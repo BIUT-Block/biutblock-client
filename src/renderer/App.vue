@@ -16,13 +16,11 @@
 import Vue from 'vue'
 import Vuetify from "vuetify"
 import "vuetify/dist/vuetify.min.css"
-
 import JsonRPCClient from './lib/jayson-rpc-vue'
 
 Vue.use(Vuetify, {
   iconfont: "mdi"
 })
-
 Vue.use(JsonRPCClient)
 
 export default {

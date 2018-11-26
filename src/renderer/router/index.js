@@ -11,7 +11,7 @@ export default new Router({
       component: require('@/components/UserLogin').default
     },
     {
-      path: '/menu/:userID/:userAddress/:walletBalance',
+      path: '/menu/:walletAddress/:walletPublicKey/:walletBalance',
       name: 'menu-header',
       component: require('@/components/MenuHeader').default,
       props: true,
@@ -22,13 +22,19 @@ export default new Router({
           component: require('@/components/UserAccount').default
         },
         {
-          path: 'transactions/:walletid',
+          path: 'transactions',
           name: 'transaction-history',
           component: require('@/components/TransactionHistory').default,
           props: true
         },
         {
-          path: 'details/:walletid',
+          path: 'txdetail',
+          name: 'transaction-detail',
+          component: require('@/components/TransactionDetail').default,
+          props: false
+        },
+        {
+          path: 'details',
           name: 'wallet-details',
           component: require('@/components/WalletDetails').default,
           props: true

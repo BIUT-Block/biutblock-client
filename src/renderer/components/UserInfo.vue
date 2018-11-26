@@ -58,9 +58,8 @@ export default {
 
   methods: {
     userLogOut() {
-      console.log('log out')
       window.localStorage.removeItem('userToken')
-      this.$router.go(-1);
+      this.$router.go(-2);
     },
     infoLoad (title) {
       var oMap = {

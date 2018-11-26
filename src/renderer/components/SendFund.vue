@@ -22,15 +22,15 @@
         
         
         <v-flex>
-          <p>You want to pay {{ amount }} with gas {{gas}}</p>  
+          <p>实际输入转账金额 {{ amount }} 转账所需矿工费用 {{gas}}</p>  
           <v-alert :value="balanceError" type="error" transition="scale-transition">
-            You don't have enough balance. Current balance {{walletBalance}}.
+            您的余额不足. 当前余额 {{walletBalance}}.
           </v-alert>
           <v-alert :value="transactionSuccess" type="success" transition="scale-transition">
             {{responseMessage}}.
           </v-alert>
           <v-btn color='info' round @click="sendTransaction">
-            Send
+            确认交易
           </v-btn>
         </v-flex>
         
@@ -69,12 +69,12 @@ export default {
       } else {
         this.txHashBuffer = []
       }
-      if(this.amount > this.walletBalance) {
+      if(parseFloat(this.amount) > parseFloat(this.walletBalance)) {
         this.balanceError = true
       } else {
         this.balanceError = false
 
-        this.$JsonRPCClient.client.request('newTokenChainTx', {token: userToken, From: this.myWalletAddress, To: this.goalWalletAddress, value: this.amount, TxFee: this.gas}, (err, response) => {
+        this.$JsonRPCClient.client.request('newTokenChainTx', {token: userToken, From: this.myWalletAddress, To: this.goalWalletAddress, value: parseFloat(this.amount), TxFee: this.gas}, (err, response) => {
           if (response.result.status === 'true') {
             this.transactionSuccess = true
             this.txHashBuffer.push(response.result.tokenTxHash)
