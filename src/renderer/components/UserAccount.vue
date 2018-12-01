@@ -9,8 +9,8 @@
                     <v-list-group prepend-icon="local_activity" class="text-truncate" no-action>
                       <v-list-tile avatar slot="activator">
                         <v-list-tile-content>
-                          <v-list-tile-title>钱包余额: {{walletBalance}}</v-list-tile-title>
-                          <v-list-tile-sub-title>{{wallet.walletAddress}}</v-list-tile-sub-title>
+                          <v-list-tile-title>Balance: {{walletBalance}}</v-list-tile-title>
+                          <v-list-tile-sub-title>{{wallet.walletName}}</v-list-tile-sub-title>
                         </v-list-tile-content>                    
                       </v-list-tile>
                       <v-list-tile v-for= "(tile, i) in wallet.subListTiles" :key= "i" @click= "clicktransactions(tile, wallet, $event)">
@@ -102,11 +102,11 @@ export default {
     walletBalance: '',
     walletAdress: '',
     errorMessage: '',
-    walletAddress: '',
+    userID: '',
     subListTiles: [
-      ["钱包详情", "account_circle"],
-      ["交易历史", "history"],
-      ["移除钱包", "remove"]
+      ["Wallet Details", "account_circle"],
+      ["Transaction History", "history"],
+      ["Remove Wallet", "remove"]
     ],
     userWallets: []
   }),
@@ -119,11 +119,12 @@ export default {
   },
 
   created() {
-    this.walletAddress = this.$route.params.walletAddress
+    this.userID = this.$route.params.userID
     this.walletBalance = this.$route.params.walletBalance
     this.userWallets.push({
-      walletAddress: `钱包地址: ${this.walletAddress}`,
-      walletBalance: `钱包余额: ${this.walletBalance}`,
+      walletID: this.userID,
+      walletName: `Wallet: ${this.$route.params.userAddress}`,
+      walletBalance: `Balance: ${this.walletBalance}`,
       subListTiles: this.subListTiles
     })
   },
@@ -136,15 +137,16 @@ export default {
 
   methods: {
     clicktransactions(tile, wallet, event) {
-      let walletAddress = wallet.walletAddress.split(': ')[1]
+      let walletID = wallet.walletID
+      let walletName = wallet.walletName.split(': ')[1]
       let walletBalance = wallet.walletBalance.split(': ')[1]
-      if (tile[0] === "交易历史") {
-       this.$router.push({name: "transaction-history"})
-      } else if (tile[0] === "移除钱包") {
+      if (tile[0] === "Transaction History") {
+       this.$router.push({name: "transaction-history", params: {walletid: walletID}})
+      } else if (tile[0] === "Remove Wallet") {
         console.log("click" + index)
         this.userWallets.splice(index, 1)
-      } else if (tile[0] === "钱包详情") {
-        this.$router.push({name: "wallet-details"})
+      } else if (tile[0] === "Wallet Details") {
+        this.$router.push({name: "wallet-details", params: {walletid: walletID}})
       }
     },
     userLogOut() {

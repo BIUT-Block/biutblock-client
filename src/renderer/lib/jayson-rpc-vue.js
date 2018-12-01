@@ -12,19 +12,12 @@ export default {
 
     let timeOut = 1500
     let externalServerAddress = '35.158.171.46'
-    let externalServerPort = '3000'
+    let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
-    let localhostPort = '3000'
+    let localhostPort = '3002'
     let localHostParam = {
       host: localhostAddress,
       port: localhostPort,
-      shellPrompt: '/ # ',
-      timeout: timeOut
-    }
-
-    let externalServerParam = {
-      host: externalServerAddress,
-      port: externalServerPort,
       shellPrompt: '/ # ',
       timeout: timeOut
     }

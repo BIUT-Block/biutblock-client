@@ -11,19 +11,19 @@
   height="80%"
 >
   <v-tab ripple>
-    我的钱包
+    Wallet
   </v-tab>
   <v-tab ripple>
-    转账
+    Send Fund
   </v-tab>
   <v-tab ripple>
-    钱包信息
+    UserInfo
   </v-tab>
   <v-tab-item>
     <router-view></router-view>
   </v-tab-item>
   <v-tab-item>
-    <send-fund :myWalletAddress = "walletAddress" :walletBalance = "walletBalance"></send-fund>
+    <send-fund :userID = "userID" :myWalletAddress = "walletAddress" :walletBalance = "walletBalance"></send-fund>
   </v-tab-item>
     <v-tab-item>
     <user-info :userName = "userName" :userID = "userID" :telefon = "telefon" :email = "email"></user-info>
@@ -68,12 +68,12 @@ export default {
     }
   },
   created() {
-    //this.userID = this.$route.params.userID
-    // this.userName = this.$route.query.username
-    // this.email = this.$route.query.email
-    // this.telefon = this.$route.query.telefon
-    this.walletAddress = this.$route.params.walletAddress
-    this.walletBalance = this.$route.params.walletBalance
+    this.userID = this.$route.params.userID
+    this.userName = this.$route.query.username
+    this.email = this.$route.query.email
+    this.telefon = this.$route.query.telefon
+    this.walletAddress = this.$route.query.walletAddress
+    this.walletBalance = this.$route.query.walletBalance
   },
   methods: {
   }

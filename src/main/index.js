@@ -20,9 +20,9 @@ function createWindow () {
    */
   updateChecker()
   mainWindow = new BrowserWindow({
-    height: 550,
+    height: 640,
     useContentSize: true,
-    width: 1000
+    width: 960
   })
 
   mainWindow.loadURL(winURL)

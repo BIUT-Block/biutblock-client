@@ -3,12 +3,10 @@
     <v-container>
       <v-data-table :headers= "headers" :items= "transactions" class="elevation-1">
         <template slot="items" slot-scope="props">
-          <tr @click="onClickHistory(props.item)">
-            <td>{{ props.item.Value }}</td>
-            <td class="text-xs-center">{{ props.item.TxFrom }}</td>
-            <td class="text-xs-center">{{ props.item.TxTo }}</td>
-            <td class="text-xs-center" v-bind:style = "{color: props.item.statusColor}">{{ props.item.Status }}</td>
-          </tr>
+          <td>{{ props.item.Value }}</td>
+          <td class="text-xs-center">{{ props.item.TxFrom }}</td>
+          <td class="text-xs-center">{{ props.item.TxTo }}</td>
+          <td class="text-xs-center" v-bind:style = "{color: props.item.statusColor}">{{ props.item.Status }}</td>
         </template>
       </v-data-table>
     </v-container>
@@ -70,22 +68,6 @@ export default {
   methods: {
     navBack() {
       this.$router.go(-1)
-    },
-    
-    onClickHistory(item) {
-      console.log(item)
-      this.$router.push({
-        name: 'transaction-detail',
-        query: {
-          txHash: item.TxHash,
-          blockHeight: item.BlockHeight,
-          timeStamp: item.TimeStamp,
-          txFrom: item.TxFrom,
-          txTo: item.TxTo,
-          fee: item.TxFee,
-          status: item.Status
-        }
-      })
     }
   }
 }
