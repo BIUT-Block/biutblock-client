@@ -27,7 +27,7 @@
 
             </section>
 
-            <p class="walletMoneyTxt">{{walletMoney}}</p>
+            <p class="walletMoneyTxt">{{walletMoney}} SEC Token</p>
             <p class="walletAddressTxt">{{walletAddress}}</p>
           </section>
 
