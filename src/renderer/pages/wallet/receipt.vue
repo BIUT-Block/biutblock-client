@@ -21,7 +21,7 @@
             <p class="receiptCntAddress" id="address">
               {{walletAddress}}
             </p>
-            <el-input v-model="money" id="money" placeholder="Payee wallet address" class="ipt">
+            <el-input v-model="money" @keyup.native="checkCount($event)" id="money" placeholder="Payee wallet address" class="ipt">
               <template slot="append">SEC</template>
             </el-input>
             
@@ -29,7 +29,7 @@
               <img src="../../assets/image/receiptImg.png" alt="">
             </figure> -->
 
-            <qr-code value="privateKey" :size="170">
+            <qr-code :value="walletAddress,money" :size="170">
             </qr-code>
     
             <button data-clipboard-target="#address" class="publicBtn publicBtnAcitve" @click="copyCnt">Copy payment address</button>
@@ -49,7 +49,7 @@ export default {
   name: '',
   data () {
     return {
-      money: '0',
+      money: 0,
       walletAddress: this.$route.query.walletAddress,
       privateKey: this.$route.query.walletPrivateKey,
       publicKey: this.$route.query.walletPublicKey,
@@ -75,6 +75,14 @@ export default {
           });
           clipboard.destroy()
         })
+    },
+    checkCount (event) {
+      console.log('Enter the key')
+      var value = event.target.value
+      if ((!/^\+?[1-9][0-9]*$/.test(value) && !/^-?\d+\.?\d{0,10}$/.test(value)) && value !== '') {
+        alert('请输入符合格式的数字')
+        this.money = 0
+      }
     }
   },
   components: {

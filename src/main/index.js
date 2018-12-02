@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import updateChecker from './updateChecker.js'
 /**
@@ -20,11 +20,13 @@ function createWindow () {
    */
   updateChecker()
   mainWindow = new BrowserWindow({
-    height: 640,
-    useContentSize: true,
-    width: 960
+    height: 700,
+    useContentSize: false,
+    width: 946,
+    transparent: true,
+    frame: false
   })
-
+  mainWindow.setResizable(false)
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
@@ -46,6 +48,15 @@ app.on('activate', () => {
   }
 })
 
+ipcMain.on('min', () => mainWindow.minimize())
+ipcMain.on('close', () => mainWindow.close())
+ipcMain.on('max', () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize()
+  } else {
+    mainWindow.maximize()
+  }
+})
 /**
  * Auto Updater
  *

@@ -11,9 +11,9 @@
       <el-col :span="16" class="navTit">
       </el-col>
       <el-col :span="4" class="windowsCnt">
-          <i class="el-icon-minus icon_nav"></i>
-          <span class="publicBtn amplification"></span>
-          <i class="el-icon-close icon_nav"></i>
+          <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
+          <span class="publicBtn amplification" @click="maximizeApp"></span>
+          <i class="el-icon-close icon_nav" @click="exitApp"></i>
       </el-col>
     </el-row>
 
@@ -78,6 +78,7 @@
 </template>
 
 <script>
+const {ipcRenderer: ipc} = require('electron')
 export default {
   name: '',
   data () {
@@ -105,7 +106,15 @@ export default {
     console.log(this.$route.query)
   },
   methods: {
-    
+    exitApp: function() {
+      ipc.send('close')
+    },
+    minimizeApp: function() {
+      ipc.send('min')
+    },
+    maximizeApp: function() {
+      ipc.send('max')
+    }
   }
 }
 </script>

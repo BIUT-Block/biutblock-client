@@ -9,7 +9,6 @@
     <el-row >
       <el-col :span="24" class="publicWalletP">
         <section class="walletMaginT">
-          
           <section class="walletHeader">
             <section class="walletHeaderList">
               <p>
@@ -187,6 +186,11 @@ export default {
               listState: "Successful"
             });
           }
+        }
+        if (this.walletList.length === 0) {
+          this.tradingCnt = true
+        } else {
+          this.tradingCnt = false
         }
         
       }

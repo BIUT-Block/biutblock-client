@@ -9,8 +9,8 @@
            
            <section class="mainCntRight">
               <section class="loginClose">
-                <i class="el-icon-minus icon_nav"></i>
-                <i class="el-icon-close icon_nav"></i>
+                <i class="el-icon-minus icon_nav" @click="minimalApp"></i>
+                <i class="el-icon-close icon_nav" @click="exitApp"></i>
               </section>
               <h1 class="loginTit">Private key login</h1>
               <input v-model="loginValue"  maxlength="64" class="loginIpt" placeholder="Please enter the private key"></input>
@@ -33,6 +33,7 @@
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
+const {ipcRenderer: ipc} = require('electron')
 
 export default {
   name: '',
@@ -114,6 +115,12 @@ export default {
         name: 'wallet',
         query: {walletAddress: params.walletAddress, walletPrivateKey: params.privateKey, walletPublicKey: params.publicKey, walletBalance: params.walletBalance}
       })
+    },
+    exitApp: function() {
+      ipc.send('close')
+    },
+    minimalApp: function() {
+      ipc.send('min')
     }
   },
   computed: {
