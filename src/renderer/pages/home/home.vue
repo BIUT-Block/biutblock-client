@@ -21,7 +21,9 @@
       <el-col :span="24" class="homeList">
         <section class="homeLeft">
           
-          <router-link :to="{name: 'wallet', query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" tag="p" class="mt50 pointerTxt">
+          <router-link 
+            :to="{name: 'wallet', query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" 
+            tag="p" class="mt50 pointerTxt">
             <img src="../../assets/image/icon_wallet.png" alt="">
           </router-link>
 

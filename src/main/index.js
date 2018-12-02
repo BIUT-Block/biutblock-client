@@ -1,5 +1,12 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
-import { autoUpdater } from 'electron-updater'
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu
+} from 'electron'
+import {
+  autoUpdater
+} from 'electron-updater'
 import updateChecker from './updateChecker.js'
 /**
  * Set `__static` path to static files in production
@@ -10,11 +17,11 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080` :
+  `file://${__dirname}/index.html`
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
@@ -27,6 +34,36 @@ function createWindow () {
     frame: false
   })
   mainWindow.setResizable(false)
+
+  if (process.platform === 'darwin') {
+    const template = [{
+      label: 'Application',
+      submenu: [{
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        click: function () {
+          app.quit()
+        }
+      }]
+    },
+    {
+      label: 'Edit',
+      submenu: [{
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        selector: 'copy:'
+      },
+      {
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        selector: 'paste:'
+      }]
+    }]
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  } else {
+    Menu.setApplicationMenu(null)
+  }
+
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {

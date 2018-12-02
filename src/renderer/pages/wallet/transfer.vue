@@ -92,7 +92,7 @@
           center>
           <section class="transferMockList">
             <p style="word-break:break-all;">{{address}}</p>
-            <input type="password" class="passwordIpt">
+            <input type="password" v-model="password" class="passwordIpt">
           </section>
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="determineTransfer">determine</button>
@@ -109,6 +109,7 @@
 <script>
 import leftNav from './components/leftNav'
 const SECUtil = require('@sec-block/secjs-util')
+const jwt = require('jsonwebtoken')
 
 export default {
   name: '',
@@ -125,7 +126,8 @@ export default {
       privateKey: this.$route.query.privateKey,
       publicKey: this.$route.query.publicKey,
       walletAddress: this.$route.query.walletAddress,
-      walletMoney: this.$route.query.walletMoney
+      walletMoney: this.$route.query.walletMoney,
+      password: ''
 
     }
   },
@@ -146,45 +148,57 @@ export default {
     },
     determineTransfer () {
       //转账功能
+      let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
         
       } else {
-        let timeStamp = new Date().getTime()
-        let transferData = [{
-          timestamp: timeStamp,
-          from: this.walletAddress,
-          to: this.address,
-          value: this.amount,
-          gasLimit: '0',
-          gas: '0',
-          gasPrice: '0',
-          data: this.remarks,
-          inputData: this.remarks
-        }]
-        const tokenTxBuffer = [
-          SECUtil.bufferToInt(transferData[0].timestamp),
-          Buffer.from(transferData[0].from, 'hex'),
-          Buffer.from(transferData[0].to, 'hex'),
-          Buffer.from(transferData[0].value),
-          Buffer.from(transferData[0].gasLimit),
-          Buffer.from(transferData[0].gas),
-          Buffer.from(transferData[0].gasPrice),
-          Buffer.from(transferData[0].inputData)
-        ]
-        let txSigHash = Buffer.from(SECUtil.rlphash(tokenTxBuffer).toString('hex'), 'hex')
-        let signature = SECUtil.ecsign(txSigHash, Buffer.from(this.privateKey, 'hex'))
-        transferData[0].data = {
-          v: signature.v,
-          r: signature.r.toString('hex'),
-          s: signature.s.toString('hex')
-        }
-
-        this.$JsonRPCClient.client.request('sec_sendRawTransaction', transferData, (err, response) => {
-          if(response.result.status === '1') {
-            this.dialogVisible = true
-            this.centerDialogVisible = false
+        let passwordToken = window.localStorage.getItem('userToken')
+        jwt.verify(passwordToken, 'MongoX-Block', (err, decode) => {
+          if (err) {
+            determineTransfer = false
+          }
+          if (decode && decode.password === this.password) {
+            determineTransfer = true
           }
         })
+        if (determineTransfer){
+          let timeStamp = new Date().getTime()
+          let transferData = [{
+            timestamp: timeStamp,
+            from: this.walletAddress,
+            to: this.address,
+            value: this.amount,
+            gasLimit: '0',
+            gas: '0',
+            gasPrice: '0',
+            data: this.remarks,
+            inputData: this.remarks
+          }]
+          const tokenTxBuffer = [
+            SECUtil.bufferToInt(transferData[0].timestamp),
+            Buffer.from(transferData[0].from, 'hex'),
+            Buffer.from(transferData[0].to, 'hex'),
+            Buffer.from(transferData[0].value),
+            Buffer.from(transferData[0].gasLimit),
+            Buffer.from(transferData[0].gas),
+            Buffer.from(transferData[0].gasPrice),
+            Buffer.from(transferData[0].inputData)
+          ]
+          let txSigHash = Buffer.from(SECUtil.rlphash(tokenTxBuffer).toString('hex'), 'hex')
+          let signature = SECUtil.ecsign(txSigHash, Buffer.from(this.privateKey, 'hex'))
+          transferData[0].data = {
+            v: signature.v,
+            r: signature.r.toString('hex'),
+            s: signature.s.toString('hex')
+          }
+
+          this.$JsonRPCClient.client.request('sec_sendRawTransaction', transferData, (err, response) => {
+            if(response.result.status === '1') {
+              this.dialogVisible = false
+              this.centerDialogVisible = false
+            }
+          })
+        }
       }
     }
   },

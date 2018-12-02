@@ -2572,11 +2572,39 @@ function createWindow() {
   mainWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
     height: 700,
     useContentSize: false,
-    width: 1000,
+    width: 946,
     transparent: true,
     frame: false
   });
-  mainWindow.setResizable(false);
+  mainWindow.setResizable(true);
+
+  if (process.platform === 'darwin') {
+    const template = [{
+      label: 'Application',
+      submenu: [{
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        click: function () {
+          __WEBPACK_IMPORTED_MODULE_0_electron__["app"].quit();
+        }
+      }]
+    }, {
+      label: 'Edit',
+      submenu: [{
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        selector: 'copy:'
+      }, {
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        selector: 'paste:'
+      }]
+    }];
+    __WEBPACK_IMPORTED_MODULE_0_electron__["Menu"].setApplicationMenu(__WEBPACK_IMPORTED_MODULE_0_electron__["Menu"].buildFromTemplate(template));
+  } else {
+    __WEBPACK_IMPORTED_MODULE_0_electron__["Menu"].setApplicationMenu(null);
+  }
+
   mainWindow.loadURL(winURL);
 
   mainWindow.on('closed', () => {
