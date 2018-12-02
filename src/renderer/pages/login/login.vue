@@ -70,8 +70,11 @@ export default {
           let keyDataJSON = JSON.parse(keyData)
           let walletsArr = []
           let walletNamesArr = Object.keys(keyDataJSON)
+          let walletInfo = {}
           for (let walletName of walletNamesArr) {
-            walletsArr.push(keyDataJSON[walletName])
+            walletInfo = keyDataJSON[walletName]
+            walletInfo["walletName"] = walletName
+            walletsArr.push(walletInfo)
           }
           this._userAuthRequest(walletsArr, loginValue)
         } catch(e) {
@@ -101,14 +104,15 @@ export default {
           }
           if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
             for (let wallet of walletsArr) {
-                wallet[walletBalance] = walletsBalanceJS[wallet.walletName]
+                wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
             }
             this._navToAccountDetail({
-              privateKey: keyDataJSON.privateKey,
-              publicKey: keyDataJSON.publicKey,
-              walletAddress: keyDataJSON.walletAddress,
-              walletBalance: response.result.value.toString(),
-              walletsArr: walletsArr
+              privateKey: walletsArr[0].privateKey,
+              publicKey: walletsArr[0].publicKey,
+              walletAddress: walletsArr[0].walletAddress,
+              walletBalance: walletsArr[0].walletBalance,
+              walletsArr: walletsArr,
+              walletName: walletsArr[0].walletName
             })
           }
         })        
@@ -124,7 +128,8 @@ export default {
           walletPublicKey: params.publicKey, 
           walletBalance: params.walletBalance,
           walletsArr: params.walletsArr,
-          walletPwd: this.loginValue  
+          walletPwd: this.loginValue,
+          walletName: params.walletName  
         }
       })
     }

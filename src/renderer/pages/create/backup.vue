@@ -219,7 +219,8 @@ export default {
             walletAddress: this.secAddress,
             walletBalance: '10',
             walletsArr: walletsArr,
-            walletPwd: this.walletPwd
+            walletPwd: this.walletPwd,
+            walletName: this.walletName
         }})
       } else {
         this.$router.push({name: 'wallet', query: {
@@ -228,7 +229,8 @@ export default {
             walletAddress: this.secAddress,
             walletBalance: '10',
             walletsArr: walletsArr,
-            walletPwd: this.password
+            walletPwd: this.password,
+            walletName: this.walletName
         }})
       }
     }

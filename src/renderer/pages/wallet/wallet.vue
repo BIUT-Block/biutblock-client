@@ -98,6 +98,10 @@
 
 <script>
 import leftNav from "./components/leftNav";
+const fs = require("fs")
+const CryptoJS = require("crypto-js")
+const jwt = require('jsonwebtoken')
+
 export default {
   name: "",
   data() {
@@ -153,6 +157,7 @@ export default {
     this.walletMoney = this.$route.query.walletBalance;
     this.walletsArr = this.$route.query.walletsArr;
     this.walletPwd = this.$route.query.walletPwd;
+    this.walletName = this.$route.query.walletName;
     this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
       if(response.result.status === '1'){
         this.walletMoney = response.result.value
@@ -215,15 +220,17 @@ export default {
       this.centerDialogVisible = false;
       let dirPath = require('os').homedir() + '/secwallet'
       let filePath = dirPath + '/default.data'
-      fs.readFile(filePath, 'utf-8', this._DeleteWallet.bind(this, filePath))
+      let walletName = "wallet 01"
+      fs.readFile(filePath, 'utf-8', this._DeleteWallet.bind(this, filePath, walletName))
     },
-    _DeleteWallet: function(filePath, err, data){
+    _DeleteWallet: function(filePath, walletName, err, data){
         if (err) {
           return
         }
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
+          delete keyDataJSON[walletName]
           this.keyFileDataJS = keyDataJSON
           let keyFileData = JSON.stringify(keyDataJSON)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
