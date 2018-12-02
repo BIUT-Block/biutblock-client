@@ -39,10 +39,7 @@ export default {
   data() {
     return {
       errorTxt: false,
-      loginValue: '',
-      privateKey: '',
-      publicKey: '',
-      walletAddress: ''
+      loginValue: ''
     }
   },
   methods: {
@@ -71,14 +68,17 @@ export default {
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), loginValue).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
-          this.privateKey = keyDataJSON.privateKey
-        if (this.privateKey !== "") {
-          this._userAuthRequest(keyDataJSON, loginValue)
-        }} catch(e) {
+          let walletsArr = []
+          let walletNamesArr = Object.keys(keyDataJSON)
+          for (let walletName of walletNamesArr) {
+            walletsArr.push(keyDataJSON[walletName])
+          }
+          this._userAuthRequest(walletsArr, loginValue)
+        } catch(e) {
           this.errorTxt = true
         }
     },
-    _userAuthRequest: function(keyDataJSON, loginValue) {
+    _userAuthRequest: function(walletsArr, loginValue) {
       let tokenInfo = {
         password: loginValue
       }
@@ -88,31 +88,44 @@ export default {
       })
 
       window.localStorage.setItem('userToken', token)
-      this.$JsonRPCClient.client.request('sec_getBalance', [keyDataJSON.walletAddress], (err, response) => {
-        console.log(response)
-        if(response.result.status === 'false') {
-          this.loginError = true
-        } else if (response.result.status == '0') {
-          this._navToAccountDetail({
-            privateKey: keyDataJSON.privateKey,
-            publicKey: keyDataJSON.publicKey,
-            walletAddress: keyDataJSON.walletAddress,
-            walletBalance: response.result.value.toString()
-          })
-        } else if (response.result.status === '1') {
-          this._navToAccountDetail({
-            privateKey: keyDataJSON.privateKey,
-            publicKey: keyDataJSON.publicKey,
-            walletAddress: keyDataJSON.walletAddress,
-            walletBalance: response.result.value.toString()
-          })
-        }
-      })     
+      let walletsBalanceJS = {}
+      for (let wallet of walletsArr) {
+        this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
+          console.log(response)
+          if(response.result.status === 'false') {
+            this.loginError = true
+          } else if (response.result.status == '0') {
+            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
+          } else if (response.result.status === '1') {
+            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
+          }
+          if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
+            for (let wallet of walletsArr) {
+                wallet[walletBalance] = walletsBalanceJS[wallet.walletName]
+            }
+            this._navToAccountDetail({
+              privateKey: keyDataJSON.privateKey,
+              publicKey: keyDataJSON.publicKey,
+              walletAddress: keyDataJSON.walletAddress,
+              walletBalance: response.result.value.toString(),
+              walletsArr: walletsArr
+            })
+          }
+        })        
+      }      
     },
     _navToAccountDetail: function(params) {
       this.$router.push({
         name: 'wallet',
-        query: {walletAddress: params.walletAddress, walletPrivateKey: params.privateKey, walletPublicKey: params.publicKey, walletBalance: params.walletBalance}
+        query: {
+          walletPwd: this.loginValue, 
+          walletAddress: params.walletAddress, 
+          walletPrivateKey: params.privateKey, 
+          walletPublicKey: params.publicKey, 
+          walletBalance: params.walletBalance,
+          walletsArr: params.walletsArr,
+          walletPwd: this.loginValue  
+        }
       })
     }
   },

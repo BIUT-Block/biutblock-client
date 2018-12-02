@@ -2,7 +2,7 @@
   <el-container class="walletCnt">
     <el-row>
       <el-col :span="24">
-        <left-nav :wallet-name="walletName" :wallet-address="walletAddress"></left-nav>
+        <left-nav :wallet-name="walletName" :wallet-address="walletAddress" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"></left-nav>
       </el-col>
     </el-row>
 
@@ -111,6 +111,8 @@ export default {
       walletName: "wallet 01",
       walletMoney: "1,000.2345678 SEC",
       walletAddress: "",
+      walletsArr: [],
+      walletPwd: "",
       //   walletList: [{
       //     id: '01',
       //     listAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
@@ -149,6 +151,8 @@ export default {
     this.publicKey = this.$route.query.walletPublicKey;
     this.walletAddress = this.$route.query.walletAddress;
     this.walletMoney = this.$route.query.walletBalance;
+    this.walletsArr = this.$route.query.walletsArr;
+    this.walletPwd = this.$route.query.walletPwd;
     this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
       if(response.result.status === '1'){
         this.walletMoney = response.result.value
@@ -205,10 +209,32 @@ export default {
       //钱包详情  可传对应的参数
       this.$router.push({ path: "/recordsDetails" });
     },
-    deleteWallet() {
+    deleteWallet(event) {
       //删除钱包
       this.positionBtnH = false;
       this.centerDialogVisible = false;
+      let dirPath = require('os').homedir() + '/secwallet'
+      let filePath = dirPath + '/default.data'
+      fs.readFile(filePath, 'utf-8', this._DeleteWallet.bind(this, filePath))
+    },
+    _DeleteWallet: function(filePath, err, data){
+        if (err) {
+          return
+        }
+        try {
+          let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
+          let keyDataJSON = JSON.parse(keyData)
+          this.keyFileDataJS = keyDataJSON
+          let keyFileData = JSON.stringify(keyDataJSON)
+          let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
+          fs.writeFile(filePath, cipherKeyData, (err) => {
+            if(err) {
+              return
+            }
+          })
+        } catch(e) {
+          return
+        }
     },
     tradingListCnt() {
       //获取钱包列表

@@ -121,7 +121,10 @@ export default {
       dialogVisible: false,
       englishWords: [[]],
       privateKey: "",
-      password: ""
+      password: "",
+      keyFileDataJS: {},
+      walletPwd: "",
+      walletName: ""
     }
   },
   methods: {
@@ -151,27 +154,83 @@ export default {
     saveFile () {
       this.centerDialogVisible = false
       let dirPath = require('os').homedir() + '/secwallet'
-        if (!fs.existsSync(dirPath)){
-          fs.mkdirSync(dirPath);
+      let filePath = dirPath + '/default.data'
+      if (!fs.existsSync(dirPath)){
+        fs.mkdirSync(dirPath);
+      }
+      if (!fs.existsSync(filePath) || !this.walletPwd || this.walletPwd === ""){
+        this.keyFileDataJS = {
+          [this.walletName]:
+          {
+            privateKey: this.privateKey,
+            publicKey: this.publicKey,
+            walletAddress: this.secAddress
+          }
         }
-        let keyFileData = JSON.stringify({
-          privateKey: this.privateKey,
-          publicKey: this.publicKey,
-          walletAddress: this.secAddress
-        })
+        let keyFileData = JSON.stringify(this.keyFileDataJS)
         let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.password)
         fs.writeFile(dirPath+'/default.data', cipherKeyData, (err) => {
           if(err) {
             return
           }
         })
+      } else {
+        fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
+      }
+    },
+    _AppendWallet: function(filePath, err, data){
+        if (err) {
+          return
+        }
+        try {
+          let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
+          let keyDataJSON = JSON.parse(keyData)
+          keyDataJSON[this.walletName] = {
+            privateKey: this.privateKey,
+            publicKey: this.publicKey,
+            walletAddress: this.secAddress
+          }
+          this.keyFileDataJS = keyDataJSON
+          let keyFileData = JSON.stringify(keyDataJSON)
+          let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
+          fs.writeFile(filePath, cipherKeyData, (err) => {
+            if(err) {
+              return
+            }
+          })
+        } catch(e) {
+          return
+        }
     },
     enterWallet() {
       this.dialogVisible = true
-      this.$router.push({name: 'wallet', query: {privateKey: this.privateKey,
+      let walletsArr = []
+      let walletNamesArr = Object.keys(this.keyFileDataJS)
+      let walletInfo = {}
+      for (let walletName of walletNamesArr) {
+        walletInfo = this.keyFileDataJS[walletName]
+        walletInfo["walletName"] = walletName
+        walletsArr.push(walletInfo)
+      }
+      if (this.walletPwd) {
+        this.$router.push({name: 'wallet', query: {
+            privateKey: this.privateKey,
             publicKey: this.publicKey,
             walletAddress: this.secAddress,
-            walletBalance: '10'}})
+            walletBalance: '10',
+            walletsArr: walletsArr,
+            walletPwd: this.walletPwd
+        }})
+      } else {
+        this.$router.push({name: 'wallet', query: {
+            privateKey: this.privateKey,
+            publicKey: this.publicKey,
+            walletAddress: this.secAddress,
+            walletBalance: '10',
+            walletsArr: walletsArr,
+            walletPwd: this.password
+        }})
+      }
     }
   },
   created() {
@@ -179,6 +238,8 @@ export default {
     this.publicKey = this.$route.query.publicKey
     this.password = this.$route.query.password
     this.secAddress = this.$route.query.userAddress
+    this.walletPwd = this.$route.query.walletPwd
+    this.walletName = this.$route.query.walletName
     let lineCount = 0
     let englishWords = this.$route.query.englishWords.split(' ')
     for(let i = 0; i < englishWords.length; i++) {

@@ -74,6 +74,7 @@
 const CryptoJS = require("crypto-js");
 const SECUtil = require("@sec-block/secjs-util");
 const jwt = require("jsonwebtoken");
+const fs = require("fs")
 //const secUtil = new SECUtil()
 export default {
   name: "",
@@ -105,96 +106,77 @@ export default {
         walletName: "",
         password: "",
         repeatPassword: ""
-      }
+      },
+      walletPwd: ""
     };
   },
   methods: {
     createBtn() {
-      // 创建钱包方法
-      if (this.confirmP != this.password) {
-        alert("两次密码输入不一致，请重新输入");
-        return;
-      } else {
-        let keys = SECUtil.generateSecKeys();
-        let privKey64 = keys.privKey;
-        this.privateKey = privKey64;
-        this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-
-        let pubKey128 = keys.publicKey;
-        this.pubKey128ToString = pubKey128.toString("hex");
-
-        //let userAddressBuffer = keys.secAddress;
-        //let userAddress = userAddressBuffer.toString("hex");
-        this.userAddressToString = keys.secAddress;
-
-        let tokenInfo = {
-          password: this.newUserAccount.password
-        };
-
-        let token = jwt.sign(tokenInfo, "MongoX-Block", {
-          expiresIn: 60 * 60 * 24
-        });
-        this.decoded = this.$JWT.verifyToken(token);
-        //成功就跳转到助记词
-        //this.$router.push('/backup')
-        //失败  弹出提示框，不做任何跳转
-        if (this.decoded === "") {
-          return;
-        } else {
-          // save to local file
-          this.userToken = token;
-        }
-        this.$router.push({
-          name: "backup",
-          query: {
-            privateKey: this.privateKey,
-            publicKey: this.pubKey128ToString,
-            userAddress: this.userAddressToString,
-            password: this.password,
-            englishWords: this.englishWords
-          }
-        });
+      //检查钱包名字是否重复
+      if (this.walletPwd && this.walletPwd!==""){
+        let dirPath = require('os').homedir() + '/secwallet'
+        let filePath = dirPath + '/default.data'
+        fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.name))
       }
     },
 
-    _userAuthRequest: function(keyDataJSON, password) {
-      let tokenInfo = {
-        password: password
-      };
+    _checkWalletName(name, err, data) {
+      let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
+      let keyDataJSON = JSON.parse(keyData)
+      let walletNamesArr = Object.keys(keyDataJSON)
+      if (walletNamesArr.indexOf(name) > -1) {
+          //In the array!
+          return "Name Repeat"
+      } else {
+          //Not in the array
+        // 创建钱包方法
+        if (this.confirmP != this.password) {
+          alert("两次密码输入不一致，请重新输入");
+          return;
+        } else {
+          let keys = SECUtil.generateSecKeys();
+          let privKey64 = keys.privKey;
+          this.privateKey = privKey64;
+          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
 
-      let token = jwt.sign(tokenInfo, "MongoX-Block", {
-        expiresIn: 60 * 60 * 24
-      });
-      window.localStorage.setItem("userToken", token);
-      this.$JsonRPCClient.client.request(
-        "sec_getBalance", [keyDataJSON.walletAddres], (err, response) => {
-          if (response.result.status === 'false') {
-            this.loginError = true;
-          } else if (response.result.status == '1') {
-            this._navToAccountDetail({
-              publicKey: keyDataJSON.publicKey,
-              walletAddress: keyDataJSON.walletAddress,
-              walletBalance: response.result.value.toString()
-            });
-          } else if (response.result.status === '0'){
-            this._navToAccountDetail({
-              publicKey: keyDataJSON.publicKey,
-              walletAddress: keyDataJSON.walletAddress,
-              walletBalance: response.result.value.toString()
-            });
+          let pubKey128 = keys.publicKey;
+          this.pubKey128ToString = pubKey128.toString("hex");
+
+          //let userAddressBuffer = keys.secAddress;
+          //let userAddress = userAddressBuffer.toString("hex");
+          this.userAddressToString = keys.secAddress;
+
+          let tokenInfo = {
+            password: this.newUserAccount.password
+          };
+
+          let token = jwt.sign(tokenInfo, "MongoX-Block", {
+            expiresIn: 60 * 60 * 24
+          });
+          this.decoded = this.$JWT.verifyToken(token);
+          //成功就跳转到助记词
+          //this.$router.push('/backup')
+          //失败  弹出提示框，不做任何跳转
+          if (this.decoded === "") {
+            return;
+          } else {
+            // save to local file
+            this.userToken = token;
           }
+          this.$router.push({
+            name: "backup",
+            query: {
+              privateKey: this.privateKey,
+              publicKey: this.pubKey128ToString,
+              userAddress: this.userAddressToString,
+              password: this.password,
+              englishWords: this.englishWords,
+              walletPwd: this.walletPwd,
+              walletName: this.name
+            }
+          });
         }
-      );
-    },
-
-    _navToAccountDetail: function(params) {
-      this.$router.push({
-        name: "backup",
-        query: {
-          privateKey: this.privateKey,
-          englishWords: this.englishWords
-        }
-      });
+      }
     },
 
     importingFrom() {
@@ -279,6 +261,7 @@ export default {
       this.btn = "btn2";
       this.btn2 = "btn";
     }
+    this.walletPwd = this.$route.query.walletPwd
   }
 };
 </script>

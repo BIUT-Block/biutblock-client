@@ -21,7 +21,7 @@
             <p class="receiptCntAddress" id="address">
               {{walletAddress}}
             </p>
-            <el-input v-model="money" id="money" placeholder="Payee wallet address" class="ipt">
+            <el-input v-model="money" id="money" placeholder="Payee wallet address" class="ipt" @keypress.native="isNumber">
               <template slot="append">SEC</template>
             </el-input>
             
@@ -75,6 +75,18 @@ export default {
           });
           clipboard.destroy()
         })
+    },
+    isNumber (evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+        evt.preventDefault();;
+      } else if ((this.money*10+parseFloat(evt.key)) > this.walletMoney) {
+        evt.preventDefault();
+      }
+      else {
+        return true;
+      }
     }
   },
   components: {

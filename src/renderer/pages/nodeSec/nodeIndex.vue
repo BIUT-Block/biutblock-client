@@ -57,7 +57,7 @@
           center>
           <p style="text-align: center;">Insufficient balance, unable to mine</p>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">determine</button>
+            <button class="publicBtn publicBtnAcitve" @click="navBackToWallet">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
@@ -103,7 +103,10 @@ export default {
     })
   },
   methods: {
-
+    navBackToWallet () {
+      this.centerDialogVisible = false
+      this.$router.go(-1)
+    }
   }
 }
 </script>
