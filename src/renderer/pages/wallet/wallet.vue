@@ -2,7 +2,8 @@
   <el-container class="walletCnt">
     <el-row>
       <el-col :span="24">
-        <left-nav :wallet-name="walletName" :wallet-address="walletAddress" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"></left-nav>
+        <left-nav :wallet-name="walletName" :wallet-address="walletAddress" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
+        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletMoney"></left-nav>
       </el-col>
     </el-row>
 
@@ -31,11 +32,13 @@
           </section>
 
           <section class="walletListCnt">
-            <router-link :to="{name: 'receipt', query: {privateKey: this.privateKey, publicKey: this.publicKey, walletAddress: this.walletAddress, walletMoney: this.walletMoney}}" tag="button" class="pointerTxt walletListBtn">
+            <router-link :to="{name: 'receipt', query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney}}" tag="button" class="pointerTxt walletListBtn">
               <img src="../../assets/image/walletReceipt.png" alt="" class="walletListTxt">
               Receipt
             </router-link>
-            <router-link :to="{name: 'transfer', query: {privateKey: this.privateKey, publicKey: this.publicKey, walletAddress: this.walletAddress, walletMoney: this.walletMoney}}" tag="button" class="pointerTxt walletListBtn">
+            <router-link :to="{name: 'transfer', 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney}}" 
+              tag="button" class="pointerTxt walletListBtn">
                <img src="../../assets/image/walletTransfer.png" alt="" class="walletListTxt">
               Transfer
             </router-link>
@@ -100,6 +103,7 @@ import leftNav from "./components/leftNav";
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
+import {EventBus} from "../../lib/EventBus.js"
 
 export default {
   name: "",
@@ -157,13 +161,14 @@ export default {
     this.walletsArr = this.$route.query.walletsArr;
     this.walletPwd = this.$route.query.walletPwd;
     this.walletName = this.$route.query.walletName;
-    this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
+
+    for (let i = 0; i < this.walletsArr.length; i++) {
+      this.$JsonRPCClient.client.request('sec_getBalance', [this.walletsArr[i]], (err, response) => {
       if(response.result.status === '1'){
         this.walletMoney = response.result.value
       }
     })
-
-    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
+    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletsArr[i]], (err, response) => {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
@@ -204,6 +209,19 @@ export default {
         
       }
     );
+    }
+  },
+
+  mounted() {
+    EventBus.$on('updateWalletInfo', function (walletParams) {
+      this.privateKey = walletParams.walletPrivateKey;
+      this.publicKey = walletParams.walletPublicKey;
+      this.walletAddress = walletParams.walletAddress;
+      this.walletMoney = walletParams.walletBalance;
+      this.walletsArr = walletParams.walletsArr;
+      this.walletPwd = walletParams.walletPwd;
+      this.walletName = walletParams.walletName;
+    }.bind(this))
   },
 
   methods: {

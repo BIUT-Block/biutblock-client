@@ -2,7 +2,8 @@
   <el-container>
     <el-row>
       <el-col :span="24">
-        <left-nav :wallet-address="walletAddress" wallet-name="wallet 01"></left-nav>
+        <left-nav :wallet-address="walletAddress" :wallet-name="walletName" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
+        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletMoney"></left-nav>
       </el-col>
     </el-row>
 
@@ -11,7 +12,9 @@
         <section class="publicWalletH publicWalletHF">
 
           <section class="publicWalletHList">
-            <router-link :to="{name: 'wallet', query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" class="publicWalletHListIcon">
+            <router-link :to="{name: 'wallet', 
+            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" 
+            class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
             <span class="publicWalletHTit">Transfer</span>
@@ -127,12 +130,14 @@ export default {
       publicKey: this.$route.query.publicKey,
       walletAddress: this.$route.query.walletAddress,
       walletMoney: this.$route.query.walletMoney,
+      walletsArr: this.$route.query.walletsArr,
+      walletPwd: this.$route.query.walletPwd,
+      walletName: this.$route.query.walletName,
       password: ''
-
     }
   },
   created() {
-    console.log(this.$route.query)
+    
   },
   methods: {
     allMoneyFrom () {

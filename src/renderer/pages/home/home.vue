@@ -22,7 +22,7 @@
         <section class="homeLeft">
           
           <router-link 
-            :to="{name: 'wallet', query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" 
+            :to="{name: 'wallet', query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" 
             tag="p" class="mt50 pointerTxt">
             <img src="../../assets/image/icon_wallet.png" alt="">
           </router-link>
@@ -101,7 +101,10 @@ export default {
       walletAddress: this.$route.query.walletAddress,
       privateKey: this.$route.query.walletPrivateKey,
       publicKey: this.$route.query.walletPublicKey,
-      walletMoney: this.$route.query.walletBalance
+      walletMoney: this.$route.query.walletBalance,
+      walletsArr: this.$route.query.walletsArr,
+      walletPwd: this.$route.query.walletPwd,
+      walletName: this.$route.query.walletName
     }
   },
   created () {

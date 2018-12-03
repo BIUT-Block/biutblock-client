@@ -129,7 +129,6 @@ export default {
           walletPublicKey: params.publicKey, 
           walletBalance: params.walletBalance,
           walletsArr: params.walletsArr,
-          walletPwd: this.loginValue,
           walletName: params.walletName  
         }
       })

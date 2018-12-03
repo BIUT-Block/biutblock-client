@@ -85,6 +85,10 @@ export default {
       password: "",
       confirmP: "",
       privateKey: "",
+      walletPwd: "",
+      publicKey: "",
+      walletBalance: "",
+      walletAddress: "",
       englishWords: "",
       mainCntTab1: true,
       mainCntTab2: false,
@@ -107,7 +111,7 @@ export default {
         password: "",
         repeatPassword: ""
       },
-      walletPwd: ""
+      
     };
   },
   methods: {
@@ -155,6 +159,7 @@ export default {
           this.$router.push({
             name: "backup",
             query: {
+              id: this.$route.query.id,
               privateKey: this.privateKey,
               publicKey: this.pubKey128ToString,
               userAddress: this.userAddressToString,
@@ -214,11 +219,13 @@ export default {
           this.$router.push({
             name: "backup",
             query: {
+              id: this.$route.query.id,
               privateKey: this.privateKey,
               publicKey: this.pubKey128ToString,
               userAddress: this.userAddressToString,
               password: this.password,
               englishWords: this.englishWords,
+              walletsArr: this.$route.query.walletsArr,
               walletPwd: this.walletPwd,
               walletName: this.name
             }
@@ -296,7 +303,18 @@ export default {
       this.btn2 = "btn2";
     }
     if (this.$route.query.id === "3") {
-      this.returnPage = "/home";
+      this.returnPage = {
+        name: 'wallet',
+        query: {
+          privateKey: this.$route.query.walletPrivateKey,
+          publicKey: this.$route.query.walletPublicKey,
+          walletAddress: this.$route.query.walletAddress,
+          walletBalance: this.$route.query.walletBalance,
+          walletsArr: this.$route.query.walletsArr,
+          walletPwd: this.$route.query.walletPwd,
+          walletName: this.$route.query.walletName
+        }
+      };
       this.mainCntTab1 = true;
       this.mainCntTab2 = false;
       this.btn = "btn";

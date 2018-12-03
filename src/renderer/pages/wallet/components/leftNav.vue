@@ -4,17 +4,17 @@
       <el-col :span="24">
         <section class="leftNavCnt">
           <ul>
-            <!-- <li v-for="(item,index) in walletList" 
+            <li v-for="(item,index) in walletsArr" 
               :index="item.id"
               :class="[colorArr[index]?'color'+index%2:'',colorBorderArr[index%4]]"
-              @click="tabWallet(index)">
+              @click="tabWallet(item)">
                 <p>{{item.walletName}}</p>
                 <p style="margin-top:5px">{{item.walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
-            </li> -->
-            <li class="borderColor1" @click="tabWallet(index)">
+            </li>
+            <!-- <li class="borderColor1" @click="tabWallet(index)">
                 <p>{{walletName}}</p>
                 <p style="margin-top:5px">{{walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
-            </li>
+            </li> -->
           </ul>
           <button class="btn" @click="createWallet">+ Create a wallet</button>
         </section>
@@ -24,9 +24,10 @@
 </template>
 
 <script>
+import {EventBus} from "../../../lib/EventBus.js"
 export default {
   name: '',
-  props: ['walletName', 'walletAddress', 'walletsArr', 'walletPwd'],
+  props: ['walletName', 'walletAddress', 'walletsArr', 'walletPwd', 'walletPrivateKey', 'walletPublicKey', 'walletBalance'],
   data () {
     return {
       colorArr: [false, false],
@@ -60,17 +61,31 @@ export default {
         query: {
           id: "3",
           walletPwd: this.walletPwd,
+          walletAddress: this.walletAddress, 
+          walletPrivateKey: this.privateKey, 
+          walletPublicKey: this.publicKey, 
+          walletBalance: this.walletBalance,
+          walletsArr: this.walletsArr,
+          walletName: this.walletName
         }
       })
     },
-    tabWallet (index) {
-      const res = [false, false]
-      res[index] = !res[index]
-      this.colorArr = res
-
-      console.log(index) //需要的参数可以通过方法 拿
-
-      this.$router.go(-1)  //返回钱包首页 默认加载第一个钱包
+    tabWallet (item) {
+      //const res = [false, false]
+      //res[index] = !res[index]
+      //this.colorArr = res
+      
+      console.log(item) //需要的参数可以通过方法 拿
+      EventBus.$emit('updateWalletInfo', {
+          walletPwd: this.walletPwd, 
+          walletAddress: item.walletAddress, 
+          walletPrivateKey: item.privateKey, 
+          walletPublicKey: item.publicKey, 
+          walletBalance: item.walletBalance,
+          walletsArr: this.walletsArr,
+          walletName: item.walletName 
+      })
+     // this.$router.go(-1)  //返回钱包首页 默认加载第一个钱包
 
 
       //点击那个钱包就加载那个钱包的数据  

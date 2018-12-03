@@ -3,7 +3,16 @@
     <main style="width: 700px;height: 600px;border:1px solid #ccc;">
       <el-row class="publicNav">
         <el-col :span="6">
-          <router-link to="/create?id=1">
+          <router-link :to="{name: 'create', query: {
+            id: this.id,
+            privateKey: this.privateKey,
+            publicKey: this.publicKey,
+            walletAddress: this.secAddress,
+            walletBalance: this.walletBalance,
+            walletName: this.walletName,
+            walletPwd: this.password,
+            walletsArr: this.walletsArr
+          }}">
             <i class="el-icon-arrow-left icon_nav"></i>
           </router-link>
         </el-col>
@@ -117,6 +126,7 @@ export default {
   name: '',
   data() {
     return {
+      id: '',
       centerDialogVisible: false,
       dialogVisible: false,
       englishWords: [[]],
@@ -124,7 +134,9 @@ export default {
       password: "",
       keyFileDataJS: {},
       walletPwd: "",
-      walletName: ""
+      walletName: "",
+      walletsArr: '',
+      walletBalance: ""
     }
   },
   methods: {
@@ -220,7 +232,7 @@ export default {
             walletBalance: '10',
             walletsArr: walletsArr,
             walletPwd: this.walletPwd,
-            walletName: this.walletName
+            walletName: this.walletName,
         }})
       } else {
         this.$router.push({name: 'wallet', query: {
@@ -236,12 +248,17 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.query.id
     this.privateKey = this.$route.query.privateKey
     this.publicKey = this.$route.query.publicKey
     this.password = this.$route.query.password
     this.secAddress = this.$route.query.userAddress
     this.walletPwd = this.$route.query.walletPwd
     this.walletName = this.$route.query.walletName
+    this.walletBalance = this.$route.query.walletBalance
+    if (this.$route.query.walletsArr) {
+      this.walletsArr = this.$route.query.walletsArr
+    }
     let lineCount = 0
     let englishWords = this.$route.query.englishWords.split(' ')
     for(let i = 0; i < englishWords.length; i++) {
@@ -252,6 +269,8 @@ export default {
       }
       this.englishWords[lineCount][i % 4] = englishWords[i]
     }
+    this.walletPwd = this.$route.query.walletPwd
+  
   }
 }
 </script>
