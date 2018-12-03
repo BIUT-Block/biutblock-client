@@ -161,14 +161,13 @@ export default {
     this.walletsArr = this.$route.query.walletsArr;
     this.walletPwd = this.$route.query.walletPwd;
     this.walletName = this.$route.query.walletName;
-
-    for (let i = 0; i < this.walletsArr.length; i++) {
-      this.$JsonRPCClient.client.request('sec_getBalance', [this.walletsArr[i]], (err, response) => {
+    this.walletList = []
+    this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
       if(response.result.status === '1'){
         this.walletMoney = response.result.value
       }
     })
-    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletsArr[i]], (err, response) => {
+    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
@@ -209,11 +208,13 @@ export default {
         
       }
     );
-    }
   },
 
   mounted() {
+    
     EventBus.$on('updateWalletInfo', function (walletParams) {
+      let moneyValue = ''
+      this.walletList = []
       this.privateKey = walletParams.walletPrivateKey;
       this.publicKey = walletParams.walletPublicKey;
       this.walletAddress = walletParams.walletAddress;
@@ -221,6 +222,52 @@ export default {
       this.walletsArr = walletParams.walletsArr;
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
+      this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
+        if(response.result.status === '1'){
+          this.walletMoney = response.result.value
+        }
+      })
+    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
+        if (response.result.resultInPool) {
+            for (let j = 0; j < response.result.resultInPool.length; j++) {
+              if (response.result.resultInPool[j].TxTo === this.walletAddress) {
+                moneyValue = "+ " + response.result.resultInPool[j].Value
+              } else {
+                moneyValue = "- " + response.result.resultInPool[j].Value
+              }
+              this.walletList.push({
+                id: response.result.resultInPool[j].TxHeight,
+                listAddress: response.result.resultInPool[j].TxTo,
+                listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
+                listMoney: moneyValue,
+                listState: "Packed"
+            });
+          }
+        }
+        if (response.result.resultInChain) {
+          for (let i = 0; i < response.result.resultInChain.length; i++) {
+            if (response.result.resultInChain[i].TxTo === this.walletAddress) {
+                moneyValue = "+ " + response.result.resultInChain[i].Value
+              } else {
+                moneyValue = "- " + response.result.resultInChain[i].Value
+              }
+            this.walletList.push({
+              id: response.result.resultInChain[i].TxHeight,
+              listAddress: response.result.resultInChain[i].TxTo,
+              listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
+              listMoney: moneyValue,
+              listState: "Successful"
+            });
+          }
+        }
+        if (this.walletList.length === 0) {
+          this.tradingCnt = true
+        } else {
+          this.tradingCnt = false
+        }
+        
+      }
+    );
     }.bind(this))
   },
 
@@ -242,7 +289,7 @@ export default {
       this.centerDialogVisible = false;
       let dirPath = require('os').homedir() + '/secwallet'
       let filePath = dirPath + '/default.data'
-      let walletName = "wallet 01"
+      let walletName = this.walletName
       fs.readFile(filePath, 'utf-8', this._DeleteWallet.bind(this, filePath, walletName))
     },
     _DeleteWallet: function(filePath, walletName, err, data){
@@ -256,6 +303,14 @@ export default {
           this.keyFileDataJS = keyDataJSON
           let keyFileData = JSON.stringify(keyDataJSON)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
+          this.walletsArr = this.walletsArr.filter((wallet) => {
+            return wallet.walletAddress !== this.walletAddress
+          })
+          this.walletName = this.walletsArr[0].walletName
+          this.walletAddress = this.walletsArr[0].walletAddress
+          this.walletMoney = this.walletsArr[0].walletBalance
+          this.privateKey = this.walletsArr[0].privateKey
+          this.publicKey = this.walletsArr[0].publicKey
           fs.writeFile(filePath, cipherKeyData, (err) => {
             if(err) {
               return

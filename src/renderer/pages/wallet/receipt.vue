@@ -86,10 +86,7 @@ export default {
       var charCode = (evt.which) ? evt.which : evt.keyCode;
       if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
         evt.preventDefault();;
-      } else if (parseFloat(this.money+evt.key) > this.walletMoney) {
-        evt.preventDefault();
-      }
-      else {
+      } else {
         return true;
       }
     }
