@@ -1,8 +1,8 @@
 directories:
   output: build
   buildResources: build
-productName: webapp
-appId: org.simulatedgreg.electron-vue
+productName: Sec Client
+appId: sec.secjs-client
 files:
   - dist/electron/**/*
 dmg:
