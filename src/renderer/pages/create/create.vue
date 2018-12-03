@@ -113,10 +113,58 @@ export default {
   methods: {
     createBtn() {
       //检查钱包名字是否重复
+      console.log('Button')
       if (this.walletPwd && this.walletPwd!==""){
         let dirPath = require('os').homedir() + '/secwallet'
         let filePath = dirPath + '/default.data'
         fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.name))
+      } else {
+        if (this.confirmP != this.password) {
+          alert("两次密码输入不一致，请重新输入");
+          return;
+        } else {
+          let keys = SECUtil.generateSecKeys();
+          let privKey64 = keys.privKey;
+          this.privateKey = privKey64;
+          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
+
+          let pubKey128 = keys.publicKey;
+          this.pubKey128ToString = pubKey128.toString("hex");
+
+          //let userAddressBuffer = keys.secAddress;
+          //let userAddress = userAddressBuffer.toString("hex");
+          this.userAddressToString = keys.secAddress;
+
+          let tokenInfo = {
+            password: this.newUserAccount.password
+          };
+
+          let token = jwt.sign(tokenInfo, "MongoX-Block", {
+            expiresIn: 60 * 60 * 24
+          });
+          this.decoded = this.$JWT.verifyToken(token);
+          //成功就跳转到助记词
+          //this.$router.push('/backup')
+          //失败  弹出提示框，不做任何跳转
+          if (this.decoded === "") {
+            return;
+          } else {
+            // save to local file
+            this.userToken = token;
+          }
+          this.$router.push({
+            name: "backup",
+            query: {
+              privateKey: this.privateKey,
+              publicKey: this.pubKey128ToString,
+              userAddress: this.userAddressToString,
+              password: this.password,
+              englishWords: this.englishWords,
+              walletPwd: this.walletPwd,
+              walletName: this.name
+            }
+          });
+        }
       }
     },
 

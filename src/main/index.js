@@ -61,7 +61,7 @@ function createWindow() {
     }]
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
   } else {
-    Menu.setApplicationMenu(null)
+   // Menu.setApplicationMenu(null)
   }
 
   mainWindow.loadURL(winURL)

@@ -10,7 +10,7 @@
       </v-content>
   </v-app>
   </div> -->
-  <div id="app" style="-webkit-app-region: drag">
+  <div id="app">
     <router-view/>
   </div>
 </template>
