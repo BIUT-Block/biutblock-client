@@ -30,7 +30,7 @@ function createWindow() {
     height: 700,
     useContentSize: true,
     width: 946,
-    transparent: true,
+    transparent: false
     //frame: false
   })
   mainWindow.setResizable(true)
