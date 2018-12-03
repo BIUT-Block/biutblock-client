@@ -79,7 +79,7 @@
             </section>
           </section>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="dialogVisible = true">determine</button>
+            <button class="publicBtn publicBtnAcitve" @click="determineTransfer">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
@@ -139,7 +139,7 @@ export default {
       this.amount = this.allMoney
     },
     transferFrom () {
-      if (Number(this.amount) >= Number(this.allMoney)) {
+      if (Number(this.amount) >= Number(this.walletMoney)) {
         alert("转账金额不能超过总金额")
         return
       } else {
@@ -150,18 +150,8 @@ export default {
       //转账功能
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
-        
+        alert("转账金额不能超过总金额")
       } else {
-        let passwordToken = window.localStorage.getItem('userToken')
-        jwt.verify(passwordToken, 'MongoX-Block', (err, decode) => {
-          if (err) {
-            determineTransfer = false
-          }
-          if (decode && decode.password === this.password) {
-            determineTransfer = true
-          }
-        })
-        if (determineTransfer){
           let timeStamp = new Date().getTime()
           let transferData = [{
             timestamp: timeStamp,
@@ -198,7 +188,6 @@ export default {
               this.centerDialogVisible = false
             }
           })
-        }
       }
     }
   },
