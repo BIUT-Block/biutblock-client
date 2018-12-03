@@ -26,7 +26,7 @@
 <script>
 export default {
   name: '',
-  props: ['walletName', 'walletAddress'],
+  props: ['walletName', 'walletAddress', 'walletsArr', 'walletPwd'],
   data () {
     return {
       colorArr: [false, false],
@@ -55,7 +55,13 @@ export default {
   },
   methods: {
     createWallet () {
-      this.$router.push({ path: '/create?id=3' })
+      this.$router.push({ 
+        name: 'create',
+        query: {
+          id: "3",
+          walletPwd: this.walletPwd,
+        }
+      })
     },
     tabWallet (index) {
       const res = [false, false]
