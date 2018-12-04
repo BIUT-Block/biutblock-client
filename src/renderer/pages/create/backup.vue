@@ -34,15 +34,17 @@
             <p>private key. If you lose this file, you will lose the assets in your wallet.</p>
           </section>
 
-          <section class="mainCntList" id="englishWordsList">
-            <div v-for="wordsLine in englishWords" :key="wordsLine.index" >
-              <ul>
-                <li class="iptTxt">{{wordsLine[0]}}</li>
-                <li class="iptTxt">{{wordsLine[1]}}</li>
-                <li class="iptTxt">{{wordsLine[2]}}</li>
-                <li class="iptTxt">{{wordsLine[3]}}</li>
-              </ul>
-            </div>
+          <section class="mainCntList">
+            <section id="englishWordsList">
+              <div v-for="wordsLine in englishWords" :key="wordsLine.index" >
+                <ul>
+                  <li class="iptTxt">{{wordsLine[0]}}</li>
+                  <li class="iptTxt">{{wordsLine[1]}}</li>
+                  <li class="iptTxt">{{wordsLine[2]}}</li>
+                  <li class="iptTxt">{{wordsLine[3]}}</li>
+                </ul>
+              </div>
+            </section>
             <span class="line"></span>
 
             <section style="display: flex;justify-content: space-between;">
@@ -58,7 +60,7 @@
           </section>
 
           <section class="publicCntBtn">
-            <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
+            <button class="publicBtn" :disabled="!checkAlreadySaved" :class="checkAlreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
           </section>
           
           <el-dialog
@@ -75,14 +77,14 @@
               <p class="downTxt"><input type="radio" name="downImg" id="jpg"><span class="downTxt2">JPG file(*.jpg)</span> 
               Export to JPG file format (default is white background)</p>
 
-              <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
+              <!-- <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
               Export to PDF file format</p>
 
               <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
               Export HD PDF files (only partial font styles are supported)</p>
 
               <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">POS file(*.pos)</span> 
-              Contains image and graphic structure definitions (can be imported)</p>
+              Contains image and graphic structure definitions (can be imported)</p> -->
 
               <p class="downTxt"><input type="radio" name="downImg" id="svg"><span class="downTxt2">SVG file(*.svg)</span> 
               Export to SVG vector graphics</p>
@@ -233,6 +235,22 @@ export default {
                       this._saveWalletSuccess(filePath)
                   })
       }
+      if (document.getElementById('jpg').checked) {
+        domtoimage.toJpeg(document.getElementById('englishWordsList'), { quality: 0.95 })
+          .then( (dataUrl) => {
+            let link = document.createElement('a')
+            link.download = 'englishWords.jpeg'
+            link.href = dataUrl
+            link.click()
+            this._saveWalletSuccess(filePath)
+         })
+      }
+      if (document.getElementById('svg').checked) {
+        domtoimage.toSvg(document.getElementById('my-node'), {filter: filter})
+          .then(function (dataUrl) {
+        /* do something */
+          });
+      }
     },
     _saveWalletSuccess (filePath) {
       this.alreadySaved = true
@@ -297,7 +315,7 @@ export default {
   
   },
   computed: {
-    alreadySaved () {
+    checkAlreadySaved () {
       return this.alreadySaved
     }
   }
