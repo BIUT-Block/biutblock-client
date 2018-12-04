@@ -20,7 +20,7 @@
               <section style="position: relative"  class="pointerTxt">
                 <img src="../../assets/image/deleteBtn.png" alt="" @click="positionFrom">
                 <section v-show="positionBtnH" class="positionBtn">
-                  <el-button @click="dialogVisible" class="deleteBtn">Delete wallet</el-button>
+                  <el-button @click="dialogVisible" :disabled="walletsArr.length<=1" class="deleteBtn">Delete wallet</el-button>
                   <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button>
                 </section>
               </section>
@@ -62,7 +62,7 @@
 
           <section v-show="!tradingCnt" class="walletCntList">
               <ul>
-                <li v-for="item in walletList" :index="item.id">
+                <li v-for="item in walletList" :index="item.id" @click="toTxDetails(item)" class="pointerTxt">
                     <section class="radiusCnt">
                       <span class="radiusIcon" :class="item.listState | radiusColor"> </span>
                     </section>
@@ -176,10 +176,13 @@ export default {
                 moneyValue = "- " + response.result.resultInPool[j].Value
               }
               this.walletList.push({
-                id: response.result.resultInPool[j].TxHeight,
+                id: response.result.resultInPool[j].TxHash,
+                blockNumber: "Not in Block yet",
                 listAddress: response.result.resultInPool[j].TxTo,
+                listFrom: response.result.resultInPool[j].TxFrom,                
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
                 listMoney: moneyValue,
+                listMinerCost: response.result.resultInPool[j].TxFee, 
                 listState: "Packed"
             });
           }
@@ -192,10 +195,13 @@ export default {
                 moneyValue = "- " + response.result.resultInChain[i].Value
               }
             this.walletList.push({
-              id: response.result.resultInChain[i].TxHeight,
+              id: response.result.resultInChain[i].TxHash,
+              blockNumber: response.result.resultInChain[i].BlockNumber,
               listAddress: response.result.resultInChain[i].TxTo,
+              listFrom: response.result.resultInChain[i].TxFrom,
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
               listMoney: moneyValue,
+              listMinerCost: response.result.resultInChain[i].TxFee, 
               listState: "Successful"
             });
           }
@@ -214,6 +220,7 @@ export default {
     
     EventBus.$on('updateWalletInfo', function (walletParams) {
       let moneyValue = ''
+      let walletListTemp = []
       this.walletList = []
       this.privateKey = walletParams.walletPrivateKey;
       this.publicKey = walletParams.walletPublicKey;
@@ -227,7 +234,7 @@ export default {
           this.walletMoney = response.result.value
         }
       })
-    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
+      this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
@@ -235,11 +242,14 @@ export default {
               } else {
                 moneyValue = "- " + response.result.resultInPool[j].Value
               }
-              this.walletList.push({
-                id: response.result.resultInPool[j].TxHeight,
+              walletListTemp.push({
+                id: response.result.resultInPool[j].TxHash,
+                blockNumber: "Not in Block yet",
                 listAddress: response.result.resultInPool[j].TxTo,
+                listFrom: response.result.resultInPool[j].TxFrom,
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
                 listMoney: moneyValue,
+                listMinerCost: response.result.resultInPool[j].TxFee,
                 listState: "Packed"
             });
           }
@@ -251,15 +261,19 @@ export default {
               } else {
                 moneyValue = "- " + response.result.resultInChain[i].Value
               }
-            this.walletList.push({
-              id: response.result.resultInChain[i].TxHeight,
+            walletListTemp.push({
+              id: response.result.resultInChain[i].TxHash,
+              blockNumber: response.result.resultInChain[i].BlockNumber,
               listAddress: response.result.resultInChain[i].TxTo,
+              listFrom: response.result.resultInChain[i].TxFrom,
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
               listMoney: moneyValue,
+              listMinerCost: response.result.resultInChain[i].TxFee,
               listState: "Successful"
             });
           }
         }
+        this.walletList = walletListTemp
         if (this.walletList.length === 0) {
           this.tradingCnt = true
         } else {
@@ -273,15 +287,40 @@ export default {
 
   methods: {
     positionFrom() {
-      this.positionBtnH = true;
+      this.positionBtnH = !this.positionBtnH;
     },
     dialogVisible() {
       this.centerDialogVisible = true;
       this.positionBtnH = false;
     },
+    toTxDetails(item) {
+      //钱包详情  可传对应的参数
+      this.$router.push(
+        { name: "recordsDetails",
+          query: {
+            privateKey: this.privateKey, 
+            publicKey: this.publicKey, 
+            walletsArr: this.walletsArr, 
+            walletName: this.walletName, 
+            walletPwd: this.walletPwd, 
+            walletAddress: this.walletAddress, 
+            walletBalance: this.walletMoney,
+            detailsMoney: item.listMoney + ' SEC',
+            detailsNumber: item.id,
+            detailsBlock: item.blockNumber.toString(),
+            detailsTime: item.listTime,
+            detailsBeneficiary: item.listAddress,
+            detailsSending: item.listFrom,
+            detailsCost: item.listMinerCost,            
+          }
+      });
+    },
     detailsWallet() {
       //钱包详情  可传对应的参数
-      this.$router.push({ path: "/recordsDetails" });
+      this.$router.push(
+        { name: "walletDetails",
+          query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletBalance: this.walletMoney}
+      });
     },
     deleteWallet(event) {
       //删除钱包
@@ -308,9 +347,62 @@ export default {
           })
           this.walletName = this.walletsArr[0].walletName
           this.walletAddress = this.walletsArr[0].walletAddress
-          this.walletMoney = this.walletsArr[0].walletBalance
           this.privateKey = this.walletsArr[0].privateKey
           this.publicKey = this.walletsArr[0].publicKey
+          this.walletList = []
+          let moneyValue = ""
+          this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
+            if(response.result.status === '1'){
+              this.walletMoney = response.result.value
+            }
+          })
+          this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
+              if (response.result.resultInPool) {
+                  for (let j = 0; j < response.result.resultInPool.length; j++) {
+                    if (response.result.resultInPool[j].TxTo === this.walletAddress) {
+                      moneyValue = "+ " + response.result.resultInPool[j].Value
+                    } else {
+                      moneyValue = "- " + response.result.resultInPool[j].Value
+                    }
+                    this.walletList.push({
+                      id: response.result.resultInPool[j].TxHash,
+                      blockNumber: "Not in Block yet",
+                      listAddress: response.result.resultInPool[j].TxTo,
+                      listFrom: response.result.resultInPool[j].TxFrom,
+                      listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
+                      listMoney: moneyValue,
+                      listMinerCost: response.result.resultInPool[j].TxFee,
+                      listState: "Packed"
+                  });
+                }
+              }
+              if (response.result.resultInChain) {
+                for (let i = 0; i < response.result.resultInChain.length; i++) {
+                  if (response.result.resultInChain[i].TxTo === this.walletAddress) {
+                      moneyValue = "+ " + response.result.resultInChain[i].Value
+                    } else {
+                      moneyValue = "- " + response.result.resultInChain[i].Value
+                    }
+                  this.walletList.push({
+                    id: response.result.resultInChain[i].TxHash,
+                    blockNumber: response.result.resultInChain[i].BlockNumber,
+                    listAddress: response.result.resultInChain[i].TxTo,
+                    listFrom: response.result.resultInChain[i].TxFrom,                    
+                    listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
+                    listMoney: moneyValue,
+                    listMinerCost: response.result.resultInChain[i].TxFee,
+                    listState: "Successful"
+                  });
+                }
+              }
+              if (this.walletList.length === 0) {
+                this.tradingCnt = true
+              } else {
+                this.tradingCnt = false
+              }
+              
+            }
+          );
           fs.writeFile(filePath, cipherKeyData, (err) => {
             if(err) {
               return

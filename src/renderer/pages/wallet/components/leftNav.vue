@@ -76,7 +76,8 @@ export default {
       //this.colorArr = res
       
       console.log(item) //需要的参数可以通过方法 拿
-      EventBus.$emit('updateWalletInfo', {
+      if (this.$route.name === 'wallet') {
+        EventBus.$emit('updateWalletInfo', {
           walletPwd: this.walletPwd, 
           walletAddress: item.walletAddress, 
           walletPrivateKey: item.privateKey, 
@@ -84,13 +85,21 @@ export default {
           walletBalance: item.walletBalance,
           walletsArr: this.walletsArr,
           walletName: item.walletName 
-      })
-     // this.$router.go(-1)  //返回钱包首页 默认加载第一个钱包
-
-
-      //点击那个钱包就加载那个钱包的数据  
-
-      
+        })
+      } else {
+        this.$router.push({
+          name: 'wallet',
+          query: {
+            walletPwd: this.walletPwd, 
+            walletAddress: item.walletAddress, 
+            walletPrivateKey: item.privateKey, 
+            walletPublicKey: item.publicKey, 
+            walletBalance: item.walletBalance,
+            walletsArr: this.walletsArr,
+            walletName: item.walletName 
+          }
+        })
+      }
     }
   },
   filters: {

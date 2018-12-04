@@ -60,7 +60,7 @@
           </section>
 
           <section class="publicCntBtn">
-            <button class="publicBtn" :disabled="!checkAlreadySaved" :class="checkAlreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
+            <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
           </section>
           
           <el-dialog
@@ -86,8 +86,8 @@
               <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">POS file(*.pos)</span> 
               Contains image and graphic structure definitions (can be imported)</p> -->
 
-              <p class="downTxt"><input type="radio" name="downImg" id="svg"><span class="downTxt2">SVG file(*.svg)</span> 
-              Export to SVG vector graphics</p>
+              <!-- <p class="downTxt"><input type="radio" name="downImg" id="svg"><span class="downTxt2">SVG file(*.svg)</span> 
+              Export to SVG vector graphics</p> -->
             </div>
             <span slot="footer" class="dialog-footer">
               <button class="publicBtn publicBtnAcitve" @click="saveFile">determine</button>
@@ -204,6 +204,7 @@ export default {
         if (err) {
           return
         }
+        this.alreadySaved = true
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
@@ -236,7 +237,7 @@ export default {
                   })
       }
       if (document.getElementById('jpg').checked) {
-        domtoimage.toJpeg(document.getElementById('englishWordsList'), { quality: 0.95 })
+        domtoimage.toJpeg(domSection, { quality: 0.95 })
           .then( (dataUrl) => {
             let link = document.createElement('a')
             link.download = 'englishWords.jpeg'
@@ -245,12 +246,13 @@ export default {
             this._saveWalletSuccess(filePath)
          })
       }
-      if (document.getElementById('svg').checked) {
-        domtoimage.toSvg(document.getElementById('my-node'), {filter: filter})
-          .then(function (dataUrl) {
-        /* do something */
-          });
-      }
+      // if (document.getElementById('svg').checked) {
+      //   domtoimage.toSvg(domSection)
+      //     .then(function (dataUrl) {
+            
+      //       FileSaver.saveAs(dataUrl, 'englishWords.svg')
+      //     });
+      // }
     },
     _saveWalletSuccess (filePath) {
       this.alreadySaved = true

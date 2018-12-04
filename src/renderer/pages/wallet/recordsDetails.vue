@@ -2,7 +2,8 @@
   <el-container>
     <el-row>
       <el-col :span="24">
-        <left-nav></left-nav>
+        <left-nav :wallet-address="walletAddress" :wallet-name="walletName" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
+        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletBalance"></left-nav>
       </el-col>
     </el-row>
 
@@ -10,7 +11,9 @@
       <el-col :span="24" class="publicWalletP"> 
         <section class="publicWalletH">
           <section class="publicWalletHList">
-            <router-link to="/wallet" class="publicWalletHListIcon">
+            <router-link :to="{name: 'wallet', 
+            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletBalance}}" 
+            class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
             <span class="publicWalletHTit">Transaction Details</span>
@@ -76,13 +79,20 @@ export default {
   data () {
     return {
       detailsImg: successImg,
-      detailsMoney: '+0.00000001 SEC',
-      detailsNumber: '0x8eaa3534j3o4u937jof97r98dfe0wrewjroei0fe8r0ew343403806e0ad730',
-      detailsBlock: '01',
-      detailsTime: '2018/11/08 21:03 UTC',
-      detailsBeneficiary: '0x80863e630c664c8761c71a8a9a5bccfaf008e33f2e04b1c4d76f61dd38b43832',
-      detailsSending: '0x2c7ccfe69c645cc1362f35038a8beb5f843598842084c105adb4df1ca85622fb',
-      detailsCost: '8.89729807 sec',
+      privateKey: this.$route.query.privateKey,
+      publicKey: this.$route.query.publicKey,
+      walletAddress: this.$route.query.walletAddress,
+      walletBalance: this.$route.query.walletBalance,
+      walletsArr: this.$route.query.walletsArr,
+      walletPwd: this.$route.query.walletPwd,
+      walletName: this.$route.query.walletName,
+      detailsMoney: this.$route.query.detailsMoney,
+      detailsNumber: this.$route.query.detailsNumber,
+      detailsBlock: this.$route.query.detailsBlock,
+      detailsTime: this.$route.query.detailsTime,
+      detailsBeneficiary: this.$route.query.detailsBeneficiary,
+      detailsSending: this.$route.query.detailsSending,
+      detailsCost: this.$route.query.detailsCost,
     }
   },
   components: {

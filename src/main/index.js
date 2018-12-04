@@ -27,13 +27,13 @@ function createWindow() {
    */
   updateChecker()
   mainWindow = new BrowserWindow({
-    height: 700,
+    height: 624,
     useContentSize: true,
-    width: 946,
-    transparent: false
-    //frame: false
+    width: 944,
+    transparent: false,
+    frame: true
   })
-  mainWindow.setResizable(true)
+  mainWindow.setResizable(false)
 
   if (process.platform === 'darwin') {
     const template = [{

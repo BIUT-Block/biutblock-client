@@ -2570,13 +2570,13 @@ function createWindow() {
    */
   Object(__WEBPACK_IMPORTED_MODULE_2__updateChecker_js__["a" /* default */])();
   mainWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
-    height: 700,
+    height: 624,
     useContentSize: true,
-    width: 946,
-    transparent: false
-    //frame: false
+    width: 944,
+    transparent: false,
+    frame: true
   });
-  mainWindow.setResizable(true);
+  mainWindow.setResizable(false);
 
   if (process.platform === 'darwin') {
     const template = [{

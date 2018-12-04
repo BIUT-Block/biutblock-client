@@ -319,6 +319,8 @@ export default {
       this.mainCntTab2 = false;
       this.btn = "btn";
       this.btn2 = "btn2";
+      let walletOrd = (this.$route.query.walletsArr.length + 1).toString()
+      this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
     }
     if (this.$route.query.id === "2") {
       this.returnPage = "/backup";
@@ -327,7 +329,7 @@ export default {
       this.btn = "btn2";
       this.btn2 = "btn";
     }
-    this.walletPwd = this.$route.query.walletPwd
+    this.walletPwd = this.$route.query.walletPwd;
   }
 };
 </script>
