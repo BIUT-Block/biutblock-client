@@ -37,6 +37,11 @@ export default new Router({
           component: require('@/pages/wallet/recordsDetails').default
         },
         {
+          path: '/walletDetails',
+          name: 'walletDetails',
+          component: require('@/pages/wallet/walletDetails').default
+        },        
+        {
           path: '/transfer',
           name: 'transfer',
           component: require('@/pages/wallet/transfer').default

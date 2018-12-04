@@ -22,9 +22,9 @@
           
           <section class="transferCnt">
 
-            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address"></input>
+            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress"></input>
 
-            <el-input v-model="amount"  maxlength="10" placeholder="transfer amount" class="ipt">
+            <el-input v-model="amount"  maxlength="10" placeholder="transfer amount" class="ipt" @focusout.native="isNumber">
               <template slot="append">SEC</template>
             </el-input>
 
@@ -140,6 +140,33 @@ export default {
     
   },
   methods: {
+    isNumber (evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if(this.amount === "") {
+        return true
+      }
+      if (!/^[0-9.]+$/i.test(this.amount)) {
+        alert("输入非法字符")
+      } else if (parseFloat(this.amount)>this.walletMoney) {
+        alert("转账金额不能超过总金额")
+      } else {
+        return true;
+      }
+    },
+    isAddress (evt) {
+      if(this.address === "") {
+        return true
+      }
+      if (!/^[a-z0-9]+$/.test(this.address)) {
+        alert("转账地址应由小写字母及数字组成")
+      } else if (this.address.length !== 40) {
+        alert("转账地址长度应为40位")
+      }
+      else {
+        return true;
+      }
+    },
     allMoneyFrom () {
       this.amount = this.allMoney
     },
@@ -198,7 +225,7 @@ export default {
   },
   computed: {
     publicBtnAcitve () {
-      return (this.address.length > 39 && this.amount > 0 && this.remarks.length > 0) ? true : false
+      return (this.address.length > 39 && this.amount > 0) ? true : false
     }
   },
   components: {
