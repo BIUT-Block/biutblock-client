@@ -34,8 +34,8 @@
             <p>private key. If you lose this file, you will lose the assets in your wallet.</p>
           </section>
 
-          <section class="mainCntList">
-            <div v-for="wordsLine in englishWords" :key="wordsLine.index">
+          <section class="mainCntList" id="englishWordsList">
+            <div v-for="wordsLine in englishWords" :key="wordsLine.index" >
               <ul>
                 <li class="iptTxt">{{wordsLine[0]}}</li>
                 <li class="iptTxt">{{wordsLine[1]}}</li>
@@ -58,7 +58,7 @@
           </section>
 
           <section class="publicCntBtn">
-            <button class="publicBtn publicBtnAcitve" @click="enterWallet">Backed up, enter the wallet</button>
+            <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
           </section>
           
           <el-dialog
@@ -68,23 +68,25 @@
             :show-close=false
             :closeOnClickModal = false
             center>
-            <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">Picture file(*.png)</span> 
-            Export files as images</p>
+            <div id="selectFileType">
+              <p class="downTxt"><input type="radio" name="downImg" id="png"><span class="downTxt2">Picture file(*.png)</span> 
+              Export files as images</p>
 
-            <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">JPG file(*.jpg)</span> 
-            Export to JPG file format (default is white background)</p>
+              <p class="downTxt"><input type="radio" name="downImg" id="jpg"><span class="downTxt2">JPG file(*.jpg)</span> 
+              Export to JPG file format (default is white background)</p>
 
-            <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
-            Export to PDF file format</p>
+              <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
+              Export to PDF file format</p>
 
-            <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
-            Export HD PDF files (only partial font styles are supported)</p>
+              <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
+              Export HD PDF files (only partial font styles are supported)</p>
 
-            <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">POS file(*.pos)</span> 
-            Contains image and graphic structure definitions (can be imported)</p>
+              <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">POS file(*.pos)</span> 
+              Contains image and graphic structure definitions (can be imported)</p>
 
-            <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">SVG file(*.svg)</span> 
-            Export to SVG vector graphics</p>
+              <p class="downTxt"><input type="radio" name="downImg" id="svg"><span class="downTxt2">SVG file(*.svg)</span> 
+              Export to SVG vector graphics</p>
+            </div>
             <span slot="footer" class="dialog-footer">
               <button class="publicBtn publicBtnAcitve" @click="saveFile">determine</button>
               <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
@@ -120,8 +122,10 @@
 
 <script>
 import Clipboard from 'clipboard'
-const CryptoJS = require("crypto-js");
+import domtoimage from 'dom-to-image'
+const CryptoJS = require("crypto-js")
 const fs = require("fs")
+const FileSaver = require('file-saver')
 export default {
   name: '',
   data() {
@@ -136,7 +140,8 @@ export default {
       walletPwd: "",
       walletName: "",
       walletsArr: '',
-      walletBalance: ""
+      walletBalance: "",
+      alreadySaved: false
     }
   },
   methods: {
@@ -185,6 +190,9 @@ export default {
           if(err) {
             return
           }
+          this._createImageFile(dirPath)
+          
+          
         })
       } else {
         fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
@@ -209,10 +217,26 @@ export default {
             if(err) {
               return
             }
+            this._saveWalletSuccess(filePath)
+
           })
         } catch(e) {
           return
         }
+    },
+    _createImageFile (filePath) {
+      let domSection = document.getElementById('englishWordsList')
+      if (document.getElementById('png').checked) {
+        domtoimage.toBlob(domSection)
+                  .then( (blob) => {
+                      FileSaver.saveAs(blob, 'englishWords.png');
+                      this._saveWalletSuccess(filePath)
+                  })
+      }
+    },
+    _saveWalletSuccess (filePath) {
+      this.alreadySaved = true
+      alert(`Already saved png file and the secure file would be saved in ${filePath}`)
     },
     enterWallet() {
       this.dialogVisible = true
@@ -271,6 +295,11 @@ export default {
     }
     this.walletPwd = this.$route.query.walletPwd
   
+  },
+  computed: {
+    alreadySaved () {
+      return this.alreadySaved
+    }
   }
 }
 </script>

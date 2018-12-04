@@ -98,8 +98,8 @@ export default {
       }
       console.log(response)
       this.ipAddress = response.result.ipv4
-      this.systemTime = new Date(response.result.time*1000)
-      this.localTime = new Date()
+      this.systemTime = new Date(response.result.time*1000).toString()
+      this.localTime = new Date().toString()
     })
   },
   methods: {

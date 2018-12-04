@@ -124,7 +124,7 @@ export default {
         fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.name))
       } else {
         if (this.confirmP != this.password) {
-          alert("两次密码输入不一致，请重新输入");
+          alert("The input passwords are not same. Please enter again.");
           return;
         } else {
           let keys = SECUtil.generateSecKeys();

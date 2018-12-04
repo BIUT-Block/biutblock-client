@@ -34,7 +34,7 @@
           <p class="mt50 pointerTxt" @click="dialogVisible = true">
             <img src="../../assets/image/icon_set.png" alt="">
           </p>
-          <p class="copyright">V1 . 0 . 0</p>
+          <p class="copyright">V{{appVersion}}</p>
         </section>
         
         <section class="containerCnt" >
@@ -67,7 +67,7 @@
               <section class="versionCnt">
                 <p>Version Information</p>
                 <p>|</p>
-                <p>SEC wallet 1.0.0</p>
+                <p>SEC wallet {{appVersion}}</p>
               </section>
             </el-tab-pane>
           </el-tabs>
@@ -81,18 +81,21 @@
 
 <script>
 const {ipcRenderer: ipc} = require('electron')
+const packageInfo = require("../../../../package.json")
+
 export default {
   name: '',
   data () {
     return {
       tabPosition: 'left',
       dialogVisible: false,
+      appVersion: '',
       options: [{
           value: 'system',
           label: 'Follow system'
         }, {
           value: 'cn',
-          label: '中文'
+          label: '中文(敬请期待)'
         }, {
           value: 'English',
           label: 'English'
@@ -108,7 +111,7 @@ export default {
     }
   },
   created () {
-    console.log(this.$route.query)
+    this.appVersion = packageInfo.version
   },
   methods: {
     exitApp: function() {

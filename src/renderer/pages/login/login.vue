@@ -13,11 +13,11 @@
                 <i class="el-icon-close icon_nav" @click="exitApp"></i>
               </section>
               <h1 class="loginTit">Private key login</h1>
-              <input v-model="loginValue"  maxlength="64" class="loginIpt" placeholder="Please enter the private key"></input>
+              <input v-model="loginValue"  maxlength="64" class="loginIpt" placeholder="Please enter the password"></input>
               <button type="button" class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="loginBtn">Log in</button>
 
               <section class="errorCnt">
-                <p v-if="errorTxt" class="errorTxt">Wrong private key format</p>
+                <p v-if="errorTxt" class="errorTxt">Wrong password</p>
               </section>
 
               <p class="loginTxt">No wallet? <router-link to="create?id=1" tag="span" class="TxtColor pointerTxt">Click here to create a new</router-link></p>
