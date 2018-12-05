@@ -2,7 +2,7 @@
   <el-container class="home">
     <el-row class="publicNav">
       <el-col :span="4">
-        <router-link to="/">
+        <router-link to="/wallet">
           <span class="homeHNav">
             <img src="../../assets/image/logo.png" alt="">
           </span>
@@ -21,7 +21,7 @@
       <el-col :span="24" class="homeList">
         <section class="homeLeft">
           
-          <router-link 
+          <!-- <router-link 
             :to="{name: 'wallet', query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" 
             tag="p" class="mt50 pointerTxt">
             <img src="../../assets/image/icon_wallet.png" alt="">
@@ -33,7 +33,19 @@
 
           <p class="mt50 pointerTxt" @click="dialogVisible = true">
             <img src="../../assets/image/icon_set.png" alt="">
+          </p> -->
+
+          <p  @click="walletListFrom" class="mt50 pointerTxt">
+            <img :src="icon_wallet" alt="">
           </p>
+          <p @click="nodeListFrom"  class="mt50 pointerTxt">
+            <img :src="icon_node" alt="">
+          </p>
+          <p class="mt50 pointerTxt" @click="setListFrom">
+            <img :src="icon_set" alt="">
+          </p>
+
+
           <p class="copyright">V{{appVersion}}</p>
         </section>
         
@@ -83,6 +95,13 @@
 const {ipcRenderer: ipc} = require('electron')
 const packageInfo = require("../../../../package.json")
 
+import icon_wallet from '../../assets/image/icon_wallet.png'
+import icon_node from '../../assets/image/icon_node.png'
+import icon_set from '../../assets/image/icon_set.png'
+import icon_wallet_active from '../../assets/image/icon_wallet_active.png'
+import icon_node_active from '../../assets/image/icon_node_active.png'
+import icon_set_active from '../../assets/image/icon_set_active.png'
+
 export default {
   name: '',
   data () {
@@ -107,7 +126,11 @@ export default {
       walletMoney: this.$route.query.walletBalance,
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
-      walletName: this.$route.query.walletName
+      walletName: this.$route.query.walletName,
+
+      icon_wallet: icon_wallet_active,
+      icon_node: icon_node,
+      icon_set: icon_set,
     }
   },
   created () {
@@ -122,6 +145,27 @@ export default {
     },
     maximizeApp: function() {
       ipc.send('max')
+    },
+    walletListFrom () {
+      this.$router.push({name: 'wallet', 
+            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
+            walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd,
+            walletPublicKey: this.publicKey, walletBalance: this.walletMoney}})
+      this.icon_wallet = icon_wallet_active
+      this.icon_node = icon_node
+      this.icon_set = icon_set
+    },
+    nodeListFrom () {
+      this.$router.push({ path: '/nodeSec' })
+      this.icon_wallet = icon_wallet
+      this.icon_node = icon_node_active
+      this.icon_set = icon_set
+    },
+    setListFrom () {
+      this.dialogVisible = true
+      this.icon_wallet = icon_wallet
+      this.icon_node = icon_node
+      this.icon_set = icon_set_active
     }
   }
 }

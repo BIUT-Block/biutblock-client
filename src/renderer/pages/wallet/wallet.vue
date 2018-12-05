@@ -78,14 +78,16 @@
               </ul>
           </section>
         </section>
-
+        
         <el-dialog
-          title=""
+          title="prompt"
           :visible.sync="centerDialogVisible"
           width="432px"
-          :show-close=false
+          :show-close = true
+          :closeOnClickModal = false
+          top="30vh"
           center>
-          <p style="color: #657292;text-align: center;">
+          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             Whether to delete the wallet
           </p>
           <span slot="footer" class="dialog-footer">
@@ -93,6 +95,7 @@
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
+
       </el-col>
     </el-row>
   </el-container>
@@ -109,7 +112,7 @@ export default {
   name: "",
   data() {
     return {
-      tradingCnt: false,
+      tradingCnt: false, //如果没有交易记录的话 true  有交易数据就设置为 false
       positionBtnH: false,
       centerDialogVisible: false,
       publicKey: "",
@@ -470,8 +473,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  height: 55px;
+  height: 40px;
   border-bottom: 1px solid #c8d1da;
+  color:#939CB2;
 }
 
 .walletListCnt {
@@ -502,23 +506,27 @@ export default {
 .walletAddressTxt {
   margin-left: 24px;
   color: #657292;
+  margin-bottom: 16px;
 }
 
 .deleteBtn {
   width: 100%;
   border: none;
-  background: #242e49;
-  color: #fff;
-  border-radius: 0;
+  background: #939CB2;
+  color: rgba(255,255,255, 0.7);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 }
 .detailsBtn {
   width: 100%;
   border: none;
-  border-top: 1px solid #fff;
   border-radius: 0;
+  border-top: 1px solid rgba(255,255,255, 0.3);
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
   margin-left: 0;
-  color: #fff;
-  background: #242e49;
+  color: rgba(255,255,255, 0.7);
+  background: #939CB2;
 }
 
 .walletMaginT {
@@ -538,13 +546,14 @@ export default {
   height: 132px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   background: #fff;
 }
 .walletHeaderList {
   display: flex;
   justify-content: space-between;
-  margin: 0 24px;
+  margin: 16px 24px 0;
+  color:#657292;
 }
 
 .walletNoneCnt {
@@ -564,10 +573,11 @@ export default {
 
 ul {
   width: 560px;
+  height: 300px;
   margin: 0 auto;
 }
 ul li {
-  height: 80px;
+  height: 74px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -578,7 +588,7 @@ ul li {
 ul li .radiusCnt {
   display: flex;
   align-items: center;
-  width: 20px;
+  width: 27px;
 }
 .radiusIcon {
   width: 6px;
@@ -600,6 +610,7 @@ ul li .addressMt {
   justify-content: start;
   align-items: start;
   flex: 1;
+  margin-top:6px;
 }
 
 ul li .moneyCnt {
@@ -609,6 +620,13 @@ ul li .moneyCnt {
   align-items: flex-end;
   width: 100px;
 }
+.clickMore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #657292;
+  height: 42px;
+}
 
 .positionBtn {
   position: absolute;
@@ -616,7 +634,13 @@ ul li .moneyCnt {
   right: 0;
   width: 138px;
   height: 72px;
-  border-radius: 0;
-  background: #242e49;
+  border-radius: 2px;
+  background: #939CB2;
 }
+
+section >>> .el-dialog__title {color: #939CB2}
+section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid #C8D1DA;}
+section >>> .el-dialog--center {height: 288px;}
+section >>> .el-dialog__body {padding-top: 0px;padding-bottom: 10px;}
+section >>> .el-dialog__footer {padding: 0;}
 </style>

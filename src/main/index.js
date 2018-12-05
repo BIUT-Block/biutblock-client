@@ -25,7 +25,7 @@ function createWindow() {
   /**
    * Initial window options
    */
-  updateChecker()
+  //updateChecker()
   mainWindow = new BrowserWindow({
     height: 624,
     useContentSize: true,
@@ -33,7 +33,7 @@ function createWindow() {
     transparent: false,
     frame: true
   })
-  mainWindow.setResizable(false)
+  mainWindow.setResizable(true)
 
   if (process.platform === 'darwin') {
     const template = [{

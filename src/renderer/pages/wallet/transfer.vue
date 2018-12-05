@@ -22,7 +22,7 @@
           
           <section class="transferCnt">
 
-            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress"></input>
+            <input class="ipt" v-model="address"  style="margin-top:70px" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress"></input>
 
             <el-input v-model="amount"  maxlength="10" placeholder="transfer amount" class="ipt" @focusout.native="isNumber">
               <template slot="append">SEC</template>
@@ -53,8 +53,8 @@
         <el-dialog
           title="Please confirm your transfer information"
           :visible.sync="centerDialogVisible"
-          width="512px"
-          :show-close=false
+          width="432px"
+          top="30vh"
           center>
           <section class="transferMockList">
             <section>
@@ -63,7 +63,7 @@
             </section>
             <section>
               <span class="transferMockTxt">Collection address</span>
-              {{address.replace(/(.{10}).+(.{10})/,'$1...$2')}}
+              {{address}}
             </section>
 
             <section>
@@ -81,24 +81,24 @@
               {{amount}} SEC
             </section>
           </section>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="determineTransfer">determine</button>
+          <span slot="footer" class="dialog-footer" style="margin-top:28px">
+            <button class="publicBtn publicBtnAcitve" @click="determineTransferGo">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
 
        <el-dialog
-          title=""
+          title="wallet 01"
           :visible.sync="dialogVisible"
           width="432px"
-          :show-close=false
+          top="30vh"
           center>
           <section class="transferMockList">
             <p style="word-break:break-all;">{{address}}</p>
-            <input type="password" v-model="password" class="passwordIpt">
+            <input type="password" v-model="password" placeholder="Please enter your password" class="passwordIpt">
           </section>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="determineTransfer">determine</button>
+            <button class="publicBtn" :disabled="determineBtn" :class="determineBtn?'publicBtnAcitve':''" @click="determineTransfer">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="dialogVisible = false">cancel</button>
           </span>
         </el-dialog>
@@ -133,7 +133,7 @@ export default {
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
-      password: ''
+      password: '' //转账密码
     }
   },
   created() {
@@ -171,15 +171,19 @@ export default {
       this.amount = this.allMoney
     },
     transferFrom () {
-      if (Number(this.amount) >= Number(this.walletMoney)) {
+      if (Number(this.amount) > Number(this.walletMoney)) {
         alert("转账金额不能超过总金额")
         return
       } else {
         this.centerDialogVisible = true
       }
     },
+    determineTransferGo () {
+      this.centerDialogVisible = false
+      this.dialogVisible = true
+    },
     determineTransfer () {
-      //转账功能
+      //转账功能   转账的结果 给个 alert提示
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
         alert("转账金额不能超过总金额")
@@ -218,6 +222,7 @@ export default {
             if(response.result.status === '1') {
               this.dialogVisible = false
               this.centerDialogVisible = false
+              alert('Your transfer is now in pending.')
             }
           })
       }
@@ -226,6 +231,9 @@ export default {
   computed: {
     publicBtnAcitve () {
       return (this.address.length > 39 && this.amount > 0) ? true : false
+    },
+    determineBtn () {
+      return this.password.length > 7 ? true : false
     }
   },
   components: {
@@ -235,7 +243,9 @@ export default {
 </script>
 
 <style scoped>
-.passwordIpt {width: 300px;height: 36px;color: #C8D1DA;border:1px solid #C8D1DA;outline: none;}
+.passwordIpt {width: 300px;height: 36px;color: #C8D1DA;border:1px solid #C8D1DA;outline: none;
+margin:20px;text-indent: 8px;}
+
 .ipt {width:300px;height:36px;margin-bottom: 8px;border-radius: 2px;
   border: 1px solid #C8D1DA;outline: none;padding-left:8px;}
 
@@ -249,7 +259,8 @@ export default {
 
 
 .transferMockList {height: 110px;display: flex;justify-content:space-between;flex-direction: column;
-  color: #657292;}
+  color: #657292;margin-top:20px;}
+.transferDetermine {display: flex;justify-content:center;flex-direction: column;align-items: center;}
 .transferMockTxt {display:inline-block;width: 120px;color:#C8D1DA;text-align:right;margin-right:20px;} 
 
 
@@ -257,5 +268,13 @@ section >>> .el-slider__bar {background-color: #00D6B2}
 section >>> .el-slider__button {border-color: #00D6B2;}
 
 section >>> .el-input-group__append {background: #fff;color: #657292;border:none;}
-section >>> .el-input__inner {border: none;padding-left:0;}
+section >>> .el-input__inner {border: none;padding-left:0px;}
+
+
+section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
+section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid #C6CFD8;}
+section >>> .el-dialog--center {height: 288px;}
+section >>> .el-dialog__body {padding:25px 0 28px 18px;}
+section >>> .el-dialog__footer {padding: 0;}
+
 </style>

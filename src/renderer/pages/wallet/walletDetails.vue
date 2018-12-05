@@ -19,7 +19,7 @@
             <span class="publicWalletHTit">Wallet Details</span>
           </section>
 
-          <section class="recordsCnt">
+          <section class="recordsCnt" style="margin-top:70px;">
             <figure>
               <img :src="detailsImg" alt="">
             </figure>
@@ -31,7 +31,6 @@
                <span class="detailsListLabel">wallet name</span>
                <span class="detailsListTxt">{{walletName}}</span>                  
              </section>
-
              <section>
                <span class="detailsListLabel">wallet address</span>
                <span class="detailsListTxt">{{walletAddress}}</span>               
@@ -73,8 +72,10 @@ export default {
 </script>
 
 <style scoped>
-.detailsList {height: 174px;display: flex;justify-content: space-between;flex-direction: column;
-  margin:0 14px;color: #939CB2}
+.detailsList {height: 174px;display: flex;flex-direction: column;margin:0 14px;color: #939CB2}
+
+.detailsList section{margin-top:10px;}
+
 
 .recordsCnt {height: 170px;display: flex;justify-content: start;flex-direction: column;align-items: center;}
 .recordsTit {font-size:18px;font-weight:400;color: #242E49;}

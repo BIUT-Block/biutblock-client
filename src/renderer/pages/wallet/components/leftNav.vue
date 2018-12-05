@@ -7,7 +7,7 @@
             <li v-for="(item,index) in walletsArr" 
               :index="item.id"
               :class="[colorArr[index]?'color'+index%2:'',colorBorderArr[index%4]]"
-              @click="tabWallet(item)">
+              @click="tabWallet(item,index)">
                 <p>{{item.walletName}}</p>
                 <p style="margin-top:5px">{{item.walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
             </li>
@@ -16,7 +16,7 @@
                 <p style="margin-top:5px">{{walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
             </li> -->
           </ul>
-          <button class="btn" @click="createWallet">+ Create a wallet</button>
+          <button class="btn pointerTxt" @click="createWallet">+ Create a wallet</button>
         </section>
       </el-col>
     </el-row>
@@ -30,28 +30,8 @@ export default {
   props: ['walletName', 'walletAddress', 'walletsArr', 'walletPwd', 'walletPrivateKey', 'walletPublicKey', 'walletBalance'],
   data () {
     return {
-      colorArr: [false, false],
+      colorArr: [true, false],
       colorBorderArr: ['borderColor1','borderColor2','borderColor3','borderColor4'],
-      walletList:[{
-        id: '01',
-        walletName: 'Wallet 01',
-        walletAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      },
-      {
-        id: '02',
-        walletName: 'Wallet 01',
-        walletAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      },
-      {
-        id: '03',
-        walletName: 'Wallet 01',
-        walletAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      },
-      {
-        id: '04',
-        walletName: 'Wallet 01',
-        walletAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      }]
     }
   },
   methods: {
@@ -70,10 +50,10 @@ export default {
         }
       })
     },
-    tabWallet (item) {
-      //const res = [false, false]
-      //res[index] = !res[index]
-      //this.colorArr = res
+    tabWallet (item,index) {
+      const res = [false, false]
+      res[index] = !res[index]
+      this.colorArr = res
       
       console.log(item) //需要的参数可以通过方法 拿
       if (this.$route.name === 'wallet') {
