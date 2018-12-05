@@ -1,6 +1,6 @@
 <template>
   <el-container class="layoutCnt">
-    <main style="width: 700px;height: 600px;border:1px solid #ccc;">
+    <main class="publicContent">
       <el-row class="publicNav">
         <el-col :span="6">
           <router-link :to="{name: 'create', query: {
@@ -26,49 +26,47 @@
         </el-col>
       </el-row>
 
+
       <el-row class="backupCnt">
         <el-col :span="24" class="mainCnt">
           <section class="mainCntTxt">
-            <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" @click="centerDialogVisible = true">Save as...</span></p>
-            <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a mnemonic or</p>
-            <p>private key. If you lose this file, you will lose the assets in your wallet.</p>
+            <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" style="margin-left:17px;" @click="centerDialogVisible = true">Save as...</span></p>
+            <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
+            <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
           </section>
 
           <section class="mainCntList">
-            <section id="englishWordsList">
-              <div v-for="wordsLine in englishWords" :key="wordsLine.index" >
-                <ul>
+            <section class="wordsLine" id="englishWordsList">
+                <ul v-for="wordsLine in englishWords" :key="wordsLine.index">
                   <li class="iptTxt">{{wordsLine[0]}}</li>
                   <li class="iptTxt">{{wordsLine[1]}}</li>
                   <li class="iptTxt">{{wordsLine[2]}}</li>
                   <li class="iptTxt">{{wordsLine[3]}}</li>
                 </ul>
-              </div>
             </section>
-            <span class="line"></span>
-
-            <section style="display: flex;justify-content: space-between;">
+            <section style="display: flex;justify-content: space-between;padding:0 8px;margin-top:32px;">
               <figure>
                 <img src="../../assets/image/backupImg.png" alt="">
               </figure>
-              <section>
+              <section style="width:370px;">
                 <p class="copyTxt">Private key</p>
-                <p class="copyTxt2" id="testTxt">{{privateKey}}</p>
+                <p class="copyTxt2" id="copyPrivateKey">{{privateKey}}</p>
               </section>
-              <button data-clipboard-target="#testTxt" type="button" class="copyBtn" @click="copyTxtCnt">Copy</button>
+              <button data-clipboard-target="#copyPrivateKey" type="button" class="copyBtn" @click="copyTxtCnt">copy</button>
             </section>
+
           </section>
 
           <section class="publicCntBtn">
             <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
           </section>
           
-          <el-dialog
+         <el-dialog
             title="Download format"
             :visible.sync="centerDialogVisible"
-            width="530px"
-            :show-close=false
+            width="482px"
             :closeOnClickModal = false
+            top="30vh"
             center>
             <div id="selectFileType">
               <p class="downTxt"><input type="radio" name="downImg" id="png"><span class="downTxt2">Picture file(*.png)</span> 
@@ -89,20 +87,21 @@
               <!-- <p class="downTxt"><input type="radio" name="downImg" id="svg"><span class="downTxt2">SVG file(*.svg)</span> 
               Export to SVG vector graphics</p> -->
             </div>
+
             <span slot="footer" class="dialog-footer">
               <button class="publicBtn publicBtnAcitve" @click="saveFile">determine</button>
-              <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
             </span>
           </el-dialog>
 
           <el-dialog
-            title=""
+            title="prompt"
             :visible.sync="dialogVisible"
             width="432px"
-            :show-close=false
+            :show-close = true
             :closeOnClickModal = false
+            top="30vh"
             center>
-            <p class="agreementTxt">
+            <p class="agreementTxt" style="margin-top:20px;">
               Be sure to back up your mnemonics 
             </p>
             <p class="agreementTxt">
@@ -112,9 +111,10 @@
               are lost,you will permanently lose your assets.
             </p>
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" @click="dialogVisibleFrom">Enter the wallet</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:50px" @click="dialogVisibleFrom">Enter the wallet</button>
             </span>
           </el-dialog>
+
         </el-col>
       </el-row>
     </main>
@@ -148,19 +148,17 @@ export default {
   },
   methods: {
     copyTxtCnt () {
-        var clipboard = new Clipboard('.copyBtn')
+       var clipboard = new Clipboard('.copyBtn')
         clipboard.on('success', e => {
-          this.$alert('复制成功', '温馨提示', {
-            confirmButtonText: '确定',
-            callback: action => {
-              
-            }
+          this.$alert('Copy success', 'Warm prompt', {
+            confirmButtonText: 'determine',
+            callback: action => {}
           });
           clipboard.destroy()
         })
         clipboard.on('error', e => {
-          this.$alert('该浏览器不支持自动复制', '温馨提示', {
-            confirmButtonText: '确定',
+          this.$alert('Automatic replication is not supported', 'Warm prompt', {
+            confirmButtonText: 'determine',
             callback: action => {}
           });
           clipboard.destroy()
@@ -325,31 +323,41 @@ export default {
 </script>
 
 <style scoped>
-.layoutCnt {background: #fff;display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
-.mainCnt {background: #FFFFFF;width:570px;}
+.layoutCnt {display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
+.mainCnt {background: #FFFFFF;width:492px;}
 .backupCnt {display: flex;justify-content: center;flex: 1;}
 
-.mainCntList {width: 500px;margin: 16px auto 32px;}
+.mainCntList {width: 492px;margin: 16px auto 41px;}
 
 input[type="radio"] {vertical-align: middle;}
-.line {display: block;width:500px;height: 1px;border-top: 1px dashed #C8D1DA;margin: 17px auto 14px;}
 
-.mainCntTxt {width: 570px;color: #939CB2;text-align: center;line-height: 1.5;}
+/* .line {display: block;width:492px;height: 1px;border-top: 1px dashed #C8D1DA;margin: 17px auto 14px;} */
+
+.mainCntTxt {color: #939CB2;text-align: center;margin: 36px 0 15px;width:100%;}
+.mainCntTxt p {margin-top: 6px;}
 
 .downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 0;}
 .downTxt2 {font-size: 10ox;color: #657292;margin:0 5px;}
 
-.agreementTxt {color: #FF8DB2;font-size: 16px;text-align: center;margin: 10px 0;}
+.agreementTxt {font-size: 14px;text-align: center;margin: 10px 0;color:#939CB2}
 
-ul {display: flex;}
-ul .iptTxt {width: 116px;height: 36px;border: 1px solid #C8D1DA;color: #C8D1DA;line-height: 36px;text-align: center;margin-top: 12px;margin-right: 12px;}
-ul .iptTxt:last-child {margin-right: 0;}
+ul {display: flex;height: 20px;}
+ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
 
 
-.copyBtn {outline:none;width: 116px;height: 36px;border: 1px solid #C8D1DA;background:#fff;color: #C8D1DA;}
+
+.copyBtn {outline:none;width: 42px;height: 32px;background:#fff;color: #00D6B2;border: 1px solid #00D6B2;}
+.copyBtnActive {background: #fff;color: #657292;border: 1px solid #C8D1DA;}
 .copyBtn:hover {cursor: pointer;}
-.copyTxt {font-size: 12px;color: #657292;}
-.copyTxt2 {font-size: 14px;color: #657292;margin-top:10px;}
+.copyTxt {color: #657292;}
+.copyTxt2 {color: #657292;margin-top:10px;word-wrap:break-word;word-break:break-all;}
 
-section >>> .el-dialog__title {color: #939CB2}
+.wordsLine {width:466px;height:71px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
+display: flex;flex-wrap: wrap;}
+
+section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
+section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid #C6CFD8;}
+section >>> .el-dialog--center {height: 288px;}
+section >>> .el-dialog__body {padding:25px 0 10px 18px;}
+section >>> .el-dialog__footer {padding: 0;}
 </style>

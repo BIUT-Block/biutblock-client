@@ -13,17 +13,19 @@
 
           <section class="publicWalletHList">
             <router-link :to="{name: 'wallet', 
-            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletPublicKey: this.publicKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletBalance: this.walletMoney}}" class="publicWalletHListIcon">
+            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
+            walletPublicKey: this.publicKey, walletName:this.walletName, walletsArr: this.walletsArr,
+             walletPwd: this.walletPwd, walletBalance: this.walletMoney}}" class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
             <span class="publicWalletHTit">Receipt</span>
           </section>
-
+          
           <section class="receiptCnt">
             <p class="receiptCntAddress" id="address">
               {{walletAddress}}
             </p>
-            <el-input v-model="money" id="money" placeholder="Payee wallet address" class="ipt" @keypress.native="isNumber">
+            <el-input v-model="money" id="money" placeholder="Payee wallet address" class="moneyIpt" @keypress.native="isNumber">
               <template slot="append">SEC</template>
             </el-input>
             
@@ -31,7 +33,7 @@
               <img src="../../assets/image/receiptImg.png" alt="">
             </figure> -->
 
-            <qr-code :value="walletAddress,money" :size="170">
+            <qr-code :value="walletAddress,money" :size="170" class="receiptCntImg">
             </qr-code>
     
             <button data-clipboard-target="#address" class="publicBtn publicBtnAcitve" @click="copyCnt">Copy payment address</button>
@@ -65,19 +67,18 @@ export default {
     copyCnt () {
       var clipboard = new Clipboard('.publicBtn')
         clipboard.on('success', e => {
-          this.$alert('复制成功', '温馨提示', {
-            confirmButtonText: '确定',
-            callback: action => {
-              
-            }
+          this.$alert('Copy success', 'Warm prompt', {
+            confirmButtonText: 'determine',
+            callback: action => {}
           });
           clipboard.destroy()
         })
         clipboard.on('error', e => {
-          this.$alert('该浏览器不支持自动复制', '温馨提示', {
-            confirmButtonText: '确定',
+          this.$alert('Automatic replication is not supported', 'Warm prompt', {
+            confirmButtonText: 'determine',
             callback: action => {}
           });
+
           clipboard.destroy()
         })
     },
@@ -99,13 +100,14 @@ export default {
 </script>
 
 <style scoped>
-.ipt {width:434px;height:36px;margin-bottom: 8px;}
+.moneyIpt {width:434px;height:36px;margin-bottom: 8px;}
 
 .receiptCnt {display: flex;justify-content: center;flex-direction: column;align-items: center;flex: 1;}
-.receiptCntAddress {margin-bottom: 11px;color: #657292;}
+.receiptCntAddress {margin:75px 0 11px;color: #657292;text-align: left;width: 434px;}
 
 .receiptCntImg {margin: 36px auto;}
 
-section >>> .el-input-group__append {background: #fff;color: #657292;}
-section >>> .el-input__inner {border-right: none}
+section >>> .el-input-group__append {background: #fff;color: #657292;border-color:#c8d1da;}
+section >>> .el-input__inner {border-right: none;border-color:#c8d1da;}
+section >>> .el-input__inner:focus {border-color: #c8d1da;}
 </style>

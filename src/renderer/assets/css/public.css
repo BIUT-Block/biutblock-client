@@ -2,6 +2,7 @@ html {font-family: "PingFang SC",Arial,sans-serif;font-size: 12px;}
 body,ul,p,figure {margin: 0;padding: 0;}
 ul li {list-style: none;}
 
+.publicContent {width: 640px;height: 432px;border:1px solid #C8D1DA;}
 
 .TxtColor {color: #00D6B2}
 .TxtColor2 {color: #FF8DB2}
@@ -17,28 +18,33 @@ ul li {list-style: none;}
 
 .publicBtn:hover {cursor: pointer;}
 
-.publicNav {display: flex;height: 50px;align-items: center;}
+.publicNav {display: flex;height: 48px;align-items: center;border-bottom:1px solid #C8D1DA;}
+.publicHomeNav {display: flex;height: 60px;align-items: center;}
+
 .icon_nav{font-size: 18px;margin-left: 16px;color:#C8D1DA;}
 .icon_nav:hover {cursor: pointer;}
 .windowsCnt {display: flex;justify-content: center;align-items: center;}
 .amplification {display:inline-block;width:11px;height:11px;border:1px solid #C8D1DA;
   background: #fff;vertical-align:middle;margin-left:18px;border-radius: 0;}
-.navTit{text-align: center;font-size: 16px;color: #939CB2}
+.navTit{text-align: center;font-size: 16px;color: #657292}
 
 .publicWalletH {width: 606px;height: 532px;border-radius: 2px;background: #fff;margin-top: 24px;}
 .publicWalletHF {display: flex;flex-direction: column;}
-.publicWalletHTit {font-size: 14px;color: #939CB2;}
-.publicWalletHList {height: 64px; display: flex;align-items: center;}
-.publicWalletHListIcon {margin: 0 30px;}
+.publicWalletHList {height: 48px; display: flex;align-items: center;border-bottom:1px solid #C8D1DA;}
+.publicWalletHTit {font-size: 14px;color: #939CB2;flex:1;text-align: center;padding-right: 30px;}
+.publicWalletHListIcon {width:30px;height:16px;}
+
 
 .mt30 {margin-top: 32px;}
 .mt10 {margin-top: 10px;}
 .mt50 {margin-top: 55px;}
 
-input::-webkit-input-placeholder{ color:#C8D1DA;}
-input::-moz-placeholder{color:#C8D1DA;}
-input:-moz-placeholder{color:#C8D1DA;}
-input:-ms-input-placeholder{ color:#C8D1DA;}
+
+:-moz-placeholder {color: #C8D1DA; opacity:1; }
+::-moz-placeholder {color: #C8D1DA;opacity:1;}
+input:-ms-input-placeholder,textarea:-ms-input-placeholder {color: #C8D1DA;opacity:1;}
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color: #C8D1DA;opacity:1;}
+
 
 .publicWalletP {padding: 0 32px;background: #FAFAFA;}
 

@@ -8,7 +8,7 @@
           </router-link>
         </el-col>
         <el-col :span="12" class="navTit">
-          New wallet
+          {{navTit}}
         </el-col>
         <el-col :span="6" class="windowsCnt">
           <i class="el-icon-minus icon_nav"></i>
@@ -24,48 +24,65 @@
             <button @click="tab1" class="pointerTxt" :class="btn">Create a new wallet</button>
             <button @click="tab2" class="pointerTxt" :class="btn2">Mnemonic import wallet</button>
           </section>
-
+          
           <section v-show="mainCntTab1" class="mainCntTab1">
-            <p class="mainCntTab1Txt">Wallet name</p>
-            <input v-model="name" class="tabIpt" maxlength="10" placeholder="Please enter wallet name"></input>
-            <p class="mainCntTab1Txt">password</p>
-            <input type="password" v-model="password" maxlength="30" class="tabIpt" placeholder="8-30 characters, must contain at least 2 types of numbers,English letters, and special characters."></input>
-            <p class="mainCntTab1Txt">confirm password</p>
-            <input type="password" v-model="confirmP" maxlength="30" class="tabIpt" placeholder="Please confirm the password you entered"></input>
-            
-            <section class="publicCntBtn mt30">
+            <!-- <p class="mainCntTab1Txt">Wallet name</p> -->
+             <el-input
+              type="text"
+              placeholder="wallet name"
+              v-model="name"
+              maxlength="12"
+              clearable>
+            </el-input>
+            <section v-show="passCntList">
+              <!-- <p class="mainCntTab1Txt">password</p> -->
+              <el-input
+                type="password"
+                placeholder="password"
+                v-model="password"
+                maxlength="30"
+                clearable>
+              </el-input>
+              <!-- <p class="mainCntTab1Txt">confirm password</p> -->
+              <el-input
+                type="password"
+                placeholder="confirm password"
+                v-model="confirmP"
+                maxlength="30"
+                clearable>
+              </el-input>
+            </section>
+            <section class="publicCntBtn" style="margin-top:16px;">
               <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
             </section>
-
           </section>
 
           <section v-show="mainCntTab2" class="mainCntTab2">
-            <ul>
-              <li class="iptTxt"><input type="text" v-model="word1"></li>
-              <li class="iptTxt"><input type="text" v-model="word2"></li>
-              <li class="iptTxt"><input type="text" v-model="word3"></li>
-              <li class="iptTxt"><input type="text" v-model="word4"></li>
-            </ul>
-
-            <ul>
-              <li class="iptTxt"><input type="text" v-model="word5"></li>
-              <li class="iptTxt"><input type="text" v-model="word6"></li>
-              <li class="iptTxt"><input type="text" v-model="word7"></li>
-              <li class="iptTxt"><input type="text" v-model="word8"></li>
-            </ul>
-            <ul>
-             <li class="iptTxt"><input type="text" v-model="word9"></li>
-              <li class="iptTxt"><input type="text" v-model="word10"></li>
-              <li class="iptTxt"><input type="text" v-model="word11"></li>
-              <li class="iptTxt"><input type="text" v-model="word12"></li>
-            </ul>
-            <section class="publicCntBtn mt50">
+            <textarea name="" id="" cols="30" v-model="mnemonicTxt" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
+            <section class="publicCntBtn" style="margin-top:28px;">
               <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Start importing</button>
             </section>
           </section>
+
         </el-col>
       </el-row>
-      
+
+      <el-dialog
+          title="prompt"
+          :visible.sync="centerDialogVisible"
+          width="432px"
+          :show-close = true
+          :closeOnClickModal = false
+          top="30vh"
+          center>
+          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
+            Error message: mnemonic is incorrect
+          </p>
+          <span slot="footer" class="dialog-footer">
+            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Re-import</button>
+          </span>
+      </el-dialog>
+
     </main>
   </el-container>
 </template>
@@ -81,31 +98,19 @@ export default {
   data() {
     return {
       returnPage: "/",
-      name: "wallet 01",
+      name: "wallet 01", //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
       password: "",
       confirmP: "",
       privateKey: "",
-      walletPwd: "",
-      publicKey: "",
-      walletBalance: "",
-      walletAddress: "",
       englishWords: "",
       mainCntTab1: true,
       mainCntTab2: false,
+      passCntList: false,
+      centerDialogVisible: false,
       btn: "btn",
       btn2: "btn2",
-      word1: "",
-      word2: "",
-      word3: "",
-      word4: "",
-      word5: "",
-      word6: "",
-      word7: "",
-      word8: "",
-      word9: "",
-      word10: "",
-      word11: "",
-      word12: "",
+      navTit: 'New wallet',
+      mnemonicTxt: "",
       newUserAccount: {
         walletName: "",
         password: "",
@@ -247,12 +252,14 @@ export default {
       this.mainCntTab2 = false;
       this.btn = "btn";
       this.btn2 = "btn2";
+      this.navTit = 'New wallet'
     },
     tab2() {
       this.mainCntTab1 = false;
       this.mainCntTab2 = true;
       this.btn = "btn2";
       this.btn2 = "btn";
+      this.navTit = 'Import wallet'
 
       let filePath = ''
       if(require('os').type() === 'Darwin' || require('os').type() === 'Linux') {
@@ -269,29 +276,19 @@ export default {
   },
   computed: {
     createActiveBtn() {
-      return this.name.length > 0 &&
-        this.password.length > 7 &&
-        this.password.length < 29 &&
-        this.confirmP.length > 7 &&
-        this.confirmP.length < 29
-        ? true
-        : false;
+      if (this.$route.query.id === "1") {
+        return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
+      }
+      if (this.$route.query.id === "3") {
+        return this.name.length > 0 ? true : false;
+      }
+      if (this.$route.query.id === "2") {
+        this.navTit = 'Import wallet'
+        return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
+      }
     },
     publicBtnAcitve() {
-      return this.word1.length > 0 &&
-        this.word2.length > 0 &&
-        this.word3.length > 0 &&
-        this.word4.length > 0 &&
-        this.word5.length > 0 &&
-        this.word6.length > 0 &&
-        this.word7.length > 0 &&
-        this.word8.length > 0 &&
-        this.word9.length > 0 &&
-        this.word10.length > 0 &&
-        this.word11.length > 0 &&
-        this.word12.length > 0
-        ? true
-        : false;
+      return this.mnemonicTxt.length > 0 ? true : false;
     }
   },
   created() {
@@ -301,6 +298,7 @@ export default {
       this.mainCntTab2 = false;
       this.btn = "btn";
       this.btn2 = "btn2";
+      this.passCntList = true
     }
     if (this.$route.query.id === "3") {
       this.returnPage = {
@@ -319,6 +317,7 @@ export default {
       this.mainCntTab2 = false;
       this.btn = "btn";
       this.btn2 = "btn2";
+      this.passCntList = false;
       let walletOrd = (this.$route.query.walletsArr.length + 1).toString()
       this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
     }
@@ -328,6 +327,7 @@ export default {
       this.mainCntTab2 = true;
       this.btn = "btn2";
       this.btn2 = "btn";
+      this.passCntList = true
     }
     this.walletPwd = this.$route.query.walletPwd;
   }
@@ -343,7 +343,6 @@ export default {
   align-items: center;
 }
 .mainCnt {
-  background: #ffffff;
   width: 500px;
   height: 382px;
 }
@@ -357,7 +356,7 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 380px;
-  margin: 28px auto 0;
+  margin: 56px auto 33px;
 }
 .mainCntTab1 {
   margin: 32px auto 0;
@@ -367,24 +366,15 @@ export default {
   color: #c8d1da;
   margin: 12px 0 6px;
 }
-.tabIpt {
-  width: 100%;
-  height: 36px;
-  outline: none;
-  border: 1px solid #c8d1da;
-  border-radius: 2px;
-  padding-left: 8px;
-}
-
 .mainCntTab2 {
-  width: 500px;
-  margin: 16px auto 32px;
+  width: 380px;
+  margin: 28px auto;
 }
 
 .btn {
   width: 184px;
   height: 36px;
-  background: #242e49;
+  background: #00D6B2;
   border: 1px solid #c8d1da;
   color: #fff;
   outline: none;
@@ -394,8 +384,8 @@ export default {
   width: 184px;
   height: 36px;
   background: #fff;
-  color: #c8d1da;
-  border: 1px solid #c8d1da;
+  color: #00D6B2;
+  border: 1px solid #00D6B2;
   outline: none;
   border-radius: 2px;
 }
@@ -425,4 +415,9 @@ ul .iptTxt input[type="text"] {
   text-align: center;
   color: #657292;
 }
+textarea {width:380px;height:149px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;}
+
+section >>> .el-input__inner {padding-left: 0;text-indent: 8px;}
+section >>> .el-input__inner:focus {border-color: #c8d1da;}
+section >>> .el-input__inner {border-radius: 2px;outline: none;margin-bottom: 16px}
 </style>

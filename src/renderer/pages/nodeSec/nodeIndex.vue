@@ -4,17 +4,21 @@
       <el-col :span="24"> 
         <section class="nodeCnt">
           <section class="nodeCntH">
-            <p class="mt30 nodeTit">Node information</p>
-            <p class="mt30">
-              <span class="nodeTxt">IP address：</span>
+
+            <p class="nodeTit">Node information</p>
+
+            <p class="" style="width:77px;margin-top:28px;display:flex;flex-direction:column;">
+              <span class="nodeTxt" style="margin-bottom:5px;">IP address：</span>
                 {{ipAddress}}
             </p>
-            <p class="mt10">
-              <span class="nodeTxt">Current system time：</span>
+
+            <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;">
+              <span class="nodeTxt" style="margin-bottom:5px;">Current system time：</span>
                {{systemTime}}
             </p>
-            <p class="mt10">
-              <span class="nodeTxt">local time：</span>
+
+            <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;">
+              <span class="nodeTxt" style="margin-bottom:5px;">local time：</span>
                {{localTime}}
             </p>
           </section>
@@ -23,42 +27,45 @@
             <section class="nodeListCntP">
               <span class="nodeSwitch">
                 <el-switch
-                  v-model="value2"
+                  v-model="progressVal"
                   active-color="#C8D1DA"
                   inactive-color="#00D6B2"
-                  :disabled="disabled"> 
+                  :disabled="disabledBtn"> 
                   <!-- 默认不可点击，进度条加载完成之后可点击 -->
                 </el-switch>
-                 
+                 <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
               </span>
               <p class="updateTime">Last update time</p>
             </section>
             <p class="updateTime2">{{updateTime}}</p>
-            <p style="width: 480px;margin: 57px 0 73px;">
+
+            <p style="width: 480px;margin-top: 57px;" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
               <section style="display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px">
                  <span>{{progressAll}} G / {{progress}} G</span> 
                  <span>{{consumptionTimt}}</span> 
               </section>
             </p>
-            
 
-            
-            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = true">Start syncing</button>
+            <!-- 点击挖矿 -->
+            <input type="text" v-model="timeCnt" v-show="timeCntShow">
+
+            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" style="margin-top: 48px;" @click="startSyncing">
+              {{startBtn}}
+            </button>
           </section>
         </section>
         
         <el-dialog
-          title=""
+          title="prompt"
           :visible.sync="centerDialogVisible"
           width="430px"
-          :show-close=false
           :closeOnClickModal = false
+          top="30vh"
           center>
-          <p style="text-align: center;">Insufficient balance, unable to mine</p>
+          <p style="text-align: center;font-size:16px;margin:62px 0 93px;">Insufficient balance, unable to mine</p>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="navBackToWallet">determine</button>
-            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
+            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Recharge immediately</button>
           </span>
         </el-dialog>
 
@@ -69,9 +76,6 @@
 </template>
 
 <script>
-import nodeNoActive from '../../assets/image/nodeNoActive.png'
-import nodeActive from '../../assets/image/nodeActive.png'
-import nodeBeginAction from '../../assets/image/nodeBeginAction.png'
 export default {
   name: '',
   data () {
@@ -80,32 +84,40 @@ export default {
       systemTime: '2018/11/07 18:00 UTC+8 ',
       localTime: '2018/11/07 09:00 UTC+8', 
       updateTime: '2017/11/01 09:00 UTC+8',
+      timeCntShow: true,
       centerDialogVisible: false,
-      switchUrl: nodeNoActive,
-      value1: true,
-      value2: true,
-      disabled: "disabled",
+      progressVal: true,
+      disabledBtn: true, // 切换显示 switch 开关
       progressAll: '50.2',
       progress:'25.1',
       progressPercentage: 50,
-      consumptionTimt: '00:30:23'
+      consumptionTimt: '00:30:23',
+      timeCnt: "1 year 7 days 12 hours 0 minutes No update",
+      startBtn: 'Start syncing',
+      startBtnActive: '',
     }
   },
   created () {
-    this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '200.19.74.21'}], (err, response) => {
-      if (err) {
-        console.log(err)
-      }
-      console.log(response)
+    this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: 'DE'}], (err, response) => {
       this.ipAddress = response.result.ipv4
-      this.systemTime = new Date(response.result.time*1000).toString()
-      this.localTime = new Date().toString()
+      this.systemItem = new Date(response.result.time * 1000)
+      this.localTime = new Date()
     })
   },
   methods: {
-    navBackToWallet () {
-      this.centerDialogVisible = false
-      this.$router.go(-1)
+    startSyncing () { 
+
+      //同步节点
+      this.timeCntShow = false
+      
+
+
+      //节点同步完成
+      this.startBtn = 'synchronizing...'
+      this.startBtnActive = 'startBtnActive'
+
+      //挖矿余额不足的时候弹窗
+      //this.centerDialogVisible = true
     }
   }
 }
@@ -118,24 +130,28 @@ export default {
 .nodeCnt {width: 806px;height: 532px;border-radius: 2px;background: #FAFAFA;padding: 24px 32px;
 display: flex;flex-direction: column;}
 
-.nodeCntH {height: 210px;display: flex;flex-direction: column;justify-content: center;
-  background: url('../../assets/image/nodeBg.png') no-repeat;background-size: cover;color: #fff;}
+.nodeCntH {height: 94px;display: flex;border-bottom:1px solid #C8D1DA;color:#C8D1DA;background: #fff;}
 
 .nodeNoActiveImg {vertical-align: middle;margin-right: 15px;}
+
+.startBtnActive {background: rgba(0,214,178,.3);border-color:rgba(0,214,178,.3);}
 
 .nodeListCnt {display: flex;justify-content: center;padding-top: 60px;background: #fff;
   flex-direction: column;align-items: center;flex: 1;}
 .nodeListCntP {width: 806px;position: relative;}
 
 .nodeSwitch {color:#657292;position: absolute;top:0;left:30px;}
-.updateTime {text-align:center;color:#657292;}
-.updateTime2 {margin-top: 15px;font-size:14px;color:#657292;}
+.updateTime {text-align:center;color:#C8D1DA;}
+.updateTime2 {margin-top: 15px;font-size:14px;color:#939CB2;}
 
-.nodeTit {color: #F3F8F7;text-align: center;}
-.nodeTxt {color: #C8D1DA;width: 120px;text-align:right;display: inline-block;margin-left:285px;}
+.nodeTit {text-align: center;font-size: 16px;margin:28px 94px 0 24px;color:#657292;}
+
+
+input[type="text"]{width:412px;height:36px;text-align:center;border-radius:18px;border:1px solid #C8D1DA;
+  text-align:center;outline:none;color:#657292;margin-top: 57px;}
 
 section >>> .el-input__inner {border-radius: 18px;}
-
 section >>> .el-progress-bar__inner {background: #00D6B2;}
-
+section >>> .el-dialog__header {padding: 16px 0 14px;border-bottom:1px solid #C8D1DA;}
+section >>> .el-dialog--center {height: 288px;}
 </style>
