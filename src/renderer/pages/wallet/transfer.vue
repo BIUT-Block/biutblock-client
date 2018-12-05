@@ -222,6 +222,7 @@ export default {
             if(response.result.status === '1') {
               this.dialogVisible = false
               this.centerDialogVisible = false
+              alert('Your transfer is now in pending.')
             }
           })
       }
