@@ -11,9 +11,9 @@
           {{navTit}}
         </el-col>
         <el-col :span="6" class="windowsCnt">
-          <i class="el-icon-minus icon_nav"></i>
-          <span class="publicBtn amplification"></span>
-          <i class="el-icon-close icon_nav"></i>
+          <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
+          <span class="publicBtn amplification" @click="maximizeApp"></span>
+          <i class="el-icon-close icon_nav" @click="exitApp"></i>
         </el-col>
       </el-row>
 
@@ -88,10 +88,12 @@
 </template>
 
 <script>
+const {ipcRenderer: ipc} = require('electron')
 const CryptoJS = require("crypto-js");
 const SECUtil = require("@sec-block/secjs-util");
 const jwt = require("jsonwebtoken");
 const fs = require("fs")
+
 //const secUtil = new SECUtil()
 export default {
   name: "",
@@ -271,7 +273,15 @@ export default {
           return
       }
       fs.readFile(filePath, 'utf-8', this._fileRequest.bind(this, this.loginValue))
-
+    },
+    exitApp() {
+      ipc.send('close')
+    },
+    minimizeApp() {
+      ipc.send('min')
+    },
+    maximizeApp() {
+      ipc.send('max')
     }
   },
   computed: {

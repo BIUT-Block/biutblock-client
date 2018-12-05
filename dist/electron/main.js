@@ -2568,7 +2568,7 @@ function createWindow() {
   /**
    * Initial window options
    */
-  Object(__WEBPACK_IMPORTED_MODULE_2__updateChecker_js__["a" /* default */])();
+  //updateChecker()
   mainWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
     height: 624,
     useContentSize: true,
@@ -2576,7 +2576,7 @@ function createWindow() {
     transparent: false,
     frame: true
   });
-  mainWindow.setResizable(false);
+  mainWindow.setResizable(true);
 
   if (process.platform === 'darwin') {
     const template = [{
@@ -2630,8 +2630,10 @@ __WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('min', () => mainWindow.min
 __WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('close', () => mainWindow.close());
 __WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('max', () => {
   if (mainWindow.isMaximized()) {
+    console.log('The window is maximized');
     mainWindow.unmaximize();
   } else {
+    console.log('The window is original');
     mainWindow.maximize();
   }
 });
@@ -7288,7 +7290,7 @@ function map_obj(obj, fn){
 /* 46 */
 /***/ (function(module, exports) {
 
-module.exports = {"_args":[["7zip@0.0.6","C:\\Users\\联想~~\\Desktop\\test\\secjs-client"]],"_development":true,"_from":"7zip@0.0.6","_id":"7zip@0.0.6","_inBundle":false,"_integrity":"sha1-nK+xca+CMpSQNTtIFvAzR6oVCjA=","_location":"/7zip","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"7zip@0.0.6","name":"7zip","escapedName":"7zip","rawSpec":"0.0.6","saveSpec":null,"fetchSpec":"0.0.6"},"_requiredBy":["/electron-devtools-installer"],"_resolved":"https://registry.npmjs.org/7zip/-/7zip-0.0.6.tgz","_spec":"0.0.6","_where":"C:\\Users\\联想~~\\Desktop\\test\\secjs-client","bin":{"7z":"7zip-lite/7z.exe"},"bugs":{"url":"https://github.com/fritx/win-7zip/issues"},"description":"7zip Windows Package via Node.js","homepage":"https://github.com/fritx/win-7zip#readme","keywords":["7z","7zip","7-zip","windows","install"],"license":"GNU LGPL","main":"index.js","name":"7zip","repository":{"type":"git","url":"git+ssh://git@github.com/fritx/win-7zip.git"},"scripts":{"test":"mocha"},"version":"0.0.6"}
+module.exports = {"_args":[["7zip@0.0.6","C:\\Users\\D067430\\git\\secjs-client"]],"_development":true,"_from":"7zip@0.0.6","_id":"7zip@0.0.6","_inBundle":false,"_integrity":"sha1-nK+xca+CMpSQNTtIFvAzR6oVCjA=","_location":"/7zip","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"7zip@0.0.6","name":"7zip","escapedName":"7zip","rawSpec":"0.0.6","saveSpec":null,"fetchSpec":"0.0.6"},"_requiredBy":["/electron-devtools-installer"],"_resolved":"https://registry.npmjs.org/7zip/-/7zip-0.0.6.tgz","_spec":"0.0.6","_where":"C:\\Users\\D067430\\git\\secjs-client","bin":{"7z":"7zip-lite/7z.exe"},"bugs":{"url":"https://github.com/fritx/win-7zip/issues"},"description":"7zip Windows Package via Node.js","homepage":"https://github.com/fritx/win-7zip#readme","keywords":["7z","7zip","7-zip","windows","install"],"license":"GNU LGPL","main":"index.js","name":"7zip","repository":{"type":"git","url":"git+ssh://git@github.com/fritx/win-7zip.git"},"scripts":{"test":"mocha"},"version":"0.0.6"}
 
 /***/ }),
 /* 47 */
@@ -7375,7 +7377,7 @@ const compareVersion2Update = (current, latest) => {
   return flag;
 };
 
-/* harmony default export */ __webpack_exports__["a"] = (checkVersion);
+/* unused harmony default export */ var _unused_webpack_default_export = (checkVersion);
 
 /***/ }),
 /* 50 */
