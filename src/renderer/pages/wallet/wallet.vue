@@ -157,6 +157,8 @@ export default {
   },
   created() {
     let moneyValue = ''
+    let walletAddressTempInPool = ''
+    let walletAddressTempInChain = ''
     this.privateKey = this.$route.query.walletPrivateKey;
     this.publicKey = this.$route.query.walletPublicKey;
     this.walletAddress = this.$route.query.walletAddress;
@@ -175,13 +177,15 @@ export default {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInPool[j].Value
+                walletAddressTempInPool = response.result.resultInPool[j].TxFrom
               } else {
                 moneyValue = "- " + response.result.resultInPool[j].Value
+                walletAddressTempInPool = response.result.resultInPool[j].TxTo
               }
               this.walletList.push({
                 id: response.result.resultInPool[j].TxHash,
                 blockNumber: "Not in Block yet",
-                listAddress: response.result.resultInPool[j].TxTo,
+                listAddress: walletAddressTempInPool,
                 listFrom: response.result.resultInPool[j].TxFrom,                
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
                 listMoney: moneyValue,
@@ -194,13 +198,15 @@ export default {
           for (let i = 0; i < response.result.resultInChain.length; i++) {
             if (response.result.resultInChain[i].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
               } else {
                 moneyValue = "- " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[j].TxTo
               }
             this.walletList.push({
               id: response.result.resultInChain[i].TxHash,
               blockNumber: response.result.resultInChain[i].BlockNumber,
-              listAddress: response.result.resultInChain[i].TxTo,
+              listAddress: walletAddressTempInChain,
               listFrom: response.result.resultInChain[i].TxFrom,
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
               listMoney: moneyValue,
@@ -224,6 +230,8 @@ export default {
     EventBus.$on('updateWalletInfo', function (walletParams) {
       let moneyValue = ''
       let walletListTemp = []
+      let walletAddressTempInPool = ''
+      let walletAddressTempInChain = ''
       this.walletList = []
       this.privateKey = walletParams.walletPrivateKey;
       this.publicKey = walletParams.walletPublicKey;
@@ -242,13 +250,15 @@ export default {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInPool[j].Value
+                walletAddressTempInPool = response.result.resultInPool[j].TxFrom
               } else {
                 moneyValue = "- " + response.result.resultInPool[j].Value
+                walletAddressTempInPool = response.result.resultInPool[j].TxTo
               }
               walletListTemp.push({
                 id: response.result.resultInPool[j].TxHash,
                 blockNumber: "Not in Block yet",
-                listAddress: response.result.resultInPool[j].TxTo,
+                listAddress: walletAddressTempInPool,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
                 listMoney: moneyValue,
@@ -261,13 +271,15 @@ export default {
           for (let i = 0; i < response.result.resultInChain.length; i++) {
             if (response.result.resultInChain[i].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
               } else {
                 moneyValue = "- " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
               }
             walletListTemp.push({
               id: response.result.resultInChain[i].TxHash,
               blockNumber: response.result.resultInChain[i].BlockNumber,
-              listAddress: response.result.resultInChain[i].TxTo,
+              listAddress: walletAddressTempInChain,
               listFrom: response.result.resultInChain[i].TxFrom,
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
               listMoney: moneyValue,

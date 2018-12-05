@@ -244,7 +244,8 @@ export default {
     importingFrom() {
       //导入助记词方法
       //导入成功 跳转至首页
-
+      let englishWords = this.mnemonicTxt
+      let wallets = SECUtil.mnemonicToEntropy(englishWords)
       this.$router.push("/wallet");
 
       //导入失败，停留在当前页面 给出对应的提示
@@ -262,17 +263,7 @@ export default {
       this.btn = "btn2";
       this.btn2 = "btn";
       this.navTit = 'Import wallet'
-
-      let filePath = ''
-      if(require('os').type() === 'Darwin' || require('os').type() === 'Linux') {
-        filePath = require('os').homedir() + '/secwallet/default.data'
-      } else {
-        filePath = require('os').homedir() + '\\secwallet\\default.data'
-      }
-      if (!fs.existsSync(dirPath)){
-          return
-      }
-      fs.readFile(filePath, 'utf-8', this._fileRequest.bind(this, this.loginValue))
+      //fs.readFile(filePath, 'utf-8', this._fileRequest.bind(this, this.loginValue))
     },
     exitApp() {
       ipc.send('close')

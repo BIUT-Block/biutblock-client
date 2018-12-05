@@ -100,8 +100,8 @@ export default {
   created () {
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: 'DE'}], (err, response) => {
       this.ipAddress = response.result.ipv4
-      this.systemItem = new Date(response.result.time * 1000)
-      this.localTime = new Date()
+      this.systemItem = new Date(response.result.time * 1000).toString()
+      this.localTime = new Date().toString()
     })
   },
   methods: {
