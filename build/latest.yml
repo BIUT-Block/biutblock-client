@@ -1,0 +1,9 @@
+version: 1.2.6
+files:
+  - url: secblock-wallet-setup-1.2.6.exe
+    sha512: DGm4C5wwC7VQSvkKYIDzELCnmMQRTj7/uwifu1IoIQMrgZxaLwoZLLehcPQiMrYdiRhE74NpHfNcKuFcVZqC+A==
+    size: 49408173
+path: secblock-wallet-setup-1.2.6.exe
+sha512: DGm4C5wwC7VQSvkKYIDzELCnmMQRTj7/uwifu1IoIQMrgZxaLwoZLLehcPQiMrYdiRhE74NpHfNcKuFcVZqC+A==
+sha2: 976d380f4b785d665cf32ede3c7d7b1d943d24b27f0b45f9dae9ca23ad3850ee
+releaseDate: '2018-12-06T22:21:39.571Z'
