@@ -6,10 +6,10 @@
            <section class="mainCntLeft"></section>
            <section class="mainCntRight">
               <img src="../../assets/image/loginLogo.png" alt="secLogo" title="sec" class="secLogo">
-              <section class="loginClose">
+              <!-- <section class="loginClose">
                 <i class="el-icon-minus icon_nav" @click="minimalApp"></i>
                 <i class="el-icon-close icon_nav" @click="exitApp"></i>
-              </section>
+              </section> -->
               <h1 class="loginTit">Password login</h1>
               <input type="password" v-model="loginValue"  maxlength="30" class="loginIpt" placeholder="Please enter your password"></input>
               <button type="button" class="logoBtn pointerTxt" :disabled="!logoBtnAcitve" :class="logoBtnAcitve?'logoBtnAcitve':''" @click="loginBtn">Log in</button>
@@ -29,7 +29,6 @@
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
-const {ipcRenderer: ipc} = require('electron')
 
 export default {
   name: '',
@@ -128,12 +127,6 @@ export default {
           walletName: params.walletName  
         }
       })
-    },
-    exitApp: function() {
-      ipc.send('close')
-    },
-    minimalApp: function() {
-      ipc.send('min')
     }
   },
   computed: {

@@ -2580,9 +2580,9 @@ function createWindow() {
    */
   //updateChecker()
   mainWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
-    height: 624,
+    height: 564,
     useContentSize: true,
-    width: 944,
+    width: 958,
     transparent: false,
     frame: true
   });

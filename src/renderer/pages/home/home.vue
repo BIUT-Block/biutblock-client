@@ -1,6 +1,6 @@
 <template>
   <el-container class="home">
-    <el-row class="publicNav">
+    <!-- <el-row class="publicNav">
       <el-col :span="4">
         <router-link to="/wallet">
           <span class="homeHNav">
@@ -15,7 +15,7 @@
           <span class="publicBtn amplification" @click="maximizeApp"></span>
           <i class="el-icon-close icon_nav" @click="exitApp"></i>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-row>
       <el-col :span="24" class="homeList">
@@ -92,7 +92,6 @@
 </template>
 
 <script>
-const {ipcRenderer: ipc} = require('electron')
 const packageInfo = require("../../../../package.json")
 
 import icon_wallet from '../../assets/image/icon_wallet.png'
@@ -137,15 +136,6 @@ export default {
     this.appVersion = packageInfo.version
   },
   methods: {
-    exitApp: function() {
-      ipc.send('close')
-    },
-    minimizeApp: function() {
-      ipc.send('min')
-    },
-    maximizeApp: function() {
-      ipc.send('max')
-    },
     walletListFrom () {
       this.$router.push({name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
