@@ -100,6 +100,7 @@ import icon_set from '../../assets/image/icon_set.png'
 import icon_wallet_active from '../../assets/image/icon_wallet_active.png'
 import icon_node_active from '../../assets/image/icon_node_active.png'
 import icon_set_active from '../../assets/image/icon_set_active.png'
+import {EventBus} from "../../lib/EventBus.js"
 
 export default {
   name: '',
@@ -126,7 +127,6 @@ export default {
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
-
       icon_wallet: icon_wallet_active,
       icon_node: icon_node,
       icon_set: icon_set,
@@ -134,6 +134,15 @@ export default {
   },
   created () {
     this.appVersion = packageInfo.version
+    EventBus.$on('updateQuery', (queryParams) => {
+      this.walletAddress = queryParams.walletAddress
+      this.privateKey = queryParams.walletPrivateKey
+      this.publicKey = queryParams.walletPublicKey
+      this.walletMoney = queryParams.walletMoney
+      this.walletsArr = queryParams.walletsArr
+      this.walletPwd = queryParams.walletPwd
+      this.walletName = queryParams.walletName
+    })
   },
   methods: {
     walletListFrom () {
@@ -146,7 +155,10 @@ export default {
       this.icon_set = icon_set
     },
     nodeListFrom () {
-      this.$router.push({ path: '/nodeSec' })
+      this.$router.push({ path: '/nodeSec',
+      query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
+            walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd,
+            walletPublicKey: this.publicKey, walletBalance: this.walletMoney} })
       this.icon_wallet = icon_wallet
       this.icon_node = icon_node_active
       this.icon_set = icon_set

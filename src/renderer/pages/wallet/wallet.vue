@@ -201,7 +201,7 @@ export default {
                 walletAddressTempInChain = response.result.resultInChain[i].TxFrom
               } else {
                 moneyValue = "- " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[j].TxTo
+                walletAddressTempInChain = response.result.resultInChain[i].TxTo
               }
             this.walletList.push({
               id: response.result.resultInChain[i].TxHash,
@@ -211,7 +211,7 @@ export default {
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
               listMoney: moneyValue,
               listMinerCost: response.result.resultInChain[i].TxFee, 
-              listState: "Successful"
+              listState: "Successfull"
             });
           }
         }
@@ -364,6 +364,16 @@ export default {
           this.walletAddress = this.walletsArr[0].walletAddress
           this.privateKey = this.walletsArr[0].privateKey
           this.publicKey = this.walletsArr[0].publicKey
+          EventBus.$emit('updateQuery', {
+            walletPrivateKey: this.privateKey,
+            walletPublicKey: this.publicKey,
+            walletAddress: this.walletAddress,
+            walletsArr: this.walletsArr,
+            walletName: this.walletName,
+            walletPwd: this.walletPwd,
+            walletMoney: this.walletMoney
+          })
+          
           this.walletList = []
           let moneyValue = ""
           this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {

@@ -82,12 +82,12 @@
             </section>
           </section>
           <span slot="footer" class="dialog-footer" style="margin-top:28px">
-            <button class="publicBtn publicBtnAcitve" @click="determineTransferGo">determine</button>
+            <button class="publicBtn publicBtnAcitve" @click="determineTransfer">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
 
-       <el-dialog
+       <!-- <el-dialog
           title="wallet 01"
           :visible.sync="dialogVisible"
           width="432px"
@@ -101,7 +101,7 @@
             <button class="publicBtn" :disabled="determineBtn" :class="determineBtn?'publicBtnAcitve':''" @click="determineTransfer">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="dialogVisible = false">cancel</button>
           </span>
-        </el-dialog>
+        </el-dialog> -->
 
       </el-col>
     </el-row>
@@ -172,21 +172,21 @@ export default {
     },
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {
-        alert("转账金额不能超过总金额")
+        alert("You don't have enough balance.")
         return
       } else {
         this.centerDialogVisible = true
       }
     },
-    determineTransferGo () {
-      this.centerDialogVisible = false
-      this.dialogVisible = true
-    },
+    // determineTransferGo () {
+    //   this.centerDialogVisible = false
+    //   this.dialogVisible = true
+    // },
     determineTransfer () {
       //转账功能   转账的结果 给个 alert提示
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
-        alert("转账金额不能超过总金额")
+        alert("You don't have enough balance.")
       } else {
           let timeStamp = new Date().getTime()
           let transferData = [{
@@ -220,7 +220,7 @@ export default {
 
           this.$JsonRPCClient.client.request('sec_sendRawTransaction', transferData, (err, response) => {
             if(response.result.status === '1') {
-              this.dialogVisible = false
+              //this.dialogVisible = false
               this.centerDialogVisible = false
               alert('Your transfer is now in pending.')
             }
