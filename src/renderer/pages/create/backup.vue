@@ -14,7 +14,7 @@
             walletsArr: this.walletsArr,
             colorArr: this.colorArr
           }}">
-            <i class="el-icon-arrow-left icon_nav"></i>
+            <i v-show="saveSuccess" class="el-icon-arrow-left icon_nav"></i>
           </router-link>
         </el-col>
         <el-col :span="12" class="navTit">
@@ -145,7 +145,8 @@ export default {
       walletsArr: '',
       walletBalance: "",
       alreadySaved: false,
-      colorArr: []
+      colorArr: [],
+      saveSuccess: true
     }
   },
   methods: {
@@ -256,6 +257,7 @@ export default {
     },
     _saveWalletSuccess (filePath) {
       this.alreadySaved = true
+      this.saveSuccess = false
       alert(`Already saved png file and the secure file would be saved in ${filePath}`)
     },
     enterWallet() {
