@@ -8,15 +8,16 @@ import {
   autoUpdater
 } from 'electron-updater'
 import updateChecker from './updateChecker.js'
-// const SECCore = require('./secjs-core')
-// const SECRPCServer = require('@sec-block/secjs-rpc')
+
+const SECCore = require('@sec-block/secjs-core')
+const SECRPCServer = require('@sec-block/secjs-rpc')
 
 /**
  * Start RPC Server
  */
 // SECCore.coreRun()
-// let secRPCServer = new SECRPCServer(SECCore.core)
-// secRPCServer.runRPCServer()
+let secRPCServer = new SECRPCServer(SECCore.core)
+secRPCServer.runRPCServer()
 
 /**
  * Set `__static` path to static files in production

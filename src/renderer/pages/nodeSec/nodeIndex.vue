@@ -116,15 +116,19 @@ export default {
         if (err) {
           return
         }
-        if (response && response.result.status === '1') {
+        // if (response && response.result.status === '1') {
+        if (response) {
           this.progressAll = Number(response.result.value) / 1000000000
         }
       })
       this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
+        console.log(err)
+        console.log(response)
         if (err) {
           return
         }
-        if (response && response.result.status === '1') {
+        // if (response && response.result.status === '1') {
+        if (response) {
           
           this.startBtnActive = 'startBtnActive'
           this.startBtn = 'Start syncing'
@@ -156,7 +160,8 @@ export default {
             this.progressVal = true
             return
           }
-          if (response && response.result.status === '1') {
+          // if (response && response.result.status === '1') {
+          if (response) {
             alert('Begin Mining successfull')
           } else {
             this.progressVal = true
@@ -170,7 +175,8 @@ export default {
             this.progressVal = false
             return
           }
-          if (response && response.result.status === '1') {
+          // if (response && response.result.status === '1') {
+          if (response) {
             alert('Stop Mining successfull')
           } else {
             this.progressVal = false
