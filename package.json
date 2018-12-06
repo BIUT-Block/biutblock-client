@@ -1,6 +1,6 @@
 {
   "name": "secblock-wallet",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "author": "theFay <fei.minhao@gmail.com>",
   "description": "SEC Wallet Client",
   "license": "MIT",
