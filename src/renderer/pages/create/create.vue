@@ -10,11 +10,11 @@
         <el-col :span="12" class="navTit">
           {{navTit}}
         </el-col>
-        <el-col :span="6" class="windowsCnt">
+        <!-- <el-col :span="6" class="windowsCnt">
           <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
           <span class="publicBtn amplification" @click="maximizeApp"></span>
           <i class="el-icon-close icon_nav" @click="exitApp"></i>
-        </el-col>
+        </el-col> -->
       </el-row>
 
       <el-row class="createTabCnt">
@@ -285,6 +285,9 @@ export default {
         if (this.confirmP != this.password) {
           alert("The input passwords are not same. Please enter again.");
           return;
+        } else if(!new RegExp(/^(?=.*[a-zA-Z])(?=.*\d).{6,18}$/).test(this.password)){
+          alert("The password formatt is wrong. Please enter 8 - 30 character with number and letter.");
+          return;
         } else {
           let keys = SECUtil.generateSecKeys();
           let privKey64 = keys.privKey;
@@ -345,7 +348,7 @@ export default {
         if (this.confirmP != this.password) {
           alert("两次密码输入不一致，请重新输入");
           return;
-        } else {
+        }  else {
           let keys = SECUtil.generateSecKeys();
           let privKey64 = keys.privKey;
           this.privateKey = privKey64;

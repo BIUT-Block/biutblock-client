@@ -37,13 +37,13 @@
 
             <section class="transferSlider">
               <div class="block">
-                <el-slider v-model="cost"></el-slider>
+                <el-slider v-model="cost" @change="addTxFee"></el-slider>
               </div>
             </section>
 
             <section class="costCnt">
               <span class="TxtColor3">Slow</span>
-              <span class="TxtColor3">0 sec</span>
+              <span class="TxtColor3">{{cost}} sec</span>
               <span class="TxtColor3">Fast</span>
             </section>
             
@@ -74,7 +74,7 @@
 
             <section>
               <span class="transferMockTxt">Miner fee</span>
-              0 SEC
+              {{cost}} SEC
             </section>
 
             <section>
@@ -123,7 +123,7 @@ export default {
       oneselfAddress: this.$route.query.walletAddress, //点击跳转的时候 带地址  或者存入缓存种
       amount: '',
       remarks: '',
-      cost: 50,
+      cost: 0,
       allMoney: this.$route.query.walletMoney,
       centerDialogVisible: false,
       dialogVisible: false,
@@ -149,9 +149,9 @@ export default {
         return true
       }
       if (!/^[0-9.]+$/i.test(this.amount)) {
-        alert("输入非法字符")
+        alert("Wrong input formatt")
       } else if (parseFloat(this.amount)>this.walletMoney) {
-        alert("转账金额不能超过总金额")
+        alert("You don't have enough balance.")
       } else {
         return true;
       }
@@ -160,12 +160,10 @@ export default {
       if(this.address === "") {
         return true
       }
-      if (!/^[a-z0-9]+$/.test(this.address)) {
-        alert("转账地址应由小写字母及数字组成")
-      } else if (this.address.length !== 40) {
-        alert("转账地址长度应为40位")
-      }
-      else {
+      if (!/^[a-z0-9]+$/.test(this.address) && this.address.length !== 40 ) {
+        alert("Invalid wallet address formatt")
+        this.address = ""
+      } else {
         return true;
       }
     },
@@ -197,7 +195,7 @@ export default {
             to: this.address,
             value: this.amount,
             gasLimit: '0',
-            gas: '0',
+            gas: this.cost.toString(),
             gasPrice: '0',
             data: this.remarks,
             inputData: this.remarks

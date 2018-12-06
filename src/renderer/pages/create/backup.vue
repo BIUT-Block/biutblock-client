@@ -19,11 +19,11 @@
         <el-col :span="12" class="navTit">
           Backup wallet
         </el-col>
-        <el-col :span="6" class="windowsCnt">
+        <!-- <el-col :span="6" class="windowsCnt">
           <i class="el-icon-minus icon_nav"></i>
           <span class="publicBtn amplification"></span>
           <i class="el-icon-close icon_nav"></i>
-        </el-col>
+        </el-col> -->
       </el-row>
 
 
