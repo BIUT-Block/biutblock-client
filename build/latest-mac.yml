@@ -1,0 +1,10 @@
+version: 1.2.5
+files:
+  - url: secblock-wallet-1.2.5-mac.zip
+    sha512: HEBoMw8dRjkDt+hwuQfvQUZ+A/U/L0U7irKVzkGo1GVLTceEt2CMtCN/HBCQ1WtbqNZE0/yxXzXXfz3Xvq8Rmw==
+  - url: secblock-wallet-1.2.5.dmg
+    sha512: tWyd18NChiahmzGGvy3HhyrJOVesYnHtQD0l/QlZ1mTZ8MywHPfa4jTpdCim4WXBKLb0BSFlIYBISe0bYrBWPw==
+    size: 67368916
+path: secblock-wallet-1.2.5-mac.zip
+sha512: HEBoMw8dRjkDt+hwuQfvQUZ+A/U/L0U7irKVzkGo1GVLTceEt2CMtCN/HBCQ1WtbqNZE0/yxXzXXfz3Xvq8Rmw==
+releaseDate: '2018-12-06T02:54:42.971Z'

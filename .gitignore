@@ -3,3 +3,8 @@ build/mac
 build/win-unpacked
 build/Sec*
 dist/
+data/
+data/*
+logs/
+logs/*
+.DS_Store
