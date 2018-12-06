@@ -3,3 +3,8 @@ build/mac
 build/win-unpacked
 build/Sec*
 dist/
+build/github/                                                                              
+build/latest-mac.yml                                                                       
+build/latest.yml                                                                           
+data/                                                                                      
+logs/
