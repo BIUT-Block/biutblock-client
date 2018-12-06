@@ -193,10 +193,9 @@ export default {
           if(err) {
             return
           }
-          this._createImageFile(dirPath)
-          
-          
+          this._createImageFile(dirPath)   
         })
+        
       } else {
         fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
       }
@@ -221,8 +220,8 @@ export default {
             if(err) {
               return
             }
-            this._saveWalletSuccess(filePath)
-
+            this._createImageFile(require('os').homedir() + '/secwallet')
+            this._saveWalletSuccess(filePath)          
           })
         } catch(e) {
           return
