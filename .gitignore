@@ -2,8 +2,11 @@ node_modules/
 build/mac
 build/win-unpacked
 build/Sec*
+build/github
+build/latest*
 dist/
 dist/*
+dist/**
 data/
 data/*
 logs/
