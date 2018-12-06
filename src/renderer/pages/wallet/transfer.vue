@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <left-nav :wallet-address="walletAddress" :wallet-name="walletName" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
-        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletMoney"></left-nav>
+        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletMoney" :color-arr="colorArr"></left-nav>
       </el-col>
     </el-row>
 
@@ -13,7 +13,8 @@
 
           <section class="publicWalletHList">
             <router-link :to="{name: 'wallet', 
-            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney}}" 
+            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, 
+            walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney, colorArr: this.colorArr}}" 
             class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
@@ -133,7 +134,8 @@ export default {
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
-      password: '' //转账密码
+      colorArr: this.$route.query.colorArr,
+      password: '' //转账密码,
     }
   },
   created() {

@@ -275,6 +275,7 @@ export default {
             walletsArr: walletsArr,
             walletPwd: this.walletPwd,
             walletName: this.walletName,
+            colorArr: new Array(walletsArr.length-1).fill(false).concat([true])
         }})
       } else {
         this.$router.push({name: 'wallet', query: {
@@ -284,7 +285,8 @@ export default {
             walletBalance: '10',
             walletsArr: walletsArr,
             walletPwd: this.password,
-            walletName: this.walletName
+            walletName: this.walletName,
+            colorArr: new Array(walletsArr.length-1).fill(false).concat([true])
         }})
       }
     }
