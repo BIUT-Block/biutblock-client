@@ -2554,15 +2554,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-// const SECCore = require('@sec-block/secjs-core')
-// const SECRPCServer = require('@sec-block/secjs-rpc')
+const SECCore = __webpack_require__(52);
+const SECRPCServer = __webpack_require__(53);
 
 /**
  * Start RPC Server
  */
-// SECCore.coreRun()
-// let secRPCServer = new SECRPCServer(SECCore.core)
-// secRPCServer.runRPCServer()
+SECCore.coreRun();
+let secRPCServer = new SECRPCServer(SECCore.core);
+secRPCServer.runRPCServer();
 
 /**
  * Set `__static` path to static files in production
@@ -2661,7 +2661,7 @@ __WEBPACK_IMPORTED_MODULE_1_electron_updater__["autoUpdater"].on('update-downloa
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('ready', () => {
   if (process.env.NODE_ENV === 'production') __WEBPACK_IMPORTED_MODULE_1_electron_updater__["autoUpdater"].checkForUpdates();
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, "src\\main"))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, "src/main"))
 
 /***/ }),
 /* 16 */
@@ -4489,7 +4489,10 @@ for (var i = 0; i < R; i++) {
 }
 
 exports.parse = parse;
-function parse(version, loose) {
+function parse(version, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
   if (version instanceof SemVer)
     return version;
 
@@ -4499,35 +4502,37 @@ function parse(version, loose) {
   if (version.length > MAX_LENGTH)
     return null;
 
-  var r = loose ? re[LOOSE] : re[FULL];
+  var r = options.loose ? re[LOOSE] : re[FULL];
   if (!r.test(version))
     return null;
 
   try {
-    return new SemVer(version, loose);
+    return new SemVer(version, options);
   } catch (er) {
     return null;
   }
 }
 
 exports.valid = valid;
-function valid(version, loose) {
-  var v = parse(version, loose);
+function valid(version, options) {
+  var v = parse(version, options);
   return v ? v.version : null;
 }
 
 
 exports.clean = clean;
-function clean(version, loose) {
-  var s = parse(version.trim().replace(/^[=v]+/, ''), loose);
+function clean(version, options) {
+  var s = parse(version.trim().replace(/^[=v]+/, ''), options);
   return s ? s.version : null;
 }
 
 exports.SemVer = SemVer;
 
-function SemVer(version, loose) {
+function SemVer(version, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
   if (version instanceof SemVer) {
-    if (version.loose === loose)
+    if (version.loose === options.loose)
       return version;
     else
       version = version.version;
@@ -4539,11 +4544,13 @@ function SemVer(version, loose) {
     throw new TypeError('version is longer than ' + MAX_LENGTH + ' characters')
 
   if (!(this instanceof SemVer))
-    return new SemVer(version, loose);
+    return new SemVer(version, options);
 
-  debug('SemVer', version, loose);
-  this.loose = loose;
-  var m = version.trim().match(loose ? re[LOOSE] : re[FULL]);
+  debug('SemVer', version, options);
+  this.options = options;
+  this.loose = !!options.loose;
+
+  var m = version.trim().match(options.loose ? re[LOOSE] : re[FULL]);
 
   if (!m)
     throw new TypeError('Invalid Version: ' + version);
@@ -4593,16 +4600,16 @@ SemVer.prototype.toString = function() {
 };
 
 SemVer.prototype.compare = function(other) {
-  debug('SemVer.compare', this.version, this.loose, other);
+  debug('SemVer.compare', this.version, this.options, other);
   if (!(other instanceof SemVer))
-    other = new SemVer(other, this.loose);
+    other = new SemVer(other, this.options);
 
   return this.compareMain(other) || this.comparePre(other);
 };
 
 SemVer.prototype.compareMain = function(other) {
   if (!(other instanceof SemVer))
-    other = new SemVer(other, this.loose);
+    other = new SemVer(other, this.options);
 
   return compareIdentifiers(this.major, other.major) ||
          compareIdentifiers(this.minor, other.minor) ||
@@ -4611,7 +4618,7 @@ SemVer.prototype.compareMain = function(other) {
 
 SemVer.prototype.comparePre = function(other) {
   if (!(other instanceof SemVer))
-    other = new SemVer(other, this.loose);
+    other = new SemVer(other, this.options);
 
   // NOT having a prerelease is > having one
   if (this.prerelease.length && !other.prerelease.length)
@@ -4902,19 +4909,23 @@ function cmp(a, op, b, loose) {
 }
 
 exports.Comparator = Comparator;
-function Comparator(comp, loose) {
+function Comparator(comp, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
   if (comp instanceof Comparator) {
-    if (comp.loose === loose)
+    if (comp.loose === !!options.loose)
       return comp;
     else
       comp = comp.value;
   }
 
   if (!(this instanceof Comparator))
-    return new Comparator(comp, loose);
+    return new Comparator(comp, options);
 
-  debug('comparator', comp, loose);
-  this.loose = loose;
+  debug('comparator', comp, options);
+  this.options = options;
+  this.loose = !!options.loose;
   this.parse(comp);
 
   if (this.semver === ANY)
@@ -4927,7 +4938,7 @@ function Comparator(comp, loose) {
 
 var ANY = {};
 Comparator.prototype.parse = function(comp) {
-  var r = this.loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
+  var r = this.options.loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
   var m = comp.match(r);
 
   if (!m)
@@ -4941,7 +4952,7 @@ Comparator.prototype.parse = function(comp) {
   if (!m[2])
     this.semver = ANY;
   else
-    this.semver = new SemVer(m[2], this.loose);
+    this.semver = new SemVer(m[2], this.options.loose);
 };
 
 Comparator.prototype.toString = function() {
@@ -4949,30 +4960,33 @@ Comparator.prototype.toString = function() {
 };
 
 Comparator.prototype.test = function(version) {
-  debug('Comparator.test', version, this.loose);
+  debug('Comparator.test', version, this.options.loose);
 
   if (this.semver === ANY)
     return true;
 
   if (typeof version === 'string')
-    version = new SemVer(version, this.loose);
+    version = new SemVer(version, this.options);
 
-  return cmp(version, this.operator, this.semver, this.loose);
+  return cmp(version, this.operator, this.semver, this.options);
 };
 
-Comparator.prototype.intersects = function(comp, loose) {
+Comparator.prototype.intersects = function(comp, options) {
   if (!(comp instanceof Comparator)) {
     throw new TypeError('a Comparator is required');
   }
 
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
   var rangeTmp;
 
   if (this.operator === '') {
-    rangeTmp = new Range(comp.value, loose);
-    return satisfies(this.value, rangeTmp, loose);
+    rangeTmp = new Range(comp.value, options);
+    return satisfies(this.value, rangeTmp, options);
   } else if (comp.operator === '') {
-    rangeTmp = new Range(this.value, loose);
-    return satisfies(comp.semver, rangeTmp, loose);
+    rangeTmp = new Range(this.value, options);
+    return satisfies(comp.semver, rangeTmp, options);
   }
 
   var sameDirectionIncreasing =
@@ -4986,11 +5000,11 @@ Comparator.prototype.intersects = function(comp, loose) {
     (this.operator === '>=' || this.operator === '<=') &&
     (comp.operator === '>=' || comp.operator === '<=');
   var oppositeDirectionsLessThan =
-    cmp(this.semver, '<', comp.semver, loose) &&
+    cmp(this.semver, '<', comp.semver, options) &&
     ((this.operator === '>=' || this.operator === '>') &&
     (comp.operator === '<=' || comp.operator === '<'));
   var oppositeDirectionsGreaterThan =
-    cmp(this.semver, '>', comp.semver, loose) &&
+    cmp(this.semver, '>', comp.semver, options) &&
     ((this.operator === '<=' || this.operator === '<') &&
     (comp.operator === '>=' || comp.operator === '>'));
 
@@ -5001,23 +5015,29 @@ Comparator.prototype.intersects = function(comp, loose) {
 
 
 exports.Range = Range;
-function Range(range, loose) {
+function Range(range, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
   if (range instanceof Range) {
-    if (range.loose === loose) {
+    if (range.loose === !!options.loose &&
+        range.includePrerelease === !!options.includePrerelease) {
       return range;
     } else {
-      return new Range(range.raw, loose);
+      return new Range(range.raw, options);
     }
   }
 
   if (range instanceof Comparator) {
-    return new Range(range.value, loose);
+    return new Range(range.value, options);
   }
 
   if (!(this instanceof Range))
-    return new Range(range, loose);
+    return new Range(range, options);
 
-  this.loose = loose;
+  this.options = options;
+  this.loose = !!options.loose;
+  this.includePrerelease = !!options.includePrerelease
 
   // First, split based on boolean or ||
   this.raw = range;
@@ -5047,9 +5067,8 @@ Range.prototype.toString = function() {
 };
 
 Range.prototype.parseRange = function(range) {
-  var loose = this.loose;
+  var loose = this.options.loose;
   range = range.trim();
-  debug('range', range, loose);
   // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
   var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE];
   range = range.replace(hr, hyphenReplace);
@@ -5072,22 +5091,22 @@ Range.prototype.parseRange = function(range) {
 
   var compRe = loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
   var set = range.split(' ').map(function(comp) {
-    return parseComparator(comp, loose);
-  }).join(' ').split(/\s+/);
-  if (this.loose) {
+    return parseComparator(comp, this.options);
+  }, this).join(' ').split(/\s+/);
+  if (this.options.loose) {
     // in loose mode, throw out any that are not valid comparators
     set = set.filter(function(comp) {
       return !!comp.match(compRe);
     });
   }
   set = set.map(function(comp) {
-    return new Comparator(comp, loose);
-  });
+    return new Comparator(comp, this.options);
+  }, this);
 
   return set;
 };
 
-Range.prototype.intersects = function(range, loose) {
+Range.prototype.intersects = function(range, options) {
   if (!(range instanceof Range)) {
     throw new TypeError('a Range is required');
   }
@@ -5096,7 +5115,7 @@ Range.prototype.intersects = function(range, loose) {
     return thisComparators.every(function(thisComparator) {
       return range.set.some(function(rangeComparators) {
         return rangeComparators.every(function(rangeComparator) {
-          return thisComparator.intersects(rangeComparator, loose);
+          return thisComparator.intersects(rangeComparator, options);
         });
       });
     });
@@ -5105,8 +5124,8 @@ Range.prototype.intersects = function(range, loose) {
 
 // Mostly just for testing and legacy API reasons
 exports.toComparators = toComparators;
-function toComparators(range, loose) {
-  return new Range(range, loose).set.map(function(comp) {
+function toComparators(range, options) {
+  return new Range(range, options).set.map(function(comp) {
     return comp.map(function(c) {
       return c.value;
     }).join(' ').trim().split(' ');
@@ -5116,15 +5135,15 @@ function toComparators(range, loose) {
 // comprised of xranges, tildes, stars, and gtlt's at this point.
 // already replaced the hyphen ranges
 // turn into a set of JUST comparators.
-function parseComparator(comp, loose) {
-  debug('comp', comp);
-  comp = replaceCarets(comp, loose);
+function parseComparator(comp, options) {
+  debug('comp', comp, options);
+  comp = replaceCarets(comp, options);
   debug('caret', comp);
-  comp = replaceTildes(comp, loose);
+  comp = replaceTildes(comp, options);
   debug('tildes', comp);
-  comp = replaceXRanges(comp, loose);
+  comp = replaceXRanges(comp, options);
   debug('xrange', comp);
-  comp = replaceStars(comp, loose);
+  comp = replaceStars(comp, options);
   debug('stars', comp);
   return comp;
 }
@@ -5139,14 +5158,16 @@ function isX(id) {
 // ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
 // ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
 // ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
-function replaceTildes(comp, loose) {
+function replaceTildes(comp, options) {
   return comp.trim().split(/\s+/).map(function(comp) {
-    return replaceTilde(comp, loose);
+    return replaceTilde(comp, options);
   }).join(' ');
 }
 
-function replaceTilde(comp, loose) {
-  var r = loose ? re[TILDELOOSE] : re[TILDE];
+function replaceTilde(comp, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  var r = options.loose ? re[TILDELOOSE] : re[TILDE];
   return comp.replace(r, function(_, M, m, p, pr) {
     debug('tilde', comp, _, M, m, p, pr);
     var ret;
@@ -5180,15 +5201,17 @@ function replaceTilde(comp, loose) {
 // ^1.2, ^1.2.x --> >=1.2.0 <2.0.0
 // ^1.2.3 --> >=1.2.3 <2.0.0
 // ^1.2.0 --> >=1.2.0 <2.0.0
-function replaceCarets(comp, loose) {
+function replaceCarets(comp, options) {
   return comp.trim().split(/\s+/).map(function(comp) {
-    return replaceCaret(comp, loose);
+    return replaceCaret(comp, options);
   }).join(' ');
 }
 
-function replaceCaret(comp, loose) {
-  debug('caret', comp, loose);
-  var r = loose ? re[CARETLOOSE] : re[CARET];
+function replaceCaret(comp, options) {
+  debug('caret', comp, options);
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  var r = options.loose ? re[CARETLOOSE] : re[CARET];
   return comp.replace(r, function(_, M, m, p, pr) {
     debug('caret', comp, _, M, m, p, pr);
     var ret;
@@ -5235,16 +5258,18 @@ function replaceCaret(comp, loose) {
   });
 }
 
-function replaceXRanges(comp, loose) {
-  debug('replaceXRanges', comp, loose);
+function replaceXRanges(comp, options) {
+  debug('replaceXRanges', comp, options);
   return comp.split(/\s+/).map(function(comp) {
-    return replaceXRange(comp, loose);
+    return replaceXRange(comp, options);
   }).join(' ');
 }
 
-function replaceXRange(comp, loose) {
+function replaceXRange(comp, options) {
   comp = comp.trim();
-  var r = loose ? re[XRANGELOOSE] : re[XRANGE];
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  var r = options.loose ? re[XRANGELOOSE] : re[XRANGE];
   return comp.replace(r, function(ret, gtlt, M, m, p, pr) {
     debug('xRange', comp, ret, gtlt, M, m, p, pr);
     var xM = isX(M);
@@ -5308,8 +5333,8 @@ function replaceXRange(comp, loose) {
 
 // Because * is AND-ed with everything else in the comparator,
 // and '' means "any version", just remove the *s entirely.
-function replaceStars(comp, loose) {
-  debug('replaceStars', comp, loose);
+function replaceStars(comp, options) {
+  debug('replaceStars', comp, options);
   // Looseness is ignored here.  star is always as loose as it gets!
   return comp.trim().replace(re[STAR], '');
 }
@@ -5353,22 +5378,25 @@ Range.prototype.test = function(version) {
     return false;
 
   if (typeof version === 'string')
-    version = new SemVer(version, this.loose);
+    version = new SemVer(version, this.options);
 
   for (var i = 0; i < this.set.length; i++) {
-    if (testSet(this.set[i], version))
+    if (testSet(this.set[i], version, this.options))
       return true;
   }
   return false;
 };
 
-function testSet(set, version) {
+function testSet(set, version, options) {
   for (var i = 0; i < set.length; i++) {
     if (!set[i].test(version))
       return false;
   }
 
-  if (version.prerelease.length) {
+  if (!options)
+    options = {}
+
+  if (version.prerelease.length && !options.includePrerelease) {
     // Find the set of versions that are allowed to have prereleases
     // For example, ^1.2.3-pr.1 desugars to >=1.2.3-pr.1 <2.0.0
     // That should allow `1.2.3-pr.2` to pass.
@@ -5396,9 +5424,9 @@ function testSet(set, version) {
 }
 
 exports.satisfies = satisfies;
-function satisfies(version, range, loose) {
+function satisfies(version, range, options) {
   try {
-    range = new Range(range, loose);
+    range = new Range(range, options);
   } catch (er) {
     return false;
   }
@@ -5406,19 +5434,19 @@ function satisfies(version, range, loose) {
 }
 
 exports.maxSatisfying = maxSatisfying;
-function maxSatisfying(versions, range, loose) {
+function maxSatisfying(versions, range, options) {
   var max = null;
   var maxSV = null;
   try {
-    var rangeObj = new Range(range, loose);
+    var rangeObj = new Range(range, options);
   } catch (er) {
     return null;
   }
   versions.forEach(function (v) {
-    if (rangeObj.test(v)) { // satisfies(v, range, loose)
+    if (rangeObj.test(v)) { // satisfies(v, range, options)
       if (!max || maxSV.compare(v) === -1) { // compare(max, v, true)
         max = v;
-        maxSV = new SemVer(max, loose);
+        maxSV = new SemVer(max, options);
       }
     }
   })
@@ -5426,19 +5454,19 @@ function maxSatisfying(versions, range, loose) {
 }
 
 exports.minSatisfying = minSatisfying;
-function minSatisfying(versions, range, loose) {
+function minSatisfying(versions, range, options) {
   var min = null;
   var minSV = null;
   try {
-    var rangeObj = new Range(range, loose);
+    var rangeObj = new Range(range, options);
   } catch (er) {
     return null;
   }
   versions.forEach(function (v) {
-    if (rangeObj.test(v)) { // satisfies(v, range, loose)
+    if (rangeObj.test(v)) { // satisfies(v, range, options)
       if (!min || minSV.compare(v) === 1) { // compare(min, v, true)
         min = v;
-        minSV = new SemVer(min, loose);
+        minSV = new SemVer(min, options);
       }
     }
   })
@@ -5446,11 +5474,11 @@ function minSatisfying(versions, range, loose) {
 }
 
 exports.validRange = validRange;
-function validRange(range, loose) {
+function validRange(range, options) {
   try {
     // Return '*' instead of '' so that truthiness works.
     // This will throw if it's invalid anyway
-    return new Range(range, loose).range || '*';
+    return new Range(range, options).range || '*';
   } catch (er) {
     return null;
   }
@@ -5458,20 +5486,20 @@ function validRange(range, loose) {
 
 // Determine if version is less than all the versions possible in the range
 exports.ltr = ltr;
-function ltr(version, range, loose) {
-  return outside(version, range, '<', loose);
+function ltr(version, range, options) {
+  return outside(version, range, '<', options);
 }
 
 // Determine if version is greater than all the versions possible in the range.
 exports.gtr = gtr;
-function gtr(version, range, loose) {
-  return outside(version, range, '>', loose);
+function gtr(version, range, options) {
+  return outside(version, range, '>', options);
 }
 
 exports.outside = outside;
-function outside(version, range, hilo, loose) {
-  version = new SemVer(version, loose);
-  range = new Range(range, loose);
+function outside(version, range, hilo, options) {
+  version = new SemVer(version, options);
+  range = new Range(range, options);
 
   var gtfn, ltefn, ltfn, comp, ecomp;
   switch (hilo) {
@@ -5494,7 +5522,7 @@ function outside(version, range, hilo, loose) {
   }
 
   // If it satisifes the range it is not outside
-  if (satisfies(version, range, loose)) {
+  if (satisfies(version, range, options)) {
     return false;
   }
 
@@ -5513,9 +5541,9 @@ function outside(version, range, hilo, loose) {
       }
       high = high || comparator;
       low = low || comparator;
-      if (gtfn(comparator.semver, high.semver, loose)) {
+      if (gtfn(comparator.semver, high.semver, options)) {
         high = comparator;
-      } else if (ltfn(comparator.semver, low.semver, loose)) {
+      } else if (ltfn(comparator.semver, low.semver, options)) {
         low = comparator;
       }
     });
@@ -5539,15 +5567,15 @@ function outside(version, range, hilo, loose) {
 }
 
 exports.prerelease = prerelease;
-function prerelease(version, loose) {
-  var parsed = parse(version, loose);
+function prerelease(version, options) {
+  var parsed = parse(version, options);
   return (parsed && parsed.prerelease.length) ? parsed.prerelease : null;
 }
 
 exports.intersects = intersects;
-function intersects(r1, r2, loose) {
-  r1 = new Range(r1, loose)
-  r2 = new Range(r2, loose)
+function intersects(r1, r2, options) {
+  r1 = new Range(r1, options)
+  r2 = new Range(r2, options)
   return r1.intersects(r2)
 }
 
@@ -7293,13 +7321,13 @@ function map_obj(obj, fn){
   }, {})
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, "node_modules\\7zip"))
+/* WEBPACK VAR INJECTION */}.call(exports, "node_modules/7zip"))
 
 /***/ }),
 /* 46 */
 /***/ (function(module, exports) {
 
-module.exports = {"_args":[["7zip@0.0.6","C:\\SECWorkspace\\new-secjs-client\\secjs-client"]],"_development":true,"_from":"7zip@0.0.6","_id":"7zip@0.0.6","_inBundle":false,"_integrity":"sha1-nK+xca+CMpSQNTtIFvAzR6oVCjA=","_location":"/7zip","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"7zip@0.0.6","name":"7zip","escapedName":"7zip","rawSpec":"0.0.6","saveSpec":null,"fetchSpec":"0.0.6"},"_requiredBy":["/electron-devtools-installer"],"_resolved":"https://registry.npmjs.org/7zip/-/7zip-0.0.6.tgz","_spec":"0.0.6","_where":"C:\\SECWorkspace\\new-secjs-client\\secjs-client","bin":{"7z":"7zip-lite/7z.exe"},"bugs":{"url":"https://github.com/fritx/win-7zip/issues"},"description":"7zip Windows Package via Node.js","homepage":"https://github.com/fritx/win-7zip#readme","keywords":["7z","7zip","7-zip","windows","install"],"license":"GNU LGPL","main":"index.js","name":"7zip","repository":{"type":"git","url":"git+ssh://git@github.com/fritx/win-7zip.git"},"scripts":{"test":"mocha"},"version":"0.0.6"}
+module.exports = {"_args":[["7zip@0.0.6","/Users/thefay/Project/SEC/secjs-client_old"]],"_development":true,"_from":"7zip@0.0.6","_id":"7zip@0.0.6","_inBundle":false,"_integrity":"sha1-nK+xca+CMpSQNTtIFvAzR6oVCjA=","_location":"/7zip","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"7zip@0.0.6","name":"7zip","escapedName":"7zip","rawSpec":"0.0.6","saveSpec":null,"fetchSpec":"0.0.6"},"_requiredBy":["/electron-devtools-installer"],"_resolved":"https://registry.npmjs.org/7zip/-/7zip-0.0.6.tgz","_spec":"0.0.6","_where":"/Users/thefay/Project/SEC/secjs-client_old","bin":{"7z":"7zip-lite/7z.exe"},"bugs":{"url":"https://github.com/fritx/win-7zip/issues"},"description":"7zip Windows Package via Node.js","homepage":"https://github.com/fritx/win-7zip#readme","keywords":["7z","7zip","7-zip","windows","install"],"license":"GNU LGPL","main":"index.js","name":"7zip","repository":{"type":"git","url":"git+ssh://git@github.com/fritx/win-7zip.git"},"scripts":{"test":"mocha"},"version":"0.0.6"}
 
 /***/ }),
 /* 47 */
@@ -7399,6 +7427,18 @@ module.exports = require("axios");
 /***/ (function(module, exports) {
 
 module.exports = {"name":"secblock-wallet","version":"1.2.5","author":"theFay <fei.minhao@gmail.com>","description":"SEC Wallet Client","license":"MIT","main":"./dist/electron/main.js","scripts":{"build":"node .electron-vue/build.js && electron-builder","release":"node .electron-vue/build.js && electron-builder","release-all":"node .electron-vue/build.js && electron-builder && electron-builder -m && electron-builder --windows","build:dir":"node .electron-vue/build.js && electron-builder --dir","build:clean":"cross-env BUILD_TARGET=clean node .electron-vue/build.js","build:web":"cross-env BUILD_TARGET=web node .electron-vue/build.js","dev":"node .electron-vue/dev-runner.js","pack":"npm run pack:main && npm run pack:renderer","pack:main":"cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js","pack:renderer":"cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js","test":"npm run unit","unit":"karma start test/unit/karma.conf.js","postinstall":"","patch":"npm version patch && git push origin master && git push origin --tags","minor":"npm version minor && git push origin master && git push origin --tags","major":"npm version major && git push origin master && git push origin --tags"},"build":{"productName":"Sec Client","appId":"sec.secjs-client","directories":{"output":"build"},"files":["dist/electron/**/*"],"dmg":{"contents":[{"x":410,"y":150,"type":"link","path":"/Applications"},{"x":130,"y":150,"type":"file"}]},"mac":{"icon":"build/icons/icon.icns"},"win":{"icon":"build/icons/icon.ico"},"linux":{"icon":"build/icons"}},"dependencies":{"@mdi/font":"^2.7.94","@sec-block/secjs-core":"^1.0.1","@sec-block/secjs-rpc":"^1.0.1","@sec-block/secjs-util":"^1.1.20","axios":"^0.16.1","buefy":"^0.6.6","clipboard":"^2.0.4","crypto-js":"^3.1.9-1","dom-to-image":"^2.6.0","electron-prompt":"^1.2.0","electron-updater":"^3.1.2","element-ui":"^2.4.11","file-saver":"^2.0.0","jayson":"^2.0.6","jsonwebtoken":"^8.3.0","mdi":"^2.2.43","net-ping":"^1.2.3","qrious":"^4.0.2","telnet-client":"^0.16.1","vue":"^2.3.3","vue-electron":"^1.0.6","vue-router":"^2.5.3","vuex":"^2.3.1"},"devDependencies":{"babel-core":"^6.25.0","babel-loader":"^7.1.1","babel-plugin-istanbul":"^4.1.1","babel-plugin-transform-runtime":"^6.23.0","babel-preset-env":"^1.6.0","babel-preset-stage-0":"^6.24.1","babel-register":"^6.24.1","babili-webpack-plugin":"^0.1.2","cfonts":"^1.1.3","chai":"^4.0.0","chalk":"^2.1.0","copy-webpack-plugin":"^4.0.1","cross-env":"^5.0.5","css-loader":"^0.28.4","del":"^3.0.0","devtron":"^1.4.0","electron":"^1.8.8","electron-builder":"^19.19.1","electron-debug":"^1.4.0","electron-devtools-installer":"^2.2.0","extract-text-webpack-plugin":"^3.0.0","file-loader":"^0.11.2","html-webpack-plugin":"^2.30.1","inject-loader":"^3.0.0","karma":"^1.3.0","karma-chai":"^0.1.0","karma-coverage":"^1.1.1","karma-electron":"^5.1.1","karma-mocha":"^1.2.0","karma-sourcemap-loader":"^0.3.7","karma-spec-reporter":"^0.0.31","karma-webpack":"^2.0.1","mocha":"^3.0.2","multispinner":"^0.2.1","node-loader":"^0.6.0","normalize.css":"^8.0.1","style-loader":"^0.18.2","url-loader":"^0.5.9","vue-html-loader":"^1.2.4","vue-loader":"^13.7.3","vue-style-loader":"^3.0.1","vue-template-compiler":"^2.4.2","webpack":"^3.5.2","webpack-dev-server":"^2.11.3","webpack-hot-middleware":"^2.23.1","webpack-merge":"^4.1.0"}}
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports) {
+
+module.exports = require("@sec-block/secjs-core");
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports) {
+
+module.exports = require("@sec-block/secjs-rpc");
 
 /***/ })
 /******/ ]);
