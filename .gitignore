@@ -3,6 +3,7 @@ build/mac
 build/win-unpacked
 build/Sec*
 dist/
+dist/*
 data/
 data/*
 logs/
