@@ -11,7 +11,8 @@
             walletBalance: this.walletBalance,
             walletName: this.walletName,
             walletPwd: this.password,
-            walletsArr: this.walletsArr
+            walletsArr: this.walletsArr,
+            colorArr: this.colorArr
           }}">
             <i class="el-icon-arrow-left icon_nav"></i>
           </router-link>
@@ -143,7 +144,8 @@ export default {
       walletName: "",
       walletsArr: '',
       walletBalance: "",
-      alreadySaved: false
+      alreadySaved: false,
+      colorArr: []
     }
   },
   methods: {
@@ -295,11 +297,18 @@ export default {
     this.id = this.$route.query.id
     this.privateKey = this.$route.query.privateKey
     this.publicKey = this.$route.query.publicKey
-    this.password = this.$route.query.password
-    this.secAddress = this.$route.query.userAddress
     this.walletPwd = this.$route.query.walletPwd
+    if(this.id==="3"){
+      this.password = this.$route.query.walletPwd
+    } else {
+      this.password = this.$route.query.password
+    }
+    this.secAddress = this.$route.query.userAddress
     this.walletName = this.$route.query.walletName
     this.walletBalance = this.$route.query.walletBalance
+    if (this.$route.query.colorArr) {
+      this.colorArr = this.$route.query.colorArr
+    }    
     if (this.$route.query.walletsArr) {
       this.walletsArr = this.$route.query.walletsArr
     }
