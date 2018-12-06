@@ -1,0 +1,81 @@
+{
+  "SECBlock": {
+    "dbConfig": {
+      "Path": "/data/"
+    },
+    "logConfig": {
+      "Path": "/logs/",
+      "Name": "sec-main.log",
+      "Level": "debug"
+    },
+    "devp2pConfig": {
+      "Port": 13331,
+      "bootstrapNodes": [
+        {
+          "ip": "35.158.171.46",
+          "port": "13331"
+        },
+        {
+          "ip": "54.250.166.137",
+          "port": "13331"
+        },
+        {
+          "ip": "35.180.32.134",
+          "port": "13331"
+        },
+        {
+          "ip": "13.209.3.183",
+          "port": "13331"
+        }
+      ],
+      "txCache": 1000,
+      "blocksCache": 100,
+      "ndp": {
+        "refreshInterval": 30000,
+        "endpoint": {
+          "address": "0.0.0.0",
+          "udpPort": 13331,
+          "tcpPort": 13331
+        }
+      },
+      "rlp": {
+        "maxPeers": 25,
+        "clientId": "sec",
+        "remoteClientIdFilter": [],
+        "listenPort": "",
+        "endpoint": {
+          "address": "0.0.0.0",
+          "udpPort": 13331,
+          "tcpPort": 13331
+        }
+      }
+    },
+    "checkConfig": {
+      "CHAIN_ID": 1,
+      "CHECK_BLOCK_TITLE": "SEC_CHECK_BLOCK",
+      "CHECK_BLOCK_NR": 1
+    },
+    "groupConfig": {
+      "accAddrLength": 34,
+      "minGroupId": 1,
+      "maxGroupId": 2
+    },
+    "circleConfig": {
+      "timeServer": "DE",
+      "circleStartTime": 1500000000,
+      "periodTime": 480,
+      "intervalTime": 120,
+      "timeResolution": 0.1,
+      "timeTolerance": 1,
+      "ntpTryOut": 3
+    },
+    "txChainConfig": {
+      "minGenPeriod": 1200000,
+      "maxGenPeriod": 2400000
+    },
+    "powConfig": {
+      "path": "powCache",
+      "expectedDifficulty": 100000
+    }
+  }
+}

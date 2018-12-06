@@ -5,11 +5,6 @@ let connection = new Telnet()
 
 export default {
   install: function (Vue, options) {
-    let jsonRPC = {
-      target: '',
-      client: ''
-    }
-
     let timeOut = 1500
     let externalServerAddress = '35.158.171.46'
     let externalServerPort = '3002'
@@ -21,18 +16,27 @@ export default {
       shellPrompt: '/ # ',
       timeout: timeOut
     }
+    let jsonRPC = {
+      target: '',
+      client: '',
+      switchToLocalHost: function () {
+        this.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
+      }
+    }
 
-    connection.connect(localHostParam)
+    // connection.connect(localHostParam)
 
-    connection.on('connect', () => {
-      jsonRPC.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
+    // connection.on('connect', () => {
+    //   jsonRPC.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
+    // })
+
+    // connection.on('error', (err) => {
+    //   console.log(err)
+    jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+    // })
+
+    Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
+      value: jsonRPC
     })
-
-    connection.on('error', (err) => {
-      console.log(err)
-      jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-    })
-
-    Object.defineProperty(Vue.prototype, '$JsonRPCClient', {value: jsonRPC})
   }
 }

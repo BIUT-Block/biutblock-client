@@ -246,6 +246,7 @@ export default {
       //导入成功 跳转至首页
       let englishWords = this.mnemonicTxt
       let wallets = SECUtil.mnemonicToEntropy(englishWords)
+      
       this.$router.push("/wallet");
 
       //导入失败，停留在当前页面 给出对应的提示

@@ -8,6 +8,16 @@ import {
   autoUpdater
 } from 'electron-updater'
 import updateChecker from './updateChecker.js'
+// const SECCore = require('./secjs-core')
+// const SECRPCServer = require('@sec-block/secjs-rpc')
+
+/**
+ * Start RPC Server
+ */
+// SECCore.coreRun()
+// let secRPCServer = new SECRPCServer(SECCore.core)
+// secRPCServer.runRPCServer()
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html

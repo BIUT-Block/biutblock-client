@@ -30,7 +30,8 @@
                   v-model="progressVal"
                   active-color="#C8D1DA"
                   inactive-color="#00D6B2"
-                  :disabled="disabledBtn"> 
+                  :disabled="disabledBtn"
+                > 
                   <!-- 默认不可点击，进度条加载完成之后可点击 -->
                 </el-switch>
                  <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
@@ -83,14 +84,14 @@ export default {
       ipAddress: '35.158.171.46',
       systemTime: '2018/11/07 18:00 UTC+8 ',
       localTime: '2018/11/07 09:00 UTC+8', 
-      updateTime: '2017/11/01 09:00 UTC+8',
+      updateTime: '',
       timeCntShow: true,
       centerDialogVisible: false,
       progressVal: true,
       disabledBtn: true, // 切换显示 switch 开关
       progressAll: '50.2',
-      progress:'25.1',
-      progressPercentage: 50,
+      progress:'0',
+      progressPercentage: 0,
       consumptionTimt: '00:30:23',
       timeCnt: "1 year 7 days 12 hours 0 minutes No update",
       startBtn: 'Start syncing',
@@ -98,26 +99,85 @@ export default {
     }
   },
   created () {
-    this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: 'DE'}], (err, response) => {
-      this.ipAddress = response.result.ipv4
-      this.systemItem = new Date(response.result.time * 1000).toString()
-      this.localTime = new Date().toString()
+    this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
+      if(response) {
+        this.ipAddress = response.result.ipv4
+        this.systemItem = new Date(response.result.time * 1000).toString()
+        this.localTime = new Date().toString()
+      } 
     })
   },
   methods: {
     startSyncing () { 
-
-      //同步节点
       this.timeCntShow = false
-      
-
-
-      //节点同步完成
       this.startBtn = 'synchronizing...'
-      this.startBtnActive = 'startBtnActive'
-
-      //挖矿余额不足的时候弹窗
+      this.$JsonRPCClient.switchToLocalHost()
+      this.$JsonRPCClient.client.request('sec_getTokenChainSize', [], (err, response) => {
+        if (err) {
+          return
+        }
+        if (response && response.result.status === '1') {
+          this.progressAll = Number(response.result.value) / 1000000000
+        }
+      })
+      this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
+        if (err) {
+          return
+        }
+        if (response && response.result.status === '1') {
+          
+          this.startBtnActive = 'startBtnActive'
+          this.startBtn = 'Start syncing'
+          
+          let progressInterval = setInterval( () => {
+            this.progress = Number(this.progress) + Number(this.progressAll) / 5
+            if (Number(this.progressAll) - this.progress > 0.001) {
+              this.progressPercentage = (this.progress / Number(this.progressAll)) * 100
+            } else {
+              this.progressPercentage = 100
+              this.progress = this.progressAll
+              this.updateTime = new Date().toString()
+              this.disabledBtn = false
+              clearInterval(progressInterval)
+            }
+          }, 1000)
+        }
+      })
       //this.centerDialogVisible = true
+    }
+  },
+  watch: {
+    progressVal: function(){
+      console.log(this.progressVal)
+      if (!this.progressVal) {
+        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+          if (err) {
+            alert('Can not start mining')
+            this.progressVal = true
+            return
+          }
+          if (response && response.result.status === '1') {
+            alert('Begin Mining successfull')
+          } else {
+            this.progressVal = true
+            alert('Can not start mining')
+          }
+        })
+      } else {
+        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+          if (err) {
+            alert('Can not stop mining')
+            this.progressVal = false
+            return
+          }
+          if (response && response.result.status === '1') {
+            alert('Stop Mining successfull')
+          } else {
+            this.progressVal = false
+            alert('Can not stop mining')
+          }
+        })
+      }
     }
   }
 }
