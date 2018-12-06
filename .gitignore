@@ -3,10 +3,11 @@ build/mac
 build/win-unpacked
 build/Sec*
 build/github
+build/github/*
 build/latest*
 dist/
 dist/*
-dist/**
+dist/*/*
 data/
 data/*
 logs/
