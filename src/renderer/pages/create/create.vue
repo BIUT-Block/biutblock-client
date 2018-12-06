@@ -467,7 +467,7 @@ export default {
         this.mnemonicWallet.pubKey128ToString = pubKey128.toString('hex')
 
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
-        this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer)
+        this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
         alert('导入成功')
       } catch(e) {
         alert('助记词导入失败，请确认助记词正确')
@@ -562,12 +562,13 @@ export default {
             }
             this._navToAccountDetail({
               walletPwd: walletPwd,
-              privateKey: walletsArr[0].privateKey,
-              publicKey: walletsArr[0].publicKey,
-              walletAddress: walletsArr[0].walletAddress,
-              walletBalance: walletsArr[0].walletBalance,
+              privateKey: walletsArr[walletsArr.length-1].privateKey,
+              publicKey: walletsArr[walletsArr.length-1].publicKey,
+              walletAddress: walletsArr[walletsArr.length-1].walletAddress,
+              walletBalance: walletsArr[walletsArr.length-1].walletBalance,
               walletsArr: walletsArr,
-              walletName: walletsArr[0].walletName
+              walletName: walletsArr[walletsArr.length-1].walletName,
+              colorArr: new Array(walletsArr.length-1).fill(false).concat([true])
             })
           }
         })        
@@ -583,7 +584,8 @@ export default {
           walletPublicKey: params.publicKey, 
           walletBalance: params.walletBalance,
           walletsArr: params.walletsArr,
-          walletName: params.walletName  
+          walletName: params.walletName,
+          colorArr: params.colorArr
         }
       })
     },
@@ -648,7 +650,8 @@ export default {
           walletBalance: this.$route.query.walletBalance,
           walletsArr: this.$route.query.walletsArr,
           walletPwd: this.$route.query.walletPwd,
-          walletName: this.$route.query.walletName
+          walletName: this.$route.query.walletName,
+          colorArr: this.$route.query.colorArr
         }
       };
       this.mainCntTab1 = true;

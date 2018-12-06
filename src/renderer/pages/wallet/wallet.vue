@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <left-nav :wallet-name="walletName" :wallet-address="walletAddress" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
-        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletMoney"></left-nav>
+        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletMoney" :color-arr="colorArr"></left-nav>
       </el-col>
     </el-row>
 
@@ -32,12 +32,14 @@
           </section>
 
           <section class="walletListCnt">
-            <router-link :to="{name: 'receipt', query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney}}" tag="button" class="pointerTxt walletListBtn">
+            <router-link :to="{name: 'receipt', 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr}}" 
+              tag="button" class="pointerTxt walletListBtn">
               <img src="../../assets/image/walletReceipt.png" alt="" class="walletListTxt">
               Receipt
             </router-link>
             <router-link :to="{name: 'transfer', 
-              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney}}" 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr}}" 
               tag="button" class="pointerTxt walletListBtn">
                <img src="../../assets/image/walletTransfer.png" alt="" class="walletListTxt">
               Transfer
@@ -123,6 +125,7 @@ export default {
       walletAddress: "",
       walletsArr: [],
       walletPwd: "",
+      colorArr: [],
       //   walletList: [{
       //     id: '01',
       //     listAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
@@ -166,6 +169,13 @@ export default {
     this.walletsArr = this.$route.query.walletsArr;
     this.walletPwd = this.$route.query.walletPwd;
     this.walletName = this.$route.query.walletName;
+
+    if (this.$route.query.colorArr) {
+      this.colorArr = this.$route.query.colorArr
+    } else {
+      this.colorArr = [true].concat(new Array(this.walletsArr.length-1).fill(false))
+    }
+
     this.walletList = []
     this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
       if(response.result.status === '1'){
@@ -228,6 +238,9 @@ export default {
   mounted() {
     
     EventBus.$on('updateWalletInfo', function (walletParams) {
+      const res = new Array(this.walletsArr.length).fill(false)
+      res[walletParams.walletIndex] = !res[walletParams.walletIndex]
+      this.colorArr = res
       let moneyValue = ''
       let walletListTemp = []
       let walletAddressTempInPool = ''
@@ -320,6 +333,7 @@ export default {
             walletPwd: this.walletPwd, 
             walletAddress: this.walletAddress, 
             walletBalance: this.walletMoney,
+            colorArr: this.colorArr,
             detailsMoney: item.listMoney + ' SEC',
             detailsNumber: item.id,
             detailsBlock: item.blockNumber.toString(),
@@ -334,7 +348,15 @@ export default {
       //钱包详情  可传对应的参数
       this.$router.push(
         { name: "walletDetails",
-          query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletBalance: this.walletMoney}
+          query: {
+            privateKey: this.privateKey, 
+            publicKey: this.publicKey, 
+            walletsArr: this.walletsArr, 
+            walletName: this.walletName, 
+            walletPwd: this.walletPwd, 
+            walletAddress: this.walletAddress, 
+            walletBalance: this.walletMoney,
+            colorArr: this.colorArr}
       });
     },
     deleteWallet(event) {
@@ -364,6 +386,8 @@ export default {
           this.walletAddress = this.walletsArr[0].walletAddress
           this.privateKey = this.walletsArr[0].privateKey
           this.publicKey = this.walletsArr[0].publicKey
+          this.colorArr = new Array(this.walletsArr.length).fill(false)
+          this.colorArr[0] = true
           EventBus.$emit('updateQuery', {
             walletPrivateKey: this.privateKey,
             walletPublicKey: this.publicKey,
@@ -371,7 +395,8 @@ export default {
             walletsArr: this.walletsArr,
             walletName: this.walletName,
             walletPwd: this.walletPwd,
-            walletMoney: this.walletMoney
+            walletMoney: this.walletMoney,
+            colorArr: this.colorArr
           })
           
           this.walletList = []

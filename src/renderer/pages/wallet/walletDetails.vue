@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <left-nav :wallet-address="walletAddress" :wallet-name="walletName" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
-        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletBalance"></left-nav>
+        :wallet-private-key="privateKey" :wallet-public-key="publicKey" :wallet-balance="walletBalance" :color-arr="colorArr"></left-nav>
       </el-col>
     </el-row>
 
@@ -12,7 +12,8 @@
         <section class="publicWalletH">
           <section class="publicWalletHList">
             <router-link :to="{name: 'wallet', 
-            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletBalance}}" 
+            query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, 
+            walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletBalance, colorArr: this.colorArr}}" 
             class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
@@ -63,6 +64,7 @@ export default {
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
+      colorArr: this.$route.query.colorArr
     }
   },
   components: {

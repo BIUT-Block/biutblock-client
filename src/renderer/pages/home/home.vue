@@ -127,6 +127,7 @@ export default {
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
+      colorArr: [true],
       icon_wallet: icon_wallet_active,
       icon_node: icon_node,
       icon_set: icon_set,
@@ -134,6 +135,10 @@ export default {
   },
   created () {
     this.appVersion = packageInfo.version
+
+  },
+
+  mounted () {
     EventBus.$on('updateQuery', (queryParams) => {
       this.walletAddress = queryParams.walletAddress
       this.privateKey = queryParams.walletPrivateKey
@@ -142,6 +147,7 @@ export default {
       this.walletsArr = queryParams.walletsArr
       this.walletPwd = queryParams.walletPwd
       this.walletName = queryParams.walletName
+      this.colorArr = queryParams.colorArr
     })
   },
   methods: {
@@ -149,7 +155,7 @@ export default {
       this.$router.push({name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
             walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd,
-            walletPublicKey: this.publicKey, walletBalance: this.walletMoney}})
+            walletPublicKey: this.publicKey, walletBalance: this.walletMoney, colorArr: this.colorArr}})
       this.icon_wallet = icon_wallet_active
       this.icon_node = icon_node
       this.icon_set = icon_set

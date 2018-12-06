@@ -6,7 +6,7 @@
           <ul>
             <li v-for="(item,index) in walletsArr" 
               :index="item.id"
-              :class="[colorArr[index]?'color'+index%2:'',colorBorderArr[index%4]]"
+              :class="[colorArr[index]?'color0':'',colorBorderArr[index%4]]"
               @click="tabWallet(item,index)">
                 <p>{{item.walletName}}</p>
                 <p style="margin-top:5px">{{item.walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
@@ -27,10 +27,9 @@
 import {EventBus} from "../../../lib/EventBus.js"
 export default {
   name: '',
-  props: ['walletName', 'walletAddress', 'walletsArr', 'walletPwd', 'walletPrivateKey', 'walletPublicKey', 'walletBalance'],
+  props: ['walletName', 'walletAddress', 'walletsArr', 'walletPwd', 'walletPrivateKey', 'walletPublicKey', 'walletBalance', 'colorArr'],
   data () {
     return {
-      colorArr: [true, false],
       colorBorderArr: ['borderColor1','borderColor2','borderColor3','borderColor4'],
     }
   },
@@ -46,16 +45,27 @@ export default {
           walletPublicKey: this.publicKey, 
           walletBalance: this.walletBalance,
           walletsArr: this.walletsArr,
-          walletName: this.walletName
+          walletName: this.walletName,
+          colorArr: this.colorArr
         }
       })
     },
     tabWallet (item,index) {
-      const res = [false, false]
-      res[index] = !res[index]
-      this.colorArr = res
-      
+      //this.colorArr.fill(false)
+      //this.colorArr[index] = true
       console.log(item) //需要的参数可以通过方法 拿
+      let res = new Array(this.colorArr.length).fill(false)
+      res[index] = !res[index]
+      EventBus.$emit('updateQuery', {
+        walletPwd: this.walletPwd, 
+        walletAddress: item.walletAddress, 
+        walletPrivateKey: item.privateKey, 
+        walletPublicKey: item.publicKey, 
+        walletBalance: item.walletBalance,
+        walletsArr: this.walletsArr,
+        walletName: item.walletName ,
+        colorArr: res
+      })
       if (this.$route.name === 'wallet') {
         EventBus.$emit('updateWalletInfo', {
           walletPwd: this.walletPwd, 
@@ -64,7 +74,8 @@ export default {
           walletPublicKey: item.publicKey, 
           walletBalance: item.walletBalance,
           walletsArr: this.walletsArr,
-          walletName: item.walletName 
+          walletName: item.walletName ,
+          walletIndex: index
         })
       } else {
         this.$router.push({
@@ -76,7 +87,9 @@ export default {
             walletPublicKey: item.publicKey, 
             walletBalance: item.walletBalance,
             walletsArr: this.walletsArr,
-            walletName: item.walletName 
+            walletName: item.walletName,
+            walletIndex: index,
+            colorArr: res 
           }
         })
       }
@@ -116,5 +129,4 @@ li:hover {cursor: pointer;background:#00D6B2;color:#fff;border-left: none;}
 .borderColor4 {border-left: 2px solid #7498FB;}
 
 .color0 {background:#00D6B2;color:#fff;border-left: none;}
-.color1 {background:#00D6B2;color:#fff;border-left: none;}
 </style>
