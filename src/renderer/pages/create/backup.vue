@@ -221,7 +221,7 @@ export default {
               return
             }
             this._createImageFile(require('os').homedir() + '/secwallet')
-            this._saveWalletSuccess(filePath)          
+          //  this._saveWalletSuccess(filePath)          
           })
         } catch(e) {
           return
@@ -235,6 +235,7 @@ export default {
                       FileSaver.saveAs(blob, 'englishWords.png');
                       this._saveWalletSuccess(filePath)
                   })
+        return
       }
       if (document.getElementById('jpg').checked) {
         domtoimage.toJpeg(domSection, { quality: 0.95 })
@@ -245,7 +246,10 @@ export default {
             link.click()
             this._saveWalletSuccess(filePath)
          })
+         return
       }
+      alert('Select a file format to save your english words')
+      return
       // if (document.getElementById('svg').checked) {
       //   domtoimage.toSvg(domSection)
       //     .then(function (dataUrl) {

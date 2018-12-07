@@ -126,35 +126,6 @@ export default {
       walletsArr: [],
       walletPwd: "",
       colorArr: [],
-      //   walletList: [{
-      //     id: '01',
-      //     listAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      //     listTime: '16:23 12 dec 2018',
-      //     listMoney: '+ 100',
-      //     listState: 'Packed'
-      //   },
-      //   {
-      //     id: '02',
-      //     listAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      //     listTime: '16:23 12 dec 2018',
-      //     listMoney: '+ 100',
-      //     listState: 'Failed'
-      //   },
-      //   {
-      //     id: '03',
-      //     listAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      //     listTime: '16:23 12 dec 2018',
-      //     listMoney: '+ 100',
-      //     listState: 'Successful'
-      //   },
-      //   {
-      //     id: '04',
-      //     listAddress: '0x75f04e06b80b4b249a878000714e038fcc746ac54f56a49fabba5f1cb9449828',
-      //     listTime: '16:23 12 dec 2018',
-      //     listMoney: '+ 100',
-      //     listState: 'Failed'
-      //   }]
-      // }
       walletList: []
     };
   },

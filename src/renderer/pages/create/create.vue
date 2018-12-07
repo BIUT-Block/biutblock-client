@@ -665,8 +665,15 @@ export default {
       this.btn = "btn";
       this.btn2 = "btn2";
       this.passCntList = false;
-      let walletOrd = (this.$route.query.walletsArr.length + 1).toString()
+      let walletOrd = this.$route.query.walletsArr.length + 1
       this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
+      let result = this.$route.query.walletsArr.filter((wallet) => {
+        return wallet.walletName === this.name
+      })
+      if(result.length > 0) {
+        walletOrd = walletOrd + 1
+        this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
+      }   
     }
     if (this.$route.query.id === "2") {
       this.returnPage = "/backup";

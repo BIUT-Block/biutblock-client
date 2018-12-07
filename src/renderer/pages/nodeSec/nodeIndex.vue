@@ -81,9 +81,9 @@ export default {
   name: '',
   data () {
     return {
-      ipAddress: '35.158.171.46',
-      systemTime: '2018/11/07 18:00 UTC+8 ',
-      localTime: '2018/11/07 09:00 UTC+8', 
+      ipAddress: '',
+      systemTime: '',
+      localTime: '', 
       updateTime: '',
       timeCntShow: true,
       centerDialogVisible: false,
@@ -93,16 +93,27 @@ export default {
       progress:'0',
       progressPercentage: 0,
       consumptionTimt: '00:30:23',
-      timeCnt: "1 year 7 days 12 hours 0 minutes No update",
+      timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
+      siteStatus: {
+        walletUpdateTime: '',
+        mining: false,
+        startBtnActive: true
+      }
     }
   },
   created () {
+    if (window.localStorage.getItem('siteStatus')) {
+      this.siteStatus = JSON.parse(window.localStorage.getItem('siteStatus'))
+      this.timeCnt = this.siteStatus.walletUpdateTime
+      this.disabledBtn = this.siteStatus.mining
+      this.startBtnActive = this.siteStatus.startBtnActive
+    }
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
       if(response) {
         this.ipAddress = response.result.ipv4
-        this.systemItem = new Date(response.result.time * 1000).toString()
+        this.systemTime = new Date(response.result.time * 1000).toString()
         this.localTime = new Date().toString()
       } 
     })
@@ -142,6 +153,8 @@ export default {
               this.progress = this.progressAll
               this.updateTime = new Date().toString()
               this.disabledBtn = false
+              this.siteStatus.walletUpdateTime = this.updateTime
+              window.localStorage('siteStatus', JSON.stringify(this.siteStatus))
               clearInterval(progressInterval)
             }
           }, 1000)
@@ -162,6 +175,7 @@ export default {
           }
           // if (response && response.result.status === '1') {
           if (response) {
+            this.siteStatus.mining = false
             alert('Begin Mining successfull')
           } else {
             this.progressVal = true
@@ -177,6 +191,7 @@ export default {
           }
           // if (response && response.result.status === '1') {
           if (response) {
+            this.siteStatus.mining = true
             alert('Stop Mining successfull')
           } else {
             this.progressVal = false
@@ -184,6 +199,7 @@ export default {
           }
         })
       }
+      window.localStorage.setItem('siteStatus', JSON.stringify(this.siteStatus))
     }
   }
 }

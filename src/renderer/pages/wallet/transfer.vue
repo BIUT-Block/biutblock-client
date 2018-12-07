@@ -31,13 +31,13 @@
 
             <p class="transferCntTxt">Balance : {{allMoney}} <span @click="allMoneyFrom" class="TxtColor pointerTxt">All out</span></p>
 
-            <input class="ipt" maxlength="20" v-model="remarks" placeholder="Remarks"></input>
+            <input class="ipt" maxlength="20" v-model="remarks" placeholder="Remarks" />
 
             <p class="transferCntTxt2">Miner cost</p>
 
             <section class="transferSlider">
               <div class="block">
-                <el-slider v-model="cost" @change="addTxFee"></el-slider>
+                <el-slider v-model="cost"></el-slider>
               </div>
             </section>
 
@@ -222,15 +222,22 @@ export default {
             if(response.result.status === '1') {
               //this.dialogVisible = false
               this.centerDialogVisible = false
+              this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, responseBalance) => {
+                if(responseBalance.result.status === '1'){
+                  this.allMoney = responseBalance.result.value
+                }
+              })
               alert('Your transfer is now in pending.')
             }
           })
+
+          
       }
     }
   },
   computed: {
     publicBtnAcitve () {
-      return (this.address.length > 39 && this.amount > 0) ? true : false
+      return (this.address.length > 39 && this.amount > 0 && Number(this.amount) <= Number(this.allMoney)) ? true : false
     },
     determineBtn () {
       return this.password.length > 7 ? true : false
