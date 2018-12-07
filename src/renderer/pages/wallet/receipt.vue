@@ -55,8 +55,8 @@ export default {
     return {
       money: 0,
       walletAddress: this.$route.query.walletAddress,
-      privateKey: this.$route.query.walletPrivateKey,
-      publicKey: this.$route.query.walletPublicKey,
+      privateKey: this.$route.query.privateKey,
+      publicKey: this.$route.query.publicKey,
       walletMoney: this.$route.query.walletMoney,
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,

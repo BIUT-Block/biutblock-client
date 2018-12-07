@@ -260,6 +260,7 @@ export default {
       btn: "btn",
       btn2: "btn2",
       navTit: 'New wallet',
+      tempColorArr: [],
       mnemonicTxt: "",
       newUserAccount: {
         walletName: "",
@@ -389,7 +390,8 @@ export default {
               englishWords: this.englishWords,
               walletsArr: this.$route.query.walletsArr,
               walletPwd: this.walletPwd,
-              walletName: this.name
+              walletName: this.name,
+              colorArr: this.tempColorArr
             }
           });
         }
@@ -647,8 +649,8 @@ export default {
       this.returnPage = {
         name: 'wallet',
         query: {
-          privateKey: this.$route.query.walletPrivateKey,
-          publicKey: this.$route.query.walletPublicKey,
+          walletPrivateKey: this.$route.query.walletPrivateKey,
+          walletPublicKey: this.$route.query.walletPublicKey,
           walletAddress: this.$route.query.walletAddress,
           walletBalance: this.$route.query.walletBalance,
           walletsArr: this.$route.query.walletsArr,
@@ -657,6 +659,7 @@ export default {
           colorArr: this.$route.query.colorArr
         }
       };
+      this.tempColorArr = this.$route.query.colorArr
       this.mainCntTab1 = true;
       this.mainCntTab2 = false;
       this.btn = "btn";

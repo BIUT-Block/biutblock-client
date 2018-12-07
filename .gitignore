@@ -2,4 +2,15 @@ node_modules/
 build/mac
 build/win-unpacked
 build/Sec*
-disk/electron/main.js
+build/github
+build/github/*
+build/latest*
+dist/
+dist/*
+dist/*/*
+data/
+data/*
+logs/
+logs/*
+.DS_Store
+build/.DS_Store

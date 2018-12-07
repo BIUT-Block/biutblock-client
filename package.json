@@ -1,7 +1,7 @@
 {
   "name": "secblock-wallet",
-  "version": "1.2.5",
-  "author": "theFay <fei.minhao@gmail.com>",
+  "version": "1.2.7",
+  "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",
   "main": "./dist/electron/main.js",
@@ -24,7 +24,7 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "Sec Client",
+    "productName": "SEC_Client",
     "appId": "sec.secjs-client",
     "directories": {
       "output": "build"
@@ -48,19 +48,19 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icon.png"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/icon.png"
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "build/icons/icon.png"
     }
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-core": "^1.0.1",
-    "@sec-block/secjs-rpc": "^1.0.1",
+    "@sec-block/secjs-core": "^1.0.4",
+    "@sec-block/secjs-rpc": "^1.0.2",
     "@sec-block/secjs-util": "^1.1.20",
     "axios": "^0.16.1",
     "buefy": "^0.6.6",
