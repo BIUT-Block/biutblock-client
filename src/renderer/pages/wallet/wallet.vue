@@ -315,7 +315,8 @@ export default {
             detailsTime: item.listTime,
             detailsBeneficiary: item.listAddress,
             detailsSending: item.listFrom,
-            detailsCost: item.listMinerCost,            
+            detailsCost: item.listMinerCost,
+            detailsState: item.listState         
           }
       });
     },

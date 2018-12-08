@@ -47,10 +47,10 @@
             </section>
             <section style="display: flex;justify-content: space-between;padding:0 8px;
             margin-top:23px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
-              <figure>
-                <qr-code :value="privateKey" :size="70" class="receiptCntImg">
+              
+                <qr-code :value="englishWordsString" :size="80" class="receiptCntImg">
                 </qr-code>
-              </figure>
+              
               <section style="margin: 0 22px 0 8px;">
                 <p class="copyTxt">Private key</p>
                 <p class="copyTxt2" id="copyPrivateKey">{{privateKey}}</p>
@@ -147,6 +147,7 @@ export default {
       centerDialogVisible: false,
       dialogVisible: false,
       englishWords: [[]],
+      englishWordsString: '',
       privateKey: "",
       password: "",
       keyFileDataJS: {},
@@ -328,6 +329,7 @@ export default {
     }
     let lineCount = 0
     let englishWords = this.$route.query.englishWords.split(' ')
+    this.englishWordsString = this.$route.query.englishWords
     for(let i = 0; i < englishWords.length; i++) {
       if ( i % 4 === 0 && i !== 0 ) {
         lineCount ++

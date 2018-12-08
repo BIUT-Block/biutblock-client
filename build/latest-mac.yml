@@ -1,10 +1,10 @@
-version: 1.2.7
+version: 1.2.9
 files:
-  - url: secblock-wallet-1.2.7-mac.zip
-    sha512: V8Y7I/ukoWj4M1OZ9UsamCAM/IW6d++cWZ2gkPWdyRK9es7FTzxgsQ1RqjBl8gBDYXSYbtpBRt5a5Y0hoTMsyA==
-  - url: SEC_Client-1.2.7.dmg
-    sha512: N0sWQaIRtceA9qjURnKmBLpjsaY+JnvbjU/Zgrfr3ZwtY0PTjkW9zCmkkFDn+TWuN/z2AsTfHWj/jgox3DdSAw==
-    size: 66641198
-path: secblock-wallet-1.2.7-mac.zip
-sha512: V8Y7I/ukoWj4M1OZ9UsamCAM/IW6d++cWZ2gkPWdyRK9es7FTzxgsQ1RqjBl8gBDYXSYbtpBRt5a5Y0hoTMsyA==
-releaseDate: '2018-12-07T21:26:36.262Z'
+  - url: secblock-wallet-1.2.9-mac.zip
+    sha512: yrY8XoYUKPAvXROdVkcd356F0jKg5wY5H+sAio6gsJLv2FSWaZ4JIDhToUEgyfWcx7pr0rz3FkvdJwllntjyLQ==
+  - url: SEC_Client-1.2.9.dmg
+    sha512: LAeC7VDkaq7boQ/RnQ6KnAkxBm9R083KRTDHZdWEjvem+ObgcLS+/O+zTBDGRlTUecLuVhq3hvEtMUySAfqg7w==
+    size: 66636988
+path: secblock-wallet-1.2.9-mac.zip
+sha512: yrY8XoYUKPAvXROdVkcd356F0jKg5wY5H+sAio6gsJLv2FSWaZ4JIDhToUEgyfWcx7pr0rz3FkvdJwllntjyLQ==
+releaseDate: '2018-12-08T17:10:43.983Z'

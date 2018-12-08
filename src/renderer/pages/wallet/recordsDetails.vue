@@ -75,6 +75,7 @@
 <script>
 import leftNav from './components/leftNav'
 import successImg from '../../assets/image/detailsSuccess.png'
+import detailsLoadingImg from '../../assets/image/detailsLoading.png'
 export default {
   name: '',
   data () {
@@ -94,7 +95,20 @@ export default {
       detailsBeneficiary: this.$route.query.detailsBeneficiary,
       detailsSending: this.$route.query.detailsSending,
       detailsCost: this.$route.query.detailsCost,
+      detailsState: this.$route.query.detailsState,
       colorArr: this.$route.query.colorArr
+    }
+  },
+  created () {
+    switch(this.detailsState) {
+      case 'Packed':
+        this.detailsImg = detailsLoadingImg
+        break
+      case 'Successful':
+        this.detailsImg = successImg
+        break
+      default:
+        break
     }
   },
   components: {

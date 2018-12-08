@@ -1,9 +1,9 @@
-version: 1.2.7
+version: 1.2.9
 files:
-  - url: secblock-wallet-setup-1.2.7.exe
-    sha512: S2+hxW+L6VjTCKZjkZzOz8mw+tcXgbmcSIWHK95+v3auYkH4L4YzQnGsY+4THRY2rOUeHcJPW+bCBPrWovQLEw==
-    size: 49062120
-path: secblock-wallet-setup-1.2.7.exe
-sha512: S2+hxW+L6VjTCKZjkZzOz8mw+tcXgbmcSIWHK95+v3auYkH4L4YzQnGsY+4THRY2rOUeHcJPW+bCBPrWovQLEw==
-sha2: a947e97200b2dec8bf94d730072981a7b123e835f7276473f126b5d0bb70e50d
-releaseDate: '2018-12-07T21:27:22.031Z'
+  - url: secblock-wallet-setup-1.2.9.exe
+    sha512: 3E+jfZOYv+3SKgI5allM3lr/RGyAYS5VBbxxtpPKN6zo0JNz7dK6VFwWo6efVn1yC7S2WlpEo4UxeCOABeZtuA==
+    size: 49057686
+path: secblock-wallet-setup-1.2.9.exe
+sha512: 3E+jfZOYv+3SKgI5allM3lr/RGyAYS5VBbxxtpPKN6zo0JNz7dK6VFwWo6efVn1yC7S2WlpEo4UxeCOABeZtuA==
+sha2: 5d5ac69d7e06bbd28fd07e9e0efe197af08477902075263e552c8aa659a79159
+releaseDate: '2018-12-08T17:12:23.190Z'
