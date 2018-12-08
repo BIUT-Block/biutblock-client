@@ -48,7 +48,8 @@
             <section style="display: flex;justify-content: space-between;padding:0 8px;
             margin-top:23px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
               <figure>
-                <img src="../../assets/image/backupImg.png" alt="">
+                <qr-code :value="privateKey" :size="70" class="receiptCntImg">
+                </qr-code>
               </figure>
               <section style="margin: 0 22px 0 8px;">
                 <p class="copyTxt">Private key</p>
@@ -129,11 +130,15 @@
 <script>
 import Clipboard from 'clipboard'
 import domtoimage from 'dom-to-image'
+import qrCode from '../wallet/components/qrCode'
 const CryptoJS = require("crypto-js")
 const fs = require("fs")
 const FileSaver = require('file-saver')
 export default {
   name: '',
+  components: {
+    qrCode
+  },
   data() {
     return {
       copyBtnAcitve: '',

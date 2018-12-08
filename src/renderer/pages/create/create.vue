@@ -59,7 +59,6 @@
               <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
             </section>
           </section>
-
           <section v-show="mainCntTab2" class="mainCntTab2">
             <textarea name="" id="" cols="30" v-model="mnemonicTxt" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
             <section class="publicCntBtn" style="margin-top: 26px;">
@@ -304,9 +303,6 @@ export default {
 
           let pubKey128 = keys.publicKey;
           this.pubKey128ToString = pubKey128.toString("hex");
-
-          //let userAddressBuffer = keys.secAddress;
-          //let userAddress = userAddressBuffer.toString("hex");
           this.userAddressToString = keys.secAddress;
 
           let tokenInfo = {
@@ -349,7 +345,10 @@ export default {
       let walletNamesArr = Object.keys(keyDataJSON)
       if (walletNamesArr.indexOf(name) > -1) {
           //In the array!
-          return "Name Repeat"
+          this.$alert("Wallet name already exists", 'prompt', {
+                confirmButtonText: 'OK',
+          });
+          return
       } else {
           //Not in the array
         // 创建钱包方法
