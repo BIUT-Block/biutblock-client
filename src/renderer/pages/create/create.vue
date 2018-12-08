@@ -36,13 +36,16 @@
             </el-input>
             <section v-show="passCntList">
               <!-- <p class="mainCntTab1Txt">password</p> -->
-              <el-input
-                type="password"
-                placeholder="password"
-                v-model="password"
-                maxlength="30"
-                clearable>
-              </el-input>
+              
+              <section style="margin: 16px 0;">
+                  <el-input
+                    type="password"
+                    placeholder="password"
+                    v-model="password"
+                    maxlength="30"
+                    clearable>
+                  </el-input>
+              </section>
               <!-- <p class="mainCntTab1Txt">confirm password</p> -->
               <el-input
                 type="password"
@@ -52,14 +55,14 @@
                 clearable>
               </el-input>
             </section>
-            <section class="publicCntBtn" style="margin-top:16px;">
+            <section class="publicCntBtn createActiveBtn1" style="margin-top: 26px;">
               <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
             </section>
           </section>
 
           <section v-show="mainCntTab2" class="mainCntTab2">
             <textarea name="" id="" cols="30" v-model="mnemonicTxt" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
-            <section class="publicCntBtn" style="margin-top:28px;">
+            <section class="publicCntBtn" style="margin-top: 26px;">
               <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Start importing</button>
             </section>
           </section>
@@ -238,22 +241,22 @@ export default {
       passCntList: false,
       centerDialogVisible: false,
       newDialogVisible1: false,
-      newDialogLabel1: "请设置您导入的钱包名称",
+      newDialogLabel1: "Please set the name of the wallet you imported",
       newDialogInput1: "",
       newDialogVisible2: false,
-      newDialogLabel2: "本地没有账户信息，这是您的第一个钱包，请设置您的新账户密码",
+      newDialogLabel2: "There is no account information locally. This is your first wallet. Please set your new account password.",
       newDialogInput2: "",
       newDialogVisible3: false,
-      newDialogLabel3: "检测到本地已有账户，如果想保存您已有账户，请输入1，如果想新建账户(原账户内所有钱包信息将丢失), 请输入2",
+      newDialogLabel3: "If you want to save your existing account, please enter 1. If you want to create a new account (all wallet information in the original account will be lost), please enter 2",
       newDialogInput3: "",
       newDialogVisible4: false,
-      newDialogLabel4: "您选择了保存账户，请登陆原有账户",
+      newDialogLabel4: "You have chosen to save your account, please log in to your original account.",
       newDialogInput4: "",
       newDialogVisible5: false,
-      newDialogLabel5: "您选择了新建账户，请设置密码",
+      newDialogLabel5: "You have chosen to create a new account, please set a password.",
       newDialogInput5: "",
       newDialogVisible6: false,
-      newDialogLabel6: "您导入的钱包与已有账户中的钱包名字重复，请重命名",
+      newDialogLabel6: "The wallet you imported is duplicated with the name of the wallet in the existing account. Please rename it.",
       newDialogInput6: "",
       filePath: "",
       keyFileDataJS: {},                  
@@ -284,10 +287,14 @@ export default {
         fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.name))
       } else {
         if (this.confirmP != this.password) {
-          alert("The input passwords are not same. Please enter again.");
+          this.$alert('The input passwords are not same. Please enter again.', 'prompt', {
+              confirmButtonText: 'determine',
+          });
           return;
-        } else if(!new RegExp(/^(?=.*[a-zA-Z])(?=.*\d).{6,18}$/).test(this.password)){
-          alert("The password formatt is wrong. Please enter 8 - 30 character with number and letter.");
+        } else if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.password)){
+          this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
+              confirmButtonText: 'determine',
+          });
           return;
         } else {
           let keys = SECUtil.generateSecKeys();
@@ -347,7 +354,9 @@ export default {
           //Not in the array
         // 创建钱包方法
         if (this.confirmP != this.password) {
-          alert("两次密码输入不一致，请重新输入");
+           this.$alert('The password input is inconsistent twice, please re-enter', 'prompt', {
+              confirmButtonText: 'determine',
+          });
           return;
         }  else {
           let keys = SECUtil.generateSecKeys();
@@ -427,7 +436,9 @@ export default {
         if(err) {
           return
         }
-        alert(`Already saved the secure file would be saved in ${this.filePath}`)
+        this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+              confirmButtonText: 'determine',
+          });
       })
       this._mnemonicNavToWallet(this.keyFileDataJS, this.mnemonicPwd)
     },
@@ -441,7 +452,9 @@ export default {
         // let mnemonicPwd = prompt('您选择了新建账户，请设置密码')
         this.newDialogVisible5 = true
       } else {
-        alert('请输入1或2')
+        this.$alert('Please enter 1 or 2', 'prompt', {
+              confirmButtonText: 'determine',
+          });
       }    
     },
 
@@ -456,7 +469,9 @@ export default {
         if(err) {
           return
         }
-        alert(`Already saved the secure file would be saved in ${this.filePath}`)
+        this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+              confirmButtonText: 'determine',
+          });
       })
       this._mnemonicNavToWallet(this.keyFileDataJS, this.newDialogInput5)
     },
@@ -473,9 +488,13 @@ export default {
 
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
         this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
-        alert('导入成功')
+        this.$alert('Successfully imported', 'prompt', {
+              confirmButtonText: 'determine',
+          });
       } catch(e) {
-        alert('助记词导入失败，请确认助记词正确')
+        this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
+              confirmButtonText: 'determine',
+          });
         return
       }
       // read local file
@@ -501,7 +520,9 @@ export default {
           for (let walletName of walletNamesArr) {
               localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
               if (localPrivatKey===this.mnemonicWallet.privateKey) {
-                alert(`该钱包信息已在本地，本地钱包名 ${walletName}`)
+                this.$alert(`The wallet information is already local, local wallet name ${walletName}`, 'prompt', {
+                    confirmButtonText: 'determine',
+                });
                 return 
               }
           }
@@ -521,11 +542,15 @@ export default {
             if(err) {
               return
             }
-            alert(`Already saved the secure file would be saved in ${this.filePath}`)
+            this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+                confirmButtonText: 'determine',
+            });
           })
           this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
         } catch(e) {
-          alert('登陆错误！请确认密码')
+          this.$alert('Login error! Please confirm your password', 'prompt', {
+                confirmButtonText: 'determine',
+            });
         }
     },
 
@@ -555,7 +580,9 @@ export default {
         this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
           console.log(response)
           if(response.result.status === 'false') {
-            alert('无法获取余额，钱包地址可能无效')
+            this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
+                confirmButtonText: 'determine',
+            });
           } else if (response.result.status == '0') {
             walletsBalanceJS[wallet.walletName] = response.result.value.toString()
           } else if (response.result.status === '1') {
@@ -715,6 +742,13 @@ export default {
 .mainCntTab1 {
   margin: 32px auto 0;
   width: 380px;
+  height: 213px;
+  position: relative;
+}
+.createActiveBtn1 {
+  position: absolute;
+  bottom: -1px;
+  left: 98px;
 }
 .mainCntTab1Txt {
   color: #c8d1da;
@@ -722,14 +756,15 @@ export default {
 }
 .mainCntTab2 {
   width: 380px;
-  margin: 28px auto;
+  margin: 32px auto 0;
+  height: 213px;
 }
 
 .btn {
   width: 184px;
   height: 36px;
-  background: #00D6B2;
-  border: 1px solid #c8d1da;
+  background: rgba(0,214,178,0.6);
+  border: none;
   color: #fff;
   outline: none;
   border-radius: 2px;
@@ -739,7 +774,7 @@ export default {
   height: 36px;
   background: #fff;
   color: #00D6B2;
-  border: 1px solid #00D6B2;
+  border: 1px solid rgba(0,214,178,0.6);
   outline: none;
   border-radius: 2px;
 }
@@ -769,9 +804,12 @@ ul .iptTxt input[type="text"] {
   text-align: center;
   color: #657292;
 }
-textarea {width:380px;height:149px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;}
+textarea {width:356px;height:123px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
+  outline:none;resize:none;}
 
 section >>> .el-input__inner {padding-left: 0;text-indent: 8px;}
 section >>> .el-input__inner:focus {border-color: #c8d1da;}
-section >>> .el-input__inner {border-radius: 2px;outline: none;margin-bottom: 16px}
+section >>> .el-input__inner {border-radius: 2px;outline: none;}
+
+section >>> .el-message-box__btns .el-button--primary:focus, .el-button--primary:hover  {background-color: red;}
 </style>

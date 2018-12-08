@@ -38,9 +38,9 @@ function createWindow() {
    */
   //updateChecker()
   mainWindow = new BrowserWindow({
-    height: 564,
+    height: 640,
     useContentSize: true,
-    width: 958,
+    width: 960,
     transparent: false,
     frame: true
   })

@@ -22,7 +22,7 @@
 
           <section class="recordsCnt">
             <figure>
-              <img :src="detailsImg" alt="">
+              <img :src="detailsImg" alt="" width="56px" height="56px">
             </figure>
             <h2 class="recordsTit">{{detailsMoney}}</h2>
           </section>
@@ -105,12 +105,13 @@ export default {
 
 <style scoped>
 .detailsList {height: 174px;display: flex;justify-content: space-between;flex-direction: column;
-  margin:0 14px;color: #939CB2}
+  margin: 46px 14px 76px;color: #939CB2;}
 
-.recordsCnt {height: 170px;display: flex;justify-content: start;flex-direction: column;align-items: center;}
-.recordsTit {font-size:18px;font-weight:400;color: #242E49;}
+.recordsCnt {display: flex;justify-content: start;flex-direction: column;
+  align-items: center;margin-top: 50px;}
+.recordsTit {font-size:18px;font-weight:400;color: #242E49;margin: 0;margin-top: 18px;}
 
 .detailsListTxt {display:inline-block;width: 115px;text-align: right;color:#C8D1DA;margin-right: 32px;}
-.footerTxt {margin-top: 90px;text-align: center;color: #939CB2}
+.footerTxt {margin-top: 10px;text-align: center;color: #939CB2}
 .footerImg {vertical-align: middle;margin-right: 10px;}
 </style>

@@ -16,7 +16,6 @@
                 <img src="../../assets/image/walletLogo.png" alt="" class="walletLogoImg">
                 {{walletName}}
               </p>
-
               <section style="position: relative"  class="pointerTxt">
                 <img src="../../assets/image/deleteBtn.png" alt="" @click="positionFrom">
                 <section v-show="positionBtnH" class="positionBtn">
@@ -24,7 +23,6 @@
                   <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button>
                 </section>
               </section>
-
             </section>
 
             <p class="walletMoneyTxt">{{walletMoney}} SEC Token</p>
@@ -56,7 +54,7 @@
               <p>
                 <img src="../../assets/image/moneyNo.png" alt="">
               </p>
-              <p style="color:#939CB2;margin: 16px 0 46px;">No transaction data</p>
+              <p style="color:#939CB2;margin: 16px 0px;">No transaction data</p>
               <p>
                 <img src="../../assets/image/refresh.png" alt="">
               </p>
@@ -79,7 +77,12 @@
                 </li>
               </ul>
           </section>
+          <section class="clickMore" v-show="moreCnt">
+            <i class="el-icon-arrow-down" style="margin-right:5px;"></i>
+            Click to load more
+          </section>
         </section>
+
         
         <el-dialog
           title="prompt"
@@ -115,6 +118,7 @@ export default {
   data() {
     return {
       tradingCnt: false, //如果没有交易记录的话 true  有交易数据就设置为 false
+      moreCnt: false, //加载更多，交易记录大于四条就 设置为 true  然后点击就加载四条
       positionBtnH: false,
       centerDialogVisible: false,
       publicKey: "",
@@ -476,7 +480,7 @@ export default {
 .walletCnt {
   display: flex;
 }
-
+.clickMore {height: 44px;line-height: 44px;text-align: center;color:rgba(101,114,146,.7);font-size: 12px;}
 .walletRecordCnt {
   width: 606px;
   height: 384px;
@@ -484,16 +488,18 @@ export default {
   flex-direction: column;
   background: #fff;
   margin-top: 16px;
+  box-shadow:0px 0px 15px rgba(0,91,76,0.05);
 }
 .walletRecordTxt {
-  width: 560px;
+  width: 536px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  height: 40px;
-  border-bottom: 1px solid #c8d1da;
+  height: 43px;
+  border-bottom: 1px solid rgba(200,209,218,0.5);
   color:#939CB2;
+  margin-right: 48px;
 }
 
 .walletListCnt {
@@ -510,6 +516,7 @@ export default {
   height: 58px;
   margin: 0;
   background: #fff;
+  box-shadow:0px 0px 15px rgba(0,91,76,0.05);
 }
 .walletListTxt {
   vertical-align: middle;
@@ -566,6 +573,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   background: #fff;
+  box-shadow:0px 0px 15px rgba(0,91,76,0.05);
 }
 .walletHeaderList {
   display: flex;
@@ -583,23 +591,41 @@ export default {
 }
 
 .walletCntList {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: start;
 }
 
 ul {
-  width: 560px;
+  width: 536px;
   height: 300px;
   margin: 0 auto;
+  overflow: hidden;
+  overflow-y: scroll;
+  padding-right: 24px;
 }
+ul::-webkit-scrollbar {/*滚动条整体样式*/
+            width: 2px;    
+            height: 2px;
+        }
+        ul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+            -webkit-box-shadow: inset 0 0 1px #00D6B2;
+            background: #00D6B2;
+            border-radius: 1px;
+           
+        }
+        ul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 1px #EDF5F4;
+            border-radius: 0;
+            
+            background: #EDF5F4;
+        }
 ul li {
   height: 74px;
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #c8d1da;
+  border-bottom: 1px solid rgba(200,209,218,0.5);
   color: #657292;
 }
 
@@ -657,7 +683,7 @@ ul li .moneyCnt {
 }
 
 section >>> .el-dialog__title {color: #939CB2}
-section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid #C8D1DA;}
+section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding-top: 0px;padding-bottom: 10px;}
 section >>> .el-dialog__footer {padding: 0;}
