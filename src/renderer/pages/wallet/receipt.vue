@@ -70,14 +70,12 @@ export default {
         clipboard.on('success', e => {
           this.$alert('Copy success', 'Warm prompt', {
             confirmButtonText: 'determine',
-            callback: action => {}
           });
           clipboard.destroy()
         })
         clipboard.on('error', e => {
           this.$alert('Automatic replication is not supported', 'Warm prompt', {
             confirmButtonText: 'determine',
-            callback: action => {}
           });
 
           clipboard.destroy()
@@ -103,8 +101,9 @@ export default {
 <style scoped>
 .moneyIpt {width:434px;height:36px;margin-bottom: 8px;}
 
-.receiptCnt {display: flex;justify-content: center;flex-direction: column;align-items: center;flex: 1;}
-.receiptCntAddress {margin:75px 0 11px;color: #657292;text-align: left;width: 434px;}
+.receiptCnt {display: flex;justify-content: center;flex-direction: column;align-items: center;flex: 1;
+  box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
+.receiptCntAddress {margin:25px 0 11px;color: #657292;text-align: left;width: 434px;}
 
 .receiptCntImg {margin: 36px auto;}
 

@@ -1,21 +1,19 @@
 <template>
   <el-container class="home">
-    <!-- <el-row class="publicNav">
+    <el-row class="publicNav publicHomeNav">
       <el-col :span="4">
-        <router-link to="/wallet">
-          <span class="homeHNav">
-            <img src="../../assets/image/logo.png" alt="">
+          <span class="homeHNav" title="SEC - Wallet">
+            <img src="../../assets/image/logo.png" alt="SEC - Wallet">
           </span>
-        </router-link>
       </el-col>
       <el-col :span="16" class="navTit">
       </el-col>
       <el-col :span="4" class="windowsCnt">
-          <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
+          <!-- <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
           <span class="publicBtn amplification" @click="maximizeApp"></span>
-          <i class="el-icon-close icon_nav" @click="exitApp"></i>
+          <i class="el-icon-close icon_nav" @click="exitApp"></i> -->
       </el-col>
-    </el-row> -->
+    </el-row>
 
     <el-row>
       <el-col :span="24" class="homeList">
@@ -41,11 +39,13 @@
           <p @click="nodeListFrom"  class="mt50 pointerTxt">
             <img :src="icon_node" alt="">
           </p>
-          <p class="mt50 pointerTxt" @click="setListFrom">
+
+          <p class="mt50 pointerTxt" @click="setListFrom" @mouseover="setListCnt" @mouseout="setListCntOut">
             <img :src="icon_set" alt="">
           </p>
-
-
+          <div class="setListCnt" v-show="setList">
+            Setting
+          </div>
           <p class="copyright">V{{appVersion}}</p>
         </section>
         
@@ -58,32 +58,32 @@
         title="Setting"
         :visible.sync="dialogVisible"
         width="432px"
+        top="30vh"
+        :before-close="handleClose"
         >
-        <section class="setBtn">
-          <el-tabs :tab-position="tabPosition" style="height: 200px;">
-            <el-tab-pane label="Switch language">
-              <section class="languageCnt">
-                <p style="margin-right:10px;">Language</p>
-                <el-select v-model="value4" clearable 
-                size="214px">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </section>
-            </el-tab-pane>
-            <el-tab-pane label="About wallet">
-              <section class="versionCnt">
-                <p>Version Information</p>
-                <p>|</p>
-                <p>SEC wallet {{appVersion}}</p>
-              </section>
-            </el-tab-pane>
-          </el-tabs>
+        <section class="homeMock">
+         
+         <section style="display:flex;flex-direction: column;flex-basis: 124px;border-right: 1px solid rgba(200,209,218,0.5);text-align:right;padding-top: 33px;">
+           <span style="" :class="mockActive1" @click="tapMock1">Switch language</span>
 
+           <span style="margin-top: 21px;" :class="mockActive2" @click="tapMock2">About wallet</span>
+         </section>
+
+         <section style="padding-top: 33px;padding-left: 12px;" v-show="homeMockCnt2">
+            Version Information 
+            <span style="margin: 0 24px">|</span>
+            SEC wallet {{appVersion}}
+         </section>
+
+          <section style="padding-top: 22px;padding-left: 12px;" v-show="homeMockCnt1">
+           Language
+           <select class="homeSelect" name="" id="" style="">
+             <option value="">Follow system</option>
+             <option value="">中文</option>
+             <option value="">English</option>
+           </select>
+         </section>
+     
         </section>
       </el-dialog>
 
@@ -106,20 +106,14 @@ export default {
   name: '',
   data () {
     return {
+      setList: false,
+      homeMockCnt1: true,
+      homeMockCnt2: false,
+      mockActive1: 'mockActive',
+      mockActive2: '',
       tabPosition: 'left',
       dialogVisible: false,
       appVersion: '',
-      options: [{
-          value: 'system',
-          label: 'Follow system'
-        }, {
-          value: 'cn',
-          label: '中文(敬请期待)'
-        }, {
-          value: 'English',
-          label: 'English'
-        }],
-      value4: '',
       walletAddress: this.$route.query.walletAddress,
       privateKey: this.$route.query.walletPrivateKey,
       publicKey: this.$route.query.walletPublicKey,
@@ -151,6 +145,12 @@ export default {
     })
   },
   methods: {
+    setListCnt () {
+      this.setList = true
+    },
+    setListCntOut () {
+      this.setList = false
+    },
     walletListFrom () {
       this.$router.push({name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
@@ -174,6 +174,22 @@ export default {
       this.icon_wallet = icon_wallet
       this.icon_node = icon_node
       this.icon_set = icon_set_active
+    },
+    handleClose (done) {
+      done()
+      this.walletListFrom()
+    },
+    tapMock1 () {
+      this.mockActive1 = 'mockActive'
+      this.mockActive2 = 'pr'
+      this.homeMockCnt1 = true
+      this.homeMockCnt2 = false
+    },
+    tapMock2 () {
+      this.mockActive1 = 'pr'
+      this.mockActive2 = 'mockActive'
+      this.homeMockCnt1 = false
+      this.homeMockCnt2 = true
     }
   }
 }
@@ -188,24 +204,25 @@ export default {
 
 .homeList {display: flex;flex: 1;background: #FAFAFA;}
 .homeLeft {width: 70px;height: 580px;display: flex;align-items: center;justify-content: start;
-  flex-direction: column;background: #fff;}
+  flex-direction: column;background: #fff;position: relative;}
 
+.setListCnt {width:122px;height:36px;background:rgba(147,156,178,1);border-radius:2px;color:rgba(255,255,255,.7);position: absolute;
+  top: 203px;left: 70px;z-index: 999;line-height: 36px;padding-left: 16px;}
 
-.setBtn {width: 400px;margin: 0 auto;height: 218px;border-top: 1px solid #ccc;}
+.homeMock {height: 218px;display: flex;border-top: 1px solid rgba(200,209,218,0.5);font-size: 12px;}
+.homeSelect {-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-appearance:none;
+  -webkit-tap-highlight-color: transparent;appearance:none;-moz-appearance:none;
+  width: 214px;margin-left: 13px;height: 36px;background:#F9F9FA;border: none;padding-left: 8px;}
+
 .languageCnt {flex:1;display: flex;justify-content:start;padding:23px;line-height: 2;}
 .versionCnt {flex:1;display: flex;justify-content:space-between;padding:23px 10px;line-height: 2;}
 
+.mockActive {border-right: 2px solid #00D6B2;color:#242E49;padding-right: 13px;}
+.pr {padding-right: 15px;}
 
 
+section >>> .el-dialog__header {padding: 20px 0 10px;}
+section >>> .el-dialog__body {padding: 0;color: #939CB2;font-size: 12px;margin: 0;}
+section >>> .el-dialog__title {font-size: 12px;color: #939CB2;padding-left: 25px;}
 
-section >>> .el-dialog__body {padding-top: 0;color: #939CB2;font-size: 12px;}
-section >>> .el-dialog__title {font-size: 12px;color: #939CB2}
-
-
-section >>> .popper__arrow {display: none;}
-section >>> .el-select-dropdown__list {padding: 0;}
-
-
-section >>> .el-tabs__item.is-active,section >>> .el-tabs__item:hover {color: #00D6B2} 
-section >>> .el-tabs__active-bar {background-color: #00D6B2}
 </style>

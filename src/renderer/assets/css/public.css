@@ -11,15 +11,16 @@ ul li {list-style: none;}
 .pointerTxt:hover {cursor: pointer;}
 
 .el-button,.el-input {font-size: 12px;}
-.publicBtn {width:184px;height:36px;background: #C8D1DA;color: #fff;outline: none;border:1px solid #C8D1DA;border-radius: 4px;}
+.publicBtn {width:184px;height:36px;background: #C8D1DA;color: #fff;outline: none;
+  border:1px solid #C8D1DA;border-radius: 4px;}
 .publicBtnAcitve {background: #00D6B2;}
 
 .publicCntBtn {display: flex;justify-content: center;}
 
 .publicBtn:hover {cursor: pointer;}
 
-.publicNav {display: flex;height: 48px;align-items: center;border-bottom:1px solid #C8D1DA;}
-.publicHomeNav {display: flex;height: 60px;align-items: center;}
+.publicNav {display: flex;height: 48px;align-items: center;box-shadow:0px 1px 1px rgba(96,98,115,0.1);}
+.publicHomeNav {display: flex;height: 60px;align-items: center;box-shadow:0px 1px 1px rgba(96,98,115,0.1);}
 
 .icon_nav{font-size: 18px;margin-left: 16px;color:#C8D1DA;}
 .icon_nav:hover {cursor: pointer;}
@@ -28,9 +29,9 @@ ul li {list-style: none;}
   background: #fff;vertical-align:middle;margin-left:18px;border-radius: 0;}
 .navTit{text-align: center;font-size: 16px;color: #657292}
 
-.publicWalletH {width: 606px;height: 532px;border-radius: 2px;background: #fff;margin-top: 24px;}
-.publicWalletHF {display: flex;flex-direction: column;}
-.publicWalletHList {height: 48px; display: flex;align-items: center;border-bottom:1px solid #C8D1DA;}
+.publicWalletH {width: 606px;height: 532px;border-radius: 2px;background: #fff;margin-top: 24px;box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
+.publicWalletHF {display: flex;flex-direction: column;box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
+.publicWalletHList {height: 48px; display: flex;align-items: center;border-bottom: 1px solid rgba(200,209,218,.5);}
 .publicWalletHTit {font-size: 14px;color: #939CB2;flex:1;text-align: center;padding-right: 30px;}
 .publicWalletHListIcon {width:30px;height:16px;}
 
@@ -49,4 +50,4 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color: #C8D
 .publicWalletP {padding: 0 32px;background: #FAFAFA;}
 
 
-.homeHNav {width: 70px;height:50px;display: flex;background:#00D6B2;justify-content: center;align-items: center;}
+.homeHNav {width: 70px;height:60px;display: flex;background:#00D6B2;justify-content: center;align-items: center;}

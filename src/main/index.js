@@ -9,15 +9,15 @@ import {
 } from 'electron-updater'
 import updateChecker from './updateChecker.js'
 
-//const SECCore = require('@sec-block/secjs-core')
-//const SECRPCServer = require('@sec-block/secjs-rpc')
+const SECCore = require('@sec-block/secjs-core')
+const SECRPCServer = require('@sec-block/secjs-rpc')
 
 /**
  * Start RPC Server
  */
-//SECCore.coreRun()
-//let secRPCServer = new SECRPCServer(SECCore.core)
-//secRPCServer.runRPCServer()
+SECCore.coreRun()
+let secRPCServer = new SECRPCServer(SECCore.core)
+secRPCServer.runRPCServer()
 
 /**
  * Set `__static` path to static files in production
@@ -38,9 +38,9 @@ function createWindow() {
    */
   //updateChecker()
   mainWindow = new BrowserWindow({
-    height: 564,
+    height: 640,
     useContentSize: true,
-    width: 958,
+    width: 960,
     transparent: false,
     frame: true
   })

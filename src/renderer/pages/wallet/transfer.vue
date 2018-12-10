@@ -23,7 +23,7 @@
           
           <section class="transferCnt">
 
-            <input class="ipt" v-model="address"  style="margin-top:70px" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress"></input>
+            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress"></input>
 
             <el-input v-model="amount"  maxlength="10" placeholder="transfer amount" class="ipt" @focusout.native="isNumber">
               <template slot="append">SEC</template>
@@ -149,9 +149,13 @@ export default {
         return true
       }
       if (!/^[0-9.]+$/i.test(this.amount)) {
-        alert("Wrong input formatt")
+        this.$alert('Wrong input formatt', 'prompt', {
+                confirmButtonText: 'determine',
+          });
       } else if (parseFloat(this.amount)>this.walletMoney) {
-        alert("You don't have enough balance.")
+        this.$alert("You don't have enough balance.", 'prompt', {
+                confirmButtonText: 'determine',
+          });
       } else {
         return true;
       }
@@ -161,7 +165,9 @@ export default {
         return true
       }
       if (!/^[a-z0-9]+$/.test(this.address) && this.address.length !== 40 ) {
-        alert("Invalid wallet address formatt")
+        this.$alert('Invalid wallet address formatt', 'prompt', {
+                confirmButtonText: 'determine',
+          });
         this.address = ""
       } else {
         return true;
@@ -172,7 +178,9 @@ export default {
     },
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {
-        alert("You don't have enough balance.")
+        this.$alert("You don't have enough balance.", 'prompt', {
+                confirmButtonText: 'determine',
+          });
         return
       } else {
         this.centerDialogVisible = true
@@ -186,7 +194,9 @@ export default {
       //转账功能   转账的结果 给个 alert提示
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
-        alert("You don't have enough balance.")
+        this.$alert("You don't have enough balance.", 'prompt', {
+                confirmButtonText: 'determine',
+          });
       } else {
           let timeStamp = new Date().getTime()
           let transferData = [{
@@ -227,7 +237,9 @@ export default {
                   this.allMoney = responseBalance.result.value
                 }
               })
-              alert('Your transfer is now in pending.')
+              this.$alert('Your transfer is now in pending.', 'prompt', {
+                confirmButtonText: 'determine',
+          });
             }
           })
 
@@ -253,16 +265,16 @@ export default {
 .passwordIpt {width: 300px;height: 36px;color: #C8D1DA;border:1px solid #C8D1DA;outline: none;
 margin:20px;text-indent: 8px;}
 
-.ipt {width:300px;height:36px;margin-bottom: 8px;border-radius: 2px;
+.ipt {width:300px;height:32px;margin-bottom: 8px;border-radius: 2px;
   border: 1px solid #C8D1DA;outline: none;padding-left:8px;}
 
 .transferCnt {display: flex;justify-content: center;flex-direction: column;align-items: center;flex: 1;}
-.transferCntTxt {text-align: left;width: 300px;margin: 7px 0 12px;color: #939CB2;}
-.transferCntTxt2 {color: #657292;text-align: left;width: 300px;margin: 22px 0;}
+.transferCntTxt {text-align: left;width: 300px;margin: 0px 0 12px;color: #939CB2;}
+.transferCntTxt2 {color: #657292;text-align: left;width: 300px;margin: 14px 0 5px;}
 
 .transferSlider {width: 300px;}
 
-.costCnt {display: flex;justify-content: space-between;width: 300px;margin: 12px 0 70px;}
+.costCnt {display: flex;justify-content: space-between;width: 300px;margin-bottom:50px;}
 
 
 .transferMockList {height: 110px;display: flex;justify-content:space-between;flex-direction: column;
@@ -271,17 +283,19 @@ margin:20px;text-indent: 8px;}
 .transferMockTxt {display:inline-block;width: 120px;color:#C8D1DA;text-align:right;margin-right:20px;} 
 
 
+section >>> .el-slider__button-wrapper {width: 12px;height: 12px;top: -5px;}
+
 section >>> .el-slider__bar {background-color: #00D6B2}
-section >>> .el-slider__button {border-color: #00D6B2;}
+section >>> .el-slider__button {border-color: #00D6B2;width: 12px;height: 12px;}
 
 section >>> .el-input-group__append {background: #fff;color: #657292;border:none;}
 section >>> .el-input__inner {border: none;padding-left:0px;}
 
 
 section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
-section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid #C6CFD8;}
+section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
-section >>> .el-dialog__body {padding:25px 0 28px 18px;}
+section >>> .el-dialog__body {padding:15px 0 35px;}
 section >>> .el-dialog__footer {padding: 0;}
 
 </style>

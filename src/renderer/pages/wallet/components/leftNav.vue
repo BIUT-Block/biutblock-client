@@ -9,7 +9,7 @@
               :class="[colorArr[index]?'color0':'',colorBorderArr[index%4]]"
               @click="tabWallet(item,index)">
                 <p>{{item.walletName}}</p>
-                <p style="margin-top:5px">{{item.walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
+                <p style="margin-top:5px">{{item.walletAddress.replace(/(.{8}).+(.{8})/,'$1...$2')}}</p>
             </li>
             <!-- <li class="borderColor1" @click="tabWallet(index)">
                 <p>{{walletName}}</p>
@@ -110,15 +110,30 @@ export default {
 </script>
 
 <style scoped>
-.btn {width: 160px;height: 58px;background: #fff;color: #657292;
-  border:1px solid #657292;outline: none;position:fixed;bottom:24px;left: 90px;border-radius:2px;}
+.btn {width: 160px;height: 58px;background: #fff;color: #657292;outline: none;position:fixed;
+  bottom:24px;left: 90px;border-radius:2px;border: none;}
 
 
 .leftNavCnt {width: 200px;background: #EDF5F4;height:580px;}
-ul {display: flex;flex-direction:column;align-items:center;padding-top:8px;justify-content: center;}
-li {width: 160px;height: 58px;display: flex;justify-content:center;margin-top: 16px;
-    flex-direction: column;border:1px solid #fff;background: #fff;color:#657292;padding-left:20px;}
-
+ul {padding-top:8px;overflow: hidden;margin-left: 20px;overflow-y: scroll;height: 484px;}
+li {width: 139px;height: 58px;display: flex;justify-content:center;margin-top: 16px;
+    flex-direction: column;border:1px none;background: #fff;color:#657292;padding-left:20px;}
+ul::-webkit-scrollbar {/*滚动条整体样式*/
+            width: 2px;    
+            height: 2px;
+        }
+        ul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+            -webkit-box-shadow: inset 0 0 1px #00D6B2;
+            background: #00D6B2;
+            border-radius: 1px;
+           
+        }
+        ul::-webkit-scrollbar-track {/*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 1px #EDF5F4;
+            border-radius: 0;
+            
+            background: #EDF5F4;
+        }
 
 li:hover {cursor: pointer;background:#00D6B2;color:#fff;border-left: none;}
 

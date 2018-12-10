@@ -20,9 +20,9 @@
             <span class="publicWalletHTit">Wallet Details</span>
           </section>
 
-          <section class="recordsCnt" style="margin-top:70px;">
+          <section class="recordsCnt">
             <figure>
-              <img :src="detailsImg" alt="">
+              <img :src="detailsImg" alt="" width="56px" height="56px">
             </figure>
             <h2 class="recordsTit">{{walletBalance + ' SEC Token'}}</h2>
           </section>
@@ -79,10 +79,10 @@ export default {
 .detailsList section{margin-top:10px;}
 
 
-.recordsCnt {height: 170px;display: flex;justify-content: start;flex-direction: column;align-items: center;}
-.recordsTit {font-size:18px;font-weight:400;color: #242E49;}
+.recordsCnt {display: flex;justify-content: start;flex-direction: column;align-items: center;margin-top: 50px;}
+.recordsTit {font-size:18px;font-weight:400;color: #242E49;margin: 18px 0 46px;}
 
-.detailsListTxt {display:inline-block;width: 300px;text-align: left;color:#939CB2; word-wrap:break-word; vertical-align: top;}
+.detailsListTxt {display:inline-block;width: 400px;text-align: left;color:#939CB2; word-wrap:break-word; vertical-align: top;line-height: 1.5;}
 .detailsListLabel {display:inline-block;width: 115px;text-align: right;color:#C8D1DA;margin-right: 32px; word-wrap:break-word;}
 .footerTxt {margin-top: 90px;text-align: center;color: #939CB2}
 .footerImg {vertical-align: middle;margin-right: 10px;}

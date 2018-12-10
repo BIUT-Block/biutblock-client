@@ -7,19 +7,19 @@
 
             <p class="nodeTit">Node information</p>
 
-            <p class="" style="width:77px;margin-top:28px;display:flex;flex-direction:column;">
-              <span class="nodeTxt" style="margin-bottom:5px;">IP address：</span>
-                {{ipAddress}}
+            <p class="" style="width:77px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
+              <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">IP address：</span>
+                <span style="line-height:1.5">{{ipAddress}}</span>
             </p>
 
-            <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;">
-              <span class="nodeTxt" style="margin-bottom:5px;">Current system time：</span>
-               {{systemTime}}
+            <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;color: #939CB2;">
+              <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">Current system time：</span>
+               <span style="line-height:1.5">{{systemTime}}</span>
             </p>
 
-            <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;">
-              <span class="nodeTxt" style="margin-bottom:5px;">local time：</span>
-               {{localTime}}
+            <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
+              <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">local time：</span>
+               <span style="line-height:1.5">{{localTime}}</span>
             </p>
           </section>
 
@@ -40,7 +40,7 @@
             </section>
             <p class="updateTime2">{{updateTime}}</p>
 
-            <p style="width: 480px;margin-top: 57px;" v-show="!timeCntShow">
+            <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
               <section style="display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px">
                  <span>{{progressAll}} G / {{progress}} G</span> 
@@ -51,7 +51,7 @@
             <!-- 点击挖矿 -->
             <input type="text" v-model="timeCnt" v-show="timeCntShow">
 
-            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" style="margin-top: 48px;" @click="startSyncing">
+            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" style="margin-top: 80px;" @click="startSyncing">
               {{startBtn}}
             </button>
           </section>
@@ -84,7 +84,7 @@ export default {
       ipAddress: '',
       systemTime: '',
       localTime: '', 
-      updateTime: '',
+      updateTime: '2017/11/01 09:00 UTC+8',
       timeCntShow: true,
       centerDialogVisible: false,
       progressVal: true,
@@ -169,33 +169,45 @@ export default {
       if (!this.progressVal) {
         this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
           if (err) {
-            alert('Can not start mining')
+            this.$alert('Can not start mining', 'prompt', {
+                confirmButtonText: 'determine',
+            });
             this.progressVal = true
             return
           }
           // if (response && response.result.status === '1') {
           if (response) {
             this.siteStatus.mining = false
-            alert('Begin Mining successfull')
+            this.$alert('Begin Mining successfull', 'prompt', {
+                confirmButtonText: 'determine',
+            });
           } else {
             this.progressVal = true
-            alert('Can not start mining')
+            this.$alert('Can not start mining', 'prompt', {
+                confirmButtonText: 'determine',
+            });
           }
         })
       } else {
         this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
           if (err) {
-            alert('Can not stop mining')
+            this.$alert('Can not stop mining', 'prompt', {
+                confirmButtonText: 'determine',
+            });
             this.progressVal = false
             return
           }
           // if (response && response.result.status === '1') {
           if (response) {
             this.siteStatus.mining = true
-            alert('Stop Mining successfull')
+            this.$alert('Stop Mining successfull', 'prompt', {
+                confirmButtonText: 'determine',
+            });
           } else {
             this.progressVal = false
-            alert('Can not stop mining')
+            this.$alert('Can not stop mining', 'prompt', {
+                confirmButtonText: 'determine',
+            });
           }
         })
       }
@@ -206,23 +218,22 @@ export default {
 </script>
 
 <style scoped>
-.ipt {width:336px;height:36px;margin: 43px 0 57px;outline: none;border-radius: 18px;
+.ipt {width:336px;height:36px;margin: 43px 0 56px;outline: none;border-radius: 18px;
   border:1px solid #8C91A9;color:#263253;text-align: center;}
 
-.nodeCnt {width: 806px;height: 532px;border-radius: 2px;background: #FAFAFA;padding: 24px 32px;
-display: flex;flex-direction: column;}
+.nodeCnt {width: 826px;height: 532px;border-radius: 2px;background: #fff;
+display: flex;flex-direction: column;margin: 24px 32px;box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
 
-.nodeCntH {height: 94px;display: flex;border-bottom:1px solid #C8D1DA;color:#C8D1DA;background: #fff;}
+.nodeCntH {height: 94px;display: flex;border-bottom: 1px solid rgba(200,209,218,0.5);color:#C8D1DA;background: #fff;}
 
 .nodeNoActiveImg {vertical-align: middle;margin-right: 15px;}
 
 .startBtnActive {background: rgba(0,214,178,.3);border-color:rgba(0,214,178,.3);}
 
-.nodeListCnt {display: flex;justify-content: center;padding-top: 60px;background: #fff;
-  flex-direction: column;align-items: center;flex: 1;}
+.nodeListCnt {display: flex;flex-direction: column;flex: 1;align-items: center;margin-top: 60px;}
 .nodeListCntP {width: 806px;position: relative;}
 
-.nodeSwitch {color:#657292;position: absolute;top:0;left:30px;}
+.nodeSwitch {color:#657292;position: absolute;top:0;left:20px;}
 .updateTime {text-align:center;color:#C8D1DA;}
 .updateTime2 {margin-top: 15px;font-size:14px;color:#939CB2;}
 
@@ -230,10 +241,10 @@ display: flex;flex-direction: column;}
 
 
 input[type="text"]{width:412px;height:36px;text-align:center;border-radius:18px;border:1px solid #C8D1DA;
-  text-align:center;outline:none;color:#657292;margin-top: 57px;}
+  text-align:center;outline:none;color:#657292;margin-top: 56px;}
 
 section >>> .el-input__inner {border-radius: 18px;}
 section >>> .el-progress-bar__inner {background: #00D6B2;}
-section >>> .el-dialog__header {padding: 16px 0 14px;border-bottom:1px solid #C8D1DA;}
+section >>> .el-dialog__header {padding: 16px 0 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
 </style>

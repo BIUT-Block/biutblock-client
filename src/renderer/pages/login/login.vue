@@ -12,9 +12,9 @@
               </section> -->
               <h1 class="loginTit">Password login</h1>
               <input type="password" v-model="loginValue"  maxlength="30" class="loginIpt" placeholder="Please enter your password"></input>
-              <button type="button" class="logoBtn pointerTxt" :disabled="!logoBtnAcitve" :class="logoBtnAcitve?'logoBtnAcitve':''" @click="loginBtn">Log in</button>
+              <button type="button" class="logoBtn pointerTxt" :disabled="!logoBtnAcitve" :class="logoBtnAcitve?'logoBtnAcitve':''" @click="loginBtn">Login</button>
               <section class="errorCnt">
-                <p v-if="errorTxt" class="errorTxt">{{errorTxt}}</p>
+                <p v-if="errorTxt" class="errorTxt">Password format error</p>
               </section>
               <p class="loginTxt">No wallet? <router-link to="create?id=1" tag="span" class="TxtColor pointerTxt">Click here to create a new</router-link></p>
            </section>
@@ -131,6 +131,9 @@ export default {
   },
   computed: {
     logoBtnAcitve () {
+      if (this.loginValue.length === 0) {
+        this.errorTxt = false
+      }
       return this.loginValue.length > 7 ? true : false
     }
    }
@@ -149,7 +152,7 @@ flex-direction: column;background: #fff;}
 .logoBtn {width:264px;height:36px;background: #C8D1DA;color: #fff;outline: none;border:1px solid #C8D1DA;border-radius: 4px;}
 .logoBtnAcitve {background: #00D6B2;}
 
-.loginTit {color: #657292;font-size: 24px;font-weight:400;margin:40px 0 24px;}
+.loginTit {color: #657292;font-size: 20px;font-weight:400;margin:40px 0 24px;}
 .loginTxt {margin-top: 37px;color: #657292;}
 .errorCnt {height: 22px;width:100%;text-align: center;}
 .errorTxt {color: #FF8DB2;margin-top: 12px;}

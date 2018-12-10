@@ -31,7 +31,7 @@
       <el-row class="backupCnt">
         <el-col :span="24" class="mainCnt">
           <section class="mainCntTxt">
-            <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" style="margin-left:17px;" @click="centerDialogVisible = true">Save as...</span></p>
+            <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="centerDialogVisible = true">Save as...</span></p>
             <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
             <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
           </section>
@@ -45,17 +45,18 @@
                   <li class="iptTxt">{{wordsLine[3]}}</li>
                 </ul>
             </section>
-            <section style="display: flex;justify-content: space-between;padding:0 8px;margin-top:32px;">
-              <figure>
-                <img src="../../assets/image/backupImg.png" alt="">
-              </figure>
-              <section style="width:370px;">
+            <section style="display: flex;justify-content: space-between;padding:0 8px;
+            margin-top:23px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
+              
+                <qr-code :value="englishWordsString" :size="80" class="receiptCntImg">
+                </qr-code>
+              
+              <section style="margin: 0 22px 0 8px;">
                 <p class="copyTxt">Private key</p>
                 <p class="copyTxt2" id="copyPrivateKey">{{privateKey}}</p>
               </section>
-              <button data-clipboard-target="#copyPrivateKey" type="button" class="copyBtn" @click="copyTxtCnt">copy</button>
+              <button data-clipboard-target="#copyPrivateKey" type="button"  :class="copyBtnAcitve" class="copyBtn" @click="copyTxtCnt">{{copyTxtCntTit}}</button>
             </section>
-
           </section>
 
           <section class="publicCntBtn">
@@ -65,13 +66,16 @@
          <el-dialog
             title="Download format"
             :visible.sync="centerDialogVisible"
-            width="482px"
+            width="432px"
             :closeOnClickModal = false
             top="30vh"
             center>
-            <div id="selectFileType">
-              <p class="downTxt"><input type="radio" name="downImg" id="png"><span class="downTxt2">Picture file(*.png)</span> 
-              Export files as images</p>
+            <div id="selectFileType" style="margin-top: 30px;">
+              <p class="downTxt">
+                  <input type="radio" name="downImg" id="png">
+                  <span class="downTxt2">Picture file(*.png)</span> 
+                  Export files as images
+                </p>
 
               <p class="downTxt"><input type="radio" name="downImg" id="jpg"><span class="downTxt2">JPG file(*.jpg)</span> 
               Export to JPG file format (default is white background)</p>
@@ -90,7 +94,7 @@
             </div>
 
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" @click="saveFile">determine</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:60px;" @click="saveFile">determine</button>
             </span>
           </el-dialog>
 
@@ -126,17 +130,24 @@
 <script>
 import Clipboard from 'clipboard'
 import domtoimage from 'dom-to-image'
+import qrCode from '../wallet/components/qrCode'
 const CryptoJS = require("crypto-js")
 const fs = require("fs")
 const FileSaver = require('file-saver')
 export default {
   name: '',
+  components: {
+    qrCode
+  },
   data() {
     return {
+      copyBtnAcitve: '',
+      copyTxtCntTit: 'Copy',
       id: '',
       centerDialogVisible: false,
       dialogVisible: false,
       englishWords: [[]],
+      englishWordsString: '',
       privateKey: "",
       password: "",
       keyFileDataJS: {},
@@ -153,17 +164,12 @@ export default {
     copyTxtCnt () {
        var clipboard = new Clipboard('.copyBtn')
         clipboard.on('success', e => {
-          this.$alert('Copy success', 'Warm prompt', {
-            confirmButtonText: 'determine',
-            callback: action => {}
-          });
+          this.copyTxtCntTit = 'Copied'
+          this.copyBtnAcitve = 'copyBtnAcitve'
           clipboard.destroy()
         })
         clipboard.on('error', e => {
-          this.$alert('Automatic replication is not supported', 'Warm prompt', {
-            confirmButtonText: 'determine',
-            callback: action => {}
-          });
+          this.copyTxtCntTit = 'Copy'
           clipboard.destroy()
         })
     },
@@ -248,7 +254,9 @@ export default {
          })
          return
       }
-      alert('Select a file format to save your english words')
+      this.$alert('Select a file format to save your english words', 'prompt', {
+          confirmButtonText: 'determine',
+      });
       return
       // if (document.getElementById('svg').checked) {
       //   domtoimage.toSvg(domSection)
@@ -261,7 +269,9 @@ export default {
     _saveWalletSuccess (filePath) {
       this.alreadySaved = true
       this.saveSuccess = false
-      alert(`Already saved png file and the secure file would be saved in ${filePath}`)
+      this.$alert(`Already saved png file and the secure file would be saved in ${filePath}`, 'prompt', {
+          confirmButtonText: 'determine',
+      });
     },
     enterWallet() {
       this.dialogVisible = true
@@ -319,6 +329,7 @@ export default {
     }
     let lineCount = 0
     let englishWords = this.$route.query.englishWords.split(' ')
+    this.englishWordsString = this.$route.query.englishWords
     for(let i = 0; i < englishWords.length; i++) {
       if ( i % 4 === 0 && i !== 0 ) {
         lineCount ++
@@ -340,16 +351,22 @@ export default {
 
 <style scoped>
 .layoutCnt {display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
-.mainCnt {background: #FFFFFF;width:492px;}
+.mainCnt {background: #FFFFFF;width:492px;margin-top: 36px;}
 .backupCnt {display: flex;justify-content: center;flex: 1;}
 
-.mainCntList {width: 492px;margin: 16px auto 41px;}
+.mainCntList {width: 492px;margin: 15px auto 34px;}
 
-input[type="radio"] {vertical-align: middle;}
+input[type="radio"] {vertical-align: middle;background-color: #01cd78;
+    background-clip: content-box;
+    padding: .2em;}
+input[type="radio"]:checked + label::before {
+    background-color: #01cd78;
+    background-clip: content-box;
+    padding: .2em;
+}
 
-/* .line {display: block;width:492px;height: 1px;border-top: 1px dashed #C8D1DA;margin: 17px auto 14px;} */
 
-.mainCntTxt {color: #939CB2;text-align: center;margin: 36px 0 15px;width:100%;}
+.mainCntTxt {color: #939CB2;text-align: center;margin-bottom:15px;width:100%;}
 .mainCntTxt p {margin-top: 6px;}
 
 .downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 0;}
@@ -362,17 +379,17 @@ ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
 
 
 
-.copyBtn {outline:none;width: 42px;height: 32px;background:#fff;color: #00D6B2;border: 1px solid #00D6B2;}
-.copyBtnActive {background: #fff;color: #657292;border: 1px solid #C8D1DA;}
+.copyBtn {outline:none;width: 80px;height: 32px;background:#fff;color: #00D6B2;border: 1px solid #00D6B2;}
+.copyBtnAcitve {background: #C8D1DA;color: #fff;border: 1px solid #C8D1DA;}
 .copyBtn:hover {cursor: pointer;}
 .copyTxt {color: #657292;}
-.copyTxt2 {color: #657292;margin-top:10px;word-wrap:break-word;word-break:break-all;}
+.copyTxt2 {color: #657292;margin-top:4px;word-wrap:break-word;word-break:break-all;}
 
 .wordsLine {width:466px;height:71px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
 display: flex;flex-wrap: wrap;}
 
 section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
-section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid #C6CFD8;}
+section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding:25px 0 10px 18px;}
 section >>> .el-dialog__footer {padding: 0;}
