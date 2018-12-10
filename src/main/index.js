@@ -7,17 +7,18 @@ import {
 import {
   autoUpdater
 } from 'electron-updater'
+
 import updateChecker from './updateChecker.js'
 
-const SECCore = require('@sec-block/secjs-core')
-const SECRPCServer = require('@sec-block/secjs-rpc')
+const _SECCore = require('@sec-block/secjs-core')
+const _SECRPCServer = require('@sec-block/secjs-rpc')
 
 /**
  * Start RPC Server
  */
-SECCore.coreRun()
-let secRPCServer = new SECRPCServer(SECCore.core)
-secRPCServer.runRPCServer()
+let SECCore = new _SECCore()
+let SECRPCServer = new _SECRPCServer(SECCore)
+SECRPCServer.runRPCServer()
 
 /**
  * Set `__static` path to static files in production
@@ -28,15 +29,13 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development' ?
-  `http://localhost:9080` :
-  `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 
-function createWindow() {
+function createWindow () {
   /**
    * Initial window options
    */
-  //updateChecker()
+  // updateChecker()
   mainWindow = new BrowserWindow({
     height: 640,
     useContentSize: true,
@@ -72,7 +71,7 @@ function createWindow() {
     }]
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
   } else {
-   // Menu.setApplicationMenu(null)
+    // Menu.setApplicationMenu(null)
   }
 
   mainWindow.loadURL(winURL)
