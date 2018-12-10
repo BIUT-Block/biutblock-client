@@ -3,7 +3,7 @@
     <main class="publicContent">
       <el-row class="publicNav">
         <el-col :span="6">
-          <router-link :to="{name: 'create', query: {
+          <!-- <router-link :to="{name: 'create', query: {
             id: this.id,
             privateKey: this.privateKey,
             publicKey: this.publicKey,
@@ -15,7 +15,7 @@
             colorArr: this.colorArr
           }}">
             <i v-show="saveSuccess" class="el-icon-arrow-left icon_nav"></i>
-          </router-link>
+          </router-link> -->
         </el-col>
         <el-col :span="12" class="navTit">
           Backup wallet

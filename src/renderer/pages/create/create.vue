@@ -487,9 +487,9 @@ export default {
 
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
         this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
-        this.$alert('Successfully imported', 'prompt', {
-              confirmButtonText: 'determine',
-          });
+        // this.$alert('Successfully imported', 'prompt', {
+        //       confirmButtonText: 'determine',
+        //  });
       } catch(e) {
         this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
               confirmButtonText: 'determine',
