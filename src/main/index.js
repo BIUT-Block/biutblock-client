@@ -14,13 +14,6 @@ const _SECCore = require('@sec-block/secjs-core')
 const _SECRPCServer = require('@sec-block/secjs-rpc')
 
 /**
- * Start RPC Server
- */
-let SECCore = new _SECCore()
-let SECRPCServer = new _SECRPCServer(SECCore)
-SECRPCServer.runRPCServer()
-
-/**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
@@ -36,6 +29,15 @@ function createWindow () {
    * Initial window options
    */
   // updateChecker()
+  let path = app.getPath('userData')
+  console.log(path + '/data/')
+
+  /**
+   * Start RPC Server
+   */
+  let SECCore = new _SECCore({DBPath: path + '/data/'})
+  let SECRPCServer = new _SECRPCServer(SECCore)
+  SECRPCServer.runRPCServer()
   mainWindow = new BrowserWindow({
     height: 640,
     useContentSize: true,

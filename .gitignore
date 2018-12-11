@@ -1,7 +1,4 @@
 node_modules/
-build/github/latest-mac.json
-build/latest-mac.yml
-build/latest.yml
 build/mac
 build/win-unpacked
 build/Sec*
