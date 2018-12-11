@@ -1,7 +1,7 @@
 node_modules/
 build/mac
 build/win-unpacked
-build/Sec*
+build/SEC*
 build/github
 build/github/*
 build/latest*
