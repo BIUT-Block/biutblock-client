@@ -83,9 +83,14 @@
             </section>
           </section>
           <span slot="footer" class="dialog-footer" style="margin-top:28px">
+<<<<<<< HEAD
             <button class="publicBtn" :disabled="transferBtn" 
               :class="transferBtn?'':'publicBtnAcitve'" @click="determineTransfer">determine</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
+=======
+            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" :disabled="isDetermineClick" @click="determineTransfer">determine</button>
+            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" @click="centerDialogVisible = false">cancel</button>
+>>>>>>> 9aee5fc5576b1c6a2f56894fde8e745bc5eb9f91
           </span>
         </el-dialog>
 
@@ -137,7 +142,8 @@ export default {
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
       colorArr: this.$route.query.colorArr,
-      password: '' //转账密码,
+      password: '', //转账密码,
+      isDetermineClick: false
     }
   },
   created() {
@@ -195,6 +201,7 @@ export default {
     determineTransfer () {
       this.transferBtn = true
       //转账功能   转账的结果 给个 alert提示
+      this.isDetermineClick = true
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
         this.$alert("You don't have enough balance.", 'prompt', {
@@ -243,6 +250,7 @@ export default {
               })
               this.$alert('Your transfer is now in pending.', 'prompt', {
                 confirmButtonText: 'determine',
+<<<<<<< HEAD
                 callback: action => {
                   this.$router.push({name: 'wallet', 
                   query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
@@ -251,6 +259,22 @@ export default {
                   colorArr: this.colorArr}})
                 }
               });
+=======
+              });
+              this.$router.push(
+                {
+                  name: 'wallet', 
+                  query: {
+                    walletAddress: this.walletAddress, 
+                    walletPrivateKey: this.privateKey, 
+                    walletName:this.walletName, 
+                    walletsArr: this.walletsArr, 
+                    walletPwd: this.walletPwd, 
+                    walletPublicKey: this.publicKey, 
+                    walletBalance: this.walletMoney, 
+                    colorArr: this.colorArr}
+              })
+>>>>>>> 9aee5fc5576b1c6a2f56894fde8e745bc5eb9f91
             }
           })
 
