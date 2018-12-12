@@ -14,12 +14,12 @@
 
             <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;color: #939CB2;">
               <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">Current system time：</span>
-               <span style="line-height:1.5">{{systemTime}}</span>
+               <span style="line-height:1.5">{{systemTime.substring(0,34)}}</span>
             </p>
 
             <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
               <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">local time：</span>
-               <span style="line-height:1.5">{{localTime}}</span>
+               <span style="line-height:1.5">{{localTime.substring(0,34)}}</span>
             </p>
           </section>
 
@@ -170,7 +170,7 @@ export default {
         this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
           if (err) {
             this.$alert('Can not start mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
             this.progressVal = true
             return
@@ -179,12 +179,12 @@ export default {
           if (response) {
             this.siteStatus.mining = false
             this.$alert('Begin Mining successfull', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           } else {
             this.progressVal = true
             this.$alert('Can not start mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           }
         })
@@ -192,7 +192,7 @@ export default {
         this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
           if (err) {
             this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
             this.progressVal = false
             return
@@ -201,12 +201,12 @@ export default {
           if (response) {
             this.siteStatus.mining = true
             this.$alert('Stop Mining successfull', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           } else {
             this.progressVal = false
             this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           }
         })

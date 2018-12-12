@@ -13,7 +13,7 @@
           <section class="publicWalletHList">
             <router-link :to="{name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, 
-            walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletBalance, colorArr: this.colorArr}}" 
+            walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletBalance, colorArr: this.colorArr,pageId: 1}}" 
             class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>

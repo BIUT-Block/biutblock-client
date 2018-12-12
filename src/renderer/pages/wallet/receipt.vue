@@ -15,7 +15,7 @@
             <router-link :to="{name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
             walletPublicKey: this.publicKey, walletName:this.walletName, walletsArr: this.walletsArr,
-             walletPwd: this.walletPwd, walletBalance: this.walletMoney, colorArr: this.colorArr}}" class="publicWalletHListIcon">
+             walletPwd: this.walletPwd, walletBalance: this.walletMoney, colorArr: this.colorArr,pageId: 1 }}" class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
             <span class="publicWalletHTit">Receipt</span>
@@ -69,13 +69,13 @@ export default {
       var clipboard = new Clipboard('.publicBtn')
         clipboard.on('success', e => {
           this.$alert('Copy success', 'Warm prompt', {
-            confirmButtonText: 'determine',
+            confirmButtonText: 'Confirm',
           });
           clipboard.destroy()
         })
         clipboard.on('error', e => {
           this.$alert('Automatic replication is not supported', 'Warm prompt', {
-            confirmButtonText: 'determine',
+            confirmButtonText: 'Confirm',
           });
 
           clipboard.destroy()

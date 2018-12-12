@@ -40,10 +40,10 @@
             <img :src="icon_node" alt="">
           </p>
 
-          <p class="mt50 pointerTxt" @click="setListFrom" @mouseover="setListCnt" @mouseout="setListCntOut">
+          <p class="mt50 pointerTxt" @click="setListFrom">
             <img :src="icon_set" alt="">
           </p>
-          <div class="setListCnt" v-show="setList">
+          <div class="setListCnt pointerTxt" @click="setListCnt" v-show="setList">
             Setting
           </div>
           <p class="copyright">V{{appVersion}}</p>
@@ -66,7 +66,7 @@
          <section style="display:flex;flex-direction: column;flex-basis: 124px;border-right: 1px solid rgba(200,209,218,0.5);text-align:right;padding-top: 33px;">
            <span style="" :class="mockActive1" @click="tapMock1">Switch language</span>
 
-           <span style="margin-top: 21px;" :class="mockActive2" @click="tapMock2">About wallet</span>
+           <span style="margin-top: 21px;padding-right: 15px;" :class="mockActive2" @click="tapMock2">About wallet</span>
          </section>
 
          <section style="padding-top: 33px;padding-left: 12px;" v-show="homeMockCnt2">
@@ -145,39 +145,56 @@ export default {
     })
   },
   methods: {
-    setListCnt () {
-      this.setList = true
-    },
-    setListCntOut () {
-      this.setList = false
-    },
+    // setListCnt () {
+    //   this.setList = true
+    // },
+    // setListCntOut () {
+    //   this.setList = false
+    // },
     walletListFrom () {
       this.$router.push({name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
             walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd,
-            walletPublicKey: this.publicKey, walletBalance: this.walletMoney, colorArr: this.colorArr}})
+            walletPublicKey: this.publicKey, walletBalance: this.walletMoney, colorArr: this.colorArr, pageId: 1}})
       this.icon_wallet = icon_wallet_active
       this.icon_node = icon_node
       this.icon_set = icon_set
+      this.setList = false
     },
     nodeListFrom () {
       this.$router.push({ path: '/nodeSec',
       query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
             walletName:this.walletName, walletsArr: this.walletsArr, walletPwd: this.walletPwd,
-            walletPublicKey: this.publicKey, walletBalance: this.walletMoney} })
+            walletPublicKey: this.publicKey, walletBalance: this.walletMoney, pageId: 2} })
       this.icon_wallet = icon_wallet
       this.icon_node = icon_node_active
       this.icon_set = icon_set
+      this.setList = false
     },
     setListFrom () {
-      this.dialogVisible = true
       this.icon_wallet = icon_wallet
       this.icon_node = icon_node
       this.icon_set = icon_set_active
+      this.setList = true
+    },
+    setListCnt () {
+      this.setList = false
+      this.dialogVisible = true
     },
     handleClose (done) {
       done()
-      this.walletListFrom()
+      this.setList = true
+      if (this.$route.query.pageId == 1) {
+        this.icon_wallet = icon_wallet_active
+        this.icon_node = icon_node
+        this.icon_set = icon_set
+        this.setList = false
+      } else {
+        this.icon_wallet = icon_wallet
+        this.icon_node = icon_node_active
+        this.icon_set = icon_set
+        this.setList = false
+      }
     },
     tapMock1 () {
       this.mockActive1 = 'mockActive'
@@ -212,7 +229,7 @@ export default {
 .homeMock {height: 218px;display: flex;border-top: 1px solid rgba(200,209,218,0.5);font-size: 12px;}
 .homeSelect {-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-appearance:none;
   -webkit-tap-highlight-color: transparent;appearance:none;-moz-appearance:none;
-  width: 214px;margin-left: 13px;height: 36px;background:#F9F9FA;border: none;padding-left: 8px;}
+  width: 214px;margin-left: 13px;height: 36px;background:#F9F9FA;border: none;padding-left: 8px;color: #ccc}
 
 .languageCnt {flex:1;display: flex;justify-content:start;padding:23px;line-height: 2;}
 .versionCnt {flex:1;display: flex;justify-content:space-between;padding:23px 10px;line-height: 2;}

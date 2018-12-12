@@ -51,3 +51,27 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color: #C8D
 
 
 .homeHNav {width: 70px;height:60px;display: flex;background:#00D6B2;justify-content: center;align-items: center;}
+.lds-dual-ring {
+  display: inline-block;
+  width: 64px;
+  height: 64px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #00D6B2;
+  border-color: #00D6B2 transparent #00D6B2 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
