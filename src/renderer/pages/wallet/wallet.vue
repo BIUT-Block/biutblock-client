@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
 
-    <el-row >
+    <el-row>
       <el-col :span="24" class="publicWalletP">
         <section class="walletMaginT">
           <section class="walletHeader">
@@ -20,7 +20,7 @@
                 <img src="../../assets/image/deleteBtn.png" alt="" @click="positionFrom">
                 <section v-show="positionBtnH" class="positionBtn">
                   <el-button @click="dialogVisible" :disabled="walletsArr.length<=1" class="deleteBtn">Delete wallet</el-button>
-                  <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button>
+                  <!-- <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button> -->
                 </section>
               </section>
             </section>
@@ -31,13 +31,13 @@
 
           <section class="walletListCnt">
             <router-link :to="{name: 'receipt', 
-              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr}}" 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
               <img src="../../assets/image/walletReceipt.png" alt="" class="walletListTxt">
               Receipt
             </router-link>
             <router-link :to="{name: 'transfer', 
-              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr}}" 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
                <img src="../../assets/image/walletTransfer.png" alt="" class="walletListTxt">
               Transfer
@@ -675,10 +675,10 @@ ul li .moneyCnt {
 
 .positionBtn {
   position: absolute;
-  bottom: -72px;
+  bottom: -36px;
   right: 0;
   width: 138px;
-  height: 72px;
+  height: 36px;
   border-radius: 2px;
   background: #939CB2;
 }

@@ -14,12 +14,12 @@
 
             <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;color: #939CB2;">
               <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">Current system time：</span>
-               <span style="line-height:1.5">{{systemTime}}</span>
+               <span style="line-height:1.5">{{systemTime.substring(0,34)}}</span>
             </p>
 
             <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
               <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">local time：</span>
-               <span style="line-height:1.5">{{localTime}}</span>
+               <span style="line-height:1.5">{{localTime.substring(0,34)}}</span>
             </p>
           </section>
 

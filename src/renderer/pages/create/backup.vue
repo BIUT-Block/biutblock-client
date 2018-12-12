@@ -72,8 +72,7 @@
             center>
             <div id="selectFileType" style="margin-top: 30px;">
               <p class="downTxt">
-                  <input type="radio" name="downImg" id="png">
-                  <span class="downTxt2">Picture file(*.png)</span> 
+                  <input type="radio" name="downImg" id="png"><span class="downTxt2">Picture file(*.png)</span> 
                   Export files as images
                 </p>
 
@@ -292,7 +291,8 @@ export default {
             walletsArr: walletsArr,
             walletPwd: this.walletPwd,
             walletName: this.walletName,
-            colorArr: new Array(walletsArr.length-1).fill(false).concat([true])
+            colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
+            pageId: 1
         }})
       } else {
         this.$router.push({name: 'wallet', query: {
@@ -303,7 +303,8 @@ export default {
             walletsArr: walletsArr,
             walletPwd: this.password,
             walletName: this.walletName,
-            colorArr: new Array(walletsArr.length-1).fill(false).concat([true])
+            colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
+            pageId: 1
         }})
       }
     }

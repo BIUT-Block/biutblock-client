@@ -36,7 +36,6 @@
             </el-input>
             <section v-show="passCntList">
               <!-- <p class="mainCntTab1Txt">password</p> -->
-              
               <section style="margin: 16px 0;">
                   <el-input
                     type="password"
@@ -45,6 +44,11 @@
                     maxlength="30"
                     clearable>
                   </el-input>
+                  <div style="margin: 4px 8px 16px 0;">
+                    <img src="../../assets/image/message.png" width="12px" height="12px"/>
+                    <span class="mainCntTab1Txt">8-30 characters, must contain at least 2 types of numbers, 
+                      English letters, and special characters</span>
+                  </div>
               </section>
               <!-- <p class="mainCntTab1Txt">confirm password</p> -->
               <el-input
@@ -61,7 +65,7 @@
           </section>
           <section v-show="mainCntTab2" class="mainCntTab2">
             <textarea name="" id="" cols="30" v-model="mnemonicTxt" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
-            <section class="publicCntBtn" style="margin-top: 26px;">
+            <section class="publicCntBtn" style="margin-top: 56px;">
               <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Start importing</button>
             </section>
           </section>
@@ -332,7 +336,7 @@ export default {
               password: this.password,
               englishWords: this.englishWords,
               walletPwd: this.walletPwd,
-              walletName: this.name
+              walletName: this.name,
             }
           });
         }
@@ -437,6 +441,7 @@ export default {
         }
         this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
               confirmButtonText: 'determine',
+              confirmButtonClass: 'determineListBtn'
           });
       })
       this._mnemonicNavToWallet(this.keyFileDataJS, this.mnemonicPwd)
@@ -599,7 +604,8 @@ export default {
               walletBalance: walletsArr[walletsArr.length-1].walletBalance,
               walletsArr: walletsArr,
               walletName: walletsArr[walletsArr.length-1].walletName,
-              colorArr: new Array(walletsArr.length-1).fill(false).concat([true])
+              colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
+              pageId: 1
             })
           }
         })        
@@ -741,7 +747,7 @@ export default {
 .mainCntTab1 {
   margin: 32px auto 0;
   width: 380px;
-  height: 213px;
+  height: 243px;
   position: relative;
 }
 .createActiveBtn1 {
@@ -756,7 +762,7 @@ export default {
 .mainCntTab2 {
   width: 380px;
   margin: 32px auto 0;
-  height: 213px;
+  height: 243px;
 }
 
 .btn {

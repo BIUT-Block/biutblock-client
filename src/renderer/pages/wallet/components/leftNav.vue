@@ -89,7 +89,8 @@ export default {
             walletsArr: this.walletsArr,
             walletName: item.walletName,
             walletIndex: index,
-            colorArr: res 
+            colorArr: res,
+            pageId: 1 
           }
         })
       }
