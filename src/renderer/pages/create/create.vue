@@ -291,12 +291,12 @@ export default {
       } else {
         if (this.confirmP != this.password) {
           this.$alert('The input passwords are not same. Please enter again.', 'prompt', {
-              confirmButtonText: 'determine',
+              confirmButtonText: 'Confirm',
           });
           return;
         } else if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.password)){
           this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
-              confirmButtonText: 'determine',
+              confirmButtonText: 'Confirm',
           });
           return;
         } else {
@@ -358,7 +358,7 @@ export default {
         // 创建钱包方法
         if (this.confirmP != this.password) {
            this.$alert('The password input is inconsistent twice, please re-enter', 'prompt', {
-              confirmButtonText: 'determine',
+              confirmButtonText: 'Confirm',
           });
           return;
         }  else {
@@ -440,8 +440,8 @@ export default {
           return
         }
         this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
-              confirmButtonText: 'determine',
-              confirmButtonClass: 'determineListBtn'
+              confirmButtonText: 'Confirm',
+              confirmButtonClass: 'ListBtn'
           });
       })
       this._mnemonicNavToWallet(this.keyFileDataJS, this.mnemonicPwd)
@@ -457,7 +457,7 @@ export default {
         this.newDialogVisible5 = true
       } else {
         this.$alert('Please enter 1 or 2', 'prompt', {
-              confirmButtonText: 'determine',
+              confirmButtonText: 'Confirm',
           });
       }    
     },
@@ -474,7 +474,7 @@ export default {
           return
         }
         this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
-              confirmButtonText: 'determine',
+              confirmButtonText: 'Confirm',
           });
       })
       this._mnemonicNavToWallet(this.keyFileDataJS, this.newDialogInput5)
@@ -493,11 +493,11 @@ export default {
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
         this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
         // this.$alert('Successfully imported', 'prompt', {
-        //       confirmButtonText: 'determine',
+        //       confirmButtonText: 'Confirm',
         //  });
       } catch(e) {
         this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
-              confirmButtonText: 'determine',
+              confirmButtonText: 'Confirm',
           });
         return
       }
@@ -525,7 +525,7 @@ export default {
               localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
               if (localPrivatKey===this.mnemonicWallet.privateKey) {
                 this.$alert(`The wallet information is already local, local wallet name ${walletName}`, 'prompt', {
-                    confirmButtonText: 'determine',
+                    confirmButtonText: 'Confirm',
                 });
                 return 
               }
@@ -547,13 +547,13 @@ export default {
               return
             }
             this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           })
           this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
         } catch(e) {
           this.$alert('Login error! Please confirm your password', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
         }
     },
@@ -585,7 +585,7 @@ export default {
           console.log(response)
           if(response.result.status === 'false') {
             this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           } else if (response.result.status == '0') {
             walletsBalanceJS[wallet.walletName] = response.result.value.toString()

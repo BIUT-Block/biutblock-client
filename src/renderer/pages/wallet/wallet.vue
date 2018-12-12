@@ -49,7 +49,7 @@
           <section class="walletRecordTxt">
             <span>Transaction Record</span>
           </section>
-
+          
           <section v-show="tradingCnt" class="walletNoneCnt">
               <p>
                 <img src="../../assets/image/moneyNo.png" alt="">
@@ -96,7 +96,7 @@
             Whether to delete the wallet
           </p>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="deleteWallet">determine</button>
+            <button class="publicBtn publicBtnAcitve" @click="deleteWallet">Confirm</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>

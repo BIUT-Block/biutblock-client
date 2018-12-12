@@ -83,14 +83,8 @@
             </section>
           </section>
           <span slot="footer" class="dialog-footer" style="margin-top:28px">
-<<<<<<< HEAD
-            <button class="publicBtn" :disabled="transferBtn" 
-              :class="transferBtn?'':'publicBtnAcitve'" @click="determineTransfer">determine</button>
-            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
-=======
-            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" :disabled="isDetermineClick" @click="determineTransfer">determine</button>
+            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" :disabled="isDetermineClick" @click="determineTransfer">Confirm</button>
             <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" @click="centerDialogVisible = false">cancel</button>
->>>>>>> 9aee5fc5576b1c6a2f56894fde8e745bc5eb9f91
           </span>
         </el-dialog>
 
@@ -105,7 +99,7 @@
             <input type="password" v-model="password" placeholder="Please enter your password" class="passwordIpt">
           </section>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn" :disabled="determineBtn" :class="determineBtn?'publicBtnAcitve':''" @click="determineTransfer">determine</button>
+            <button class="publicBtn" :disabled="determineBtn" :class="determineBtn?'publicBtnAcitve':''" @click="determineTransfer">Confirm</button>
             <button class="publicBtn publicBtnAcitve" @click="dialogVisible = false">cancel</button>
           </span>
         </el-dialog> -->
@@ -158,11 +152,11 @@ export default {
       }
       if (!/^[0-9.]+$/i.test(this.amount)) {
         this.$alert('Wrong input formatt', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
       } else if (parseFloat(this.amount)>this.walletMoney) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
       } else {
         return true;
@@ -174,7 +168,7 @@ export default {
       }
       if (!/^[a-z0-9]+$/.test(this.address) && this.address.length !== 40 ) {
         this.$alert('Invalid wallet address formatt', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
         this.address = ""
       } else {
@@ -187,7 +181,7 @@ export default {
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
         return
       } else {
@@ -205,7 +199,7 @@ export default {
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
       } else {
           let timeStamp = new Date().getTime()
@@ -249,17 +243,7 @@ export default {
                 }
               })
               this.$alert('Your transfer is now in pending.', 'prompt', {
-                confirmButtonText: 'determine',
-<<<<<<< HEAD
-                callback: action => {
-                  this.$router.push({name: 'wallet', 
-                  query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
-                  walletName:this.walletName, walletsArr: this.walletsArr, 
-                  walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney,
-                  colorArr: this.colorArr}})
-                }
-              });
-=======
+                confirmButtonText: 'Confirm',
               });
               this.$router.push(
                 {
@@ -274,7 +258,6 @@ export default {
                     walletBalance: this.walletMoney, 
                     colorArr: this.colorArr}
               })
->>>>>>> 9aee5fc5576b1c6a2f56894fde8e745bc5eb9f91
             }
           })
 

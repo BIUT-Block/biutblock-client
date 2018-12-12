@@ -69,13 +69,13 @@ export default {
       var clipboard = new Clipboard('.publicBtn')
         clipboard.on('success', e => {
           this.$alert('Copy success', 'Warm prompt', {
-            confirmButtonText: 'determine',
+            confirmButtonText: 'Confirm',
           });
           clipboard.destroy()
         })
         clipboard.on('error', e => {
           this.$alert('Automatic replication is not supported', 'Warm prompt', {
-            confirmButtonText: 'determine',
+            confirmButtonText: 'Confirm',
           });
 
           clipboard.destroy()

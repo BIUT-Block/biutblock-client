@@ -60,7 +60,7 @@
           </section>
 
           <section class="publicCntBtn">
-            <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
+            <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet1">Backed up, enter the wallet</button>
           </section>
           
          <el-dialog
@@ -93,7 +93,7 @@
             </div>
 
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:60px;" @click="saveFile">determine</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:60px;" @click="saveFile">Confirm</button>
             </span>
           </el-dialog>
 
@@ -115,7 +115,7 @@
               are lost,you will permanently lose your assets.
             </p>
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:50px" @click="dialogVisibleFrom">Enter the wallet</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:50px"  @click="enterWallet">Enter the wallet</button>
             </span>
           </el-dialog>
 
@@ -172,10 +172,6 @@ export default {
           clipboard.destroy()
         })
     },
-    dialogVisibleFrom () {
-      this.dialogVisible = false
-      this.$router.push('/create?id=2')
-    },
     saveFile () {
       this.centerDialogVisible = false
       let dirPath = require('os').homedir() + '/secwallet'
@@ -254,7 +250,7 @@ export default {
          return
       }
       this.$alert('Select a file format to save your english words', 'prompt', {
-          confirmButtonText: 'determine',
+          confirmButtonText: 'Confirm',
       });
       return
       // if (document.getElementById('svg').checked) {
@@ -268,12 +264,15 @@ export default {
     _saveWalletSuccess (filePath) {
       this.alreadySaved = true
       this.saveSuccess = false
-      this.$alert(`Already saved png file and the secure file would be saved in ${filePath}`, 'prompt', {
-          confirmButtonText: 'determine',
-      });
+      // this.$alert(`Already saved png file and the secure file would be saved in ${filePath}`, 'prompt', {
+      //     confirmButtonText: 'Confirm',
+      // });
+    },
+    enterWallet1 () {
+      this.dialogVisible = true
     },
     enterWallet() {
-      this.dialogVisible = true
+      this.dialogVisible = false
       let walletsArr = []
       let walletNamesArr = Object.keys(this.keyFileDataJS)
       let walletInfo = {}
