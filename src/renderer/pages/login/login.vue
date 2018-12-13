@@ -16,7 +16,7 @@
               <section class="errorCnt">
                 <p v-if="errorTxt" class="errorTxt">Password format error</p>
               </section>
-              <p class="loginTxt">No wallet? <router-link to="create?id=1" tag="span" class="TxtColor pointerTxt">Click here to create a new</router-link></p>
+              <p class="loginTxt">No wallet? <span class="TxtColor pointerTxt" @click="createNew">Click here to create a new</span></p>
            </section>
         </section>
       </el-col>
@@ -39,6 +39,22 @@ export default {
     }
   },
   methods: {
+    createNew () {
+      this.$alert('This operation will delete all your local wallet data, please confirm to continue or you can close this prompt.', '', {
+          confirmButtonText: 'Confirm',
+      }).then(function(){
+        this.$router.push(
+          {
+            name: 'create',
+            query: {
+              id: '1'
+            }
+          }
+        )
+      }.bind(this)).catch(function(e){
+        return
+      })
+    },
     loginBtn () { // 登陆方法
       let filePath = ''
       if(require('os').type() === 'Darwin' || require('os').type() === 'Linux') {
