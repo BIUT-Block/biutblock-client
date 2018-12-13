@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     createNew () {
-      this.$alert('This operation will delete all your local wallet data, please confirm to continue', '', {
+      this.$alert('This operation will delete all your local wallet data, please confirm to continue or you can close this prompt.', '', {
           confirmButtonText: 'Confirm',
       }).then(function(){
         this.$router.push(
