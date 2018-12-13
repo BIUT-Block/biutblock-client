@@ -14,12 +14,12 @@
 
             <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;color: #939CB2;">
               <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">Current system time：</span>
-               <span style="line-height:1.5">{{systemTime}}</span>
+               <span style="line-height:1.5">{{systemTime.substring(0,34)}}</span>
             </p>
 
             <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
               <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">local time：</span>
-               <span style="line-height:1.5">{{localTime}}</span>
+               <span style="line-height:1.5">{{localTime.substring(0,34)}}</span>
             </p>
           </section>
 
@@ -43,7 +43,7 @@
             <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
               <section style="display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px">
-                 <span>{{progressAll}} G / {{progress}} G</span> 
+                 <span>{{progress}} GB / {{progressAll}} GB</span> 
                  <span>{{consumptionTimt}}</span> 
               </section>
             </p>
@@ -89,10 +89,10 @@ export default {
       centerDialogVisible: false,
       progressVal: true,
       disabledBtn: true, // 切换显示 switch 开关
-      progressAll: '50.2',
+      progressAll: '0.00',
       progress:'0',
       progressPercentage: 0,
-      consumptionTimt: '00:30:23',
+      consumptionTimt: '00:00:05',
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
@@ -106,7 +106,7 @@ export default {
   created () {
     if (window.localStorage.getItem('siteStatus')) {
       this.siteStatus = JSON.parse(window.localStorage.getItem('siteStatus'))
-      this.timeCnt = this.siteStatus.walletUpdateTime
+      this.updateTime = this.siteStatus.walletUpdateTime
       this.disabledBtn = this.siteStatus.mining
       this.startBtnActive = this.siteStatus.startBtnActive
     }
@@ -122,16 +122,17 @@ export default {
     startSyncing () { 
       this.timeCntShow = false
       this.startBtn = 'synchronizing...'
-      this.$JsonRPCClient.switchToLocalHost()
+      // this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_getTokenChainSize', [], (err, response) => {
         if (err) {
           return
         }
         // if (response && response.result.status === '1') {
-        if (response) {
-          this.progressAll = Number(response.result.value) / 1000000000
+        if (response.result.status === '1') {
+          this.progressAll = (Number(response.result.value) / (1024*1024*1024)).toFixed(2)
         }
       })
+      this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
         console.log(err)
         console.log(response)
@@ -144,8 +145,11 @@ export default {
           this.startBtnActive = 'startBtnActive'
           this.startBtn = 'Start syncing'
           
-          let progressInterval = setInterval( () => {
+          let progressInterval = setInterval( function() {
             this.progress = Number(this.progress) + Number(this.progressAll) / 5
+            let tempStr = this.consumptionTimt
+            this.consumptionTimt = tempStr.slice(0, tempStr.length-1) + (Number(tempStr.slice(tempStr.length-1))-1).toString()
+
             if (Number(this.progressAll) - this.progress > 0.001) {
               this.progressPercentage = (this.progress / Number(this.progressAll)) * 100
             } else {
@@ -154,10 +158,10 @@ export default {
               this.updateTime = new Date().toString()
               this.disabledBtn = false
               this.siteStatus.walletUpdateTime = this.updateTime
-              window.localStorage('siteStatus', JSON.stringify(this.siteStatus))
+              window.localStorage.setItem('siteStatus', JSON.stringify(this.siteStatus))
               clearInterval(progressInterval)
             }
-          }, 1000)
+          }.bind(this), 1000)
         }
       })
       //this.centerDialogVisible = true
@@ -170,7 +174,7 @@ export default {
         this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
           if (err) {
             this.$alert('Can not start mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
             this.progressVal = true
             return
@@ -179,12 +183,12 @@ export default {
           if (response) {
             this.siteStatus.mining = false
             this.$alert('Begin Mining successfull', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           } else {
             this.progressVal = true
             this.$alert('Can not start mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           }
         })
@@ -192,7 +196,7 @@ export default {
         this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
           if (err) {
             this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
             this.progressVal = false
             return
@@ -201,12 +205,12 @@ export default {
           if (response) {
             this.siteStatus.mining = true
             this.$alert('Stop Mining successfull', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           } else {
             this.progressVal = false
             this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
             });
           }
         })

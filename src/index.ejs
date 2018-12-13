@@ -11,7 +11,10 @@
         require('module').globalPaths.push('<%= htmlWebpackPlugin.options.nodeModules.replace(/\\/g, '\\\\') %>')
       </script>
     <% } %>
-
+      <style>
+        .el-button--primary {color: #fff;background-color: #00D6B2!important;border-color: #00D6B2!important;}
+      </style>
+      
   </head>
   <body>
     <div id="app"></div>

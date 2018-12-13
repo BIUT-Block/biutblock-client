@@ -14,7 +14,7 @@
           <section class="publicWalletHList">
             <router-link :to="{name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, walletName:this.walletName, walletsArr: this.walletsArr, 
-            walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney, colorArr: this.colorArr}}" 
+            walletPwd: this.walletPwd, walletPublicKey: this.publicKey, walletBalance: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
             class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
@@ -33,22 +33,22 @@
 
             <input class="ipt" maxlength="20" v-model="remarks" placeholder="Remarks" />
 
-            <p class="transferCntTxt2">Miner cost</p>
+            <!-- <p class="transferCntTxt2">Miner cost</p>
 
             <section class="transferSlider">
               <div class="block">
                 <el-slider v-model="cost"></el-slider>
               </div>
-            </section>
+            </section> -->
 
-            <section class="costCnt">
+            <!-- <section class="costCnt">
               <span class="TxtColor3">Slow</span>
               <span class="TxtColor3">{{cost}} sec</span>
               <span class="TxtColor3">Fast</span>
             </section>
-            
+             -->
             <button class="publicBtn" :disabled="!publicBtnAcitve" 
-              :class="publicBtnAcitve?'publicBtnAcitve':''" @click="transferFrom">Transfer</button>
+              :class="publicBtnAcitve?'publicBtnAcitve':''" @click="transferFrom" style="margin-top:40px">Transfer</button>
           </section>
         </section>
         <el-dialog
@@ -72,10 +72,10 @@
               {{oneselfAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}
             </section>
 
-            <section>
+            <!-- <section>
               <span class="transferMockTxt">Miner fee</span>
               {{cost}} SEC
-            </section>
+            </section> -->
 
             <section>
               <span class="transferMockTxt">Amount</span>
@@ -83,7 +83,7 @@
             </section>
           </section>
           <span slot="footer" class="dialog-footer" style="margin-top:28px">
-            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" :disabled="isDetermineClick" @click="determineTransfer">determine</button>
+            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" :disabled="isDetermineClick" @click="determineTransfer">Confirm</button>
             <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
@@ -99,7 +99,7 @@
             <input type="password" v-model="password" placeholder="Please enter your password" class="passwordIpt">
           </section>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn" :disabled="determineBtn" :class="determineBtn?'publicBtnAcitve':''" @click="determineTransfer">determine</button>
+            <button class="publicBtn" :disabled="determineBtn" :class="determineBtn?'publicBtnAcitve':''" @click="determineTransfer">Confirm</button>
             <button class="publicBtn publicBtnAcitve" @click="dialogVisible = false">cancel</button>
           </span>
         </el-dialog> -->
@@ -119,11 +119,12 @@ export default {
   name: '',
   data () {
     return {
+      transferBtn: false,
       address: '',
       oneselfAddress: this.$route.query.walletAddress, //点击跳转的时候 带地址  或者存入缓存种
       amount: '',
       remarks: '',
-      cost: 0,
+      //cost: 0,
       allMoney: this.$route.query.walletMoney,
       centerDialogVisible: false,
       dialogVisible: false,
@@ -151,11 +152,11 @@ export default {
       }
       if (!/^[0-9.]+$/i.test(this.amount)) {
         this.$alert('Wrong input formatt', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
       } else if (parseFloat(this.amount)>this.walletMoney) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
       } else {
         return true;
@@ -167,7 +168,7 @@ export default {
       }
       if (!/^[a-z0-9]+$/.test(this.address) && this.address.length !== 40 ) {
         this.$alert('Invalid wallet address formatt', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
         this.address = ""
       } else {
@@ -180,7 +181,7 @@ export default {
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
         return
       } else {
@@ -192,12 +193,13 @@ export default {
     //   this.dialogVisible = true
     // },
     determineTransfer () {
+      this.transferBtn = true
       //转账功能   转账的结果 给个 alert提示
       this.isDetermineClick = true
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
           });
       } else {
           let timeStamp = new Date().getTime()
@@ -207,7 +209,8 @@ export default {
             to: this.address,
             value: this.amount,
             gasLimit: '0',
-            gas: this.cost.toString(),
+            //gas: this.cost.toString(),
+            gas: '0',
             gasPrice: '0',
             data: this.remarks,
             inputData: this.remarks
@@ -240,7 +243,7 @@ export default {
                 }
               })
               this.$alert('Your transfer is now in pending.', 'prompt', {
-                confirmButtonText: 'determine',
+                confirmButtonText: 'Confirm',
               });
               this.$router.push(
                 {

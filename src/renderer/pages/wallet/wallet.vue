@@ -1,5 +1,5 @@
 <template>
-  <el-container class="walletCnt">
+  <el-container class="walletCnt" @click.native="closeDetailsList">
     <el-row>
       <el-col :span="24">
         <left-nav :wallet-name="walletName" :wallet-address="walletAddress" :wallets-arr="walletsArr" :wallet-pwd="walletPwd"
@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
 
-    <el-row >
+    <el-row>
       <el-col :span="24" class="publicWalletP">
         <section class="walletMaginT">
           <section class="walletHeader">
@@ -16,11 +16,11 @@
                 <img src="../../assets/image/walletLogo.png" alt="" class="walletLogoImg">
                 {{walletName}}
               </p>
-              <section style="position: relative"  class="pointerTxt">
+              <section id='detailsList' style="position: relative"  class="pointerTxt">
                 <img src="../../assets/image/deleteBtn.png" alt="" @click="positionFrom">
                 <section v-show="positionBtnH" class="positionBtn">
                   <el-button @click="dialogVisible" :disabled="walletsArr.length<=1" class="deleteBtn">Delete wallet</el-button>
-                  <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button>
+                  <!-- <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button> -->
                 </section>
               </section>
             </section>
@@ -31,13 +31,13 @@
 
           <section class="walletListCnt">
             <router-link :to="{name: 'receipt', 
-              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr}}" 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
               <img src="../../assets/image/walletReceipt.png" alt="" class="walletListTxt">
               Receipt
             </router-link>
             <router-link :to="{name: 'transfer', 
-              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr}}" 
+              query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
                <img src="../../assets/image/walletTransfer.png" alt="" class="walletListTxt">
               Transfer
@@ -49,20 +49,19 @@
           <section class="walletRecordTxt">
             <span>Transaction Record</span>
           </section>
-
-          <section v-show="tradingCnt" class="walletNoneCnt">
+          <section v-show="refresh" class="walletNoneCnt">
+            <div class="lds-dual-ring" style="margin: 16px 0px;"></div>
+          </section>
+          <section v-show="tradingCnt&&!refresh" class="walletNoneCnt">
               <p>
                 <img src="../../assets/image/moneyNo.png" alt="">
               </p>
               <p style="color:#939CB2;margin: 16px 0px;">No transaction data</p>
-              <p>
-                <img src="../../assets/image/refresh.png" alt="">
-              </p>
           </section>
 
-          <section v-show="!tradingCnt" class="walletCntList">
+          <section v-show="!tradingCnt&&!refresh" class="walletCntList">
               <ul>
-                <li v-for="item in walletList" :index="item.id" @click="toTxDetails(item)" class="pointerTxt">
+                <li v-for="item in showList" :index="item.id" @click="toTxDetails(item)" class="pointerTxt">
                     <section class="radiusCnt">
                       <span class="radiusIcon" :class="item.listState | radiusColor"> </span>
                     </section>
@@ -77,7 +76,7 @@
                 </li>
               </ul>
           </section>
-          <section class="clickMore" v-show="moreCnt">
+          <section class="clickMore pointerTxt" v-show="moreCnt&&!refresh" @click="showMore">
             <i class="el-icon-arrow-down" style="margin-right:5px;"></i>
             Click to load more
           </section>
@@ -96,7 +95,7 @@
             Whether to delete the wallet
           </p>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="deleteWallet">determine</button>
+            <button class="publicBtn publicBtnAcitve" @click="deleteWallet">Confirm</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
@@ -130,7 +129,9 @@ export default {
       walletsArr: [],
       walletPwd: "",
       colorArr: [],
-      walletList: []
+      walletList: [],
+      showList: [],
+      refresh: true
     };
   },
   created() {
@@ -144,7 +145,7 @@ export default {
     this.walletsArr = this.$route.query.walletsArr;
     this.walletPwd = this.$route.query.walletPwd;
     this.walletName = this.$route.query.walletName;
-
+    
     if (this.$route.query.colorArr) {
       this.colorArr = this.$route.query.colorArr
     } else {
@@ -157,6 +158,7 @@ export default {
         this.walletMoney = response.result.value
       }
     })
+    this.refresh = true
     this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
@@ -205,7 +207,14 @@ export default {
         } else {
           this.tradingCnt = false
         }
-        
+        if (this.walletList.length>4){
+          this.moreCnt = true
+          this.showList = this.walletList.slice(0, 4) 
+        }
+        else {
+          this.showList = this.walletList
+        }
+        this.refresh = false
       }
     );
   },
@@ -233,6 +242,7 @@ export default {
           this.walletMoney = response.result.value
         }
       })
+      this.refresh = true
       this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
@@ -277,18 +287,35 @@ export default {
           }
         }
         this.walletList = walletListTemp
+        if (this.walletList.length>4){
+          this.moreCnt = true
+          this.showList = this.walletList.slice(0, 4) 
+        }
+        else {
+          this.showList = this.walletList
+        }
         if (this.walletList.length === 0) {
           this.tradingCnt = true
         } else {
           this.tradingCnt = false
         }
-        
+        this.refresh = false
       }
     );
     }.bind(this))
   },
 
   methods: {
+    showMore() {
+      this.showList = this.walletList
+      this.moreCnt = false
+    },
+    closeDetailsList(event) {
+      let detailsList = document.getElementById('detailsList')
+      if (!detailsList.contains(event.target) && this.positionBtnH) {
+        this.positionBtnH = false;
+      }
+    },
     positionFrom() {
       this.positionBtnH = !this.positionBtnH;
     },
@@ -382,6 +409,7 @@ export default {
               this.walletMoney = response.result.value
             }
           })
+          this.refresh = true
           this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
               if (response.result.resultInPool) {
                   for (let j = 0; j < response.result.resultInPool.length; j++) {
@@ -421,12 +449,19 @@ export default {
                   });
                 }
               }
+              if (this.walletList.length>4){
+                this.moreCnt = true
+                this.showList = this.walletList.slice(0, 4) 
+              }
+              else {
+                this.showList = this.walletList
+              }
               if (this.walletList.length === 0) {
                 this.tradingCnt = true
               } else {
                 this.tradingCnt = false
               }
-              
+              this.refresh = false
             }
           );
           fs.writeFile(filePath, cipherKeyData, (err) => {
@@ -675,10 +710,10 @@ ul li .moneyCnt {
 
 .positionBtn {
   position: absolute;
-  bottom: -72px;
+  bottom: -36px;
   right: 0;
   width: 138px;
-  height: 72px;
+  height: 36px;
   border-radius: 2px;
   background: #939CB2;
 }
