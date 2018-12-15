@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
 
-    <el-row>
+    <el-row style="margin-left: 38px;">
       <el-col :span="24" class="publicWalletP"> 
         <section class="publicWalletH publicWalletHF">
 
@@ -84,7 +84,7 @@
           </section>
           <span slot="footer" class="dialog-footer" style="margin-top:28px">
             <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" :disabled="isDetermineClick" @click="determineTransfer">Confirm</button>
-            <button class="publicBtn" :class="isDetermineClick?'':'publicBtnAcitve'" @click="centerDialogVisible = false">cancel</button>
+            <button class="publicBtn publicBtnAcitve"  @click="centerDialogVisible = false">cancel</button>
           </span>
         </el-dialog>
 
@@ -311,7 +311,7 @@ section >>> .el-input__inner {border: none;padding-left:0px;}
 
 
 section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
-section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
+section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding:15px 0 35px;}
 section >>> .el-dialog__footer {padding: 0;}

@@ -1,6 +1,6 @@
 <template>
-  <el-container class="home">
-    <el-row class="publicNav publicHomeNav">
+  <el-container class="home" @click.native="closeSettingCnt">
+    <!-- <el-row class="publicNav publicHomeNav">
       <el-col :span="4">
           <span class="homeHNav" title="SEC - Wallet">
             <img src="../../assets/image/logo.png" alt="SEC - Wallet">
@@ -9,11 +9,11 @@
       <el-col :span="16" class="navTit">
       </el-col>
       <el-col :span="4" class="windowsCnt">
-          <!-- <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
+          <i class="el-icon-minus icon_nav" @click="minimizeApp"></i>
           <span class="publicBtn amplification" @click="maximizeApp"></span>
-          <i class="el-icon-close icon_nav" @click="exitApp"></i> -->
+          <i class="el-icon-close icon_nav" @click="exitApp"></i>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-row>
       <el-col :span="24" class="homeList">
@@ -43,7 +43,7 @@
           <p class="mt50 pointerTxt" @click="setListFrom">
             <img :src="icon_set" alt="">
           </p>
-          <div class="setListCnt pointerTxt" @click="setListCnt" v-show="setList">
+          <div id="settingContent" class="setListCnt pointerTxt" v-show="setList" @click="setListCnt">
             Setting
           </div>
           <p class="copyright">V{{appVersion}}</p>
@@ -64,7 +64,7 @@
         <section class="homeMock">
          
          <section style="display:flex;flex-direction: column;flex-basis: 124px;border-right: 1px solid rgba(200,209,218,0.5);text-align:right;padding-top: 33px;">
-           <span style="" :class="mockActive1" @click="tapMock1">Switch language</span>
+           <span :class="mockActive1" @click="tapMock1">Switch language</span>
 
            <span style="margin-top: 21px;padding-right: 15px;" :class="mockActive2" @click="tapMock2">About wallet</span>
          </section>
@@ -77,10 +77,10 @@
 
           <section style="padding-top: 22px;padding-left: 12px;" v-show="homeMockCnt1">
            Language
-           <select class="homeSelect" name="" id="" style="">
+           <select class="homeSelect" disabled>
              <option value="">Follow system</option>
-             <option value="">中文</option>
-             <option value="">English</option>
+             <!-- <option value="">中文</option>
+             <option value="">English</option> -->
            </select>
          </section>
      
@@ -145,12 +145,6 @@ export default {
     })
   },
   methods: {
-    // setListCnt () {
-    //   this.setList = true
-    // },
-    // setListCntOut () {
-    //   this.setList = false
-    // },
     walletListFrom () {
       this.$router.push({name: 'wallet', 
             query: {walletAddress: this.walletAddress, walletPrivateKey: this.privateKey, 
@@ -175,11 +169,7 @@ export default {
       this.icon_wallet = icon_wallet
       this.icon_node = icon_node
       this.icon_set = icon_set_active
-      this.setList = true
-    },
-    setListCnt () {
-      this.setList = false
-      this.dialogVisible = true
+      this.setList = !this.setList
     },
     handleClose (done) {
       done()
@@ -207,6 +197,19 @@ export default {
       this.mockActive2 = 'mockActive'
       this.homeMockCnt1 = false
       this.homeMockCnt2 = true
+    },
+    closeSettingCnt (event) {
+      let detailsList = document.getElementById('settingContent')
+      console.log(!detailsList.contains(event.target))
+      //console.log(this.setList)
+      if (detailsList.contains(event.target) && this.setList) {
+        //if (this.setList)
+        this.setList = false
+      }
+    },
+    setListCnt () {
+      this.setList = false
+      this.dialogVisible = true
     }
   }
 }
@@ -238,7 +241,7 @@ export default {
 .pr {padding-right: 15px;}
 
 
-section >>> .el-dialog__header {padding: 20px 0 10px;}
+section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;}
 section >>> .el-dialog__body {padding: 0;color: #939CB2;font-size: 12px;margin: 0;}
 section >>> .el-dialog__title {font-size: 12px;color: #939CB2;padding-left: 25px;}
 

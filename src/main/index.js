@@ -39,7 +39,7 @@ function createWindow () {
   let SECRPCServer = new _SECRPCServer(SECCore)
   SECRPCServer.runRPCServer()
   mainWindow = new BrowserWindow({
-    height: 640,
+    height: 580,
     useContentSize: true,
     width: 960,
     transparent: false,

@@ -21,8 +21,26 @@
         </section>
       </el-col>
     </el-row>
-  </el-container>
+    <el-dialog
+      title="prompt"
+      :visible.sync="centerDialogVisible"
+      width="432px"
+      :show-close = true
+      :closeOnClickModal = false
+      top="25vh"
+      center>
+      <p style="color: #939CB2;font-size:14px;text-align: center;margin-top: 60px;">
+         This operation will delete all your local wallet data, 
+      </p>
+      <p style="color: #939CB2;font-size:14px;text-align: center;margin-bottom: 85px;">
+         please confirm to continue or you can close this prompt.
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <button class="publicBtn publicBtnAcitve" @click="createNew2">Confirm</button>
+      </span>
+    </el-dialog>
 
+  </el-container>
 </template>
 
 <script>
@@ -35,15 +53,32 @@ export default {
   data() {
     return {
       errorTxt: false,
-      loginValue: ''
+      loginValue: '',
+      centerDialogVisible: false
     }
   },
   methods: {
     createNew () {
-      this.$alert('This operation will delete all your local wallet data, please confirm to continue or you can close this prompt.', '', {
-          confirmButtonText: 'Confirm',
-      }).then(function(){
-        this.$router.push(
+      this.centerDialogVisible = true
+      // this.$alert('This operation will delete all your local wallet data, please confirm to continue or you can close this prompt.', '', {
+      //     confirmButtonText: 'Confirm',
+      // }).then(function(){
+      //   this.$router.push(
+      //     {
+      //       name: 'create',
+      //       query: {
+      //         id: '1'
+      //       }
+      //     }
+      //   )
+      // }.bind(this)).catch(function(e){
+      //   return
+      // })
+
+    },
+    createNew2 () {
+      this.centerDialogVisible = false
+      this.$router.push(
           {
             name: 'create',
             query: {
@@ -51,9 +86,6 @@ export default {
             }
           }
         )
-      }.bind(this)).catch(function(e){
-        return
-      })
     },
     loginBtn () { // 登陆方法
       let filePath = ''
@@ -151,6 +183,13 @@ export default {
         this.errorTxt = false
       }
       return this.loginValue.length > 7 ? true : false
+    },
+    //创建钱包
+    createActiveBtn () {
+      return this.walletName.length > 0 ? true : false
+    },
+    publicBtnAcitve () {
+      return this.mnemonicTxt.length > 0 ? true : false;
     }
    }
 }
@@ -159,18 +198,23 @@ export default {
 <style scoped>
 .layoutCnt {display: flex;height: 100vh;justify-content: center;align-items: center;}
 
-.mainCnt {height: 400px;width: 640px;display: flex;position: relative;border: 1px solid #707070;}
-.mainCntLeft {width: 248px;height: 400px;background: url('../../assets/image/loginBk.png') no-repeat;background-size: cover;}
-.mainCntRight {flex: 1;height: 400px;display: flex;align-items: center;
+.mainCnt {height: 580px;width: 960px;display: flex;position: relative;}
+.mainCntLeft {width: 380px;height: 580px;background: url('../../assets/image/loginBk.png') no-repeat;background-size: cover;}
+.mainCntRight {flex: 1;height: 580px;display: flex;align-items: center;
 flex-direction: column;background: #fff;}
-.loginClose {position: absolute;top:20px;right:20px;}
-.secLogo {margin-top: 60px;}
-.logoBtn {width:264px;height:36px;background: #C8D1DA;color: #fff;outline: none;border:1px solid #C8D1DA;border-radius: 4px;}
+.secLogo {position: absolute;top:32px;right:34px;}
+.logoBtn {width:346px;height:48px;background: #C8D1DA;color: #fff;outline: none;border:1px solid #C8D1DA;border-radius: 4px;}
 .logoBtnAcitve {background: #00D6B2;}
 
-.loginTit {color: #657292;font-size: 20px;font-weight:400;margin:40px 0 24px;}
-.loginTxt {margin-top: 37px;color: #657292;}
+.loginTit {color: #657292;font-size: 20px;font-weight:400;margin:158px 0 80px;}
+.loginTxt {margin-top: 116px;color: #657292;}
 .errorCnt {height: 22px;width:100%;text-align: center;}
 .errorTxt {color: #FF8DB2;margin-top: 12px;}
-.loginIpt {width: 264px;height: 36px;margin-bottom:24px;outline: none;color:#657292;border:1px solid #C8D1DA;text-align: center;}
+.loginIpt {width: 346px;height: 36px;margin-bottom:24px;outline: none;color:#657292;border:1px solid #C8D1DA;text-align: center;}
+
+section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
+section >>> .el-dialog__header {border-bottom:1px solid rgba(200,209,218,0.5);height: 47px;line-height: 47px;padding: 0;}
+section >>> .el-dialog--center {height: 288px;}
+section >>> .el-dialog__body {padding: 0;}
+section >>> .el-dialog__footer {padding: 0;}
 </style>

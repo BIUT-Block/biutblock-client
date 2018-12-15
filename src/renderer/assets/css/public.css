@@ -2,7 +2,7 @@ html {font-family: "PingFang SC",Arial,sans-serif;font-size: 12px;}
 body,ul,p,figure {margin: 0;padding: 0;}
 ul li {list-style: none;}
 
-.publicContent {width: 640px;height: 432px;border:1px solid #C8D1DA;}
+.publicContent {width: 960px;height: 580px;}
 
 .TxtColor {color: #00D6B2}
 .TxtColor2 {color: #FF8DB2}
@@ -47,7 +47,7 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder {color: #C8D1DA;opaci
 input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color: #C8D1DA;opacity:1;}
 
 
-.publicWalletP {padding: 0 32px;background: #FAFAFA;}
+.publicWalletP {width:606px;background: #FAFAFA;}
 
 
 .homeHNav {width: 70px;height:60px;display: flex;background:#00D6B2;justify-content: center;align-items: center;}

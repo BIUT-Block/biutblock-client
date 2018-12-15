@@ -7,12 +7,12 @@
       </el-col>
     </el-row>
 
-    <el-row>
+    <el-row style="margin-left: 38px;">
       <el-col :span="24" class="publicWalletP">
         <section class="walletMaginT">
           <section class="walletHeader">
             <section class="walletHeaderList">
-              <p>
+              <p style="font-weight:bold;">
                 <img src="../../assets/image/walletLogo.png" alt="" class="walletLogoImg">
                 {{walletName}}
               </p>
@@ -533,15 +533,14 @@ export default {
   box-shadow:0px 0px 15px rgba(0,91,76,0.05);
 }
 .walletRecordTxt {
-  width: 536px;
+  width: 557px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
   height: 43px;
   border-bottom: 1px solid rgba(200,209,218,0.5);
   color:#939CB2;
-  margin-right: 48px;
+  font-weight: bold;
+  margin-left: 20px;
 }
 
 .walletListCnt {
@@ -566,12 +565,12 @@ export default {
 }
 
 .walletMoneyTxt {
-  margin-left: 24px;
+  margin: 21px 0 14px 20px;
   color: #00d6b2;
   font-size: 28px;
 }
 .walletAddressTxt {
-  margin-left: 24px;
+  margin-left: 20px;
   color: #657292;
   margin-bottom: 16px;
 }
@@ -581,21 +580,27 @@ export default {
   border: none;
   background: #939CB2;
   color: rgba(255,255,255, 0.7);
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-radius: 2px;
+  height: 36px;
 }
 .detailsBtn {
   width: 100%;
   border: none;
   border-radius: 0;
-  border-top: 1px solid rgba(255,255,255, 0.3);
+  border-top: 1px solid rgba(255,255,255, 0.7);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
   margin-left: 0;
   color: rgba(255,255,255, 0.7);
   background: #939CB2;
+  
 }
-
+.deleteBtn:hover {
+  background: rgba(147,156,178,.5)!important;
+}
+.el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hove {
+  background: rgba(255,255,255, 0.5)!important;
+}
 .walletMaginT {
   display: flex;
   justify-content: space-between;
@@ -613,14 +618,13 @@ export default {
   height: 132px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   background: #fff;
   box-shadow:0px 0px 15px rgba(0,91,76,0.05);
 }
 .walletHeaderList {
   display: flex;
   justify-content: space-between;
-  margin: 16px 24px 0;
+  margin: 16px 20px 0;
   color:#657292;
 }
 
@@ -639,29 +643,16 @@ export default {
 }
 
 ul {
-  width: 536px;
+  width: 557px;
   height: 300px;
-  margin: 0 auto;
+  margin-left: 20px;
+  padding-right: 24px;
   overflow: hidden;
   overflow-y: scroll;
-  padding-right: 24px;
 }
-ul::-webkit-scrollbar {/*滚动条整体样式*/
-            width: 2px;    
-            height: 2px;
-        }
-        ul::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-            -webkit-box-shadow: inset 0 0 1px #00D6B2;
-            background: #00D6B2;
-            border-radius: 1px;
-           
-        }
-        ul::-webkit-scrollbar-track {/*滚动条里面轨道*/
-            -webkit-box-shadow: inset 0 0 1px #EDF5F4;
-            border-radius: 0;
-            
-            background: #EDF5F4;
-        }
+ul::-webkit-scrollbar {width: 2px;height: 2px;}
+ul::-webkit-scrollbar-thumb {-webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4; border-radius: 0;background: #EDF5F4;}
 ul li {
   height: 74px;
   width: 100%;
@@ -725,7 +716,7 @@ ul li .moneyCnt {
 }
 
 section >>> .el-dialog__title {color: #939CB2}
-section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
+section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding-top: 0px;padding-bottom: 10px;}
 section >>> .el-dialog__footer {padding: 0;}

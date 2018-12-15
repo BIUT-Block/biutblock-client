@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
 
-    <el-row>
+    <el-row style="margin-left: 38px;">
       <el-col :span="24" class="publicWalletP"> 
         <section class="publicWalletH publicWalletHF">
 

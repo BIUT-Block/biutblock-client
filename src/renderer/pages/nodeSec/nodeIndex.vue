@@ -249,6 +249,6 @@ input[type="text"]{width:412px;height:36px;text-align:center;border-radius:18px;
 
 section >>> .el-input__inner {border-radius: 18px;}
 section >>> .el-progress-bar__inner {background: #00D6B2;}
-section >>> .el-dialog__header {padding: 16px 0 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
+section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
 </style>

@@ -3,7 +3,7 @@
     <main class="publicContent">
       <el-row class="publicNav">
         <el-col :span="6">
-          <!-- <router-link :to="{name: 'create', query: {
+          <router-link :to="{name: 'create', query: {
             id: this.id,
             privateKey: this.privateKey,
             publicKey: this.publicKey,
@@ -15,7 +15,7 @@
             colorArr: this.colorArr
           }}">
             <i v-show="saveSuccess" class="el-icon-arrow-left icon_nav"></i>
-          </router-link> -->
+          </router-link>
         </el-col>
         <el-col :span="12" class="navTit">
           Backup wallet
@@ -55,7 +55,7 @@
                 <p class="copyTxt">Private key</p>
                 <p class="copyTxt2" id="copyPrivateKey">{{privateKey}}</p>
               </section>
-              <button data-clipboard-target="#copyPrivateKey" type="button"  :class="copyBtnAcitve" class="copyBtn" @click="copyTxtCnt">{{copyTxtCntTit}}</button>
+              <button data-clipboard-target="#copyPrivateKey" type="button" :class="copyBtnAcitve" class="copyBtn" @click="copyTxtCnt">{{copyTxtCntTit}}</button>
             </section>
           </section>
 
@@ -68,16 +68,14 @@
             :visible.sync="centerDialogVisible"
             width="432px"
             :closeOnClickModal = false
-            top="30vh"
+            top="25vh"
             center>
-            <div id="selectFileType" style="margin-top: 30px;">
-              <p class="downTxt">
-                  <input type="radio" name="downImg" id="png"><span class="downTxt2">Picture file(*.png)</span> 
-                  Export files as images
-                </p>
+            <div id="selectFileType" style="margin-top: 50px;">
+              <p class="downTxt"><input type="radio" name="downImg" id="png">
+                  <span class="downTxt2">Picture file(*.png)</span>Export files as images</p>
 
-              <p class="downTxt"><input type="radio" name="downImg" id="jpg"><span class="downTxt2">JPG file(*.jpg)</span> 
-              Export to JPG file format (default is white background)</p>
+              <p class="downTxt"><input type="radio" name="downImg" id="jpg">
+                <span class="downTxt2">JPG file(*.jpg)</span>Export to JPG file format (default is white background)</p>
 
               <!-- <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
               Export to PDF file format</p>
@@ -93,7 +91,7 @@
             </div>
 
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:60px;" @click="saveFile">Confirm</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:82px;" @click="saveFile">Confirm</button>
             </span>
           </el-dialog>
 
@@ -103,9 +101,9 @@
             width="432px"
             :show-close = true
             :closeOnClickModal = false
-            top="30vh"
+            top="25vh"
             center>
-            <p class="agreementTxt" style="margin-top:20px;">
+            <p class="agreementTxt" style="margin-top:52px;">
               Be sure to back up your mnemonics 
             </p>
             <p class="agreementTxt">
@@ -115,7 +113,7 @@
               are lost,you will permanently lose your assets.
             </p>
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:50px"  @click="enterWallet">Enter the wallet</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:67px"  @click="enterWallet">Enter the wallet</button>
             </span>
           </el-dialog>
 
@@ -351,10 +349,10 @@ export default {
 
 <style scoped>
 .layoutCnt {display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
-.mainCnt {background: #FFFFFF;width:492px;margin-top: 36px;}
+.mainCnt {background: #FFFFFF;width:492px;margin-top: 104px;}
 .backupCnt {display: flex;justify-content: center;flex: 1;}
 
-.mainCntList {width: 492px;margin: 15px auto 34px;}
+.mainCntList {width: 492px;margin: 16px auto 49px;}
 
 input[type="radio"] {vertical-align: middle;background-color: #01cd78;
     background-clip: content-box;
@@ -366,13 +364,13 @@ input[type="radio"]:checked + label::before {
 }
 
 
-.mainCntTxt {color: #939CB2;text-align: center;margin-bottom:15px;width:100%;}
+.mainCntTxt {color: #939CB2;text-align: left;margin-bottom:15px;width:100%;}
 .mainCntTxt p {margin-top: 6px;}
 
-.downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 0;}
+.downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 0 11px 24px;}
 .downTxt2 {font-size: 10ox;color: #657292;margin:0 5px;}
 
-.agreementTxt {font-size: 14px;text-align: center;margin: 10px 0;color:#939CB2}
+.agreementTxt {font-size: 14px;text-align: center;margin: 5px 0;color:#939CB2}
 
 ul {display: flex;height: 20px;}
 ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
@@ -389,8 +387,8 @@ ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
 display: flex;flex-wrap: wrap;}
 
 section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
-section >>> .el-dialog__header {padding-top: 16px;padding-bottom: 14px;border-bottom:1px solid rgba(200,209,218,0.5);}
+section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border-bottom:1px solid rgba(200,209,218,0.5);}
 section >>> .el-dialog--center {height: 288px;}
-section >>> .el-dialog__body {padding:25px 0 10px 18px;}
+section >>> .el-dialog__body {padding: 0;}
 section >>> .el-dialog__footer {padding: 0;}
 </style>

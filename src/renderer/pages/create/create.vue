@@ -1,6 +1,6 @@
 <template>
   <el-container class="layoutCnt">
-    <main style="width: 640px;height: 432px;border:1px solid #ccc;">
+    <main style="width: 960px;height: 580px;">
       <el-row class="publicNav">
         <el-col :span="6">
           <router-link :to="returnPage">
@@ -36,7 +36,7 @@
             </el-input>
             <section v-show="passCntList">
               <!-- <p class="mainCntTab1Txt">password</p> -->
-              <section style="margin: 16px 0;">
+              <section style="margin: 12px 0;">
                   <el-input
                     type="password"
                     placeholder="password"
@@ -44,7 +44,7 @@
                     maxlength="30"
                     clearable>
                   </el-input>
-                  <div style="margin: 4px 8px 16px 0;">
+                  <div style="margin: 4px 8px 16px 0;" v-show="passTxt">
                     <img src="../../assets/image/message.png" width="12px" height="12px"/>
                     <span class="mainCntTab1Txt">8-30 characters, must contain at least 2 types of numbers, 
                       English letters, and special characters</span>
@@ -59,13 +59,13 @@
                 clearable>
               </el-input>
             </section>
-            <section class="publicCntBtn createActiveBtn1" style="margin-top: 26px;">
+            <section class="publicCntBtn" style="margin-top: 32px;">
               <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
             </section>
           </section>
           <section v-show="mainCntTab2" class="mainCntTab2">
             <textarea name="" id="" cols="30" v-model="mnemonicTxt" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
-            <section class="publicCntBtn" style="margin-top: 56px;">
+            <section class="publicCntBtn" style="margin-top: 29px;">
               <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Start importing</button>
             </section>
           </section>
@@ -79,7 +79,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             Error message: mnemonic is incorrect
@@ -96,7 +96,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             {{newDialogLabel1}}
@@ -118,7 +118,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             {{newDialogLabel2}}
@@ -139,7 +139,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             {{newDialogLabel3}}
@@ -160,7 +160,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             {{newDialogLabel4}}
@@ -181,7 +181,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             {{newDialogLabel5}}
@@ -202,7 +202,7 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="30vh"
+          top="25vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
             {{newDialogLabel6}}
@@ -233,6 +233,7 @@ export default {
   name: "",
   data() {
     return {
+      passTxt: false, //默认密码提示不显示
       returnPage: "/",
       name: "wallet 01", //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
       password: "",
@@ -654,6 +655,11 @@ export default {
   computed: {
     createActiveBtn() {
       if (this.$route.query.id === "1") {
+        if (this.password.length > 0) {
+          this.passTxt = true
+        } else {
+          this.passTxt = false
+        }
         return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
       }
       if (this.$route.query.id === "3") {
@@ -661,6 +667,11 @@ export default {
       }
       if (this.$route.query.id === "2") {
         this.navTit = 'Import wallet'
+        if (this.password.length > 0) {
+          this.passTxt = true
+        } else {
+          this.passTxt = false
+        }
         return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
       }
     },
@@ -742,19 +753,15 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 380px;
-  margin: 56px auto 33px;
+  margin: 104px auto 32px;
+  border-radius: 2px;
 }
 .mainCntTab1 {
   margin: 32px auto 0;
   width: 380px;
-  height: 243px;
-  position: relative;
+  height: 236px;
 }
-.createActiveBtn1 {
-  position: absolute;
-  bottom: -1px;
-  left: 98px;
-}
+
 .mainCntTab1Txt {
   color: #c8d1da;
   margin: 12px 0 6px;
@@ -762,26 +769,24 @@ export default {
 .mainCntTab2 {
   width: 380px;
   margin: 32px auto 0;
-  height: 243px;
+  height: 236px;
 }
 
 .btn {
-  width: 184px;
+  width: 190px;
   height: 36px;
   background: rgba(0,214,178,0.6);
   border: none;
   color: #fff;
   outline: none;
-  border-radius: 2px;
 }
 .btn2 {
-  width: 184px;
+  width: 190px;
   height: 36px;
   background: #fff;
   color: #00D6B2;
   border: 1px solid rgba(0,214,178,0.6);
   outline: none;
-  border-radius: 2px;
 }
 
 ul {
@@ -803,18 +808,16 @@ ul .iptTxt:last-child {
 
 ul .iptTxt input[type="text"] {
   width: 116px;
-  height: 30px;
+  height: 48px;
   border: none;
   outline: none;
   text-align: center;
   color: #657292;
 }
-textarea {width:356px;height:123px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
+textarea {width:354px;height:142px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
   outline:none;resize:none;}
 
-section >>> .el-input__inner {padding-left: 0;text-indent: 8px;}
+section >>> .el-input__inner {padding-left: 0;text-indent: 8px;height: 48px;}
 section >>> .el-input__inner:focus {border-color: #c8d1da;}
 section >>> .el-input__inner {border-radius: 2px;outline: none;}
-
-section >>> .el-message-box__btns .el-button--primary:focus, .el-button--primary:hover  {background-color: red;}
 </style>
