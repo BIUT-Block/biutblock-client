@@ -213,23 +213,25 @@ export default {
     enterTheWallet () {
       this.agreementDialog = false
       this.createDialog = false
+      this.createContent = true
+      this.backUoContent = false
     },
     createWallet () {
-      //this.createDialog = true
-      this.$router.push({ 
-        name: 'create',
-        query: {
-          id: "3",
-          walletPwd: this.walletPwd,
-          walletAddress: this.walletAddress, 
-          walletPrivateKey: this.walletPrivateKey, 
-          walletPublicKey: this.walletPublicKey, 
-          walletBalance: this.walletBalance,
-          walletsArr: this.walletsArr,
-          walletName: this.walletName,
-          colorArr: this.colorArr
-        }
-      })
+      this.createDialog = true
+      // this.$router.push({ 
+      //   name: 'create',
+      //   query: {
+      //     id: "3",
+      //     walletPwd: this.walletPwd,
+      //     walletAddress: this.walletAddress, 
+      //     walletPrivateKey: this.walletPrivateKey, 
+      //     walletPublicKey: this.walletPublicKey, 
+      //     walletBalance: this.walletBalance,
+      //     walletsArr: this.walletsArr,
+      //     walletName: this.walletName,
+      //     colorArr: this.colorArr
+      //   }
+      // })
     },
     tabWallet (item,index) {
       //this.colorArr.fill(false)

@@ -48,7 +48,7 @@
             <section style="display: flex;justify-content: space-between;padding:0 8px;
             margin-top:23px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
               
-                <qr-code :value="englishWordsString" :size="80" class="receiptCntImg">
+                <qr-code :value="englishWordsString" :size="40" style="margin-top: 4px;">
                 </qr-code>
               
               <section style="margin: 0 22px 0 8px;">
@@ -380,7 +380,7 @@ ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
 .copyBtn {outline:none;width: 80px;height: 32px;background:#fff;color: #00D6B2;border: 1px solid #00D6B2;}
 .copyBtnAcitve {background: #C8D1DA;color: #fff;border: 1px solid #C8D1DA;}
 .copyBtn:hover {cursor: pointer;}
-.copyTxt {color: #657292;}
+.copyTxt {color: #939CB2;}
 .copyTxt2 {color: #657292;margin-top:4px;word-wrap:break-word;word-break:break-all;}
 
 .wordsLine {width:466px;height:71px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
@@ -391,4 +391,5 @@ section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding: 0;}
 section >>> .el-dialog__footer {padding: 0;}
+section >>> .el-dialog__headerbtn {top: 15px!important;right: 16px!important;}
 </style>
