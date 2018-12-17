@@ -264,14 +264,10 @@ export default {
       if (!fs.existsSync(dirPath)){
         fs.mkdirSync(dirPath);
       }
-      fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
+      fs.readFile(filePath, 'utf-8', this._createImageFile.bind(this, filePath))
     },
 
-    _AppendWallet: function(filePath, err, data){
-        if (err) {
-          return
-        }
-        this.alreadySaved = true
+    _AppendWallet: function(filePath, data){
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
@@ -287,45 +283,46 @@ export default {
             if(err) {
               return
             }
-            this._createImageFile(require('os').homedir() + '/secwallet')
-          //  this._saveWalletSuccess(filePath)          
+            // this._createImageFile(require('os').homedir() + '/secwallet')     
           })
         } catch(e) {
           return
         }
     },
-    _createImageFile (filePath) {
-      let domSection = document.getElementById('englishWordsList')
-      if (document.getElementById('png').checked) {
-        domtoimage.toBlob(domSection)
-                  .then( (blob) => {
-                      FileSaver.saveAs(blob, 'englishWords.png');
-                      this.alreadySaved=true
-                  })
+    _createImageFile (filePath, err, data) {
+      if (err) {
         return
       }
-      if (document.getElementById('jpg').checked) {
-        domtoimage.toJpeg(domSection, { quality: 0.95 })
-          .then( (dataUrl) => {
-            let link = document.createElement('a')
-            link.download = 'englishWords.jpeg'
-            link.href = dataUrl
-            link.click()
-            this.alreadySaved = true
-         })
-         return
+      try{
+        let domSection = document.getElementById('englishWordsList')
+        if (document.getElementById('png').checked) {
+          domtoimage.toBlob(domSection)
+                    .then( (blob) => {
+                        FileSaver.saveAs(blob, 'englishWords.png');
+                        this.alreadySaved=true
+                    })
+          this._AppendWallet(filePath, data)
+          return
+        }
+        if (document.getElementById('jpg').checked) {
+          domtoimage.toJpeg(domSection, { quality: 0.95 })
+            .then( (dataUrl) => {
+              let link = document.createElement('a')
+              link.download = 'englishWords.jpeg'
+              link.href = dataUrl
+              link.click()
+              this.alreadySaved = true
+          })
+          this._AppendWallet(filePath, data)
+          return
+        }
+        this.$alert('Select a file format to save your english words', 'prompt', {
+            confirmButtonText: 'Confirm',
+        });
+        return
+      } catch(e) {
+        return
       }
-      this.$alert('Select a file format to save your english words', 'prompt', {
-          confirmButtonText: 'Confirm',
-      });
-      return
-      // if (document.getElementById('svg').checked) {
-      //   domtoimage.toSvg(domSection)
-      //     .then(function (dataUrl) {
-            
-      //       FileSaver.saveAs(dataUrl, 'englishWords.svg')
-      //     });
-      // }
     },
     //保存好图片后进入协议界面
     enterTheWallet () {
@@ -417,62 +414,9 @@ export default {
       }
     },
     createBtn() {
-      //检查钱包名字是否重复
-      if (this.walletPwd && this.walletPwd!==""){
-        let dirPath = require('os').homedir() + '/secwallet'
-        let filePath = dirPath + '/default.data'
-        fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.newWalletName))
-      } else {
-        if (this.confirmP != this.password) {
-          this.$alert('The input passwords are not same. Please enter again.', 'prompt', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        } else if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.password)){
-          this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        } else {
-          let keys = SECUtil.generateSecKeys();
-          let privKey64 = keys.privKey;
-          this.newPrivateKey = privKey64;
-          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-
-          let pubKey128 = keys.publicKey;
-          this.newPublicKey = pubKey128.toString("hex");
-          this.newAddress = keys.secAddress;
-
-          let tokenInfo = {
-            password: this.walletPwd
-          };
-
-          let token = jwt.sign(tokenInfo, "MongoX-Block", {
-            expiresIn: 60 * 60 * 24
-          });
-          this.decoded = this.$JWT.verifyToken(token);
-
-          if (this.decoded === "") {
-            return;
-          } else {
-            // save to local file
-            this.userToken = token;
-          }
-          let englishWordsArr = this.englishWords.split(' ')
-          this.englishWordsString = this.englishWords
-          let lineCount = 0
-          for(let i = 0; i < englishWordsArr.length; i++) {
-            if ( i % 4 === 0 && i !== 0 ) {
-              lineCount ++
-              this.englishWordsArr[lineCount] = []
-              //continue
-            }
-            this.englishWordsArr[lineCount][i % 4] = englishWordsArr[i]
-          }
-          this.createContent = false
-          this.backUpContent = true
-        }
-      }
+      let dirPath = require('os').homedir() + '/secwallet'
+      let filePath = dirPath + '/default.data'
+      fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.newWalletName))
     },
 
     _checkWalletName(name, err, data) {
@@ -532,6 +476,7 @@ export default {
             this.englishWordsArr[lineCount][i % 4] = englishWordsArr[i]
           }
           this.createContent = false
+          this.alreadySaved = false
           this.backUpContent = true
         }
       }
