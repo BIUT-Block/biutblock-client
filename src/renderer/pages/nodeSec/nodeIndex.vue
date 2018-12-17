@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import {EventBus} from '../../lib/EventBus.js'
 export default {
   name: '',
   data () {
@@ -104,6 +105,10 @@ export default {
     }
   },
   created () {
+    EventBus.$emit('changeSetVisibil', {
+        isVisible: false,
+        from: 'nodeinfo'
+    })
     if (window.localStorage.getItem('siteStatus')) {
       this.siteStatus = JSON.parse(window.localStorage.getItem('siteStatus'))
       this.updateTime = this.siteStatus.walletUpdateTime
@@ -119,7 +124,11 @@ export default {
     })
   },
   methods: {
-    startSyncing () { 
+    startSyncing () {
+      EventBus.$emit('changeSetVisibil', {
+        isVisible: false,
+        from: 'nodeinfo'
+      })
       this.timeCntShow = false
       this.startBtn = 'synchronizing...'
       // this.$JsonRPCClient.switchToLocalHost()

@@ -143,6 +143,23 @@ export default {
       this.walletName = queryParams.walletName
       this.colorArr = queryParams.colorArr
     })
+    EventBus.$on('changeSetVisibil', (params) => {
+      switch(params.from) {
+        case 'wallet':
+          this.icon_wallet = icon_wallet_active
+          this.icon_node = icon_node
+          this.icon_set = icon_set
+          this.setList = false
+          break
+        case 'nodeinfo':
+          this.icon_wallet = icon_wallet
+          this.icon_node = icon_node_active
+          this.icon_set = icon_set
+          this.setList = false
+          break
+      }
+      
+    })
   },
   methods: {
     walletListFrom () {

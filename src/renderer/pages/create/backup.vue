@@ -71,7 +71,7 @@
             top="25vh"
             center>
             <div id="selectFileType" style="margin-top: 50px;">
-              <p class="downTxt"><input type="radio" name="downImg" id="png">
+              <p class="downTxt"><input type="radio" checked name="downImg" id="png">
                   <span class="downTxt2">Picture file(*.png)</span>Export files as images</p>
 
               <p class="downTxt"><input type="radio" name="downImg" id="jpg">
@@ -251,13 +251,6 @@ export default {
           confirmButtonText: 'Confirm',
       });
       return
-      // if (document.getElementById('svg').checked) {
-      //   domtoimage.toSvg(domSection)
-      //     .then(function (dataUrl) {
-            
-      //       FileSaver.saveAs(dataUrl, 'englishWords.svg')
-      //     });
-      // }
     },
     _saveWalletSuccess (filePath) {
       this.alreadySaved = true

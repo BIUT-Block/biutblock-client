@@ -112,6 +112,7 @@
 
 <script>
 import leftNav from './components/leftNav'
+import {EventBus} from "../../lib/EventBus.js"
 const SECUtil = require('@sec-block/secjs-util')
 const jwt = require('jsonwebtoken')
 
@@ -141,7 +142,10 @@ export default {
     }
   },
   created() {
-    
+    EventBus.$emit('changeSetVisibil', {
+        isVisible: false,
+        from: 'wallet'
+      })
   },
   methods: {
     isNumber (evt) {
@@ -176,7 +180,7 @@ export default {
       }
     },
     allMoneyFrom () {
-      this.amount = this.allMoney
+      this.amount = this.allMoney.toString()
     },
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {

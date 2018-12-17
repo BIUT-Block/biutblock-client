@@ -62,7 +62,7 @@
           <section class="footerTxt">
             <p>
               <img src="../../assets/image/detailsLogo.png" alt="" class="footerImg">
-              See more details at SEC BLOCKCHAIN
+              <a v-bind:href="detailsLink" target="_blank">See more details at SEC BLOCKCHAIN</a>
             </p>
           </section>
         </section>
@@ -76,6 +76,7 @@
 import leftNav from './components/leftNav'
 import successImg from '../../assets/image/detailsSuccess.png'
 import detailsLoadingImg from '../../assets/image/detailsLoading.png'
+import {EventBus} from '../../lib/EventBus.js'
 export default {
   name: '',
   data () {
@@ -96,10 +97,15 @@ export default {
       detailsSending: this.$route.query.detailsSending,
       detailsCost: this.$route.query.detailsCost,
       detailsState: this.$route.query.detailsState,
-      colorArr: this.$route.query.colorArr
+      colorArr: this.$route.query.colorArr,
+      detailsLink: `http://scan.secblock.io/tokentxdetails?hash=${this.$route.query.detailsNumber}`
     }
   },
   created () {
+    EventBus.$emit('changeSetVisibil', {
+      isVisible: false,
+      from: 'wallet'
+    })
     switch(this.detailsState) {
       case 'Packed':
         this.detailsImg = detailsLoadingImg

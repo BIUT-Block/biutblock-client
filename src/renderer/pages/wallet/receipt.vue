@@ -48,6 +48,7 @@
 import leftNav from './components/leftNav'
 import qrCode from './components/qrCode'
 import Clipboard from 'clipboard'
+import {EventBus} from "../../lib/EventBus.js"
 
 export default {
   name: '',
@@ -90,6 +91,12 @@ export default {
         return true;
       }
     }
+  },
+  created() {
+    EventBus.$emit('changeSetVisibil', {
+        isVisible: false,
+        from: 'wallet'
+    })
   },
   components: {
     leftNav,

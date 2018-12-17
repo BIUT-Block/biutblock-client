@@ -64,7 +64,7 @@
             </section>
           </section>
           <section v-show="mainCntTab2" class="mainCntTab2">
-            <textarea name="" id="" cols="30" v-model="mnemonicTxt" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
+            <textarea name="" id="" cols="30" v-model="mnemonicTxt" placeholder="Please enter a mnemonic, separated by a space"></textarea>
             <section class="publicCntBtn" style="margin-top: 29px;">
               <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Start importing</button>
             </section>
@@ -547,7 +547,7 @@ export default {
             if(err) {
               return
             }
-            this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+            this.$alert(`Already saved the secure file. The file would be saved in ${this.filePath}`, 'prompt', {
                 confirmButtonText: 'Confirm',
             });
           })

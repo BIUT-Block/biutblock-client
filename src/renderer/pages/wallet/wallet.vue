@@ -200,7 +200,7 @@ export default {
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
               listMoney: moneyValue,
               listMinerCost: response.result.resultInChain[i].TxFee, 
-              listState: "Successfull"
+              listState: "Successful"
             });
           }
         }
@@ -367,6 +367,9 @@ export default {
       });
     },
     deleteWallet(event) {
+      EventBus.$emit('changeSetVisibil', {
+        isVisible: false
+      })
       //删除钱包
       this.positionBtnH = false;
       this.centerDialogVisible = false;

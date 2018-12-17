@@ -65,12 +65,7 @@
           </section>
           <section class="mainCntList">
             <section class="wordsLine" id="englishWordsList">
-                <ul v-for="wordsLine in englishWordsArr" :key="wordsLine.index" class="englishWords">
-                  <li class="iptTxt">{{wordsLine[0]}}</li>
-                  <li class="iptTxt">{{wordsLine[1]}}</li>
-                  <li class="iptTxt">{{wordsLine[2]}}</li>
-                  <li class="iptTxt">{{wordsLine[3]}}</li>
-                </ul>
+                {{englishWords}}
             </section>
 
             <section style="display: flex;justify-content: space-between;padding:0 8px;
@@ -98,7 +93,7 @@
         :closeOnClickModal = false
         top="26vh">
         <section id="selectFileType" style="margin-top: 50px;text-align: left;">
-          <p class="downTxt"><input type="radio" name="downImg" id="png">
+          <p class="downTxt"><input type="radio" checked="checked" name="downImg" id="png">
             <span class="downTxt2">Picture file(*.png)</span>Export files as images</p>
           <p class="downTxt"><input type="radio" name="downImg" id="jpg">
             <span class="downTxt2">JPG file(*.jpg)</span>Export to JPG file format (default is white background)</p>
@@ -463,17 +458,6 @@ export default {
           } else {
             // save to local file
             this.userToken = token;
-          }
-          let englishWordsArr = this.englishWords.split(' ')
-          this.englishWordsString = this.englishWords
-          let lineCount = 0
-          for(let i = 0; i < englishWordsArr.length; i++) {
-            if ( i % 4 === 0 && i !== 0 ) {
-              lineCount ++
-              this.englishWordsArr[lineCount] = []
-              //continue
-            }
-            this.englishWordsArr[lineCount][i % 4] = englishWordsArr[i]
           }
           this.createContent = false
           this.alreadySaved = false
