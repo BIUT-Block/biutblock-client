@@ -26,8 +26,9 @@
       title="prompt"
       :visible.sync="createDialog"
       width="534px"
-      :show-close = true
+      :show-close = "closeAllowed"
       :closeOnClickModal = false
+      :closeOnPressEscape = "closeAllowed"
       top="20vh"
       center>
       <!-- 创建钱包 -->
@@ -227,6 +228,8 @@ export default {
       alreadySaved: false,
 
       decoded: '',
+
+      closeAllowed: true,
     }
   },
   methods: {
@@ -329,6 +332,7 @@ export default {
       this.createDialog = false
       this.createContent = true
       this.backUpContent = false
+      this.closeAllowed = true
       this.agreementDialog = false
       let walletsArr = []
       let walletNamesArr = Object.keys(this.keyFileDataJS)
@@ -357,6 +361,7 @@ export default {
       this.createDialog = true
       this.createContent = true
       this.backUpContent = false
+      this.closeAllowed = true
       let walletOrd = this.walletsArr.length + 1
       this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
       let result = this.walletsArr.filter((wallet) => {
@@ -466,6 +471,7 @@ export default {
           this.createContent = false
           this.alreadySaved = false
           this.backUpContent = true
+          this.closeAllowed = false
         }
       }
     },
