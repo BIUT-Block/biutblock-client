@@ -185,9 +185,14 @@ export default {
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {
         this.$alert("You don't have enough balance.", 'prompt', {
-                confirmButtonText: 'Confirm',
+            confirmButtonText: 'Confirm',
           });
         return
+      } else if (this.walletAddress === this.address) {
+        this.$alert("You can't tranfer to yourself.", 'prompt', {
+            confirmButtonText: 'Confirm',
+          })
+          return
       } else {
         this.centerDialogVisible = true
       }

@@ -254,6 +254,9 @@ export default {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInPool[j].Value
                 walletAddressTempInPool = response.result.resultInPool[j].TxFrom
+              } else if (response.result.resultInPool[i].TxFrom === '0000000000000000000000000000000000000000') {
+                moneyValue = "+ " + response.result.resultInPool[i].Value
+                walletAddressTempInPool = 'mined'
               } else {
                 moneyValue = "- " + response.result.resultInPool[j].Value
                 walletAddressTempInPool = response.result.resultInPool[j].TxTo
@@ -276,9 +279,12 @@ export default {
             if (response.result.resultInChain[i].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxFrom
-              } else {
+              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000') {
+                moneyValue = "+ " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = 'mined'
+              }else {
                 moneyValue = "- " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
+                walletAddressTempInChain = response.result.resultInChain[i].TxTo
               }
             walletListTemp.push({
               id: response.result.resultInChain[i].TxHash,

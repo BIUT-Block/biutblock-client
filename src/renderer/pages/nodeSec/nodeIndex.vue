@@ -97,6 +97,7 @@ export default {
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
+      firstWalletAddress: this.$route.query.walletsArr[0],
       siteStatus: {
         walletUpdateTime: '',
         mining: false,
@@ -142,6 +143,11 @@ export default {
         }
       })
       this.$JsonRPCClient.switchToLocalHost()
+      this.$JsonRPCClient.client.request('sec_setAddress', [this.firstWalletAddress.walletAddress], (err, response) => {
+        if (err) {
+          return
+        }
+      })
       this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
         console.log(err)
         console.log(response)
