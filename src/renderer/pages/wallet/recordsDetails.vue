@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
 
-    <el-row style="margin-left: 38px;">
+    <el-row style="margin-left: 32px;">
       <el-col :span="24" class="publicWalletP"> 
         <section class="publicWalletH">
           <section class="publicWalletHList">
@@ -30,7 +30,7 @@
           <section class="detailsList">
              <section>
                <span class="detailsListTxt">Transaction number</span>
-                {{detailsNumber}}
+               <span class="detailsListWidth">{{detailsNumber}}</span>
              </section>
 
              <section>
@@ -125,13 +125,16 @@ export default {
 
 <style scoped>
 .detailsList {height: 174px;display: flex;justify-content: space-between;flex-direction: column;
-  margin: 46px 14px 76px;color: #939CB2;}
+  margin: 46px 28px 76px;color: #939CB2;}
+
+.detailsListWidth {display: inline-block;width: 415px;word-wrap:break-word}
 
 .recordsCnt {display: flex;justify-content: start;flex-direction: column;
   align-items: center;margin-top: 50px;}
 .recordsTit {font-size:18px;font-weight:400;color: #242E49;margin: 0;margin-top: 18px;}
 
-.detailsListTxt {display:inline-block;width: 115px;text-align: right;color:#C8D1DA;margin-right: 32px;}
+.detailsListTxt {display:inline-block;width: 108px;text-align: right;color:#C8D1DA;margin-right: 23px;
+  vertical-align: top;}
 .footerTxt {margin-top: 10px;text-align: center;color: #939CB2}
 .footerImg {vertical-align: middle;margin-right: 10px;}
 </style>

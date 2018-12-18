@@ -68,11 +68,11 @@
                 {{englishWords}}
             </section>
 
-            <section style="display: flex;justify-content: space-between;padding:0 8px;
+            <section style="display: flex;justify-content: space-between;padding:0 8px 0 4px;
             margin:17px 0 20px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
-                <qr-code :value="englishWordsString" :size="80" class="receiptCntImg">
+                <qr-code :value="englishWordsString" :size="60" class="receiptCntImg">
                 </qr-code>
-              <section style="margin: 0 22px 0 8px;">
+              <section style="margin: 0 22px 0 4px;">
                 <p class="copyTxt">Private key</p>
                 <p class="copyTxt2" id="copyPrivateKey">{{newPrivateKey}}</p>
               </section>
@@ -133,20 +133,24 @@
           width="432px"
           :show-close = true
           :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel1}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput1"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn" :disabled="!importActiveBtn" :class="importActiveBtn?'publicBtnAcitve':''" @click="newDialogFn1()">OK</button>
-          </span>
+          top="26vh"
+          >
+          <section class="mainCntTab1">
+            <p style="color: #939CB2;font-size:14px;text-align: center;">
+              {{newDialogLabel1}}
+            </p>
+            <el-input
+                type="text"
+                placeholder="Please input"
+                v-model="newDialogInput1"
+                clearable
+                style="margin: 30px 0 50px;">
+            </el-input>
+
+            <span slot="footer" class="dialog-footer">
+              <button class="publicBtn" :disabled="!importActiveBtn" :class="importActiveBtn?'publicBtnAcitve':''" @click="newDialogFn1()">OK</button>
+            </span>
+          </section>
       </el-dialog>
   </el-container>  
 </template>
@@ -475,7 +479,11 @@ export default {
           walletAddress: this.mnemonicWallet.userAddressToString
         }
       }
-
+      this.createTabBtnActive1 = 'createTabBtnActive'
+      this.createTabBtnActive2 = ''
+      this.mainCntTab1 = true
+      this.mainCntTab2 = false
+      this.mnemonicTxt = ''
       fs.readFile(this.filePath, 'utf-8', this._fileRequest.bind(this, this.walletPwd, this.newDialogInput1))
     },
                   
@@ -524,6 +532,14 @@ export default {
               if (localPrivatKey===this.mnemonicWallet.privateKey) {
                 this.$alert(`The wallet information is already local, local wallet name ${walletName}`, 'prompt', {
                     confirmButtonText: 'Confirm',
+                    callback: action => {
+                      this.newDialogVisible1 = false
+                      this.createTabBtnActive1 = 'createTabBtnActive'
+                      this.createTabBtnActive2 = ''
+                      this.mainCntTab1 = true
+                      this.mainCntTab2 = false
+                      this.mnemonicTxt = ''
+                    }
                 });
                 return 
               }
@@ -681,22 +697,22 @@ li:hover {cursor: pointer;background:#00D6B2;color:#fff;border-left: none;}
 .createTextarea {width:354px;height:79px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
   outline:none;resize:none;}
 /* 备份助记词 */
-.mainCntTxt {color: #939CB2;text-align: left;margin:16px auto 8px;width:492px;}
+.mainCntTxt {color: #939CB2;text-align: left;margin:16px 0 8px 21px;}
 .mainCntTxt p {margin-top: 6px;font-size: 12px;}
 
 .mainCntList {width: 492px;margin: 0  auto;}
 .wordsLine {width:466px;height:70px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
 display: flex;flex-wrap: wrap;}
 .englishWords {display: flex;height: 10px;}
-ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
+ul .iptTxt {color: #242E49;text-align: center;margin-right: 5px;}
 .copyBtn {outline:none;width: 80px;height: 32px;background:#fff;color: #00D6B2;border: 1px solid #00D6B2;}
 .copyBtnAcitve {background: #C8D1DA;color: #fff;border: 1px solid #C8D1DA;}
 .copyBtn:hover {cursor: pointer;}
 .copyTxt {color: #657292;font-size: 12px;margin-bottom: 1px;}
 .copyTxt2 {color: #657292;margin-top:2px;font-size: 12px;word-wrap:break-word;word-break:break-all;}
 
-.downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 0 11px 24px;}
-.downTxt2 {font-size: 10ox;color: #657292;margin:0 5px;}
+.downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 24px 11px 24px;}
+.downTxt2 {font-size: 10ox;color: #657292;margin-left:5px;}
 .agreementTxt {font-size: 14px;text-align: center;margin: 5px 0;color:#939CB2}
 [type="checkbox"], [type="radio"] {vertical-align: middle;}
 
@@ -709,4 +725,5 @@ section >>> .el-dialog {height: 288px;text-align: center;}
 section >>> .el-dialog--center {height: 368px;}
 section >>> .el-dialog__body {padding: 0;}
 section >>> .el-dialog__footer {padding: 0;}
+section >>> .el-dialog__headerbtn {top: 15px!important;right: 16px!important;}
 </style>

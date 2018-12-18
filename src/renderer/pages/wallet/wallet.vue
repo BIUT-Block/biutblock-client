@@ -7,7 +7,7 @@
       </el-col>
     </el-row>
 
-    <el-row style="margin-left: 38px;">
+    <el-row style="margin-left: 32px;">
       <el-col :span="24" class="publicWalletP">
         <section class="walletMaginT">
           <section class="walletHeader">
@@ -19,7 +19,9 @@
               <section id='detailsList' style="position: relative"  class="pointerTxt">
                 <img src="../../assets/image/deleteBtn.png" alt="" @click="positionFrom">
                 <section v-show="positionBtnH" class="positionBtn">
-                  <el-button @click="dialogVisible" :disabled="walletsArr.length<=1" class="deleteBtn">Delete wallet</el-button>
+                  <el-button @click="dialogVisible" :disabled="walletsArr.length<=1" class="deleteBtn">
+                    Delete wallet
+                  </el-button>
                   <!-- <el-button @click="detailsWallet" class="detailsBtn">Wallet details</el-button> -->
                 </section>
               </section>
@@ -60,7 +62,7 @@
           </section>
 
           <section v-show="!tradingCnt&&!refresh" class="walletCntList">
-              <ul>
+              <ul class="tradingList" :class="tradingListAuto">
                 <li v-for="item in showList" :index="item.id" @click="toTxDetails(item)" class="pointerTxt">
                     <section class="radiusCnt">
                       <span class="radiusIcon" :class="item.listState | radiusColor"> </span>
@@ -96,7 +98,7 @@
           </p>
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="deleteWallet">Confirm</button>
-            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">cancel</button>
+            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Cancel</button>
           </span>
         </el-dialog>
 
@@ -118,6 +120,7 @@ export default {
     return {
       tradingCnt: false, //如果没有交易记录的话 true  有交易数据就设置为 false
       moreCnt: false, //加载更多，交易记录大于四条就 设置为 true  然后点击就加载四条
+      tradingListAuto: '',//加载更多的时候显示滚动条
       positionBtnH: false,
       centerDialogVisible: false,
       publicKey: "",
@@ -313,6 +316,7 @@ export default {
     showMore() {
       this.showList = this.walletList
       this.moreCnt = false
+      this.tradingListAuto = 'tradingListAuto'
     },
     closeDetailsList(event) {
       let detailsList = document.getElementById('detailsList')
@@ -525,7 +529,8 @@ export default {
 .walletCnt {
   display: flex;
 }
-.clickMore {height: 44px;line-height: 44px;text-align: center;color:rgba(101,114,146,.7);font-size: 12px;}
+.clickMore {height: 40px!important;line-height: 40px!important;text-align: center;
+  color:rgba(101,114,146,.7);font-size: 12px;}
 .walletRecordCnt {
   width: 606px;
   height: 384px;
@@ -600,6 +605,7 @@ export default {
 }
 .deleteBtn:hover {
   background: rgba(147,156,178,.5)!important;
+  color: #fff!important;
 }
 .el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hove {
   background: rgba(255,255,255, 0.5)!important;
@@ -645,18 +651,18 @@ export default {
   justify-content: start;
 }
 
-ul {
+.tradingList {
   width: 557px;
   height: 300px;
   margin-left: 20px;
   padding-right: 24px;
   overflow: hidden;
-  overflow-y: scroll;
 }
-ul::-webkit-scrollbar {width: 2px;height: 2px;}
-ul::-webkit-scrollbar-thumb {-webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4; border-radius: 0;background: #EDF5F4;}
-ul li {
+.tradingListAuto {overflow-y: auto;}
+.tradingList::-webkit-scrollbar {width: 2px;height: 2px;}
+.tradingList::-webkit-scrollbar-thumb {-webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+.tradingList::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4; border-radius: 0;background: #EDF5F4;}
+.tradingList li {
   height: 74px;
   width: 100%;
   display: flex;
@@ -665,7 +671,7 @@ ul li {
   color: #657292;
 }
 
-ul li .radiusCnt {
+.tradingList li .radiusCnt {
   display: flex;
   align-items: center;
   width: 27px;
@@ -677,14 +683,14 @@ ul li .radiusCnt {
   display: block;
 }
 
-ul li .addressCnt {
+.tradingList li .addressCnt {
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: start;
   flex: 1;
 }
-ul li .addressMt {
+.tradingList li .addressMt {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -693,19 +699,12 @@ ul li .addressMt {
   margin-top:6px;
 }
 
-ul li .moneyCnt {
+.tradingList li .moneyCnt {
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: flex-end;
   width: 100px;
-}
-.clickMore {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #657292;
-  height: 42px;
 }
 
 .positionBtn {
@@ -723,4 +722,5 @@ section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding-top: 0px;padding-bottom: 10px;}
 section >>> .el-dialog__footer {padding: 0;}
+section >>> .el-dialog__headerbtn {top: 15px!important;right: 16px!important;}
 </style>

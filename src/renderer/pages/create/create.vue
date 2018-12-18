@@ -44,10 +44,14 @@
                     maxlength="30"
                     clearable>
                   </el-input>
-                  <div style="margin: 4px 8px 16px 0;" v-show="passTxt">
+                  <div style="margin: 6px 0 16px 0;font-size:12px;" v-show="passTxt">
                     <img src="../../assets/image/message.png" width="12px" height="12px"/>
-                    <span class="mainCntTab1Txt">8-30 characters, must contain at least 2 types of numbers, 
-                      English letters, and special characters</span>
+                    <span class="mainCntTab1Txt1">
+                      8-30 characters, must contain at least 2 types of numbers, English
+                    </span>
+                    <span class="mainCntTab1Txt2">
+                       letters, and special characters
+                    </span>
                   </div>
               </section>
               <!-- <p class="mainCntTab1Txt">confirm password</p> -->
@@ -762,9 +766,13 @@ export default {
   height: 236px;
 }
 
-.mainCntTab1Txt {
-  color: #c8d1da;
-  margin: 12px 0 6px;
+.mainCntTab1Txt1 {
+  color: #939CB2;
+  padding-left: 8px;
+}
+.mainCntTab1Txt2 {
+  color: #939CB2;
+  padding-left: 23px;
 }
 .mainCntTab2 {
   width: 380px;

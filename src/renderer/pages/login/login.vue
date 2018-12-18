@@ -217,4 +217,5 @@ section >>> .el-dialog__header {border-bottom:1px solid rgba(200,209,218,0.5);he
 section >>> .el-dialog--center {height: 288px;}
 section >>> .el-dialog__body {padding: 0;}
 section >>> .el-dialog__footer {padding: 0;}
+section >>> .el-dialog__headerbtn {top: 15px!important;right: 16px!important;}
 </style>

@@ -29,7 +29,7 @@
 
 
       <el-row class="backupCnt">
-        <el-col :span="24" class="mainCnt">
+        <el-col :span="24">
           <section class="mainCntTxt">
             <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="centerDialogVisible = true">Save as...</span></p>
             <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
@@ -70,7 +70,7 @@
             :closeOnClickModal = false
             top="25vh"
             center>
-            <div id="selectFileType" style="margin-top: 50px;">
+            <div id="selectFileType" style="margin-top: 60px;">
               <p class="downTxt"><input type="radio" checked name="downImg" id="png">
                   <span class="downTxt2">Picture file(*.png)</span>Export files as images</p>
 
@@ -342,7 +342,6 @@ export default {
 
 <style scoped>
 .layoutCnt {display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
-.mainCnt {background: #FFFFFF;width:492px;margin-top: 104px;}
 .backupCnt {display: flex;justify-content: center;flex: 1;}
 
 .mainCntList {width: 492px;margin: 16px auto 49px;}
@@ -357,16 +356,16 @@ input[type="radio"]:checked + label::before {
 }
 
 
-.mainCntTxt {color: #939CB2;text-align: left;margin-bottom:15px;width:100%;}
+.mainCntTxt {color: #939CB2;text-align: left;width: 492px;margin: 104px auto 15px;margin-top: 104px;}
 .mainCntTxt p {margin-top: 6px;}
 
-.downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 0 11px 24px;}
-.downTxt2 {font-size: 10ox;color: #657292;margin:0 5px;}
+.downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 24px 11px 24px;}
+.downTxt2 {font-size: 10ox;color: #657292;margin-right:5px;}
 
 .agreementTxt {font-size: 14px;text-align: center;margin: 5px 0;color:#939CB2}
 
 ul {display: flex;height: 20px;}
-ul .iptTxt {color: #657292;text-align: center;margin-right: 5px;}
+ul .iptTxt {color: #242E49;text-align: center;margin-right: 5px;}
 
 
 
