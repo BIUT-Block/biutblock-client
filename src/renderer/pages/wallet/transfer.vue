@@ -23,7 +23,7 @@
           
           <section class="transferCnt">
 
-            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress"></input>
+            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress" />
 
             <el-input v-model="amount"  maxlength="10" placeholder="transfer amount" class="ipt" @focusout.native="isNumber">
               <template slot="append">SEC</template>

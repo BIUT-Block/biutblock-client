@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-core": "^1.0.34",
+    "@sec-block/secjs-core": "^1.0.39",
     "@sec-block/secjs-rpc": "^1.0.7",
     "@sec-block/secjs-util": "^1.1.20",
     "axios": "^0.16.1",

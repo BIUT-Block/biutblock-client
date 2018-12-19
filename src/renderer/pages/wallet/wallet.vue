@@ -175,7 +175,7 @@ export default {
               this.walletList.push({
                 id: response.result.resultInPool[j].TxHash,
                 blockNumber: "Not in Block yet",
-                listAddress: walletAddressTempInPool,
+                listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : walletAddressTempInPool,
                 listFrom: response.result.resultInPool[j].TxFrom, 
                 listTo: response.result.resultInPool[j].TxTo,              
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
@@ -197,7 +197,7 @@ export default {
             this.walletList.push({
               id: response.result.resultInChain[i].TxHash,
               blockNumber: response.result.resultInChain[i].BlockNumber,
-              listAddress: walletAddressTempInChain,
+              listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : walletAddressTempInChain,
               listFrom: response.result.resultInChain[i].TxFrom,
               listTo: response.result.resultInChain[i].TxTo,    
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
@@ -254,9 +254,6 @@ export default {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInPool[j].Value
                 walletAddressTempInPool = response.result.resultInPool[j].TxFrom
-              } else if (response.result.resultInPool[i].TxFrom === '0000000000000000000000000000000000000000') {
-                moneyValue = "+ " + response.result.resultInPool[i].Value
-                walletAddressTempInPool = 'mined'
               } else {
                 moneyValue = "- " + response.result.resultInPool[j].Value
                 walletAddressTempInPool = response.result.resultInPool[j].TxTo
@@ -264,7 +261,7 @@ export default {
               walletListTemp.push({
                 id: response.result.resultInPool[j].TxHash,
                 blockNumber: "Not in Block yet",
-                listAddress: walletAddressTempInPool,
+                listAddress: (walletAddressTempInPool === '0000000000000000000000000000000000000000') ? 'Mined' : walletAddressTempInPool,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTo: response.result.resultInPool[j].TxTo,    
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
@@ -279,17 +276,14 @@ export default {
             if (response.result.resultInChain[i].TxTo === this.walletAddress) {
                 moneyValue = "+ " + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxFrom
-              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000') {
-                moneyValue = "+ " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = 'mined'
-              }else {
+              } else {
                 moneyValue = "- " + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxTo
               }
             walletListTemp.push({
               id: response.result.resultInChain[i].TxHash,
               blockNumber: response.result.resultInChain[i].BlockNumber,
-              listAddress: walletAddressTempInChain,
+              listAddress: (walletAddressTempInChain === '0000000000000000000000000000000000000000') ? 'Mined' : walletAddressTempInChain,
               listFrom: response.result.resultInChain[i].TxFrom,
               listTo: response.result.resultInChain[i].TxTo,
               listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
@@ -438,7 +432,7 @@ export default {
                     this.walletList.push({
                       id: response.result.resultInPool[j].TxHash,
                       blockNumber: "Not in Block yet",
-                      listAddress: response.result.resultInPool[j].TxTo,
+                      listAddress: response.result.resultInPool[j].TxTo === '0000000000000000000000000000000000000000' ? 'Mined' : response.result.resultInPool[j].TxTo,
                       listFrom: response.result.resultInPool[j].TxFrom,
                       listTo: response.result.resultInPool[j].TxTo,
                       listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
@@ -458,7 +452,7 @@ export default {
                   this.walletList.push({
                     id: response.result.resultInChain[i].TxHash,
                     blockNumber: response.result.resultInChain[i].BlockNumber,
-                    listAddress: response.result.resultInChain[i].TxTo,
+                    listAddress: response.result.resultInChain[i].TxTo === '0000000000000000000000000000000000000000' ? 'Mined' : response.result.resultInChain[i].TxTo,
                     listFrom: response.result.resultInChain[i].TxFrom,     
                     listTo: response.result.resultInChain[i].TxTo,                   
                     listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
