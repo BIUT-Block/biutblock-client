@@ -8,7 +8,7 @@ import {
   autoUpdater
 } from 'electron-updater'
 
-import updateChecker from './updateChecker.js'
+// import updateChecker from './updateChecker.js'
 
 const _SECCore = require('@sec-block/secjs-core')
 const _SECRPCServer = require('@sec-block/secjs-rpc')
@@ -35,9 +35,10 @@ function createWindow () {
   /**
    * Start RPC Server
    */
-  let SECCore = new _SECCore({DBPath: path + '/data/'})
+  let SECCore = new _SECCore({DBPath: path + '/data/', cacheDBPath: path + '/data/powCache'})
   let SECRPCServer = new _SECRPCServer(SECCore)
   SECRPCServer.runRPCServer()
+
   mainWindow = new BrowserWindow({
     height: 580,
     useContentSize: true,
