@@ -225,7 +225,6 @@ export default {
   },
 
   mounted() {
-    
     EventBus.$on('updateWalletInfo', function (walletParams) {
       const res = new Array(this.walletsArr.length).fill(false)
       res[walletParams.walletIndex] = !res[walletParams.walletIndex]
@@ -249,6 +248,24 @@ export default {
             return
           }
         })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+          if (err) {
+            this.$alert('Can not stop mining', 'prompt', {
+                confirmButtonText: 'Confirm',
+            });
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+              if (err) {
+                return
+              }   
+              if (response) {
+                this.$alert('You are now using other wallet to mine.', 'prompt', {
+                  confirmButtonText: 'Confirm',
+               });
+              }
+            })
       }
 
       this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
@@ -319,6 +336,10 @@ export default {
       }
     );
     }.bind(this))
+  },
+
+  beforeDestroy () {
+    EventBus.$off('updateWalletInfo')
   },
 
   methods: {
