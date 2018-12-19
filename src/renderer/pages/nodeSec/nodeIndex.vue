@@ -138,7 +138,7 @@ export default {
           this.$store.commit('updateProgressAll', response.result.value)
         }
       })
-      //this.$JsonRPCClient.switchToLocalHost()
+      this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_setAddress', [this.firstWalletAddress.walletAddress], (err, response) => {
         if (err) {
           return
