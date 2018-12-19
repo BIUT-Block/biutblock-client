@@ -242,6 +242,15 @@ export default {
       this.walletsArr = walletParams.walletsArr;
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
+
+      if (!this.$store.state.Counter.mining) {
+        this.$JsonRPCClient.client.request('sec_setAddress', [this.walletAddress], (err, response) => {
+          if(err) {
+            return
+          }
+        })
+      }
+
       this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
         if(response.result.status === '1'){
           this.walletMoney = response.result.value
