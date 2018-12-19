@@ -233,6 +233,7 @@ export default {
       let walletListTemp = []
       let walletAddressTempInPool = ''
       let walletAddressTempInChain = ''
+      let lastSelectedWallet = this.walletAddress
       this.walletList = []
       this.privateKey = walletParams.walletPrivateKey;
       this.publicKey = walletParams.walletPublicKey;
@@ -242,7 +243,7 @@ export default {
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
 
-      if (!this.$store.state.Counter.mining) {
+      if (!this.$store.state.Counter.mining && lastSelectedWallet !== this.walletAddress) {
         this.$JsonRPCClient.client.request('sec_setAddress', [this.walletAddress], (err, response) => {
           if(err) {
             return
@@ -261,7 +262,7 @@ export default {
                 return
               }   
               if (response) {
-                this.$alert('You are now using other wallet to mine.', 'prompt', {
+                this.$alert(`You are now using ${this.walletName} wallet to mine.`, 'prompt', {
                   confirmButtonText: 'Confirm',
                });
               }
