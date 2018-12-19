@@ -27,7 +27,7 @@
               </section>
             </section>
 
-            <p class="walletMoneyTxt">{{walletMoney}} SEC Token</p>
+            <p class="walletMoneyTxt">{{walletMoney}}<span style="font-size:12px">SEC Token</span></p>
             <p class="walletAddressTxt">{{walletAddress}}</p>
           </section>
 
@@ -704,7 +704,6 @@ export default {
   flex-direction: column;
   justify-content: start;
   align-items: flex-end;
-  width: 100px;
 }
 
 .positionBtn {
