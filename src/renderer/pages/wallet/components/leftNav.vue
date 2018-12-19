@@ -95,9 +95,17 @@
         top="26vh">
         <section id="selectFileType" style="margin-top: 50px;text-align: left;">
           <p class="downTxt"><input type="radio" checked="checked" name="downImg" id="png">
-            <span class="downTxt2">Picture file(*.png)</span>Export files as images</p>
+            <span class="downTxt2">Picture file(*.png)</span>
+              <span style="font-size: 11px;">
+                Export files as images
+              </span>
+            </p>
           <p class="downTxt"><input type="radio" name="downImg" id="jpg">
-            <span class="downTxt2">JPG file(*.jpg)</span>Export to JPG file format (default is white background)</p>
+            <span class="downTxt2">JPG file(*.jpg)</span>
+              <span style="font-size: 11px;">
+                Export to JPG file format (default is white background)
+              </span>  
+            </p>
           <div slot="footer" class="dialog-footer" style="text-align: center;">
             <button class="publicBtn publicBtnAcitve" style="margin-top:82px;" @click="saveFile">Confirm</button>
           </div>

@@ -10,8 +10,8 @@ import {
 
 import updateChecker from './updateChecker.js'
 
-const _SECCore = require('@sec-block/secjs-core')
-const _SECRPCServer = require('@sec-block/secjs-rpc')
+//const _SECCore = require('@sec-block/secjs-core')
+//const _SECRPCServer = require('@sec-block/secjs-rpc')
 
 /**
  * Set `__static` path to static files in production
@@ -35,9 +35,9 @@ function createWindow () {
   /**
    * Start RPC Server
    */
-  let SECCore = new _SECCore({DBPath: path + '/data/'})
-  let SECRPCServer = new _SECRPCServer(SECCore)
-  SECRPCServer.runRPCServer()
+//  let SECCore = new _SECCore({DBPath: path + '/data/'})
+//  let SECRPCServer = new _SECRPCServer(SECCore)
+//  SECRPCServer.runRPCServer()
   mainWindow = new BrowserWindow({
     height: 580,
     useContentSize: true,

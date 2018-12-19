@@ -72,10 +72,18 @@
             center>
             <div id="selectFileType" style="margin-top: 60px;">
               <p class="downTxt"><input type="radio" checked name="downImg" id="png">
-                  <span class="downTxt2">Picture file(*.png)</span>Export files as images</p>
+                  <span class="downTxt2">Picture file(*.png)</span>
+                    <span style="font-size: 11px;">
+                      Export files as images
+                    </span>
+                  </p>
 
               <p class="downTxt"><input type="radio" name="downImg" id="jpg">
-                <span class="downTxt2">JPG file(*.jpg)</span>Export to JPG file format (default is white background)</p>
+                <span class="downTxt2">JPG file(*.jpg)</span>
+                  <span style="font-size: 11px;">
+                    Export to JPG file format (default is white background)
+                  </span>
+                </p>
 
               <!-- <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
               Export to PDF file format</p>

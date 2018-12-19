@@ -85,14 +85,9 @@ export default {
       ipAddress: '',
       systemTime: '',
       localTime: '', 
-      updateTime: '2017/11/01 09:00 UTC+8',
       timeCntShow: true,
       centerDialogVisible: false,
-      progressVal: true,
-      disabledBtn: true, // 切换显示 switch 开关
-      progressAll: '0.00',
-      progress:'0',
-      progressPercentage: 0,
+      progressVal: this.$store.state.Counter.mining,
       consumptionTimt: '00:00:05',
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
@@ -110,11 +105,11 @@ export default {
         isVisible: false,
         from: 'nodeinfo'
     })
-    if (window.localStorage.getItem('siteStatus')) {
-      this.siteStatus = JSON.parse(window.localStorage.getItem('siteStatus'))
-      this.updateTime = this.siteStatus.walletUpdateTime
-      this.disabledBtn = this.siteStatus.mining
-      this.startBtnActive = this.siteStatus.startBtnActive
+
+    if (this.$store.state.Counter.progressAll !== 0) {
+      this.timeCntShow = false
+      
+      this.startBtnActive = false
     }
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
       if(response) {
@@ -124,6 +119,7 @@ export default {
       } 
     })
   },
+
   methods: {
     startSyncing () {
       EventBus.$emit('changeSetVisibil', {
@@ -137,12 +133,12 @@ export default {
         if (err) {
           return
         }
-        // if (response && response.result.status === '1') {
+        
         if (response.result.status === '1') {
-          this.progressAll = (Number(response.result.value) / (1024*1024*1024)).toFixed(2)
+          this.$store.commit('updateProgressAll', response.result.value)
         }
       })
-      this.$JsonRPCClient.switchToLocalHost()
+      //this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_setAddress', [this.firstWalletAddress.walletAddress], (err, response) => {
         if (err) {
           return
@@ -154,26 +150,20 @@ export default {
         if (err) {
           return
         }
-        // if (response && response.result.status === '1') {
         if (response) {
           
           this.startBtnActive = 'startBtnActive'
           this.startBtn = 'Start syncing'
           
           let progressInterval = setInterval( function() {
-            this.progress = Number(this.progress) + Number(this.progressAll) / 5
+            this.$store.commit('updateProgress')
             let tempStr = this.consumptionTimt
             this.consumptionTimt = tempStr.slice(0, tempStr.length-1) + (Number(tempStr.slice(tempStr.length-1))-1).toString()
 
             if (Number(this.progressAll) - this.progress > 0.001) {
-              this.progressPercentage = (this.progress / Number(this.progressAll)) * 100
+              this.$store.commit('updateProgressCount')
             } else {
-              this.progressPercentage = 100
-              this.progress = this.progressAll
-              this.updateTime = new Date().toString()
-              this.disabledBtn = false
-              this.siteStatus.walletUpdateTime = this.updateTime
-              window.localStorage.setItem('siteStatus', JSON.stringify(this.siteStatus))
+              this.$store.commit('setProgressFinish')
               clearInterval(progressInterval)
             }
           }.bind(this), 1000)
@@ -182,8 +172,27 @@ export default {
       //this.centerDialogVisible = true
     }
   },
+  computed: {
+    progressPercentage() {
+      return this.$store.state.Counter.progressCount
+    },
+    progress() {
+      return this.$store.state.Counter.progress
+    },
+    progressAll() {
+      return this.$store.state.Counter.progressAll
+    },
+    updateTime() {
+      return this.$store.state.Counter.updateTime
+    },
+    disabledBtn() {
+      return this.$store.state.Counter.disableMiningBtn
+    }
+
+  },
   watch: {
-    progressVal: function(){
+    progressVal: {
+      handler() {
       console.log(this.progressVal)
       if (!this.progressVal) {
         this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
@@ -193,10 +202,9 @@ export default {
             });
             this.progressVal = true
             return
-          }
-          // if (response && response.result.status === '1') {
+          }   
           if (response) {
-            this.siteStatus.mining = false
+            this.$store.commit('setMining', false)
             this.$alert('Begin Mining successfull', 'prompt', {
                 confirmButtonText: 'Confirm',
             });
@@ -216,9 +224,9 @@ export default {
             this.progressVal = false
             return
           }
-          // if (response && response.result.status === '1') {
+          
           if (response) {
-            this.siteStatus.mining = true
+            this.$store.commit('setMining', true)
             this.$alert('Stop Mining successfull', 'prompt', {
                 confirmButtonText: 'Confirm',
             });
@@ -231,6 +239,8 @@ export default {
         })
       }
       window.localStorage.setItem('siteStatus', JSON.stringify(this.siteStatus))
+      },
+      immediate: false
     }
   }
 }
