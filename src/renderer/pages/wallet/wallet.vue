@@ -243,32 +243,6 @@ export default {
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
 
-      if (!this.$store.state.Counter.mining && lastSelectedWallet !== this.walletAddress) {
-        this.$JsonRPCClient.client.request('sec_setAddress', [this.walletAddress], (err, response) => {
-          if(err) {
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
-          if (err) {
-            this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
-              if (err) {
-                return
-              }   
-              if (response) {
-                this.$alert(`You are now using ${this.walletName} wallet to mine.`, 'prompt', {
-                  confirmButtonText: 'Confirm',
-               });
-              }
-            })
-      }
-
       this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
         if(response.result.status === '1'){
           this.walletMoney = response.result.value

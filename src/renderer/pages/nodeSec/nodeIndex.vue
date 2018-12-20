@@ -35,11 +35,21 @@
                   <!-- 默认不可点击，进度条加载完成之后可点击 -->
                 </el-switch>
                  <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
-              </span>
+                  
+                </span>
               <p class="updateTime">Last update time</p>
             </section>
             <p class="updateTime2">{{updateTime}}</p>
-
+            <el-select v-model="selectedWallet" placeholder="Select a wallet" :change='switchWalletToMining(selectedWallet)'>
+              <el-option
+                  v-for="item in walletsArr"
+                  :key="item.walletAddress"
+                  :label="item.walletName"
+                  :value="item.walletAddress"
+                >
+                {{item.walletName}}
+              </el-option>
+            </el-select>
             <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
               <section style="display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px">
@@ -86,18 +96,15 @@ export default {
       systemTime: '',
       localTime: '', 
       timeCntShow: true,
+      walletsArr: this.$route.query.walletsArr,
+      selectedWallet: this.$route.query.walletsArr[0].walletAddress,
+      startSyncBtn: true,
       centerDialogVisible: false,
       progressVal: this.$store.state.Counter.mining,
       consumptionTimt: '00:00:05',
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
-      startBtnActive: '',
-      firstWalletAddress: this.$route.query.walletsArr[0],
-      siteStatus: {
-        walletUpdateTime: '',
-        mining: false,
-        startBtnActive: true
-      }
+      startBtnActive: ''
     }
   },
   created () {
@@ -139,7 +146,7 @@ export default {
         }
       })
       this.$JsonRPCClient.switchToLocalHost()
-      this.$JsonRPCClient.client.request('sec_setAddress', [this.firstWalletAddress.walletAddress], (err, response) => {
+      this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
         if (err) {
           return
         }
@@ -170,6 +177,34 @@ export default {
         }
       })
       //this.centerDialogVisible = true
+    },
+    switchWalletToMining(walletAddress) {
+      if(!this.$store.state.Counter.mining) {
+        let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
+        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
+          if(err) {
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+          if (err) {
+            this.$alert('Can not stop mining', 'prompt', {
+                confirmButtonText: 'Confirm',
+            });
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+              if (err) {
+                return
+              }   
+              if (response) {
+                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, 'prompt', {
+                  confirmButtonText: 'Confirm',
+              });
+            }
+          })
+      }
     }
   },
   computed: {
@@ -238,7 +273,6 @@ export default {
           }
         })
       }
-      window.localStorage.setItem('siteStatus', JSON.stringify(this.siteStatus))
       },
       immediate: false
     }
