@@ -39,7 +39,7 @@
                 </span>
               <p class="updateTime">Last update time</p>
             </section>
-            <p class="updateTime2">{{updateTime}}</p>
+            
             <el-select v-model="selectedWallet" placeholder="Select a wallet" :change='switchWalletToMining(selectedWallet)'>
               <el-option
                   v-for="item in walletsArr"
@@ -50,6 +50,7 @@
                 {{item.walletName}}
               </el-option>
             </el-select>
+            <p class="updateTime2">{{updateTime}}</p>
             <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
               <section style="display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px">
@@ -97,7 +98,7 @@ export default {
       localTime: '', 
       timeCntShow: true,
       walletsArr: this.$route.query.walletsArr,
-      selectedWallet: this.$route.query.walletsArr[0].walletAddress,
+      selectedWallet: this.$route.query.walletAddress !== this.$store.state.Counter.selectedWallet && this.$store.state.Counter.selectedWallet !== '' ? this.$store.state.Counter.selectedWallet : this.$route.query.walletAddress,
       startSyncBtn: true,
       centerDialogVisible: false,
       progressVal: this.$store.state.Counter.mining,
@@ -179,7 +180,8 @@ export default {
       //this.centerDialogVisible = true
     },
     switchWalletToMining(walletAddress) {
-      if(!this.$store.state.Counter.mining) {
+      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress && this.$store.state.Counter.selectedWallet !== '' ) {
+        this.$store.commit('setSelectedWallet', walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
         this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
           if(err) {

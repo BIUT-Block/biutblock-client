@@ -243,6 +243,7 @@ export default {
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
 
+
       this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
         if(response.result.status === '1'){
           this.walletMoney = response.result.value

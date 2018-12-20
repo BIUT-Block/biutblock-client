@@ -5,7 +5,8 @@ const state = {
   updateTime: '',
   mining: true,
   disableMiningBtn: true,
-  progressVal: true
+  progressVal: true,
+  selectedWallet: ''
 }
 
 const mutations = {
@@ -26,6 +27,9 @@ const mutations = {
   },
   setMining: (state, isActive) => {
     state.mining = isActive
+  },
+  setSelectedWallet: (state, walletAddress) => {
+    state.selectedWallet = walletAddress
   }
 }
 

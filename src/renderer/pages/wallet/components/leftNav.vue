@@ -360,6 +360,16 @@ export default {
         walletName: this.newWalletName,
         walletIndex: walletsArr.length-1
       })
+      EventBus.$emit('updateQuery', {
+          walletAddress: this.newAddress,
+          privateKey: this.newPrivateKey,
+          publicKey: this.newPublicKey,
+          walletMoney: '10',
+          walletsArr: walletsArr,
+          walletPwd: this.walletPwd,
+          walletName: this.newWalletName,
+          colorArr: new Array(this.walletsArr.length).fill(false)
+      })
     },
     enterWallet () {
       //先打开协议
