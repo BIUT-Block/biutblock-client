@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container @click.native="closeWalletlsList">
     <el-row>
       <el-col :span="24"> 
         <section class="nodeCnt">
@@ -25,31 +25,30 @@
 
           <section class="nodeListCnt">
             <section class="nodeListCntP">
-              <span class="nodeSwitch">
-                <el-switch
-                  v-model="progressVal"
-                  active-color="#C8D1DA"
-                  inactive-color="#00D6B2"
-                  :disabled="disabledBtn"
-                > 
-                  <!-- 默认不可点击，进度条加载完成之后可点击 -->
-                </el-switch>
-                 <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
-                  
-                </span>
-              <p class="updateTime">Last update time</p>
+              <section>
+                <section class="selectWalletTit" @click="checkWallet" id="selectWalletList">
+                  <span>{{walletName}}</span>
+                  <img src="../../assets/image/walletList.png" width="14px" height="14px" alt="">
+                </section>
+                <transition name="fade">
+                  <ul class="selectWalletList" v-show="listIndex">
+                    <li v-for="item in walletsArr" :key="item.walletAddress" @click="checkWalletName(item)">{{item.walletName}}</li>
+                  </ul>
+                </transition>
+              </section>
+               <section class="nodeSwitch">
+                  <el-switch
+                    v-model="progressVal"
+                    active-color="#C8D1DA"
+                    inactive-color="#00D6B2"
+                    :disabled="disabledBtn"
+                  > 
+                    <!-- 默认不可点击，进度条加载完成之后可点击 -->
+                  </el-switch>
+                  <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
+                </section>
             </section>
-            
-            <el-select v-model="selectedWallet" placeholder="Select a wallet" :change='switchWalletToMining(selectedWallet)'>
-              <el-option
-                  v-for="item in walletsArr"
-                  :key="item.walletAddress"
-                  :label="item.walletName"
-                  :value="item.walletAddress"
-                >
-                {{item.walletName}}
-              </el-option>
-            </el-select>
+            <p class="updateTime">Last update time</p>
             <p class="updateTime2">{{updateTime}}</p>
             <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
@@ -62,7 +61,7 @@
             <!-- 点击挖矿 -->
             <input type="text" v-model="timeCnt" v-show="timeCntShow">
 
-            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" style="margin-top: 80px;" @click="startSyncing">
+            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" :disabled="alreadySelectWallet" style="margin-top: 80px;" @click="startSyncing">
               {{startBtn}}
             </button>
           </section>
@@ -78,6 +77,19 @@
           <p style="text-align: center;font-size:16px;margin:62px 0 93px;">Insufficient balance, unable to mine</p>
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Recharge immediately</button>
+          </span>
+        </el-dialog>
+
+        <el-dialog
+          title="prompt"
+          :visible.sync="showDialog"
+          width="430px"
+          :closeOnClickModal = false
+          top="30vh"
+          center>
+          <p style="text-align: center;font-size:16px;margin:62px 0 93px;">Please choose the wallet you need to mine.</p>
+          <span slot="footer" class="dialog-footer">
+            <button class="publicBtn publicBtnAcitve" @click="showDialog=false">Determine</button>
           </span>
         </el-dialog>
 
@@ -97,15 +109,21 @@ export default {
       systemTime: '',
       localTime: '', 
       timeCntShow: true,
+      listIndex:false,//点击选择钱包
+      walletName: 'Please choose a wallet',//钱包name
+      showDialog: false,//是否选择钱包的弹窗
+      walletListActive:'',//钱包选中样式
       walletsArr: this.$route.query.walletsArr,
-      selectedWallet: this.$route.query.walletAddress !== this.$store.state.Counter.selectedWallet && this.$store.state.Counter.selectedWallet !== '' ? this.$store.state.Counter.selectedWallet : this.$route.query.walletAddress,
+      walletName: 'Please choose a wallet',//钱包name
+      selectedWallet: this.$store.state.Counter.selectedWallet === ''? '' : this.$store.state.Counter.selectedWallet ,
       startSyncBtn: true,
       centerDialogVisible: false,
       progressVal: this.$store.state.Counter.mining,
       consumptionTimt: '00:00:05',
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
-      startBtnActive: ''
+      startBtnActive: '',
+      alreadySelectWallet: true
     }
   },
   created () {
@@ -115,10 +133,17 @@ export default {
     })
 
     if (this.$store.state.Counter.progressAll !== 0) {
-      this.timeCntShow = false
-      
-      this.startBtnActive = false
+      this.timeCntShow = false   
+      this.startBtnActive = 'startBtnActive'
+    } else if (this.selectedWallet === '') {
+      this.startBtnActive = 'startBtnActive'
     }
+
+    if(this.$store.state.Counter.selectedWallet !== '') {
+      let wallet = this.walletsArr.filter( (item) => item.walletAddress === this.$store.state.Counter.selectedWallet)
+      this.walletName = wallet[0].walletName
+    }
+
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
       if(response) {
         this.ipAddress = response.result.ipv4
@@ -129,13 +154,66 @@ export default {
   },
 
   methods: {
+    //切换钱包选择
+    checkWallet() {
+      this.listIndex = !this.listIndex
+    },
+    //选择钱包
+    checkWalletName(item){
+      this.selectedWallet = item.walletAddress
+      this.walletName = item.walletName
+      this.walletListActive = 'walletListActive'
+      this.listIndex = false
+      this.startBtnActive = ''
+      this.alreadySelectWallet = false
+      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== item.walletAddress ) {
+        this.$store.commit('setSelectedWallet', item.walletAddress)
+        let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === item.walletAddress)
+        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
+          if(err) {
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+          if (err) {
+            this.$alert('Can not stop mining', 'prompt', {
+                confirmButtonText: 'Confirm',
+            });
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+              if (err) {
+                return
+              }   
+              if (response) {
+                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, 'prompt', {
+                  confirmButtonText: 'Confirm',
+              });
+            }
+          })
+      }
+    },
+    //关闭列表
+    closeWalletlsList(event) {
+      let detailsList = document.getElementById('selectWalletList')
+      if (!detailsList.contains(event.target) && this.listIndex) {
+        this.listIndex = false;
+      }
+    },
     startSyncing () {
+      //如果没有选择钱包先弹窗提示选钱包
+      if (this.walletValue == 'Please choose a wallet') {
+        this.showDialog = true
+        return
+      }
       EventBus.$emit('changeSetVisibil', {
         isVisible: false,
         from: 'nodeinfo'
       })
       this.timeCntShow = false
       this.startBtn = 'synchronizing...'
+      this.$store.commit('setSelectedWallet', this.selectedWallet)
       // this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_getTokenChainSize', [], (err, response) => {
         if (err) {
@@ -172,41 +250,14 @@ export default {
               this.$store.commit('updateProgressCount')
             } else {
               this.$store.commit('setProgressFinish')
+              this.$store.commit('setSelectedWallet', this.selectedWallet)
+              this.startBtn = 'Syncing complete'
               clearInterval(progressInterval)
             }
           }.bind(this), 1000)
         }
       })
       //this.centerDialogVisible = true
-    },
-    switchWalletToMining(walletAddress) {
-      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress && this.$store.state.Counter.selectedWallet !== '' ) {
-        this.$store.commit('setSelectedWallet', walletAddress)
-        let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
-        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
-          if(err) {
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
-          if (err) {
-            this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
-              if (err) {
-                return
-              }   
-              if (response) {
-                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, 'prompt', {
-                  confirmButtonText: 'Confirm',
-              });
-            }
-          })
-      }
     }
   },
   computed: {
@@ -293,13 +344,30 @@ display: flex;flex-direction: column;margin: 24px 32px;box-shadow:0px 0px 15px r
 
 .nodeNoActiveImg {vertical-align: middle;margin-right: 15px;}
 
-.startBtnActive {background: rgba(0,214,178,.3);border-color:rgba(0,214,178,.3);}
+.startBtnActive {background: rgba(0,214,178,.3)!important;border-color:rgba(0,214,178,.3)!important;}
 
-.nodeListCnt {display: flex;flex-direction: column;flex: 1;align-items: center;margin-top: 60px;}
-.nodeListCntP {width: 806px;position: relative;}
+.nodeListCnt {display: flex;flex-direction: column;flex: 1;align-items: center;margin-top: 20px;position: relative;}
 
-.nodeSwitch {color:#657292;position: absolute;top:0;left:20px;}
-.updateTime {text-align:center;color:#C8D1DA;}
+.nodeListCntP {display: flex;position: absolute;left: 25px;}
+
+.selectWalletTit {font-size:12px;font-family:Arial;line-height:12px;color:rgba(147,156,178,1);
+  width:154px;height:32px;border-radius:2px;background:rgba(242,244,246,1);padding:0 8px;margin-right: 12px;
+  display:flex;align-items:center;justify-content: space-between;}
+.selectWalletList {max-height:160px;width:168px;border:1px solid rgba(200,209,218,.5);overflow: hidden;
+overflow-y: auto;}
+.selectWalletList li {height: 32px;line-height: 32px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;
+  width:154px;padding:0 8px;color: #8C91A9;}
+.selectWalletList li:hover,.walletListActive {background:#E3E7EC;color: #657292;}
+
+.selectWalletList::-webkit-scrollbar { width: 6px; height: 2px;}
+.selectWalletList::-webkit-scrollbar-thumb { background: #00D6B2!important;border-radius: 10px;}
+.selectWalletList::-webkit-scrollbar-track {border-radius: 0;}
+
+.fade-enter-active, .fade-leave-active {transition: opacity .5s;}
+.fade-enter, .fade-leave-to{opacity: 0;}
+
+.nodeSwitch {color:#657292;}
+.updateTime {text-align:center;color:#C8D1DA;margin-top: 40px;}
 .updateTime2 {margin-top: 15px;font-size:14px;color:#939CB2;}
 
 .nodeTit {text-align: center;font-size: 16px;margin:28px 94px 0 24px;color:#657292;}

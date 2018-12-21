@@ -211,11 +211,12 @@ export default {
                 confirmButtonText: 'Confirm',
           });
       } else {
+          let addressFormat = this.address.replace('0x', '')
           let timeStamp = new Date().getTime()
           let transferData = [{
             timestamp: timeStamp,
             from: this.walletAddress,
-            to: this.address,
+            to: addressFormat,
             value: this.amount,
             gasLimit: '0',
             //gas: this.cost.toString(),
