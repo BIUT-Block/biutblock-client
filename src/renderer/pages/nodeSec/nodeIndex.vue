@@ -180,7 +180,7 @@ export default {
       //this.centerDialogVisible = true
     },
     switchWalletToMining(walletAddress) {
-      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress && this.$store.state.Counter.selectedWallet !== '' ) {
+      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress ) {
         this.$store.commit('setSelectedWallet', walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
         this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
