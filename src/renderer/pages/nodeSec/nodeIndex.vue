@@ -23,19 +23,7 @@
             </p>
           </section>
 
-          <!-- <el-select v-model="selectedWallet" placeholder="Select a wallet" :change='switchWalletToMining(selectedWallet)'>
-              <el-option
-                  v-for="item in walletsArr"
-                  :key="item.walletAddress"
-                  :label="item.walletName"
-                  :value="item.walletAddress"
-                >
-                {{item.walletName}}
-              </el-option>
-            </el-select> -->
           <section class="nodeListCnt">
-           
-           <!-- 钱包列表 -->
             <section class="nodeListCntP">
               <section>
                 <section class="selectWalletTit" @click="checkWallet" id="selectWalletList">
@@ -53,8 +41,7 @@
                   </ul>
                 </transition>
               </section>
-              
-              <section class="nodeSwitch">
+               <section class="nodeSwitch">
                   <el-switch
                     v-model="progressVal"
                     active-color="#C8D1DA"
@@ -66,10 +53,18 @@
                   <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
                 </section>
             </section>
-
+            
+            <el-select v-model="selectedWallet" placeholder="Select a wallet" :change='switchWalletToMining(selectedWallet)'>
+              <el-option
+                  v-for="item in walletsArr"
+                  :key="item.walletAddress"
+                  :label="item.walletName"
+                  :value="item.walletAddress"
+                >
+                {{item.walletName}}
+              </el-option>
+            </el-select>
             <p class="updateTime">Last update time</p>
-          
-
             <p class="updateTime2">{{updateTime}}</p>
             <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
               <el-progress :percentage="progressPercentage"></el-progress>
@@ -128,12 +123,12 @@ export default {
     return {
       ipAddress: '',
       systemTime: '',
-      localTime: '',
+      localTime: '', 
+      timeCntShow: true,
       listIndex:false,//点击选择钱包
       walletValue: 'Please choose a wallet',//钱包name
       showDialog: false,//是否选择钱包的弹窗
       walletListActive:'',//钱包选中样式
-      timeCntShow: true,
       walletsArr: this.$route.query.walletsArr,
       selectedWallet: this.$route.query.walletAddress !== this.$store.state.Counter.selectedWallet && this.$store.state.Counter.selectedWallet !== '' ? this.$store.state.Counter.selectedWallet : this.$route.query.walletAddress,
       startSyncBtn: true,
@@ -239,7 +234,7 @@ export default {
       //this.centerDialogVisible = true
     },
     switchWalletToMining(walletAddress) {
-      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress && this.$store.state.Counter.selectedWallet !== '' ) {
+      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress ) {
         this.$store.commit('setSelectedWallet', walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
         this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
