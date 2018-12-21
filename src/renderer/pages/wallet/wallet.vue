@@ -334,6 +334,12 @@ export default {
       this.positionBtnH = !this.positionBtnH;
     },
     dialogVisible() {
+      if (this.walletAddress === this.$store.state.Counter.selectedWallet) {
+        this.$alert('The wallet is binding as mining wallet. You can not remove it now.', 'prompt', {
+            confirmButtonText: 'Confirm',
+        });
+        return
+      }
       this.centerDialogVisible = true;
       this.positionBtnH = false;
     },

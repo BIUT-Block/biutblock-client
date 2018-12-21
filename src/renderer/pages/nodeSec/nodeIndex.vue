@@ -40,14 +40,13 @@
               <p class="updateTime">Last update time</p>
             </section>
             
-            <el-select v-model="selectedWallet" placeholder="Select a wallet" :change='switchWalletToMining(selectedWallet)'>
+            <el-select v-model="selectedWallet" placeholder="Select a wallet" @change='switchWalletToMining(selectedWallet)'>
               <el-option
                   v-for="item in walletsArr"
                   :key="item.walletAddress"
                   :label="item.walletName"
                   :value="item.walletAddress"
                 >
-                {{item.walletName}}
               </el-option>
             </el-select>
             <p class="updateTime2">{{updateTime}}</p>
@@ -62,7 +61,7 @@
             <!-- 点击挖矿 -->
             <input type="text" v-model="timeCnt" v-show="timeCntShow">
 
-            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" style="margin-top: 80px;" @click="startSyncing">
+            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" :disabled="alreadySelectWallet" style="margin-top: 80px;" @click="startSyncing">
               {{startBtn}}
             </button>
           </section>
@@ -98,14 +97,15 @@ export default {
       localTime: '', 
       timeCntShow: true,
       walletsArr: this.$route.query.walletsArr,
-      selectedWallet: this.$route.query.walletAddress !== this.$store.state.Counter.selectedWallet && this.$store.state.Counter.selectedWallet !== '' ? this.$store.state.Counter.selectedWallet : this.$route.query.walletAddress,
+      selectedWallet: this.$store.state.Counter.selectedWallet === ''? '' : this.$store.state.Counter.selectedWallet ,
       startSyncBtn: true,
       centerDialogVisible: false,
       progressVal: this.$store.state.Counter.mining,
       consumptionTimt: '00:00:05',
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
-      startBtnActive: ''
+      startBtnActive: '',
+      alreadySelectWallet: true
     }
   },
   created () {
@@ -117,7 +117,9 @@ export default {
     if (this.$store.state.Counter.progressAll !== 0) {
       this.timeCntShow = false
       
-      this.startBtnActive = false
+      this.startBtnActive = 'startBtnActive'
+    } else if (this.selectedWallet === '') {
+      this.startBtnActive = 'startBtnActive'
     }
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
       if(response) {
@@ -136,6 +138,7 @@ export default {
       })
       this.timeCntShow = false
       this.startBtn = 'synchronizing...'
+      this.$store.commit('setSelectedWallet', this.selectedWallet)
       // this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_getTokenChainSize', [], (err, response) => {
         if (err) {
@@ -172,6 +175,8 @@ export default {
               this.$store.commit('updateProgressCount')
             } else {
               this.$store.commit('setProgressFinish')
+              this.$store.commit('setSelectedWallet', this.selectedWallet)
+              this.startBtn = 'Syncing complete'
               clearInterval(progressInterval)
             }
           }.bind(this), 1000)
@@ -180,6 +185,8 @@ export default {
       //this.centerDialogVisible = true
     },
     switchWalletToMining(walletAddress) {
+      this.startBtnActive = ''
+      this.alreadySelectWallet = false
       if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress ) {
         this.$store.commit('setSelectedWallet', walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
