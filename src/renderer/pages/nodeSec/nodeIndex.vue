@@ -27,17 +27,12 @@
             <section class="nodeListCntP">
               <section>
                 <section class="selectWalletTit" @click="checkWallet" id="selectWalletList">
-                  <span>{{walletValue}}</span>
+                  <span>{{walletName}}</span>
                   <img src="../../assets/image/walletList.png" width="14px" height="14px" alt="">
                 </section>
                 <transition name="fade">
                   <ul class="selectWalletList" v-show="listIndex">
-                    <li @click="checkWalletName($event)">111</li>
-                    <li @click="checkWalletName($event)">222</li>
-                    <li @click="checkWalletName($event)">333</li>
-                    <li @click="checkWalletName($event)">444</li>
-                    <li @click="checkWalletName($event)">555</li>
-                    <li @click="checkWalletName($event)">666</li>
+                    <li v-for="item in walletsArr" :key="item.walletAddress" @click="checkWalletName(item)">{{item.walletName}}</li>
                   </ul>
                 </transition>
               </section>
@@ -53,16 +48,6 @@
                   <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
                 </section>
             </section>
-            
-            <el-select v-model="selectedWallet" placeholder="Select a wallet" @change='switchWalletToMining(selectedWallet)'>
-              <el-option
-                  v-for="item in walletsArr"
-                  :key="item.walletAddress"
-                  :label="item.walletName"
-                  :value="item.walletAddress"
-                >
-              </el-option>
-            </el-select>
             <p class="updateTime">Last update time</p>
             <p class="updateTime2">{{updateTime}}</p>
             <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
@@ -125,10 +110,11 @@ export default {
       localTime: '', 
       timeCntShow: true,
       listIndex:false,//点击选择钱包
-      walletValue: 'Please choose a wallet',//钱包name
+      walletName: 'Please choose a wallet',//钱包name
       showDialog: false,//是否选择钱包的弹窗
       walletListActive:'',//钱包选中样式
       walletsArr: this.$route.query.walletsArr,
+      walletName: 'Please choose a wallet',//钱包name
       selectedWallet: this.$store.state.Counter.selectedWallet === ''? '' : this.$store.state.Counter.selectedWallet ,
       startSyncBtn: true,
       centerDialogVisible: false,
@@ -147,12 +133,17 @@ export default {
     })
 
     if (this.$store.state.Counter.progressAll !== 0) {
-      this.timeCntShow = false
-      
+      this.timeCntShow = false   
       this.startBtnActive = 'startBtnActive'
     } else if (this.selectedWallet === '') {
       this.startBtnActive = 'startBtnActive'
     }
+
+    if(this.$store.state.Counter.selectedWallet !== '') {
+      let wallet = this.walletsArr.filter( (item) => item.walletAddress === this.$store.state.Counter.selectedWallet)
+      this.walletName = wallet[0].walletName
+    }
+
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
       if(response) {
         this.ipAddress = response.result.ipv4
@@ -168,10 +159,40 @@ export default {
       this.listIndex = !this.listIndex
     },
     //选择钱包
-    checkWalletName(e){
-      this.walletValue=e.target.innerHTML
+    checkWalletName(item){
+      this.selectedWallet = item.walletAddress
+      this.walletName = item.walletName
       this.walletListActive = 'walletListActive'
       this.listIndex = false
+      this.startBtnActive = ''
+      this.alreadySelectWallet = false
+      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== item.walletAddress ) {
+        this.$store.commit('setSelectedWallet', item.walletAddress)
+        let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === item.walletAddress)
+        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
+          if(err) {
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+          if (err) {
+            this.$alert('Can not stop mining', 'prompt', {
+                confirmButtonText: 'Confirm',
+            });
+            return
+          }
+        })
+        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+              if (err) {
+                return
+              }   
+              if (response) {
+                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, 'prompt', {
+                  confirmButtonText: 'Confirm',
+              });
+            }
+          })
+      }
     },
     //关闭列表
     closeWalletlsList(event) {
@@ -237,37 +258,6 @@ export default {
         }
       })
       //this.centerDialogVisible = true
-    },
-    switchWalletToMining(walletAddress) {
-      this.startBtnActive = ''
-      this.alreadySelectWallet = false
-      if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== walletAddress ) {
-        this.$store.commit('setSelectedWallet', walletAddress)
-        let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === walletAddress)
-        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
-          if(err) {
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
-          if (err) {
-            this.$alert('Can not stop mining', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
-              if (err) {
-                return
-              }   
-              if (response) {
-                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, 'prompt', {
-                  confirmButtonText: 'Confirm',
-              });
-            }
-          })
-      }
     }
   },
   computed: {
