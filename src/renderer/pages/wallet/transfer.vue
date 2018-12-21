@@ -188,7 +188,7 @@ export default {
             confirmButtonText: 'Confirm',
           });
         return
-      } else if (this.walletAddress === this.address) {
+      } else if (this.walletAddress === this.address.replace('0x', '')) {
         this.$alert("You can't tranfer to yourself.", 'prompt', {
             confirmButtonText: 'Confirm',
           })
