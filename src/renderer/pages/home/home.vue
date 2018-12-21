@@ -40,10 +40,10 @@
             <img :src="icon_node" alt="">
           </p>
 
-          <p class="mt50 pointerTxt" @click="setListFrom">
+          <p class="mt50 pointerTxt" @click="setListFrom" id="settingContent">
             <img :src="icon_set" alt="">
           </p>
-          <div id="settingContent" class="setListCnt pointerTxt" v-show="setList" @click="setListCnt">
+          <div class="setListCnt pointerTxt" v-show="setList" @click="setListCnt">
             Setting
           </div>
           <p class="copyright">V{{appVersion}}</p>
@@ -217,11 +217,19 @@ export default {
     },
     closeSettingCnt (event) {
       let detailsList = document.getElementById('settingContent')
-      console.log(!detailsList.contains(event.target))
-      //console.log(this.setList)
-      if (detailsList.contains(event.target) && this.setList) {
-        //if (this.setList)
+      if (!detailsList.contains(event.target) && this.setList) {
         this.setList = false
+        if (this.$route.query.pageId == 1) {
+          this.icon_wallet = icon_wallet_active
+          this.icon_node = icon_node
+          this.icon_set = icon_set
+          this.setList = false
+        } else {
+          this.icon_wallet = icon_wallet
+          this.icon_node = icon_node_active
+          this.icon_set = icon_set
+          this.setList = false
+        }
       }
     },
     setListCnt () {
@@ -254,7 +262,7 @@ export default {
 .languageCnt {flex:1;display: flex;justify-content:start;padding:23px;line-height: 2;}
 .versionCnt {flex:1;display: flex;justify-content:space-between;padding:23px 10px;line-height: 2;}
 
-.mockActive {border-right: 2px solid #00D6B2;color:#242E49;padding-right: 13px;}
+.mockActive {border-right: 2px solid #00D6B2;color:#242E49;padding-right: 13px!important;box-sizing: border-box;}
 .pr {padding-right: 15px;}
 
 
