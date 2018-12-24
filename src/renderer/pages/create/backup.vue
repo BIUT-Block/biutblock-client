@@ -70,37 +70,19 @@
             :closeOnClickModal = false
             top="25vh"
             center>
-            <div id="selectFileType" style="margin-top: 60px;">
-              <p class="downTxt"><input type="radio" checked name="downImg" id="png">
-                  <span class="downTxt2">Picture file(*.png)</span>
-                    <span style="font-size: 11px;">
-                      Export files as images
-                    </span>
-                  </p>
-
+            <section id="selectFileType" style="margin-top: 50px;text-align: left;">
+            <p class="downTxt"><input type="radio" checked="checked" name="downImg" id="png">
+              <span class="downTxt2">Picture file(*.png)</span>
+                <span style="font-size: 11px;">Export files as images</span>
+            </p>
               <p class="downTxt"><input type="radio" name="downImg" id="jpg">
-                <span class="downTxt2">JPG file(*.jpg)</span>
-                  <span style="font-size: 11px;">
-                    Export to JPG file format (default is white background)
-                  </span>
-                </p>
-
-              <!-- <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
-              Export to PDF file format</p>
-
-              <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">PDF file(*.pdf)</span> 
-              Export HD PDF files (only partial font styles are supported)</p>
-
-              <p class="downTxt"><input type="radio" name="downImg"><span class="downTxt2">POS file(*.pos)</span> 
-              Contains image and graphic structure definitions (can be imported)</p> -->
-
-              <!-- <p class="downTxt"><input type="radio" name="downImg" id="svg"><span class="downTxt2">SVG file(*.svg)</span> 
-              Export to SVG vector graphics</p> -->
-            </div>
-
-            <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:82px;" @click="saveFile">Confirm</button>
-            </span>
+              <span class="downTxt2">JPG file(*.jpg)</span>
+                <span style="font-size: 11px;">Export to JPG file format (default is white background)</span>  
+              </p>
+              <div slot="footer" class="dialog-footer" style="text-align: center;">
+                <button class="publicBtn publicBtnAcitve" style="margin-top:82px;" @click="saveFile">Confirm</button>
+              </div>
+            </section>
           </el-dialog>
 
           <el-dialog

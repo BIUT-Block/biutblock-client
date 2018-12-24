@@ -586,7 +586,7 @@ export default {
             if(err) {
               return
             }
-            this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+            this.$alert(`The encrypted file saved in ${this.filePath}`, 'prompt', {
                 confirmButtonText: 'Confirm',
             });
           })

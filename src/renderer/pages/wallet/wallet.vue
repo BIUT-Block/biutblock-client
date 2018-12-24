@@ -166,7 +166,7 @@ export default {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
-                  return
+                  continue
               //  moneyValue = "+ " + response.result.resultInPool[j].Value
               //  walletAddressTempInPool = response.result.resultInPool[j].TxFrom
               } else {
@@ -255,8 +255,9 @@ export default {
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
-                moneyValue = "+ " + response.result.resultInPool[j].Value
-                walletAddressTempInPool = response.result.resultInPool[j].TxFrom
+                continue
+                //moneyValue = "+ " + response.result.resultInPool[j].Value
+                //walletAddressTempInPool = response.result.resultInPool[j].TxFrom
               } else {
                 moneyValue = "- " + response.result.resultInPool[j].Value
                 walletAddressTempInPool = response.result.resultInPool[j].TxTo

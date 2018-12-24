@@ -44,12 +44,12 @@
 
              <section>
                <span class="detailsListTxt">Beneficiary</span>
-                {{detailsBeneficiary}}
+                0x{{detailsBeneficiary}}
              </section>
 
              <section>
                <span class="detailsListTxt">Sending party</span>
-                {{detailsSending}}
+                0x{{detailsSending}}
              </section>
 
              <section>

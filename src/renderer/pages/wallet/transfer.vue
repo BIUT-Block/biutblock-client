@@ -64,12 +64,12 @@
             </section>
             <section>
               <span class="transferMockTxt">Collection address</span>
-              {{address}}
+              {{formattedAddress}}
             </section>
 
             <section>
               <span class="transferMockTxt">Payment address</span>
-              {{oneselfAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}
+              0x{{oneselfAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}
             </section>
 
             <!-- <section>
@@ -272,8 +272,6 @@ export default {
               })
             }
           })
-
-          
       }
     }
   },
@@ -283,6 +281,13 @@ export default {
     },
     determineBtn () {
       return this.password.length > 7 ? true : false
+    },
+    formattedAddress () {
+      if (this.address.indexOf('0x') === -1) {
+        return `0x${this.address}`
+      } else {
+        return this.address
+      }
     }
   },
   components: {
