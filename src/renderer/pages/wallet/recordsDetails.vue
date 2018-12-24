@@ -30,7 +30,7 @@
           <section class="detailsList">
              <section>
                <span class="detailsListTxt">Transaction number</span>
-               <span class="detailsListWidth">{{detailsNumber}}</span>
+               <span class="detailsListWidth">0x{{detailsNumber}}</span>
              </section>
 
              <section>
