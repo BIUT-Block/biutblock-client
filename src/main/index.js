@@ -10,8 +10,7 @@ import {
 
 // import updateChecker from './updateChecker.js'
 
-const _SECCore = require('@sec-block/secjs-core')
-const _SECRPCServer = require('@sec-block/secjs-rpc')
+const SECNODE = require('@sec-block/secjs-node')
 
 /**
  * Set `__static` path to static files in production
@@ -35,9 +34,9 @@ function createWindow () {
   /**
    * Start RPC Server
    */
-  let SECCore = new _SECCore({DBPath: path + '/data/', cacheDBPath: path + '/data/powCache'})
-  let SECRPCServer = new _SECRPCServer(SECCore)
-  SECRPCServer.runRPCServer()
+  let SECCore = new SECNODE.Core({DBPath: path + '/data/', cacheDBPath: path + '/data/powCache'})
+  let SECRPC = new SECNODE.RPC(SECCore)
+  SECRPC.runRPCServer()
 
   mainWindow = new BrowserWindow({
     height: 580,

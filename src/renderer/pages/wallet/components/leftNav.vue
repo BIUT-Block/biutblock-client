@@ -9,7 +9,7 @@
               :class="[colorArr[index]?'color0':'',colorBorderArr[index%4]]"
               @click="tabWallet(item,index)">
                 <p style="font-weight: bold;">{{item.walletName}}</p>
-                <p style="margin-top:5px">0x{{item.walletAddress.replace(/(.{8}).+(.{8})/,'$1...$2')}}</p>
+                <p style="margin-top:5px">0x{{item.walletAddress.replace(/(.{6}).+(.{8})/,'$1...$2')}}</p>
             </li>
             <!-- <li class="borderColor1" @click="tabWallet(index)">
                 <p>{{walletName}}</p>
