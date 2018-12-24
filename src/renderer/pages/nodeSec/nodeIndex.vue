@@ -351,10 +351,12 @@ display: flex;flex-direction: column;margin: 24px 32px;box-shadow:0px 0px 15px r
 .nodeListCntP {display: flex;position: absolute;left: 25px;}
 
 .selectWalletTit {font-size:12px;font-family:Arial;line-height:12px;color:rgba(147,156,178,1);
-  width:154px;height:32px;border-radius:2px;background:rgba(242,244,246,1);padding:0 8px;margin-right: 12px;
+  width:154px;height:32px;border-top-left-radius:2px;background:rgba(242,244,246,1);padding:0 8px;
+  margin-right: 12px;;border-top-right-radius:2px;
   display:flex;align-items:center;justify-content: space-between;}
-.selectWalletList {max-height:160px;width:168px;border:1px solid rgba(200,209,218,.5);overflow: hidden;
-overflow-y: auto;}
+.selectWalletList {max-height:160px;width:170px;overflow: hidden;
+overflow-y: auto;background:rgba(255,255,255,1);z-index: 999;position: absolute;top: 32px;
+box-shadow:0px 1px 6px rgba(0,0,0,0.16);}
 .selectWalletList li {height: 32px;line-height: 32px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;
   width:154px;padding:0 8px;color: #8C91A9;}
 .selectWalletList li:hover,.walletListActive {background:#E3E7EC;color: #657292;}
