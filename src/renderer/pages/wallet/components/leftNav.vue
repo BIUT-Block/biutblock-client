@@ -52,7 +52,7 @@
         <section class="mainCntTab2" v-show="mainCntTab2">
               <textarea cols="30" v-model="mnemonicTxt" class="createTextarea" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
               <section class="publicCntBtn" style="margin-top: 29px;">
-                <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''"  @click="importingFrom">Start importing</button>
+                <button class="publicBtn publicBtnAcitve"  @click="importingFrom">Start importing</button>
               </section>
         </section>
       </section>
@@ -60,7 +60,8 @@
       <!-- 备份助记词 -->
       <section v-show="backUpContent">
           <section class="mainCntTxt">
-            <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="savaImgDialog = true">Save as...</span></p>
+            <!-- <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="savaImgDialog = true">Save as...</span> -->
+            <p>Your password is encrypted.</p>
             <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
             <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
           </section>
@@ -71,8 +72,8 @@
 
             <section style="display: flex;justify-content: space-between;padding:0 8px 0 4px;
             margin:17px 0 20px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
-                <qr-code :value="englishWordsString" :size="60" class="receiptCntImg">
-                </qr-code>
+                <!-- <qr-code :value="englishWordsString" :size="60" class="receiptCntImg">
+                </qr-code> -->
               <section style="margin: 0 22px 0 4px;">
                 <p class="copyTxt">Private key</p>
                 <p class="copyTxt2" id="copyPrivateKey">{{newPrivateKey}}</p>
@@ -81,7 +82,7 @@
             </section>
           </section>
           <section class="publicCntBtn">
-            <button class="publicBtn" @click="enterWallet" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''">Backed up, enter the wallet</button>
+            <button class="publicBtn publicBtnAcitve" @click="enterWallet">Backed up, enter the wallet</button>
           </section>
       </section>
     </el-dialog>
@@ -233,7 +234,7 @@ export default {
       englishWordsArr: [[]],
       englishWordsString: '',
 
-      alreadySaved: false,
+      alreadySaved: true,
 
       decoded: '',
 
@@ -277,7 +278,10 @@ export default {
       fs.readFile(filePath, 'utf-8', this._createImageFile.bind(this, filePath))
     },
 
-    _AppendWallet: function(filePath, data){
+    _AppendWallet: function(filePath, err, data){
+        if (err) {
+          return
+        }
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
@@ -373,22 +377,31 @@ export default {
     },
     enterWallet () {
       //先打开协议
+      let dirPath = require('os').homedir() + '/secwallet'
+      let filePath = dirPath + '/default.data'
+      if (!fs.existsSync(dirPath)){
+        fs.mkdirSync(dirPath);
+      }
+      fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
+      
       this.agreementDialog = true
+      
     },
     createWallet () {
+      this.newWalletName = ''
       this.createDialog = true
       this.createContent = true
       this.backUpContent = false
       this.closeAllowed = true
       let walletOrd = this.walletsArr.length + 1
-      this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-      let result = this.walletsArr.filter((wallet) => {
-        return wallet.walletName === this.newWalletName
-      })
-      if(result.length > 0) {
-        walletOrd = walletOrd + 1
-        this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-      }   
+      //this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
+      // let result = this.walletsArr.filter((wallet) => {
+      //   return wallet.walletName === this.newWalletName
+      // })
+      // if(result.length > 0) {
+      //   walletOrd = walletOrd + 1
+      //   this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
+      // }   
     },
     tabWallet (item,index) {
       //this.colorArr.fill(false)
@@ -446,11 +459,11 @@ export default {
       let keyDataJSON = JSON.parse(keyData)
       let walletNamesArr = Object.keys(keyDataJSON)
       if (walletNamesArr.indexOf(name) > -1) {
-          //In the array!
-          this.$alert("Wallet name already exists", 'prompt', {
-                confirmButtonText: 'OK',
-          });
-          return
+         // In the array!
+         this.$alert("Wallet name already exists", 'prompt', {
+               confirmButtonText: 'OK',
+         });
+         return
       } else {
           //Not in the array
         // 创建钱包方法

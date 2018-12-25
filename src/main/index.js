@@ -70,6 +70,13 @@ function createWindow () {
         accelerator: 'CmdOrCtrl+V',
         selector: 'paste:'
       }]
+    }, {
+      label: 'Network Setting',
+      submenu: [{
+        label: 'Main Network'
+      }, {
+        label: 'Test Network'
+      }]
     }]
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
   } else {

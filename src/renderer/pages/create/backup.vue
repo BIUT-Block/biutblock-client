@@ -31,7 +31,8 @@
       <el-row class="backupCnt">
         <el-col :span="24">
           <section class="mainCntTxt">
-            <p>Your password is encrypted, you can <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="centerDialogVisible = true">Save as...</span></p>
+            <!-- <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="centerDialogVisible = true">Save as...</span> -->
+            <p>Your password is encrypted.</p>
             <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
             <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
           </section>
@@ -48,8 +49,8 @@
             <section style="display: flex;justify-content: space-between;padding:0 8px;
             margin-top:23px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
               
-                <qr-code :value="englishWordsString" :size="40" style="margin-top: 4px;">
-                </qr-code>
+                <!-- <qr-code :value="englishWordsString" :size="40" style="margin-top: 4px;">
+                </qr-code> -->
               
               <section style="margin: 0 22px 0 8px;">
                 <p class="copyTxt">Private key</p>
@@ -60,7 +61,7 @@
           </section>
 
           <section class="publicCntBtn">
-            <button class="publicBtn" :disabled="!alreadySaved" :class="alreadySaved?'publicBtnAcitve':''" @click="enterWallet1">Backed up, enter the wallet</button>
+            <button class="publicBtn publicBtnAcitve" @click="enterWallet1">Backed up, enter the wallet</button>
           </section>
           
          <el-dialog
@@ -142,7 +143,7 @@ export default {
       walletName: "",
       walletsArr: '',
       walletBalance: "",
-      alreadySaved: false,
+      alreadySaved: true,
       colorArr: [],
       saveSuccess: true
     }
@@ -320,12 +321,6 @@ export default {
       this.englishWords[lineCount][i % 4] = englishWords[i]
     }
     this.walletPwd = this.$route.query.walletPwd
-  
-  },
-  computed: {
-    checkAlreadySaved () {
-      return this.alreadySaved
-    }
   }
 }
 </script>

@@ -239,7 +239,7 @@ export default {
     return {
       passTxt: false, //默认密码提示不显示
       returnPage: "/",
-      name: "wallet 01", //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
+      name: '', //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
       password: "",
       confirmP: "",
       privateKey: "",
@@ -289,6 +289,13 @@ export default {
     createBtn() {
       //检查钱包名字是否重复
       console.log('Button')
+      if (this.walletName === ''){
+        this.$alert('You need to give the wallet a name.', 'prompt', {
+              confirmButtonText: 'Confirm',
+        });
+        return
+      }
+
       if (this.walletPwd && this.walletPwd!==""){
         let dirPath = require('os').homedir() + '/secwallet'
         let filePath = dirPath + '/default.data'
