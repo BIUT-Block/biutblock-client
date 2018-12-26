@@ -1,11 +1,11 @@
 <template>
- <el-container class="layoutCnt">
+ <el-container class="loginConter">
     <el-row>
       <el-col :span="24">
         <section class="mainCnt">
-           <section class="mainCntLeft"></section>
+           <!-- <section class="mainCntLeft"></section> -->
            <section class="mainCntRight">
-              <img src="../../assets/image/loginLogo.png" alt="secLogo" title="sec" class="secLogo">
+              <!-- <img src="../../assets/image/loginLogo.png" alt="secLogo" title="sec" class="secLogo"> -->
               <!-- <section class="loginClose">
                 <i class="el-icon-minus icon_nav" @click="minimalApp"></i>
                 <i class="el-icon-close icon_nav" @click="exitApp"></i>
@@ -14,7 +14,8 @@
               <input type="password" v-model="loginValue"  maxlength="30" class="loginIpt" placeholder="Please enter your password"></input>
               <button type="button" class="logoBtn pointerTxt" :disabled="!logoBtnAcitve" :class="logoBtnAcitve?'logoBtnAcitve':''" @click="loginBtn">Login</button>
               <section class="errorCnt">
-                <p v-if="errorTxt" class="errorTxt">Password format error</p>
+                <!-- <p v-if="errorTxt" class="errorTxt">Wrong private key format</p> -->
+                <span v-if="errorTxt" class="errorTxt">Wrong password</span>
               </section>
               <p class="loginTxt">No wallet? <span class="TxtColor pointerTxt" @click="createNew">Click here to create a new</span></p>
            </section>
@@ -196,20 +197,23 @@ export default {
 </script>
 
 <style scoped>
-.layoutCnt {display: flex;height: 100vh;justify-content: center;align-items: center;}
+.loginConter {display: flex;height: 100vh;justify-content: center;align-items: center;
+ }
 
 .mainCnt {height: 580px;width: 960px;display: flex;position: relative;}
 .mainCntLeft {width: 380px;height: 580px;background: url('../../assets/image/loginBk.png') no-repeat;background-size: cover;}
+
 .mainCntRight {flex: 1;height: 580px;display: flex;align-items: center;
-flex-direction: column;background: #fff;}
+flex-direction: column; background: url('../../assets/image/loginBg.png') no-repeat;background-size: cover;}
 .secLogo {position: absolute;top:32px;right:34px;}
-.logoBtn {width:346px;height:48px;background: #C8D1DA;color: #fff;outline: none;border:1px solid #C8D1DA;border-radius: 4px;}
+.logoBtn {width:346px;height:48px;background: #C8D1DA;color: #fff;outline: none;
+border:1px solid #C8D1DA;border-radius: 4px;font-size: 14px;}
 .logoBtnAcitve {background: #00D6B2;}
 
-.loginTit {color: #657292;font-size: 20px;font-weight:400;margin:158px 0 80px;}
-.loginTxt {margin-top: 116px;color: #657292;}
-.errorCnt {height: 22px;width:100%;text-align: center;}
-.errorTxt {color: #FF8DB2;margin-top: 12px;}
+.loginTit {color: #657292;font-size: 22px;margin-bottom: 32px;font-weight: normal;padding-top: 180px;}
+.loginTxt {margin-top: 43px;color: #657292;}
+.errorCnt {height: 20px;width:100%;text-align: center;line-height: 20px;margin-top: 17px;}
+.errorTxt {color: #FF8DB2;font-size: 14px;}
 .loginIpt {width: 346px;height: 36px;margin-bottom:24px;outline: none;color:#657292;border:1px solid #C8D1DA;text-align: center;}
 
 section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
