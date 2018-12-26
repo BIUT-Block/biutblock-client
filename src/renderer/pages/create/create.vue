@@ -250,7 +250,7 @@ export default {
   name: "",
   data() {
     return {
-      layoutPosition: true, // 设置 false隐藏
+      layoutPosition: false, // 设置 false隐藏
       layoutPositionImg: waitingImg, // waitingImg 导入中的图片  successImg 导入成功的图片
       layoutPositionTxt: 'Import into the wallet...',// Import into the wallet... 导入中的文字 Pass the test 导入成功的文字
       passTxt: false, //默认密码提示不显示
