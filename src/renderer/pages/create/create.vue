@@ -17,6 +17,13 @@
         </el-col> -->
       </el-row>
 
+      
+     <!-- 加载遮罩层 -->
+      <section class="layoutPosition" v-show="layoutPosition">
+        <img :src="layoutPositionImg" alt="" class="layoutPositionImg" width="32px" height="32px">
+        <span class="layoutPositionTxt">{{layoutPositionTxt}}</span>
+      </section>
+
       <el-row class="createTabCnt">
         <el-col :span="24" class="mainCnt">
           
@@ -77,6 +84,7 @@
         </el-col>
       </el-row>
 
+      
       <el-dialog
           title="prompt"
           :visible.sync="centerDialogVisible"
@@ -222,7 +230,11 @@
           </span>
       </el-dialog>                              
     </main>
+
   </el-container>
+
+
+ 
 </template>
 
 <script>
@@ -231,12 +243,16 @@ const CryptoJS = require("crypto-js");
 const SECUtil = require("@sec-block/secjs-util");
 const jwt = require("jsonwebtoken");
 const fs = require("fs")
-
+import waitingImg from '../../assets/image/waitingImg.png'
+import successImg from '../../assets/image/successImg.png'
 //const secUtil = new SECUtil()
 export default {
   name: "",
   data() {
     return {
+      layoutPosition: true, // 设置 false隐藏
+      layoutPositionImg: waitingImg, // waitingImg 导入中的图片  successImg 导入成功的图片
+      layoutPositionTxt: 'Import into the wallet...',// Import into the wallet... 导入中的文字 Pass the test 导入成功的文字
       passTxt: false, //默认密码提示不显示
       returnPage: "/",
       name: '', //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
@@ -743,6 +759,12 @@ export default {
 </script>
 
 <style scoped>
+.layoutPosition {position: fixed;top: 50%;left:50%;width: 176px;height: 112px;border-radius: 2px;
+  background:rgba(36,46,73,.92);box-shadow:0px 0px 15px rgba(96,98,115,0.2);
+  margin: -56px 0 0 -88px;display: flex;flex-direction: column;align-items: center;z-index: 9999;}
+.layoutPositionImg {padding: 25px 0 20px;}
+.layoutPositionTxt {font-size:12px;color:#fff;}
+
 .layoutCnt {
   display: flex;
   flex-direction: column;
