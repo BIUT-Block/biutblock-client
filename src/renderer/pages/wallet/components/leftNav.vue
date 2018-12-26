@@ -299,6 +299,7 @@ export default {
       this.walletPosition = false
       this.enterButton = true //备份助记词按钮可点击
       this.enterWalletContent = false //展示备份助记词的 内容页关闭
+      this.walletContainer1 = 'walletContainer1'
       this.enterWallet()
       this.enterTheWallet()
     },
