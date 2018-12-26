@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="24">
         <section class="leftNavCnt">
-          <ul>
+          <ul class="leftList">
             <li v-for="(item,index) in walletsArr" 
               :index="item.id"
               :class="[colorArr[index]?'color0':'',colorBorderArr[index%4]]"
@@ -20,16 +20,76 @@
         </section>
       </el-col>
     </el-row>
+    
+    <section class="walletPosition" v-if="walletPosition">
+      <!-- 备份助记词 -->
+      <section class="walletContainer" :class="walletContainer1">
+          <section class="walletHeader">
+            <span class="el-icon-arrow-left icon_txt" @click="returnWallet"></span>
+            <span class="walletHeaderTit">New wallet</span>
+            <span class="el-icon-close icon_txt" @click="closeWallet"></span>
+          </section>
+          <section class="backupContent">
+            <p class="backupTitle backupTitle1">Carefully write down these words</p>
+            <ul class="wordsContent">
+              <li class="wordsTxt" v-for="(item,index) in testList" :key="item.id">{{item.cnt}}</li>
+            </ul>
+            <p class="backupTitle backupTitle2">Private key</p>
+            <section class="keyTxt">
+              3A4B8C0d3242565655445aoqwu923700sdfpsf280ru23asfs7saf78asfaafaf5
+            </section>
+            <section class="backupBtn">
+              <button class="publicBtn" :class="enterButton==true?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
+            </section>
+          </section>
+          <section class="enterWalletContent" v-show="enterWalletContent">
+              <img src="../../../assets/image/errorMin.png" width="32px" height="32px" alt="">
+              <section class="enterWalletList">
+                <p>Be sure to back up your mnemonics andprivate keys. If the mnemonics and</p>
+                <p>private keys are lost,you will permanently lose your assets.</p>
+              </section>
+              <!-- 进入钱包先用的是关闭钱包的方法 只是关闭遮罩层，具体方法 渲染数据你们写一下 -->
+              <label class="enterWalletBtn" @click="closeWallet">
+                Enter the wallet
+              </label>
+          </section>
+          <!-- <section class="mainCntTxt">
+            <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="savaImgDialog = true">Save as...</span>
+            <p>Your password is encrypted.</p>
+            <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
+            <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
+          </section>
+          <section class="mainCntList">
+            <section class="wordsLine" id="englishWordsList">
+                {{englishWords}}
+            </section>
+
+            <section style="display: flex;justify-content: space-between;padding:0 8px 0 4px;
+            margin:17px 0 20px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
+                <qr-code :value="englishWordsString" :size="60" class="receiptCntImg">
+                </qr-code>
+              <section style="margin: 0 22px 0 4px;">
+                <p class="copyTxt">Private key</p>
+                <p class="copyTxt2" id="copyPrivateKey">{{newPrivateKey}}</p>
+              </section>
+              <button data-clipboard-target="#copyPrivateKey" type="button" :class="copyBtnAcitve" class="copyBtn" @click="copyTxtCnt">{{copyTxtCntTit}}</button>
+            </section>
+          </section>
+          <section class="publicCntBtn">
+            <button class="publicBtn publicBtnAcitve" @click="enterWallet">Backed up, enter the wallet</button>
+          </section> -->
+      </section>
+    </section>
 
     <!-- 创建钱包弹窗 -->
     <el-dialog
       title="prompt"
       :visible.sync="createDialog"
-      width="534px"
+      width="694px"
       :show-close = "closeAllowed"
       :closeOnClickModal = false
       :closeOnPressEscape = "closeAllowed"
-      top="20vh"
+      top="8vh"
       center>
       <!-- 创建钱包 -->
       <section v-show="createContent">
@@ -45,49 +105,23 @@
                 maxlength="12"
                 clearable>
               </el-input>
-              <section class="publicCntBtn" style="margin-top: 89px;">
+              <section class="publicCntBtn" style="margin-top: 142px;">
                 <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
               </section>
         </section>
         <section class="mainCntTab2" v-show="mainCntTab2">
-              <textarea cols="30" v-model="mnemonicTxt" class="createTextarea" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
-              <section class="publicCntBtn" style="margin-top: 29px;">
-                <button class="publicBtn publicBtnAcitve"  @click="importingFrom">Start importing</button>
+              <!-- 备份助记词错误的时候边框换色 -->
+              <textarea cols="30" v-model="mnemonicTxt" class="createTextarea" :class="importError==true?'createBColor':''" rows="10" placeholder="Please enter a mnemonic, separated by a space"></textarea>
+              <section class="publicCntBtn" style="margin-top: 38px;">
+                <button class="publicBtn" :disabled="!mnemonicBtn" :class="mnemonicBtn==true?'publicBtnAcitve':''"  @click="importingFrom">Start importing</button>
               </section>
+              <!-- 备份助记词错误的时候文字提示 -->
+              <p class="createError" v-show="importError">Mnemonic is incorrect</p>
         </section>
-      </section>
-      
-      <!-- 备份助记词 -->
-      <section v-show="backUpContent">
-          <section class="mainCntTxt">
-            <!-- <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="savaImgDialog = true">Save as...</span> -->
-            <p>Your password is encrypted.</p>
-            <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
-            <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
-          </section>
-          <section class="mainCntList">
-            <section class="wordsLine" id="englishWordsList">
-                {{englishWords}}
-            </section>
-
-            <section style="display: flex;justify-content: space-between;padding:0 8px 0 4px;
-            margin:17px 0 20px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
-                <!-- <qr-code :value="englishWordsString" :size="60" class="receiptCntImg">
-                </qr-code> -->
-              <section style="margin: 0 22px 0 4px;">
-                <p class="copyTxt">Private key</p>
-                <p class="copyTxt2" id="copyPrivateKey">{{newPrivateKey}}</p>
-              </section>
-              <button data-clipboard-target="#copyPrivateKey" type="button"  :class="copyBtnAcitve" class="copyBtn" @click="copyTxtCnt">{{copyTxtCntTit}}</button>
-            </section>
-          </section>
-          <section class="publicCntBtn">
-            <button class="publicBtn publicBtnAcitve" @click="enterWallet">Backed up, enter the wallet</button>
-          </section>
       </section>
     </el-dialog>
 
-    <!-- 保存图片弹窗 -->
+    <!-- 保存图片弹窗
     <el-dialog
         title="Download format"
         :visible.sync="savaImgDialog"
@@ -111,9 +145,9 @@
             <button class="publicBtn publicBtnAcitve" style="margin-top:82px;" @click="saveFile">Confirm</button>
           </div>
         </section>
-    </el-dialog>
+    </el-dialog> -->
 
-    <!-- 同意协议弹窗 -->
+    <!-- 同意协议弹窗
     <el-dialog
       title="prompt"
       :visible.sync="agreementDialog"
@@ -135,15 +169,15 @@
               <button class="publicBtn publicBtnAcitve" style="margin-top:67px"  @click="enterTheWallet">Enter the wallet</button>
             </span>
         </section>
-    </el-dialog>
+    </el-dialog> -->
 
       <el-dialog
           title="prompt"
           :visible.sync="newDialogVisible1"
-          width="432px"
+          width="534px"
           :show-close = true
           :closeOnClickModal = false
-          top="26vh"
+          top="25vh"
           >
           <section class="mainCntTab1">
             <p style="color: #939CB2;font-size:14px;text-align: center;">
@@ -192,10 +226,17 @@ export default {
       mainCntTab2: false,
       newWalletName: '',
       mnemonicTxt: '',
-      createContent: true,
+      //createContent: true,
+      createContent: false,
+      importError: false, //导入助记词错误的时候 设置成true
+      enterWalletContent: false, //点击 进入钱包之后 给出下面展示的提示
+      enterButton: true, //确认开始就可以点击
+      walletContainer1: 'walletContainer1',//备份助记词开始的高度
 
       //备份助记词
-      backUpContent: false,
+      walletPosition: false, //打开备份助记词界面
+      //backUpContent: true,
+      //backUpContent: false,
       copyBtnAcitve: '',
       copyTxtCntTit: 'Copy',
       newPrivateKey: '',
@@ -239,9 +280,28 @@ export default {
       decoded: '',
 
       closeAllowed: true,
+      //助记词列表假数据
+      testWordsList:[{
+        id: '1',
+        cnt: 'permanently'
+      }]
     }
   },
   methods: {
+    //返回创建钱包界面
+    returnWallet () {
+      this.walletPosition = false
+      this.createDialog = true
+      this.enterButton = true //备份助记词按钮可点击
+      this.enterWalletContent = false //展示备份助记词的 内容页关闭
+      this.walletContainer1 = 'walletContainer1'
+    },
+    //关闭备份助记词界面
+    closeWallet () {
+      this.walletPosition = false
+      this.enterButton = true //备份助记词按钮可点击
+      this.enterWalletContent = false //展示备份助记词的 内容页关闭
+    },
     tabBtn1 () {
       this.createTabBtnActive1 = 'createTabBtnActive'
       this.createTabBtnActive2 = ''
@@ -343,7 +403,7 @@ export default {
       //先打开协议
       this.createDialog = false
       this.createContent = true
-      this.backUpContent = false
+      //this.backUpContent = false
       this.closeAllowed = true
       this.agreementDialog = false
       let walletsArr = []
@@ -384,14 +444,16 @@ export default {
       }
       fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
       
-      this.agreementDialog = true
-      
+      //this.agreementDialog = true
+      this.enterWalletContent = true
+      this.enterButton = false
+      this.walletContainer1 = 'walletContainer2' //切换高度
     },
     createWallet () {
       this.newWalletName = ''
       this.createDialog = true
       this.createContent = true
-      this.backUpContent = false
+      //this.backUpContent = false
       this.closeAllowed = true
       let walletOrd = this.walletsArr.length + 1
       //this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
@@ -499,10 +561,11 @@ export default {
             // save to local file
             this.userToken = token;
           }
-          this.createContent = false
+          //this.createContent = false
           this.alreadySaved = false
-          this.backUpContent = true
-          this.closeAllowed = false
+          //this.closeAllowed = false
+          this.walletPosition = true
+          this.createDialog = false
         }
       }
     },
@@ -525,7 +588,7 @@ export default {
     },
                   
     importingFrom() {
-      this.createDialog = false
+       this.createDialog = false
       try{
         this.mnemonicWallet.privateKey = SECUtil.mnemonicToEntropy(this.mnemonicTxt)
         let privKey64Buffer = Buffer.from(this.mnemonicWallet.privateKey, 'hex')
@@ -700,6 +763,14 @@ export default {
     importActiveBtn () {
       return this.newDialogInput1.length > 0 ? true : false
     },
+    //导入助记词
+    mnemonicBtn () {
+      return this.mnemonicTxt.length > 0 ? true : false
+    },
+    //循环假数据
+    testList() {
+       return  Array(24).fill(this.testWordsList[0])
+    }
    }
 }
 </script>
@@ -711,13 +782,13 @@ export default {
 .backupCnt {display: flex;justify-content: center;flex: 1;}
 
 .leftNavCnt {width: 190px;background: #EDF5F4;height:580px;padding-left: 30px;}
-ul {padding-top:8px;overflow: hidden;overflow-y: scroll;height: 484px;}
-li {width: 140px;height: 58px;display: flex;justify-content:center;margin-top: 16px;
+.leftList {padding-top:8px;overflow: hidden;overflow-y: scroll;height: 484px;}
+.leftList li {width: 140px;height: 58px;display: flex;justify-content:center;margin-top: 16px;
     flex-direction: column;border:1px none;background: #fff;color:#657292;padding-left:20px;}
-ul::-webkit-scrollbar { width: 2px; height: 2px;}
-ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
-li:hover {cursor: pointer;background:#00D6B2;color:#fff;border-left: none;}
+.leftList::-webkit-scrollbar { width: 2px; height: 2px;}
+.leftList::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+.leftList::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+.leftList li:hover {cursor: pointer;background:#00D6B2;color:#fff;border-left: none;}
 
 .borderColor1 {border-left: 2px solid #98A9D2;}
 .borderColor2 {border-left: 2px solid #F5A623;}
@@ -726,14 +797,44 @@ li:hover {cursor: pointer;background:#00D6B2;color:#fff;border-left: none;}
 .color0 {background:#00D6B2;color:#fff;border-left: none;}
 
 /* 创建钱包 */
-.mainCntTab {display: flex;justify-content: space-between;width: 380px;margin: 48px auto 32px;}
-.mainCntTab1 {margin: 32px auto 0;width: 380px;height: 173px;}
-.mainCntTab2 {margin: 32px auto 0;width: 380px;height: 173px;}
-.createTabBtn {width: 190px;height: 36px;outline: none;background: #fff;color: #00D6B2;border: 1px solid rgba(0,214,178,0.6);}
+.mainCntTab {display: flex;justify-content: space-between;width: 400px;margin: 74px auto 0;}
+.mainCntTab1 {margin: 32px auto 0;width: 400px;height: auto;}
+.mainCntTab2 {margin: 32px auto 0;width: 400px;height: auto;}
+.createTabBtn {width: 200px;height: 36px;outline: none;background: #fff;color: #00D6B2;border: 1px solid rgba(0,214,178,0.6);}
 .createTabBtnActive {background: rgba(0,214,178,0.6);color: #fff;border: none;}
-.createTextarea {width:354px;height:79px;outline:none;border:1px solid #C8D1DA;padding: 12px;color:#242E49;
+.createTextarea {width:366px;height:115px;outline:none;border:1px solid #C8D1DA;padding: 16px;color:#242E49;
   outline:none;resize:none;}
+.createError {color: #FF8DB2;font-size: 12px;margin-top: 10px;text-align: center;}
+.createBColor {border-color: #FF8DB2!important;}
+
 /* 备份助记词 */
+.walletPosition {position: fixed;top: 0;left: 0;right: 0;bottom:0;background:rgba(36,46,73,.3);z-index: 99;}
+.walletContainer {position: fixed;background: #fff;width:694px;z-index: 100;}
+.walletContainer1 {top: 52px;left:153px;height:476px;}
+.walletContainer2 {top: 8px;left:153px;height:564px;}
+.icon_txt {font-size:16px;font-weight:bold;color:#C8D1DA;}
+.walletHeader {height:40px;border-bottom:1px solid rgba(96,98,115,0.1);display:flex;align-items: center;
+  justify-content: space-between;padding: 0 16px 0 22px;}
+.walletHeaderTit {font-size:16px;color:rgba(101,114,146,1);}
+.backupContent {width:524px;margin: 0 auto;}
+.backupTitle {font-size:14px;color:rgba(147,156,178,1);}
+.backupTitle1 {margin: 24px 0 10px;}
+.backupTitle2 {margin: 11px 0 6px;}
+.wordsContent {display: flex;flex-wrap: wrap;height: auto;}
+.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;
+box-shadow:0px 5px 15px rgba(217,232,223,0.2);opacity:1;padding: 0 10px;margin: 0 4px 14px 0;color: #657292!important;}
+.keyTxt {width:510px;height:42px;background:rgba(243,248,247,.7);border-radius:4px;padding-left: 14px;
+  line-height: 42px;font-size: 14px;color: #657292!important;}
+.backupBtn {padding-top: 23px;text-align: center;}
+
+.enterWalletContent {height:86px;background:rgba(68,79,107,1);display:flex;align-items:center;
+            padding-left:40px;margin-top:24px;}
+.enterWalletList {margin: 0 20px;color: #FF8DB2;font-size:12px;line-height: 1.5;}
+.enterWalletBtn {width:133px;text-align:center;line-height:36px;height:36px;font-size:14px;
+  color:rgba(255,255,255,1); background:rgba(0,214,178,1);opacity:1;border-radius:4px;}
+.enterWalletBtn:hover,.icon_txt:hover {cursor: pointer;}
+
+
 .mainCntTxt {color: #939CB2;text-align: left;margin:16px 0 8px 21px;}
 .mainCntTxt p {margin-top: 6px;font-size: 12px;}
 
@@ -759,7 +860,7 @@ section >>> .el-input__inner {border-radius: 2px;outline: none;}
 section >>> .el-dialog__title {color: #939CB2;font-size: 16px;}
 section >>> .el-dialog__header {border-bottom:1px solid rgba(200,209,218,0.5);height: 47px;line-height: 47px;padding: 0;}
 section >>> .el-dialog {height: 288px;text-align: center;}
-section >>> .el-dialog--center {height: 368px;}
+section >>> .el-dialog--center {height: 476px;}
 section >>> .el-dialog__body {padding: 0;}
 section >>> .el-dialog__footer {padding: 0;}
 section >>> .el-dialog__headerbtn {top: 15px!important;right: 16px!important;}

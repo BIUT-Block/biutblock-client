@@ -1,5 +1,5 @@
 <template>
-  <el-container class="layoutCnt">
+  <el-container>
     <main class="publicContent">
       <el-row class="publicNav">
         <el-col :span="6">
@@ -27,11 +27,30 @@
         </el-col> -->
       </el-row>
 
+      <el-row>
+        <el-col :span="24">
+          <section class="backupContent">
+            <p class="backupTitle backupTitle1">Carefully write down these words</p>
+            <ul class="wordsContent">
+              <li class="wordsTxt" v-for="item in testList" :key="item.id">{{item.cnt}}</li>
+            </ul>
+            <p class="backupTitle backupTitle2">Private key</p>
+            <section class="keyTxt">
+              3A4B8C0d3242565655445aoqwu923700sdfpsf280ru23asfs7saf78asfaafaf5
+            </section>
+            <section class="backupBtn">
+              <button class="publicBtn publicBtnAcitve" @click="enterWallet1">Backed up, enter the wallet</button>
+            </section>
+          </section>
+        </el-col> 
+      </el-row>
 
-      <el-row class="backupCnt">
+
+
+      <!-- <el-row class="backupCnt">
         <el-col :span="24">
           <section class="mainCntTxt">
-            <!-- <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="centerDialogVisible = true">Save as...</span> -->
+            <span class="TxtColor pointerTxt" style="margin-left:8px;" @click="centerDialogVisible = true">Save as...</span>
             <p>Your password is encrypted.</p>
             <p>Be sure to back up this file. You can retrieve your wallet and reset your password with a </p>
             <p>mnemonic or private key. If you lose this file, you will lose the assets in your wallet.</p>
@@ -49,8 +68,8 @@
             <section style="display: flex;justify-content: space-between;padding:0 8px;
             margin-top:23px;height:54px;background:rgba(250,250,250,1);border-radius:2px;align-items: center;">
               
-                <!-- <qr-code :value="englishWordsString" :size="40" style="margin-top: 4px;">
-                </qr-code> -->
+                <qr-code :value="englishWordsString" :size="40" style="margin-top: 4px;">
+                </qr-code>
               
               <section style="margin: 0 22px 0 8px;">
                 <p class="copyTxt">Private key</p>
@@ -62,7 +81,7 @@
 
           <section class="publicCntBtn">
             <button class="publicBtn publicBtnAcitve" @click="enterWallet1">Backed up, enter the wallet</button>
-          </section>
+          </section> -->
           
          <!-- <el-dialog
             title="Download format"
@@ -94,17 +113,20 @@
             :closeOnClickModal = false
             top="25vh"
             center>
-            <p class="agreementTxt" style="margin-top:52px;">
-              Be sure to back up your mnemonics 
-            </p>
-            <p class="agreementTxt">
-              and private keys. If the mnemonics and private keys
-            </p>
-            <p class="agreementTxt">
-              are lost,you will permanently lose your assets.
-            </p>
+            <section style="text-align: center;">
+              <img src="../../assets/image/errorMax.png" alt="Prompt-SEC" width="48px" height="48px" class="agreementImg">
+              <p class="agreementTxt">
+                Be sure to back up your mnemonics 
+              </p>
+              <p class="agreementTxt">
+                and private keys. If the mnemonics and private keys
+              </p>
+              <p class="agreementTxt">
+                are lost,you will permanently lose your assets.
+              </p>
+            </section>
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:67px"  @click="enterWallet">Enter the wallet</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:28px"  @click="enterWallet">Enter the wallet</button>
             </span>
           </el-dialog>
 
@@ -145,7 +167,13 @@ export default {
       walletBalance: "",
       alreadySaved: true,
       colorArr: [],
-      saveSuccess: true
+      saveSuccess: true,
+      testWordsList:[
+        {
+          id: '1',
+          cnt: 'transaction'
+        }
+      ]
     }
   },
   methods: {
@@ -344,16 +372,34 @@ export default {
       this.englishWords[lineCount][i % 4] = englishWords[i]
     }
     this.walletPwd = this.$route.query.walletPwd
-  }
+  },
+  computed: {
+    //循环假数据
+    testList() {
+       return  Array(24).fill(this.testWordsList[0])
+    }
+   }
 }
 </script>
 
 <style scoped>
+.backupContent {width:524px;margin: 0 auto;}
+.backupTitle {font-size:14px;color:rgba(147,156,178,1);}
+.backupTitle1 {margin: 50px 0 10px;}
+.backupTitle2 {margin: 25px 0 6px;}
+.wordsContent {display: flex;flex-wrap: wrap;height: auto;}
+.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;color: #657292;
+box-shadow:0px 5px 15px rgba(217,232,223,0.2);opacity:1;padding: 0 10px;margin: 0 4px 16px 0;}
+.keyTxt {width:510px;height:42px;background:rgba(243,248,247,.7);border-radius:4px;padding-left: 14px;
+  line-height: 42px;color: #657292;font-size: 14px;}
+.backupBtn {padding-top: 36px;text-align: center;}
+
+
+
+
 .layoutCnt {display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
 .backupCnt {display: flex;justify-content: center;flex: 1;}
-
 .mainCntList {width: 492px;margin: 16px auto 49px;}
-
 input[type="radio"] {vertical-align: middle;background-color: #01cd78;
     background-clip: content-box;
     padding: .2em;}
@@ -362,15 +408,15 @@ input[type="radio"]:checked + label::before {
     background-clip: content-box;
     padding: .2em;
 }
-
-
 .mainCntTxt {color: #939CB2;text-align: left;width: 492px;margin: 104px auto 15px;margin-top: 104px;}
 .mainCntTxt p {margin-top: 6px;}
 
 .downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 24px 11px 24px;}
 .downTxt2 {font-size: 10ox;color: #657292;margin-right:5px;}
 
-.agreementTxt {font-size: 14px;text-align: center;margin: 5px 0;color:#939CB2}
+.agreementImg {margin: 30px auto 20px;}
+.agreementTxt {font-size: 12px;margin: 5px 0;color:#FF8DB2;}
+
 
 ul {display: flex;height: 20px;}
 ul .iptTxt {color: #242E49;text-align: center;margin-right: 5px;}
