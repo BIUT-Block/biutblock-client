@@ -64,7 +64,7 @@
             <button class="publicBtn publicBtnAcitve" @click="enterWallet1">Backed up, enter the wallet</button>
           </section>
           
-         <el-dialog
+         <!-- <el-dialog
             title="Download format"
             :visible.sync="centerDialogVisible"
             width="432px"
@@ -84,7 +84,7 @@
                 <button class="publicBtn publicBtnAcitve" style="margin-top:82px;" @click="saveFile">Confirm</button>
               </div>
             </section>
-          </el-dialog>
+          </el-dialog> -->
 
           <el-dialog
             title="prompt"
@@ -161,35 +161,35 @@ export default {
           clipboard.destroy()
         })
     },
-    saveFile () {
-      this.centerDialogVisible = false
-      let dirPath = require('os').homedir() + '/secwallet'
-      let filePath = dirPath + '/default.data'
-      if (!fs.existsSync(dirPath)){
-        fs.mkdirSync(dirPath);
-      }
-      if (!fs.existsSync(filePath) || !this.walletPwd || this.walletPwd === ""){
-        this.keyFileDataJS = {
-          [this.walletName]:
-          {
-            privateKey: this.privateKey,
-            publicKey: this.publicKey,
-            walletAddress: this.secAddress
-          }
-        }
-        let keyFileData = JSON.stringify(this.keyFileDataJS)
-        let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.password)
-        fs.writeFile(dirPath+'/default.data', cipherKeyData, (err) => {
-          if(err) {
-            return
-          }
-          this._createImageFile(dirPath)   
-        })
+    // saveFile () {
+    //   this.centerDialogVisible = false
+    //   let dirPath = require('os').homedir() + '/secwallet'
+    //   let filePath = dirPath + '/default.data'
+    //   if (!fs.existsSync(dirPath)){
+    //     fs.mkdirSync(dirPath);
+    //   }
+    //   if (!fs.existsSync(filePath) || !this.walletPwd || this.walletPwd === ""){
+    //     this.keyFileDataJS = {
+    //       [this.walletName]:
+    //       {
+    //         privateKey: this.privateKey,
+    //         publicKey: this.publicKey,
+    //         walletAddress: this.secAddress
+    //       }
+    //     }
+    //     let keyFileData = JSON.stringify(this.keyFileDataJS)
+    //     let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.password)
+    //     fs.writeFile(dirPath+'/default.data', cipherKeyData, (err) => {
+    //       if(err) {
+    //         return
+    //       }
+    //       this._createImageFile(dirPath)   
+    //     })
         
-      } else {
-        fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
-      }
-    },
+    //   } else {
+    //     fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
+    //   }
+    // },
     _AppendWallet: function(filePath, err, data){
         if (err) {
           return
@@ -251,6 +251,29 @@ export default {
       // });
     },
     enterWallet1 () {
+      let dirPath = require('os').homedir() + '/secwallet'
+      let filePath = dirPath + '/default.data'
+      if (!fs.existsSync(dirPath)){
+        fs.mkdirSync(dirPath);
+      }
+      if (!fs.existsSync(filePath) || !this.walletPwd || this.walletPwd === ""){
+        this.keyFileDataJS = {
+          [this.walletName]:
+          {
+            privateKey: this.privateKey,
+            publicKey: this.publicKey,
+            walletAddress: this.secAddress
+          }
+        }
+        let keyFileData = JSON.stringify(this.keyFileDataJS)
+        let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.password)
+        fs.writeFile(dirPath+'/default.data', cipherKeyData, (err) => {
+          if(err) {
+            return
+          }
+          fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))  
+        })
+      }
       this.dialogVisible = true
     },
     enterWallet() {
