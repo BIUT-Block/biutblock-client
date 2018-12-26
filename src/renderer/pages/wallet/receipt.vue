@@ -23,7 +23,7 @@
           
           <section class="receiptCnt">
             <p class="receiptCntAddress" id="address">
-              {{walletAddress}}
+              0x{{walletAddress}}
             </p>
             <el-input v-model="money" id="money" placeholder="Payee wallet address" class="moneyIpt" @keypress.native="isNumber">
               <template slot="append">SEC</template>
