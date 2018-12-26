@@ -32,11 +32,11 @@
           <section class="backupContent">
             <p class="backupTitle backupTitle1">Carefully write down these words</p>
             <ul class="wordsContent">
-              <li class="wordsTxt" v-for="(item,index) in testList" :key="item.id">{{item.cnt}}</li>
+              <li class="wordsTxt" v-for="word in englishWordsArr" :key="word">{{word}}</li>
             </ul>
             <p class="backupTitle backupTitle2">Private key</p>
             <section class="keyTxt">
-              3A4B8C0d3242565655445aoqwu923700sdfpsf280ru23asfs7saf78asfaafaf5
+              {{newPrivateKey}}
             </section>
             <section class="backupBtn">
               <button class="publicBtn" :class="enterButton==true?'publicBtnAcitve':''" @click="enterWallet">Backed up, enter the wallet</button>
@@ -272,9 +272,7 @@ export default {
       keyFileDataJS: {},
 
       englishWords: '',
-      englishWordsArr: [[]],
-      englishWordsString: '',
-
+      englishWordsArr: [],
       alreadySaved: true,
 
       decoded: '',
@@ -301,6 +299,8 @@ export default {
       this.walletPosition = false
       this.enterButton = true //备份助记词按钮可点击
       this.enterWalletContent = false //展示备份助记词的 内容页关闭
+      this.enterWallet()
+      this.enterTheWallet()
     },
     tabBtn1 () {
       this.createTabBtnActive1 = 'createTabBtnActive'
@@ -414,6 +414,7 @@ export default {
         walletInfo["walletName"] = walletName
         walletsArr.push(walletInfo)
       }
+      
       EventBus.$emit('updateWalletInfo', {
         walletPwd: this.walletPwd, 
         walletAddress: this.newAddress, 
@@ -453,6 +454,8 @@ export default {
       this.newWalletName = ''
       this.createDialog = true
       this.createContent = true
+      this.enterWalletContent = false
+      this.enterButton = true
       //this.backUpContent = false
       this.closeAllowed = true
       let walletOrd = this.walletsArr.length + 1
@@ -466,8 +469,8 @@ export default {
       // }   
     },
     tabWallet (item,index) {
-      //this.colorArr.fill(false)
-      //this.colorArr[index] = true
+      this.colorArr.fill(false)
+      this.colorArr[index] = true
       console.log(item) //需要的参数可以通过方法 拿
       let res = new Array(this.colorArr.length).fill(false)
       res[index] = !res[index]
@@ -539,7 +542,7 @@ export default {
           let privKey64 = keys.privKey;
           this.newPrivateKey = privKey64;
           this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-
+          this.englishWordsArr = this.englishWords.split(' ')
           let pubKey128 = keys.publicKey;
           this.newPublicKey = pubKey128.toString("hex");
 
@@ -784,7 +787,7 @@ export default {
 .leftNavCnt {width: 190px;background: #EDF5F4;height:580px;padding-left: 30px;}
 .leftList {padding-top:8px;overflow: hidden;overflow-y: scroll;height: 484px;}
 .leftList li {width: 140px;height: 58px;display: flex;justify-content:center;margin-top: 16px;
-    flex-direction: column;border:1px none;background: #fff;color:#657292;padding-left:20px;}
+    flex-direction: column; background: #fff;color:#657292;padding-left:20px;}
 .leftList::-webkit-scrollbar { width: 2px; height: 2px;}
 .leftList::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
 .leftList::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
@@ -794,7 +797,7 @@ export default {
 .borderColor2 {border-left: 2px solid #F5A623;}
 .borderColor3 {border-left: 2px solid #FF8DB2;}
 .borderColor4 {border-left: 2px solid #7498FB;}
-.color0 {background:#00D6B2;color:#fff;border-left: none;}
+.color0 {background:#00D6B2 !important;color:#fff;border-left: none;}
 
 /* 创建钱包 */
 .mainCntTab {display: flex;justify-content: space-between;width: 400px;margin: 74px auto 0;}

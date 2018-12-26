@@ -32,11 +32,11 @@
           <section class="backupContent">
             <p class="backupTitle backupTitle1">Carefully write down these words</p>
             <ul class="wordsContent">
-              <li class="wordsTxt" v-for="item in testList" :key="item.id">{{item.cnt}}</li>
+              <li class="wordsTxt" v-for="word in englishWords" :key="word">{{word}}</li>
             </ul>
             <p class="backupTitle backupTitle2">Private key</p>
             <section class="keyTxt">
-              3A4B8C0d3242565655445aoqwu923700sdfpsf280ru23asfs7saf78asfaafaf5
+              {{privateKey}}
             </section>
             <section class="backupBtn">
               <button class="publicBtn publicBtnAcitve" @click="enterWallet1">Backed up, enter the wallet</button>
@@ -156,7 +156,7 @@ export default {
       id: '',
       centerDialogVisible: false,
       dialogVisible: false,
-      englishWords: [[]],
+      englishWords: [],
       englishWordsString: '',
       privateKey: "",
       password: "",
@@ -361,16 +361,17 @@ export default {
       this.walletsArr = this.$route.query.walletsArr
     }
     let lineCount = 0
-    let englishWords = this.$route.query.englishWords.split(' ')
+    //let englishWords = this.$route.query.englishWords.split(' ')
     this.englishWordsString = this.$route.query.englishWords
-    for(let i = 0; i < englishWords.length; i++) {
-      if ( i % 4 === 0 && i !== 0 ) {
-        lineCount ++
-        this.englishWords[lineCount] = []
-        //continue
-      }
-      this.englishWords[lineCount][i % 4] = englishWords[i]
-    }
+    this.englishWords = this.englishWordsString.split(' ')
+    // for(let i = 0; i < englishWords.length; i++) {
+    //   if ( i % 4 === 0 && i !== 0 ) {
+    //     lineCount ++
+    //     this.englishWords[lineCount] = []
+    //     //continue
+    //   }
+    //   this.englishWords[lineCount][i % 4] = englishWords[i]
+    // }
     this.walletPwd = this.$route.query.walletPwd
   },
   computed: {
