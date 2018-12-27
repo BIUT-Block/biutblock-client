@@ -106,7 +106,7 @@
           </el-dialog> -->
 
           <el-dialog
-            title="prompt"
+            title=""
             :visible.sync="dialogVisible"
             width="432px"
             :show-close = true
@@ -116,13 +116,13 @@
             <section style="text-align: center;">
               <img src="../../assets/image/errorMax.png" alt="Prompt-SEC" width="48px" height="48px" class="agreementImg">
               <p class="agreementTxt">
-                Be sure to back up your mnemonics 
+                Be sure to back up your phrase. You can retrieve
               </p>
               <p class="agreementTxt">
-                and private keys. If the mnemonics and private keys
+                your wallet and retrieve your password with the phrase or the private keys. 
               </p>
               <p class="agreementTxt">
-                are lost,you will permanently lose your assets.
+                If you lose both of the phrase and the private key, you will permanently lose your assets.
               </p>
             </section>
             <span slot="footer" class="dialog-footer">

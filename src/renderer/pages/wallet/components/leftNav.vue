@@ -16,7 +16,7 @@
                 <p style="margin-top:5px">{{walletAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}</p>
             </li> -->
           </ul>
-          <button class="btn pointerTxt" @click="createWallet"><span style="font-size: 20px;vertical-align: middle;">+</span> Create a wallet</button>
+          <button class="btn pointerTxt" @click="createWallet"><span style="font-size: 20px;vertical-align: middle;">+</span>Create A New Wallet</button>
         </section>
       </el-col>
     </el-row>
@@ -26,7 +26,7 @@
       <section class="walletContainer">
           <section class="walletHeader">
             <span class="el-icon-arrow-left icon_txt" @click="returnWallet"></span>
-            <span class="walletHeaderTit">New wallet</span>
+            <span class="walletHeaderTit">Wallet Creation</span>
             <span class="el-icon-close icon_txt" @click="closeWallet"></span>
           </section>
           <section class="backupContent">
@@ -45,8 +45,8 @@
           <section class="enterWalletContent" v-show="enterWalletContent">
               <img src="../../../assets/image/errorMin.png" width="32px" height="32px" alt="">
               <section class="enterWalletList">
-                <p>Be sure to back up your mnemonics andprivate keys. If the mnemonics and</p>
-                <p>private keys are lost,you will permanently lose your assets.</p>
+                <p>Be sure to back up your phrase. You can retrieve your wallet and reset your password with the phrase or the private key.</p>
+                <p>If you lose both the phrase  and the private key, you will lose the assets in the wallet.</p>
               </section>
               <!-- 进入钱包先用的是关闭钱包的方法 只是关闭遮罩层，具体方法 渲染数据你们写一下 -->
               <label class="enterWalletBtn" @click="closeWallet">
@@ -83,7 +83,7 @@
 
     <!-- 创建钱包弹窗 -->
     <el-dialog
-      title="prompt"
+      title="Wallet Creation"
       :visible.sync="createDialog"
       width="694px"
       :show-close = "closeAllowed"
@@ -94,8 +94,8 @@
       <!-- 创建钱包 -->
       <section v-show="createContent">
         <section class="mainCntTab">
-            <button @click="tabBtn1" class="createTabBtn" :class="createTabBtnActive1">Create a new wallet</button>
-            <button @click="tabBtn2" class="createTabBtn" :class="createTabBtnActive2">Mnemonic import wallet</button>
+            <button @click="tabBtn1" class="createTabBtn" :class="createTabBtnActive1">Create a new Wallet</button>
+            <button @click="tabBtn2" class="createTabBtn" :class="createTabBtnActive2">Import Phrase</button>
         </section>
         <section class="mainCntTab1" v-show="mainCntTab1">
               <el-input
@@ -106,7 +106,7 @@
                 clearable>
               </el-input>
               <section class="publicCntBtn" style="margin-top: 142px;">
-                <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
+                <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create</button>
               </section>
         </section>
         <section class="mainCntTab2" v-show="mainCntTab2">
@@ -116,7 +116,7 @@
                 <button class="publicBtn" :disabled="!mnemonicBtn" :class="mnemonicBtn==true?'publicBtnAcitve':''"  @click="importingFrom">Start importing</button>
               </section>
               <!-- 备份助记词错误的时候文字提示 -->
-              <p class="createError" v-show="importError">Mnemonic is incorrect</p>
+              <p class="createError" v-show="importError">Wrong words!</p>
         </section>
       </section>
     </el-dialog>
@@ -172,7 +172,7 @@
     </el-dialog> -->
 
       <el-dialog
-          title="prompt"
+          title="Import Phrase"
           :visible.sync="newDialogVisible1"
           width="534px"
           :show-close = true
@@ -185,7 +185,7 @@
             </p>
             <el-input
                 type="text"
-                placeholder="Please input"
+                v-bind:placeholder="placeHolder"
                 v-model="newDialogInput1"
                 clearable
                 style="margin: 30px 0 50px;">
@@ -231,7 +231,7 @@ export default {
       importError: false, //导入助记词错误的时候 设置成true
       enterWalletContent: false, //点击 进入钱包之后 给出下面展示的提示
       enterButton: true, //确认开始就可以点击
-
+      placeHolder: 'Enter wallet name',
       //备份助记词
       walletPosition: false, //打开备份助记词界面
       //backUpContent: true,
@@ -245,7 +245,7 @@ export default {
       agreementDialog: false, //协议
       savaImgDialog: false, //保存图片
       newDialogVisible1: false,
-      newDialogLabel1: "Please set the name of the wallet you imported",
+      newDialogLabel1: "",
       newDialogInput1: "",
       newDialogVisible2: false,
       newDialogLabel2: "There is no account information locally. This is your first wallet. Please set your new account password.",
@@ -522,7 +522,7 @@ export default {
       let walletNamesArr = Object.keys(keyDataJSON)
       if (walletNamesArr.indexOf(name) > -1) {
          // In the array!
-         this.$alert("Wallet name already exists", 'prompt', {
+         this.$alert("Wallet name already exists", '', {
                confirmButtonText: 'OK',
          });
          return
@@ -530,7 +530,7 @@ export default {
           //Not in the array
         // 创建钱包方法
         if (this.confirmP != this.password) {
-           this.$alert('The password input is inconsistent twice, please re-enter', 'prompt', {
+           this.$alert('The password input is inconsistent twice, please re-enter', '', {
               confirmButtonText: 'Confirm',
           });
           return;
@@ -635,7 +635,7 @@ export default {
           for (let walletName of walletNamesArr) {
               localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
               if (localPrivatKey===this.mnemonicWallet.privateKey) {
-                this.$alert(`The wallet information is already local, local wallet name ${walletName}`, 'prompt', {
+                this.$alert(`This wallet has already been existed in the name of ${walletName}`, '', {
                     confirmButtonText: 'Confirm',
                     callback: action => {
                       this.newDialogVisible1 = false
@@ -667,14 +667,14 @@ export default {
             if(err) {
               return
             }
-            this.$alert(`The encrypted file saved in ${this.filePath}`, 'prompt', {
+            this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
                 confirmButtonText: 'Confirm',
             });
           })
           this.newDialogVisible1 = false
           this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
         } catch(e) {
-          this.$alert('Login error! Please confirm your password', 'prompt', {
+          this.$alert('Login error! Please confirm your password', '', {
                 confirmButtonText: 'Confirm',
             });
         }
@@ -815,7 +815,7 @@ export default {
 /* 备份助记词 */
 .walletPosition {position: fixed;top: 0;left: 0;right: 0;bottom:0;background:rgba(36,46,73,.3);
 z-index: 99;display: flex;align-items: center;justify-items: center;}
-.walletContainer {background: #fff;width:694px;z-index: 100;height:auto;margin: 0 auto;}
+.walletContainer {background: #fff;width:850px;z-index: 100;height:auto;margin: 0 auto;}
 
 .icon_txt {font-size:16px;font-weight:bold;color:#C8D1DA;}
 .walletHeader {height:40px;border-bottom:1px solid rgba(96,98,115,0.1);display:flex;align-items: center;

@@ -18,12 +18,12 @@
             class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
-            <span class="publicWalletHTit">Transfer</span>
+            <span class="publicWalletHTit">Send</span>
           </section>
           
           <section class="transferCnt">
 
-            <input class="ipt" v-model="address" maxlength="64" placeholder="Payee wallet address" @focusout="isAddress" />
+            <input class="ipt" v-model="address" maxlength="64" placeholder="Receive address" @focusout="isAddress" />
 
             <el-input v-model="amount"  maxlength="10" placeholder="transfer amount" class="ipt" @focusout.native="isNumber">
               <template slot="append">SEC</template>
@@ -48,27 +48,27 @@
             </section>
              -->
             <button class="publicBtn" :disabled="!publicBtnAcitve" 
-              :class="publicBtnAcitve?'publicBtnAcitve':''" @click="transferFrom" style="margin-top:40px">Transfer</button>
+              :class="publicBtnAcitve?'publicBtnAcitve':''" @click="transferFrom" style="margin-top:40px">Send</button>
           </section>
         </section>
         <el-dialog
-          title="Please confirm your transfer information"
+          title="Sent Confirmation"
           :visible.sync="centerDialogVisible"
           width="432px"
           top="30vh"
           center>
           <section class="transferMockList">
             <section>
-              <span class="transferMockTxt">order information </span>
-              Transfer
+              <span class="transferMockTxt">Order information </span>
+              Sent
             </section>
             <section>
-              <span class="transferMockTxt">Collection address</span>
+              <span class="transferMockTxt">Receive</span>
               {{formattedAddress}}
             </section>
 
             <section>
-              <span class="transferMockTxt">Payment address</span>
+              <span class="transferMockTxt">Sent</span>
               0x{{oneselfAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}
             </section>
 
@@ -254,7 +254,7 @@ export default {
                   this.allMoney = responseBalance.result.value
                 }
               })
-              this.$alert('Your transfer is now in pending.', 'prompt', {
+              this.$alert('Submitted Successfully.', '', {
                 confirmButtonText: 'Confirm',
               });
               this.$router.push(

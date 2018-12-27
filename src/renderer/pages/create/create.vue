@@ -29,7 +29,7 @@
           
           <section class="mainCntTab">
             <button @click="tab1" class="pointerTxt" :class="btn">Create a new wallet</button>
-            <button @click="tab2" class="pointerTxt" :class="btn2">Mnemonic import wallet</button>
+            <button @click="tab2" class="pointerTxt" :class="btn2">Import Phrase</button>
           </section>
           
           <section v-show="mainCntTab1" class="mainCntTab1">
@@ -71,13 +71,13 @@
               </el-input>
             </section>
             <section class="publicCntBtn" style="margin-top: 32px;">
-              <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create a wallet</button>
+              <button class="publicBtn" :disabled="!createActiveBtn" :class="createActiveBtn?'publicBtnAcitve':''" @click="createBtn">Create</button>
             </section>
           </section>
           <section v-show="mainCntTab2" class="mainCntTab2">
-            <textarea name="" id="" cols="30" v-model="mnemonicTxt" placeholder="Please enter a mnemonic, separated by a space"></textarea>
+            <textarea name="" id="" cols="30" v-model="mnemonicTxt" placeholder="Type the cackup phrase here, separated by a space"></textarea>
             <section class="publicCntBtn" style="margin-top: 29px;">
-              <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Start importing</button>
+              <button class="publicBtn" :disabled="!publicBtnAcitve" :class="publicBtnAcitve?'publicBtnAcitve':''" @click="importingFrom">Importing</button>
             </section>
           </section>
 
@@ -286,7 +286,7 @@ export default {
       keyFileDataJS: {},                  
       btn: "btn",
       btn2: "btn2",
-      navTit: 'New wallet',
+      navTit: 'Wallet Creation',
       tempColorArr: [],
       mnemonicTxt: "",
       newUserAccount: {

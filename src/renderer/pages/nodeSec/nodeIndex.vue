@@ -17,7 +17,7 @@
             </p>
 
             <p class="nodeTitle3">
-              <span class="nodeTxt nodeTxtM">local time：</span>
+              <span class="nodeTxt nodeTxtM">Local time：</span>
                <span class='nodeTxtL'>{{localTime.substring(0,34)}}</span>
             </p>
           </section>
@@ -129,7 +129,7 @@ export default {
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
-      alreadySelectWallet: true,
+      alreadySelectWallet: false,
 
       digContent: true, //主要内容页面
       digImg: false, // 挖矿动图默认不展示
@@ -186,6 +186,7 @@ export default {
       this.listIndex = false
       this.startBtnActive = ''
       this.alreadySelectWallet = false
+      this.$store.commit('setMiningBtn', false)
       if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== item.walletAddress ) {
         this.$store.commit('setSelectedWallet', item.walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === item.walletAddress)
@@ -196,7 +197,7 @@ export default {
         })
         this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
           if (err) {
-            this.$alert('Can not stop mining', 'prompt', {
+            this.$alert('Can not stop mining', '', {
                 confirmButtonText: 'Confirm',
             });
             return
@@ -207,7 +208,7 @@ export default {
                 return
               }   
               if (response) {
-                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, 'prompt', {
+                this.$alert(`You are now using ${selectedWalletObj[0].walletName} wallet to mine.`, '', {
                   confirmButtonText: 'Confirm',
               });
             }
@@ -240,11 +241,7 @@ export default {
         }
       })
       this.$JsonRPCClient.switchToLocalHost()
-      this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
-        if (err) {
-          return
-        }
-      })
+
       this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
         console.log(err)
         console.log(response)
@@ -265,7 +262,9 @@ export default {
               this.$store.commit('updateProgressCount')
             } else {
               this.$store.commit('setProgressFinish')
-              this.$store.commit('setSelectedWallet', this.selectedWallet)
+              if(this.selectedWallet !== ''){
+                this.$store.commit('setMiningBtn', false)
+              }
               this.startBtn = 'Syncing complete'
               clearInterval(progressInterval)
             }
@@ -298,9 +297,15 @@ export default {
       handler() {
       console.log(this.progressVal)
       if (!this.progressVal) {
+        this.state.$commit('setSelectedWallet', this.selectedWallet)
+        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
+          if (err) {
+            return
+          }
+        })
         this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
           if (err) {
-            this.$alert('Can not start mining', 'prompt', {
+            this.$alert('Can not start mining', '', {
                 confirmButtonText: 'Confirm',
             });
             this.progressVal = true
@@ -312,12 +317,12 @@ export default {
             //     confirmButtonText: 'Confirm',
             // });
             this.centerDialogVisible = true //挖矿弹窗
-            this.digContainer = 'Begin Mining successfull' //弹窗内容
+            this.digContainer = 'Mining is enabled successfully' //弹窗内容
             this.digContent = false //开始挖矿就把内容页隐藏
             this.digImg = true //展示动画页
           } else {
             this.progressVal = true
-            this.$alert('Can not start mining', 'prompt', {
+            this.$alert('Can not start mining', '', {
                 confirmButtonText: 'Confirm',
             });
           }
@@ -325,7 +330,7 @@ export default {
       } else {
         this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
           if (err) {
-            this.$alert('Can not stop mining', 'prompt', {
+            this.$alert('Can not stop mining', '', {
                 confirmButtonText: 'Confirm',
             });
             this.progressVal = false
@@ -344,7 +349,7 @@ export default {
             this.timeCntShow = true //展示最初的页面
           } else {
             this.progressVal = false
-            this.$alert('Can not stop mining', 'prompt', {
+            this.$alert('Can not stop mining', '', {
                 confirmButtonText: 'Confirm',
             });
           }

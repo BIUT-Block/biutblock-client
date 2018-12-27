@@ -36,13 +36,13 @@
               query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
               <img src="../../assets/image/walletReceipt.png" alt="" class="walletListTxt">
-              Receipt
+              Receive
             </router-link>
             <router-link :to="{name: 'transfer', 
               query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
                <img src="../../assets/image/walletTransfer.png" alt="" class="walletListTxt">
-              Transfer
+              Sent
             </router-link>
           </section>
         </section>
@@ -86,7 +86,7 @@
 
         
         <el-dialog
-          title="prompt"
+          title=""
           :visible.sync="centerDialogVisible"
           width="432px"
           :show-close = true
@@ -94,7 +94,7 @@
           top="30vh"
           center>
           <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            Whether to delete the wallet
+            Are you sure you want to delete this wallet? You will not be able to recover it without your backup phrases.
           </p>
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="deleteWallet">Confirm</button>

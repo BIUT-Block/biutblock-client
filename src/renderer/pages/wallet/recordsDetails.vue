@@ -43,12 +43,12 @@
              </section>
 
              <section>
-               <span class="detailsListTxt">Beneficiary</span>
+               <span class="detailsListTxt">Receive</span>
                 0x{{detailsBeneficiary}}
              </section>
 
              <section>
-               <span class="detailsListTxt">Sending party</span>
+               <span class="detailsListTxt">Sent</span>
                 0x{{detailsSending}}
              </section>
 

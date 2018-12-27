@@ -18,7 +18,7 @@
              walletPwd: this.walletPwd, walletBalance: this.walletMoney, colorArr: this.colorArr,pageId: 1 }}" class="publicWalletHListIcon">
               <i class="el-icon-arrow-left icon_nav"></i>
             </router-link>
-            <span class="publicWalletHTit">Receipt</span>
+            <span class="publicWalletHTit">Receive</span>
           </section>
           
           <section class="receiptCnt">
@@ -36,7 +36,7 @@
             <qr-code :value="walletAddress,money" :size="170" class="receiptCntImg">
             </qr-code>
     
-            <button data-clipboard-target="#address" class="publicBtn publicBtnAcitve" @click="copyCnt">Copy payment address</button>
+            <button data-clipboard-target="#address" class="publicBtn" :class="isCopied ? '':'publicBtnActive'" @click="copyCnt">{{copyBtnText}}</button>
           </section>
         </section>
       </el-col>
@@ -62,12 +62,16 @@ export default {
       walletsArr: this.$route.query.walletsArr,
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
-      colorArr: this.$route.query.colorArr
+      colorArr: this.$route.query.colorArr,
+      copyBtnText: 'Copy Receipt address',
+      isCopied: false
     }
   },
   methods: {
     copyCnt () {
       var clipboard = new Clipboard('.publicBtn')
+        this.isCopied = true
+        this.copyBtnText = 'Copied'
         clipboard.on('success', e => {
           this.$alert('Copy success', 'Warm prompt', {
             confirmButtonText: 'Confirm',

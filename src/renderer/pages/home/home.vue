@@ -64,9 +64,9 @@
         <section class="homeMock">
          
          <section style="display:flex;flex-direction: column;flex-basis: 124px;border-right: 1px solid rgba(200,209,218,0.5);text-align:right;padding-top: 33px;">
-           <span :class="mockActive1" @click="tapMock1">Switch language</span>
+           <span :class="mockActive1" @click="tapMock1">Language</span>
 
-           <span style="margin-top: 21px;padding-right: 15px;" :class="mockActive2" @click="tapMock2">About wallet</span>
+           <span style="margin-top: 21px;padding-right: 15px;" :class="mockActive2" @click="tapMock2">Version</span>
          </section>
 
          <section style="padding-top: 33px;padding-left: 12px;" v-show="homeMockCnt2">

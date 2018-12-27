@@ -10,20 +10,20 @@
                 <i class="el-icon-minus icon_nav" @click="minimalApp"></i>
                 <i class="el-icon-close icon_nav" @click="exitApp"></i>
               </section> -->
-              <h1 class="loginTit">Password login</h1>
+              <h1 class="loginTit">Login</h1>
               <input type="password" v-model="loginValue"  maxlength="30" class="loginIpt" placeholder="Please enter your password"></input>
-              <button type="button" class="logoBtn pointerTxt" :disabled="!logoBtnAcitve" :class="logoBtnAcitve?'logoBtnAcitve':''" @click="loginBtn">Login</button>
+              <button type="button" class="logoBtn pointerTxt" :disabled="!logoBtnAcitve" :class="logoBtnAcitve?'logoBtnAcitve':''" @click="loginBtn">Submit</button>
               <section class="errorCnt">
                 <!-- <p v-if="errorTxt" class="errorTxt">Wrong private key format</p> -->
                 <span v-if="errorTxt" class="errorTxt">Wrong password</span>
               </section>
-              <p class="loginTxt">No wallet? <span class="TxtColor pointerTxt" @click="createNew">Click here to create a new</span></p>
+              <p class="loginTxt">No wallet? <span class="TxtColor pointerTxt" @click="createNew">Create Wallet</span></p>
            </section>
         </section>
       </el-col>
     </el-row>
     <el-dialog
-      title="prompt"
+      title=""
       :visible.sync="centerDialogVisible"
       width="432px"
       :show-close = true
@@ -34,7 +34,7 @@
          This operation will delete all your local wallet data, 
       </p>
       <p style="color: #939CB2;font-size:14px;text-align: center;margin-bottom: 85px;">
-         please confirm to continue or you can close this prompt.
+         press confirm to continue or close the window.
       </p>
       <span slot="footer" class="dialog-footer">
         <button class="publicBtn publicBtnAcitve" @click="createNew2">Confirm</button>

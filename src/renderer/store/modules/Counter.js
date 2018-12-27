@@ -23,7 +23,10 @@ const mutations = {
     state.progressCount = 100
     state.progress = state.progressAll
     state.updateTime = new Date().toString()
-    state.disableMiningBtn = false
+    // state.disableMiningBtn = false
+  },
+  setMiningBtn: (state, isDisable) => {
+    state.disableMiningBtn = isDisable
   },
   setMining: (state, isActive) => {
     state.mining = isActive
