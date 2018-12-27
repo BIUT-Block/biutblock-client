@@ -252,6 +252,7 @@ export default {
       })
       this.refresh = true
       this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
+        console.log(response)
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
