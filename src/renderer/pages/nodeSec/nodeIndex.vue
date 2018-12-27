@@ -6,26 +6,27 @@
           <section class="nodeCntH">
 
             <p class="nodeTit">Node information</p>
-
-            <p class="" style="width:77px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
-              <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">IP address：</span>
-                <span style="line-height:1.5">{{ipAddress}}</span>
+            <p class="nodeTitle1">
+              <span class="nodeTxt nodeTxtM">IP address：</span>
+                <span class='nodeTxtL'>{{ipAddress}}</span>
             </p>
 
-            <p class="" style="width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;color: #939CB2;">
-              <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">Current system time：</span>
-               <span style="line-height:1.5">{{systemTime.substring(0,34)}}</span>
+            <p class="nodeTitle2">
+              <span class="nodeTxt nodeTxtM">Current system time：</span>
+               <span class='nodeTxtL'>{{systemTime.substring(0,34)}}</span>
             </p>
 
-            <p class="" style="width:144px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;">
-              <span class="nodeTxt" style="margin-bottom:5px;color: #C8D1DA;">local time：</span>
-               <span style="line-height:1.5">{{localTime.substring(0,34)}}</span>
+            <p class="nodeTitle3">
+              <span class="nodeTxt nodeTxtM">local time：</span>
+               <span class='nodeTxtL'>{{localTime.substring(0,34)}}</span>
             </p>
           </section>
 
           <section class="nodeListCnt">
             <section class="nodeListCntP">
               <section>
+                
+                <!--  :class="disabledList == true?'disabledList':''" 设置不能点击要设置 disabledList 值 -->  
                 <section class="selectWalletTit" @click="checkWallet" id="selectWalletList">
                   <span>{{walletName}}</span>
                   <img src="../../assets/image/walletList.png" width="14px" height="14px" alt="">
@@ -36,7 +37,7 @@
                   </ul>
                 </transition>
               </section>
-               <section class="nodeSwitch">
+              <section class="nodeSwitch">
                   <el-switch
                     v-model="progressVal"
                     active-color="#C8D1DA"
@@ -46,24 +47,40 @@
                     <!-- 默认不可点击，进度条加载完成之后可点击 -->
                   </el-switch>
                   <span style="color:#C8D1DA;margin-left:5px;">Mining</span>
-                </section>
+              </section>
             </section>
+
+            <!-- 内容公共展示的部分 -->
             <p class="updateTime">Last update time</p>
             <p class="updateTime2">{{updateTime}}</p>
-            <p style="margin-top: 57px;width:480px" v-show="!timeCntShow">
-              <el-progress :percentage="progressPercentage"></el-progress>
-              <section style="display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px">
-                 <span>{{progress}} GB / {{progressAll}} GB</span> 
-                 <span>{{consumptionTimt}}</span> 
+           
+            <section class="digContent" v-show="digContent">
+              <!-- 点击挖矿 -->
+              <section  v-show="timeCntShow">
+                <input type="text" readonly v-model="timeCnt">
               </section>
-            </p>
+              
+              <!-- 开始挖矿的百分比加载 -->
+              <section >
+                <p class="digContentH" v-show="!timeCntShow">
+                  <el-progress :percentage="progressPercentage"></el-progress>
+                  <section class="loadingCnt">
+                    <span>{{progress}} GB / {{progressAll}} GB</span> 
+                    <span>{{consumptionTimt}}</span> 
+                  </section>
+                </p>
+              </section>
+              
+              <button class="publicBtn publicBtnAcitve" :disabled="alreadySelectWallet" style="margin-top: 80px;" @click="startSyncing">
+                {{startBtn}}
+              </button>
+            </section>
+            
+            <!-- 挖矿中的 gif动态图 -->
+            <section class="digImg" v-show="digImg">
+              <img src="../../assets/image/node.gif" alt="" width="541px" height="116px">
+            </section>
 
-            <!-- 点击挖矿 -->
-            <input type="text" v-model="timeCnt" v-show="timeCntShow">
-
-            <button class="publicBtn publicBtnAcitve" :class="startBtnActive" :disabled="alreadySelectWallet" style="margin-top: 80px;" @click="startSyncing">
-              {{startBtn}}
-            </button>
           </section>
         </section>
         
@@ -74,25 +91,14 @@
           :closeOnClickModal = false
           top="30vh"
           center>
-          <p style="text-align: center;font-size:16px;margin:62px 0 93px;">Insufficient balance, unable to mine</p>
+          <p style="text-align: center;font-size:16px;margin:62px 0 93px;">
+            {{digContainer}}
+          </p>
           <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Recharge immediately</button>
+            <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Confirm</button>
           </span>
         </el-dialog>
-
-        <el-dialog
-          title="prompt"
-          :visible.sync="showDialog"
-          width="430px"
-          :closeOnClickModal = false
-          top="30vh"
-          center>
-          <p style="text-align: center;font-size:16px;margin:62px 0 93px;">Please choose the wallet you need to mine.</p>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="showDialog=false">Determine</button>
-          </span>
-        </el-dialog>
-
+        
       </el-col>
     </el-row>
   </el-container>
@@ -111,22 +117,36 @@ export default {
       timeCntShow: true,
       listIndex:false,//点击选择钱包
       walletName: 'Please choose a wallet',//钱包name
-      showDialog: false,//是否选择钱包的弹窗
       walletListActive:'',//钱包选中样式
       walletsArr: this.$route.query.walletsArr,
       walletName: 'Please choose a wallet',//钱包name
       selectedWallet: this.$store.state.Counter.selectedWallet === ''? '' : this.$store.state.Counter.selectedWallet ,
       startSyncBtn: true,
-      centerDialogVisible: false,
+      centerDialogVisible: false,//挖矿提示弹窗
+      digContainer:'',//挖矿弹窗内容
       progressVal: this.$store.state.Counter.mining,
       consumptionTimt: '00:00:05',
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
-      alreadySelectWallet: true
+      alreadySelectWallet: true,
+
+      digContent: true, //主要内容页面
+      digImg: false, // 挖矿动图默认不展示
+
     }
   },
   created () {
+    //关闭状态下 是true  打开状态下是 false this.progressVal
+    if (this.progressVal == true) {
+      this.digContent = true
+      this.digImg = false
+      this.timeCntShow = true
+    } else {
+      this.digImg = true
+      this.digContent = false
+    }
+
     EventBus.$emit('changeSetVisibil', {
         isVisible: false,
         from: 'nodeinfo'
@@ -202,11 +222,6 @@ export default {
       }
     },
     startSyncing () {
-      //如果没有选择钱包先弹窗提示选钱包
-      if (this.walletValue == 'Please choose a wallet') {
-        this.showDialog = true
-        return
-      }
       EventBus.$emit('changeSetVisibil', {
         isVisible: false,
         from: 'nodeinfo'
@@ -293,9 +308,13 @@ export default {
           }   
           if (response) {
             this.$store.commit('setMining', false)
-            this.$alert('Begin Mining successfull', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
+            // this.$alert('Begin Mining successfull', 'prompt', {
+            //     confirmButtonText: 'Confirm',
+            // });
+            this.centerDialogVisible = true //挖矿弹窗
+            this.digContainer = 'Begin Mining successfull' //弹窗内容
+            this.digContent = false //开始挖矿就把内容页隐藏
+            this.digImg = true //展示动画页
           } else {
             this.progressVal = true
             this.$alert('Can not start mining', 'prompt', {
@@ -315,9 +334,14 @@ export default {
           
           if (response) {
             this.$store.commit('setMining', true)
-            this.$alert('Stop Mining successfull', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
+            // this.$alert('Stop Mining successfull', 'prompt', {
+            //     confirmButtonText: 'Confirm',
+            // });
+            this.centerDialogVisible = true //挖矿弹窗
+            this.digContainer = 'Stop Mining successfull' //弹窗内容
+            this.digContent = true //停止挖矿就把内容页显示
+            this.digImg = false //关闭动画页
+            this.timeCntShow = true //展示最初的页面
           } else {
             this.progressVal = false
             this.$alert('Can not stop mining', 'prompt', {
@@ -334,9 +358,16 @@ export default {
 </script>
 
 <style scoped>
-.ipt {width:336px;height:36px;margin: 43px 0 56px;outline: none;border-radius: 18px;
-  border:1px solid #8C91A9;color:#263253;text-align: center;}
-
+.nodeTitle1 {width:77px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;}
+.nodeTitle2 {width:144px;margin:28px 104px 0 94px;display:flex;flex-direction:column;color: #939CB2;}
+.nodeTitle3 {width:144px;margin-top:28px;display:flex;flex-direction:column;color: #939CB2;}
+.nodeTxtM {margin-bottom:5px;color: #C8D1DA;}
+.nodeTxtL {line-height:1.5}
+.digImg {padding-top:125px;}
+.digContent {text-align:center;}
+.digContentH {margin-top: 57px;width:480px}
+.loadingCnt {display: flex;justify-content: space-between;color: #657292;margin: 11px 40px 0px 0px;}
+.disabledList {pointer-events: none;}
 .nodeCnt {width: 826px;height: 532px;border-radius: 2px;background: #fff;
 display: flex;flex-direction: column;margin: 24px 32px;box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
 

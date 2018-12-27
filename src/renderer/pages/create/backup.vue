@@ -389,8 +389,8 @@ export default {
 .backupTitle1 {margin: 50px 0 10px;}
 .backupTitle2 {margin: 25px 0 6px;}
 .wordsContent {display: flex;flex-wrap: wrap;height: auto;}
-.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;color: #657292;
-box-shadow:0px 5px 15px rgba(217,232,223,0.2);opacity:1;padding: 0 10px;margin: 0 4px 16px 0;}
+.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;font-size: 14px;
+  color: #657292;padding: 0 10px;margin: 0 4px 16px 0;}
 .keyTxt {width:510px;height:42px;background:rgba(243,248,247,.7);border-radius:4px;padding-left: 14px;
   line-height: 42px;color: #657292;font-size: 14px;}
 .backupBtn {padding-top: 36px;text-align: center;}

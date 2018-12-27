@@ -23,7 +23,7 @@
     
     <section class="walletPosition" v-if="walletPosition">
       <!-- 备份助记词 -->
-      <section class="walletContainer" :class="walletContainer1">
+      <section class="walletContainer">
           <section class="walletHeader">
             <span class="el-icon-arrow-left icon_txt" @click="returnWallet"></span>
             <span class="walletHeaderTit">New wallet</span>
@@ -231,7 +231,6 @@ export default {
       importError: false, //导入助记词错误的时候 设置成true
       enterWalletContent: false, //点击 进入钱包之后 给出下面展示的提示
       enterButton: true, //确认开始就可以点击
-      walletContainer1: 'walletContainer1',//备份助记词开始的高度
 
       //备份助记词
       walletPosition: false, //打开备份助记词界面
@@ -292,14 +291,12 @@ export default {
       this.createDialog = true
       this.enterButton = true //备份助记词按钮可点击
       this.enterWalletContent = false //展示备份助记词的 内容页关闭
-      this.walletContainer1 = 'walletContainer1'
     },
     //关闭备份助记词界面
     closeWallet () {
       this.walletPosition = false
       this.enterButton = true //备份助记词按钮可点击
       this.enterWalletContent = false //展示备份助记词的 内容页关闭
-      this.walletContainer1 = 'walletContainer1'
       this.enterWallet()
       this.enterTheWallet()
     },
@@ -449,7 +446,6 @@ export default {
       //this.agreementDialog = true
       this.enterWalletContent = true
       this.enterButton = false
-      this.walletContainer1 = 'walletContainer2' //切换高度
     },
     createWallet () {
       this.newWalletName = ''
@@ -592,7 +588,7 @@ export default {
     },
                   
     importingFrom() {
-       this.createDialog = false
+       // this.createDialog = false //助记词错误的时候不关闭当前页面
       try{
         this.mnemonicWallet.privateKey = SECUtil.mnemonicToEntropy(this.mnemonicTxt)
         let privKey64Buffer = Buffer.from(this.mnemonicWallet.privateKey, 'hex')
@@ -606,10 +602,15 @@ export default {
         //       confirmButtonText: 'Confirm',
         //  });
       } catch(e) {
-        this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
-              confirmButtonText: 'Confirm',
-          });
-        return
+        //之前提示助记词错误弹窗，现在关闭了
+        // this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
+        //       confirmButtonText: 'Confirm',
+        //       callback: action => {
+                
+        //       }
+        //   });
+          this.importError = true
+          return
       }
       // read local file
       let dirPath = require('os').homedir() + '/secwallet'
@@ -798,7 +799,7 @@ export default {
 .borderColor2 {border-left: 2px solid #F5A623;}
 .borderColor3 {border-left: 2px solid #FF8DB2;}
 .borderColor4 {border-left: 2px solid #7498FB;}
-.color0 {background:#00D6B2 !important;color:#fff;border-left: none;}
+.color0 {background:#00D6B2!important;color:#fff!important;border-left: none;}
 
 /* 创建钱包 */
 .mainCntTab {display: flex;justify-content: space-between;width: 400px;margin: 74px auto 0;}
@@ -812,10 +813,10 @@ export default {
 .createBColor {border-color: #FF8DB2!important;}
 
 /* 备份助记词 */
-.walletPosition {position: fixed;top: 0;left: 0;right: 0;bottom:0;background:rgba(36,46,73,.3);z-index: 99;}
-.walletContainer {position: fixed;background: #fff;width:694px;z-index: 100;}
-.walletContainer1 {top: 52px;left:153px;height:476px;}
-.walletContainer2 {top: 8px;left:153px;height:564px;}
+.walletPosition {position: fixed;top: 0;left: 0;right: 0;bottom:0;background:rgba(36,46,73,.3);
+z-index: 99;display: flex;align-items: center;justify-items: center;}
+.walletContainer {background: #fff;width:694px;z-index: 100;height:auto;margin: 0 auto;}
+
 .icon_txt {font-size:16px;font-weight:bold;color:#C8D1DA;}
 .walletHeader {height:40px;border-bottom:1px solid rgba(96,98,115,0.1);display:flex;align-items: center;
   justify-content: space-between;padding: 0 16px 0 22px;}
@@ -823,16 +824,15 @@ export default {
 .backupContent {width:524px;margin: 0 auto;}
 .backupTitle {font-size:14px;color:rgba(147,156,178,1);}
 .backupTitle1 {margin: 24px 0 10px;}
-.backupTitle2 {margin: 11px 0 6px;}
+.backupTitle2 {margin: 16px 0 6px;}
 .wordsContent {display: flex;flex-wrap: wrap;height: auto;}
-.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;
-box-shadow:0px 5px 15px rgba(217,232,223,0.2);opacity:1;padding: 0 10px;margin: 0 4px 14px 0;color: #657292!important;}
+.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;font-size: 14px;
+  padding: 0 10px;margin: 0 4px 14px 0;color: #657292!important;}
 .keyTxt {width:510px;height:42px;background:rgba(243,248,247,.7);border-radius:4px;padding-left: 14px;
-  line-height: 42px;font-size: 14px;color: #657292!important;}
-.backupBtn {padding-top: 23px;text-align: center;}
+  line-height: 42px;font-size: 13px;color: #657292!important;}
+.backupBtn {padding: 30px 0;text-align: center;}
 
-.enterWalletContent {height:86px;background:rgba(68,79,107,1);display:flex;align-items:center;
-            padding-left:40px;margin-top:24px;}
+.enterWalletContent {height:86px;background:rgba(68,79,107,1);display:flex;align-items:center;padding-left:40px;}
 .enterWalletList {margin: 0 20px;color: #FF8DB2;font-size:12px;line-height: 1.5;}
 .enterWalletBtn {width:133px;text-align:center;line-height:36px;height:36px;font-size:14px;
   color:rgba(255,255,255,1); background:rgba(0,214,178,1);opacity:1;border-radius:4px;}
