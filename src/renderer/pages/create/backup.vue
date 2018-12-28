@@ -275,7 +275,7 @@ export default {
          })
          return
       }
-      this.$alert('Select a file format to save your english words', 'prompt', {
+      this.$alert('Select a file format to save your english words', '', {
           confirmButtonText: 'Confirm',
       });
       return

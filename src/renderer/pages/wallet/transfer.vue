@@ -184,12 +184,12 @@ export default {
     },
     transferFrom () {
       if (Number(this.amount) > Number(this.walletMoney)) {
-        this.$alert("You don't have enough balance.", 'prompt', {
+        this.$alert("You don't have enough balance.", '', {
             confirmButtonText: 'Confirm',
           });
         return
       } else if (this.walletAddress === this.address.replace('0x', '')) {
-        this.$alert("You can't tranfer to yourself.", 'prompt', {
+        this.$alert("You can't tranfer to yourself.", '', {
             confirmButtonText: 'Confirm',
           })
           return
@@ -207,7 +207,7 @@ export default {
       this.isDetermineClick = true
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
-        this.$alert("You don't have enough balance.", 'prompt', {
+        this.$alert("You don't have enough balance.", '', {
                 confirmButtonText: 'Confirm',
           });
       } else {
