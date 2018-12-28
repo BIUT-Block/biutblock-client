@@ -672,10 +672,19 @@ export default {
             });
             return
           }
-          this.keyFileDataJS[mnemonicName] = {
-            privateKey: this.mnemonicWallet.privateKey,
-            publicKey: this.mnemonicWallet.pubKey128ToString,
-            walletAddress: this.mnemonicWallet.userAddressToString
+
+          if (Number(mnemonicName) !== "NaN") {
+            this.keyFileDataJS[`"${mnemonicName}"`] = {
+              privateKey: this.mnemonicWallet.privateKey,
+              publicKey: this.mnemonicWallet.pubKey128ToString,
+              walletAddress: this.mnemonicWallet.userAddressToString
+            }
+          } else {
+            this.keyFileDataJS[mnemonicName] = {
+              privateKey: this.mnemonicWallet.privateKey,
+              publicKey: this.mnemonicWallet.pubKey128ToString,
+              walletAddress: this.mnemonicWallet.userAddressToString
+            }
           }
           let keyFileData = JSON.stringify(this.keyFileDataJS)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, pwd)
@@ -711,7 +720,7 @@ export default {
       let walletNamesArr = Object.keys(keyDataJSON)
       for (let walletName of walletNamesArr) {
         walletInfo = keyDataJSON[walletName]
-        walletInfo["walletName"] = walletName
+        walletInfo["walletName"] = walletName.replace(/"/g, '')
         walletsArr.push(walletInfo)
       }
       this._userAuthRequest(walletsArr, pwd)

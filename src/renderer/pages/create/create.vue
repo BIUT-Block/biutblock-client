@@ -167,8 +167,7 @@
           </span>
       </el-dialog>
       <el-dialog
-          title="prompt"
-          type="password"
+          title="prompt"     
           :visible.sync="newDialogVisible4"
           width="432px"
           :show-close = true
@@ -179,7 +178,7 @@
             {{newDialogLabel4}}
           </p>
           <el-input
-              type="text"
+              type="password"
               placeholder="Please input"
               v-model="newDialogInput4"
               clearable>
@@ -492,7 +491,7 @@ export default {
     },
 
     newDialogFn4() {
-      if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.newDialogInput5)){
+      if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.newDialogInput4)){
           this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
               confirmButtonText: 'Confirm',
           });
@@ -576,10 +575,18 @@ export default {
             this.newDialogVisible6 = true
             return
           }
-          this.keyFileDataJS[mnemonicName] = {
-            privateKey: this.mnemonicWallet.privateKey,
-            publicKey: this.mnemonicWallet.pubKey128ToString,
-            walletAddress: this.mnemonicWallet.userAddressToString
+          if (Number(mnemonicName) !== "NaN") {
+            this.keyFileDataJS[`"${mnemonicName}"`] = {
+              privateKey: this.mnemonicWallet.privateKey,
+              publicKey: this.mnemonicWallet.pubKey128ToString,
+              walletAddress: this.mnemonicWallet.userAddressToString
+            }
+          } else {
+            this.keyFileDataJS[mnemonicName] = {
+              privateKey: this.mnemonicWallet.privateKey,
+              publicKey: this.mnemonicWallet.pubKey128ToString,
+              walletAddress: this.mnemonicWallet.userAddressToString
+            }
           }
           let keyFileData = JSON.stringify(this.keyFileDataJS)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, pwd)
@@ -593,7 +600,7 @@ export default {
           })
           this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
         } catch(e) {
-          this.$alert('Login error! Please confirm your password', '', {
+          this.$alert('Can not import the wallet', '', {
                 confirmButtonText: 'Confirm',
             });
         }
@@ -605,7 +612,7 @@ export default {
       let walletNamesArr = Object.keys(keyDataJSON)
       for (let walletName of walletNamesArr) {
         walletInfo = keyDataJSON[walletName]
-        walletInfo["walletName"] = walletName
+        walletInfo["walletName"] = walletName.replace(/"/g, '')
         walletsArr.push(walletInfo)
       }
       this._userAuthRequest(walletsArr, pwd)
