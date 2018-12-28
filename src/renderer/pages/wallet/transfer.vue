@@ -64,7 +64,7 @@
             </section>
             <section>
               <span class="transferMockTxt">Receive</span>
-              {{formattedAddress}}
+              {{formattedAddress.replace(/(.{12}).+(.{11})/,'$1...$2')}}
             </section>
 
             <section>

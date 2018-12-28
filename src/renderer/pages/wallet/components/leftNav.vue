@@ -346,11 +346,20 @@ export default {
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
-          keyDataJSON[this.newWalletName] = {
-            privateKey: this.newPrivateKey,
-            publicKey: this.newPublicKey,
-            walletAddress: this.newAddress
+          if (Number(this.newWalletName) !== "NaN") {
+            keyDataJSON[`"${this.newWalletName}"`] = {
+              privateKey: this.newPrivateKey,
+              publicKey: this.newPublicKey,
+              walletAddress: this.newAddress
+            }
+          } else {
+            keyDataJSON[this.newWalletName] = {
+              privateKey: this.newPrivateKey,
+              publicKey: this.newPublicKey,
+              walletAddress: this.newAddress
+            }
           }
+          
           this.keyFileDataJS = keyDataJSON
           let keyFileData = JSON.stringify(keyDataJSON)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
@@ -412,7 +421,7 @@ export default {
       let walletInfo = {}
       for (let walletName of walletNamesArr) {
         walletInfo = this.keyFileDataJS[walletName]
-        walletInfo["walletName"] = walletName
+        walletInfo["walletName"] = walletName.replace(/"/g, '')
         walletsArr.push(walletInfo)
       }
       

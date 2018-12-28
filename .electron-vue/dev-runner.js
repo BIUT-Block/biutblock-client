@@ -72,8 +72,15 @@ function startRenderer () {
         }
       }
     )
-
-    server.listen(9080)
+    
+    try {
+      server.listen(9080, (err) => {
+        console.log('Hier is error' + err)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+    
   })
 }
 

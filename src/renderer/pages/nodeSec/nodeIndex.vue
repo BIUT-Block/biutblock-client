@@ -71,7 +71,7 @@
                 </p>
               </section>
               
-              <button class="publicBtn publicBtnAcitve" :disabled="alreadySelectWallet" style="margin-top: 80px;" @click="startSyncing">
+              <button class="publicBtn" :class="alreadySelectWallet?'':'publicBtnAcitve'" :disabled="alreadySelectWallet" style="margin-top: 80px;" @click="startSyncing">
                 {{startBtn}}
               </button>
             </section>
@@ -116,10 +116,10 @@ export default {
       localTime: '', 
       timeCntShow: true,
       listIndex:false,//点击选择钱包
-      walletName: 'Please choose a wallet',//钱包name
+      walletName: this.$route.query.walletsArr[0] ? this.$route.query.walletsArr[0].walletName : 'Please choose a wallet',//钱包name
       walletListActive:'',//钱包选中样式
       walletsArr: this.$route.query.walletsArr,
-      walletName: 'Please choose a wallet',//钱包name
+//      walletName: 'Please choose a wallet',//钱包name
       selectedWallet: this.$store.state.Counter.selectedWallet === ''? '' : this.$store.state.Counter.selectedWallet ,
       startSyncBtn: true,
       centerDialogVisible: false,//挖矿提示弹窗
@@ -129,7 +129,7 @@ export default {
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
-      alreadySelectWallet: false,
+      alreadySelectWallet: !this.$store.state.Counter.disableMiningBtn,
 
       digContent: true, //主要内容页面
       digImg: false, // 挖矿动图默认不展示
@@ -162,6 +162,11 @@ export default {
     if(this.$store.state.Counter.selectedWallet !== '') {
       let wallet = this.walletsArr.filter( (item) => item.walletAddress === this.$store.state.Counter.selectedWallet)
       this.walletName = wallet[0].walletName
+    } else {
+      if (this.walletName !== 'Please choose a wallet') {
+        this.selectedWallet = this.$route.query.walletsArr[0].walletAddress
+        this.$store.commit('setSelectedWallet', this.selectedWallet)
+      }
     }
 
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
@@ -185,7 +190,6 @@ export default {
       this.walletListActive = 'walletListActive'
       this.listIndex = false
       this.startBtnActive = ''
-      this.alreadySelectWallet = false
       this.$store.commit('setMiningBtn', false)
       if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== item.walletAddress ) {
         this.$store.commit('setSelectedWallet', item.walletAddress)
@@ -266,6 +270,7 @@ export default {
                 this.$store.commit('setMiningBtn', false)
               }
               this.startBtn = 'Syncing complete'
+              this.alreadySelectWallet = !this.$store.state.Counter.disableMiningBtn
               clearInterval(progressInterval)
             }
           }.bind(this), 1000)

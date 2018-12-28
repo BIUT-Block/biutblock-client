@@ -168,6 +168,7 @@
       </el-dialog>
       <el-dialog
           title="prompt"
+          type="password"
           :visible.sync="newDialogVisible4"
           width="432px"
           :show-close = true
@@ -199,7 +200,7 @@
             {{newDialogLabel5}}
           </p>
           <el-input
-              type="text"
+              type="password"
               placeholder="Please input"
               v-model="newDialogInput5"
               clearable>
@@ -377,7 +378,7 @@ export default {
       let walletNamesArr = Object.keys(keyDataJSON)
       if (walletNamesArr.indexOf(name) > -1) {
           //In the array!
-          this.$alert("Wallet name already exists", 'prompt', {
+          this.$alert("Wallet name already exists", '', {
                 confirmButtonText: 'OK',
           });
           return
@@ -385,7 +386,7 @@ export default {
           //Not in the array
         // 创建钱包方法
         if (this.confirmP != this.password) {
-           this.$alert('The password input is inconsistent twice, please re-enter', 'prompt', {
+           this.$alert('The password input is inconsistent twice, please re-enter', '', {
               confirmButtonText: 'Confirm',
           });
           return;
@@ -467,7 +468,7 @@ export default {
         if(err) {
           return
         }
-        this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+        this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
               confirmButtonText: 'Confirm',
               confirmButtonClass: 'ListBtn'
           });
@@ -484,24 +485,36 @@ export default {
         // let mnemonicPwd = prompt('您选择了新建账户，请设置密码')
         this.newDialogVisible5 = true
       } else {
-        this.$alert('Please enter 1 or 2', 'prompt', {
+        this.$alert('Please enter 1 or 2', '', {
               confirmButtonText: 'Confirm',
           });
       }    
     },
 
     newDialogFn4() {
+      if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.newDialogInput5)){
+          this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
+              confirmButtonText: 'Confirm',
+          });
+          return;
+        }
       fs.readFile(this.filePath, 'utf-8', this._fileRequest.bind(this, this.newDialogInput4, this.newDialogInput1))
     },
 
     newDialogFn5() {
       let keyFileData = JSON.stringify(this.keyFileDataJS)
       let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.newDialogInput5)
+      if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.newDialogInput5)){
+          this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
+              confirmButtonText: 'Confirm',
+          });
+          return;
+        }
       fs.writeFile(this.filePath, cipherKeyData, (err) => {
         if(err) {
           return
         }
-        this.$alert(`Already saved the secure file would be saved in ${this.filePath}`, 'prompt', {
+        this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
               confirmButtonText: 'Confirm',
           });
       })
@@ -574,13 +587,13 @@ export default {
             if(err) {
               return
             }
-            this.$alert(`Already saved the secure file. The file would be saved in ${this.filePath}`, 'prompt', {
+            this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
                 confirmButtonText: 'Confirm',
             });
           })
           this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
         } catch(e) {
-          this.$alert('Login error! Please confirm your password', 'prompt', {
+          this.$alert('Login error! Please confirm your password', '', {
                 confirmButtonText: 'Confirm',
             });
         }

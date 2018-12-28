@@ -74,6 +74,7 @@
     "jsonwebtoken": "^8.3.0",
     "mdi": "^2.2.43",
     "net-ping": "^1.2.3",
+    "portfinder": "^1.0.20",
     "qrious": "^4.0.2",
     "telnet-client": "^0.16.1",
     "vue": "^2.5.20",
