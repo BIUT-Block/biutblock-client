@@ -33,7 +33,7 @@
               <img src="../../assets/image/receiptImg.png" alt="">
             </figure> -->
 
-            <qr-code :value="walletAddress,money" :size="170" class="receiptCntImg">
+            <qr-code :value="`0x${walletAddress},money`" :size="170" class="receiptCntImg">
             </qr-code>
     
             <button data-clipboard-target="#address" class="publicBtn" :class="isCopied==true?'':'publicBtnAcitve'" @click="copyCnt">{{copyBtnText}}</button>
@@ -56,6 +56,7 @@ export default {
     return {
       money: 0,
       walletAddress: this.$route.query.walletAddress,
+      
       privateKey: this.$route.query.privateKey,
       publicKey: this.$route.query.publicKey,
       walletMoney: this.$route.query.walletMoney,
