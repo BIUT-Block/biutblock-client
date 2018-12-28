@@ -297,7 +297,7 @@ export default {
       handler() {
       console.log(this.progressVal)
       if (!this.progressVal) {
-        this.state.$commit('setSelectedWallet', this.selectedWallet)
+        this.$store.commit('setSelectedWallet', this.selectedWallet)
         this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
           if (err) {
             return
