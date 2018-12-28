@@ -273,7 +273,7 @@ export default {
               this.alreadySelectWallet = !this.$store.state.Counter.disableMiningBtn
               clearInterval(progressInterval)
             }
-          }.bind(this), 1000)
+          }.bind(this), 2500)
         }
       })
       //this.centerDialogVisible = true
