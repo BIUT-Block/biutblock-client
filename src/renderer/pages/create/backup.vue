@@ -114,19 +114,20 @@
             top="25vh"
             center>
             <section style="text-align: center;">
-              <img src="../../assets/image/errorMax.png" alt="Prompt-SEC" width="48px" height="48px" class="agreementImg">
+              <img src="../../assets/image/errorMax.png" alt="Prompt-SEC" width="40px" height="40px" class="agreementImg">
               <p class="agreementTxt">
-                Be sure to back up your phrase. You can retrieve
+                Be sure to back up your phrase. You can retrieve your wallet and 
               </p>
               <p class="agreementTxt">
-                your wallet and retrieve your password with the phrase or the private keys. 
+                retrieve your password with the phrase or the private keys.
               </p>
+              <p class="agreementTxt">If you lose both of the phrase and the private key, you will</p>
               <p class="agreementTxt">
-                If you lose both of the phrase and the private key, you will permanently lose your assets.
+                permanently lose your assets.
               </p>
             </section>
             <span slot="footer" class="dialog-footer">
-              <button class="publicBtn publicBtnAcitve" style="margin-top:28px"  @click="enterWallet">Enter the wallet</button>
+              <button class="publicBtn publicBtnAcitve" style="margin-top:30px"  @click="enterWallet">Enter the wallet</button>
             </span>
           </el-dialog>
 
@@ -389,13 +390,11 @@ export default {
 .backupTitle1 {margin: 50px 0 10px;}
 .backupTitle2 {margin: 25px 0 6px;}
 .wordsContent {display: flex;flex-wrap: wrap;height: auto;}
-.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;font-size: 14px;
-  color: #657292;padding: 0 10px;margin: 0 4px 16px 0;}
-.keyTxt {width:510px;height:42px;background:rgba(243,248,247,.7);border-radius:4px;padding-left: 14px;
-  line-height: 42px;color: #657292;font-size: 14px;}
-.backupBtn {padding-top: 36px;text-align: center;}
-
-
+.wordsContent li {height: 32px;line-height: 32px;background:rgba(243,248,247,1);text-align: center;
+  font-size: 14px;color: #657292;padding: 0 10px;margin: 0 4px 16px 0;}
+.keyTxt {height:42px;background:rgba(243,248,247,.7);border-radius:4px;padding: 0 14px;
+  line-height: 42px;color: #657292;font-size: 13px;display: inline-block;}
+.backupBtn {padding-top: 42px;text-align: center;}
 
 
 .layoutCnt {display: flex;flex-direction: column;height: 100vh;justify-content: center;align-items: center;}
@@ -415,8 +414,8 @@ input[type="radio"]:checked + label::before {
 .downTxt {color: #C8D1DA;font-size: 12px;margin: 11px 24px 11px 24px;}
 .downTxt2 {font-size: 10ox;color: #657292;margin-right:5px;}
 
-.agreementImg {margin: 30px auto 20px;}
-.agreementTxt {font-size: 12px;margin: 5px 0;color:#FF8DB2;}
+.agreementImg {margin: 24px auto 7px;}
+.agreementTxt {font-size: 12px;margin-top: 8px;color:#FF8DB2;}
 
 
 ul {display: flex;height: 20px;}

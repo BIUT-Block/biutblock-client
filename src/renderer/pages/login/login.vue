@@ -33,7 +33,7 @@
       <p style="color: #939CB2;font-size:14px;text-align: center;margin-top: 60px;">
          This operation will delete all your local wallet data, 
       </p>
-      <p style="color: #939CB2;font-size:14px;text-align: center;margin-bottom: 85px;">
+      <p style="color: #939CB2;font-size:14px;text-align: center;margin-top:8px;margin-bottom: 85px;">
          press confirm to continue or close the window.
       </p>
       <span slot="footer" class="dialog-footer">
