@@ -54,9 +54,6 @@ function createWindow () {
     let SECRPC = new SECNODE.RPC(SECCore)
   
     SECRPC.runRPCServer()
-    /* pop up window for more time opened application */
-    //dialog.showErrorBox('SEC Wallet', 'Application already opened')
-
   mainWindow = new BrowserWindow({
     height: 580,
     useContentSize: true,
