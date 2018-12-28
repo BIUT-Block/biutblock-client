@@ -93,9 +93,12 @@
           :closeOnClickModal = false
           top="30vh"
           center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            Are you sure you want to delete this wallet? You will not be able to recover it without your backup phrases.
-          </p>
+          <section style="color: #FF8DB2;font-size:14px;text-align: center;margin: 40px 52px 60px;">
+            <p> Are you sure you want to delete this wallet?</p>
+            <p style="margin-top: 8px">You will not be able to recover it without your</p>
+            <p style="margin-top: 8px"> backup phrases.</p>
+          </section>
+         
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="deleteWallet">Confirm</button>
             <button class="publicBtn publicBtnAcitve" @click="centerDialogVisible = false">Cancel</button>
@@ -733,7 +736,7 @@ export default {
 
 section >>> .el-dialog__title {color: #939CB2}
 section >>> .el-dialog__header {height: 47px;line-height: 47px;padding: 0;border-bottom:1px solid rgba(200,209,218,0.5);}
-section >>> .el-dialog--center {height: 288px;}
+section >>> .el-dialog--center {height: 272px;}
 section >>> .el-dialog__body {padding-top: 0px;padding-bottom: 10px;}
 section >>> .el-dialog__footer {padding: 0;}
 section >>> .el-dialog__headerbtn {top: 15px!important;right: 16px!important;}

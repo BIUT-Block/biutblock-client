@@ -36,7 +36,7 @@
             <qr-code :value="walletAddress,money" :size="170" class="receiptCntImg">
             </qr-code>
     
-            <button data-clipboard-target="#address" class="publicBtn" :class="isCopied ? '':'publicBtnActive'" @click="copyCnt">{{copyBtnText}}</button>
+            <button data-clipboard-target="#address" class="publicBtn" :class="isCopied==true?'':'publicBtnAcitve'" @click="copyCnt">{{copyBtnText}}</button>
           </section>
         </section>
       </el-col>
@@ -64,7 +64,8 @@ export default {
       walletName: this.$route.query.walletName,
       colorArr: this.$route.query.colorArr,
       copyBtnText: 'Copy Receipt address',
-      isCopied: false
+      isCopied: false,
+      total: 5
     }
   },
   methods: {
@@ -72,17 +73,27 @@ export default {
       var clipboard = new Clipboard('.publicBtn')
         this.isCopied = true
         this.copyBtnText = 'Copied'
+       
         clipboard.on('success', e => {
-          this.$alert('Copy success', 'Warm prompt', {
-            confirmButtonText: 'Confirm',
-          });
+          // this.$alert('Copy success', 'Warm prompt', {
+          //   confirmButtonText: 'Confirm',
+          // });
           clipboard.destroy()
+          
+          let clock = window.setInterval(() => {
+            var x = this.total--
+            if(this.total<0){
+              this.total = 5
+              this.copyBtnText = 'Copy Receipt address'
+              this.isCopied = false
+              window.clearInterval(clock)
+            }
+          },1000)
         })
         clipboard.on('error', e => {
           this.$alert('Automatic replication is not supported', 'Warm prompt', {
             confirmButtonText: 'Confirm',
           });
-
           clipboard.destroy()
         })
     },
