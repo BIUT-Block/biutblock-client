@@ -155,11 +155,11 @@ export default {
         return true
       }
       if (!/^[0-9.]+$/i.test(this.amount)) {
-        this.$alert('Wrong input formatt', 'prompt', {
+        this.$alert('Wrong input formatt', '', {
                 confirmButtonText: 'Confirm',
           });
       } else if (parseFloat(this.amount)>this.walletMoney) {
-        this.$alert("You don't have enough balance.", 'prompt', {
+        this.$alert("You don't have enough balance.", '', {
                 confirmButtonText: 'Confirm',
           });
       } else {
@@ -170,8 +170,8 @@ export default {
       if(this.address === "") {
         return true
       }
-      if (!/^[a-z0-9]+$/.test(this.address) && this.address.length !== 40 ) {
-        this.$alert('Invalid wallet address formatt', 'prompt', {
+      if (!/^[a-z0-9]+$/.test(this.address) || (this.address.length !== 40 && this.address.length !== 42))  {
+        this.$alert('Invalid wallet address formatt', '', {
                 confirmButtonText: 'Confirm',
           });
         this.address = ""

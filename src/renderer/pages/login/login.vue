@@ -118,7 +118,7 @@ export default {
           let walletInfo = {}
           for (let walletName of walletNamesArr) {
             walletInfo = keyDataJSON[walletName]
-            walletInfo["walletName"] = walletName
+            walletInfo["walletName"] = walletName.replace(/"/g, '')
             walletsArr.push(walletInfo)
           }
           this._userAuthRequest(walletsArr, loginValue)
