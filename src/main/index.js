@@ -27,8 +27,8 @@ const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000'
 let shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
-    if (mainWindow.isMinimized()) myWindow.restore()
-    myWindow.focus()
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.focus()
   }
 });
 
