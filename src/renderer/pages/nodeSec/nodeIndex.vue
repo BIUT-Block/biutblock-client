@@ -39,6 +39,7 @@
               </section>
               <section class="nodeSwitch">
                   <el-switch
+                    id="miningToggle"
                     v-model="progressVal"
                     active-color="#C8D1DA"
                     inactive-color="#00D6B2"
@@ -179,6 +180,9 @@ export default {
   methods: {
     //切换钱包选择
     checkWallet() {
+ //     let toggle = document.querySelector('.el-switch__core')
+ //     console.log(toggle)
+ //     document.styleSheets[0].addRule('.el-switch__core:after', 'top: -2px; left: -1px; border: 3px solid #00D6B2')
       this.listIndex = !this.listIndex
     },
     //选择钱包
@@ -347,6 +351,7 @@ export default {
           }
           
           if (response) {
+            this.$store.commit('setUpdateTime')
             this.$store.commit('setMining', true)
             this.$store.commit('setMiningBtn', true)
             this.$store.commit('resetProgressValue')
@@ -415,7 +420,7 @@ box-shadow:0px 1px 6px rgba(0,0,0,0.16);}
 .nodeSwitch {color:#657292;}
 .updateTime {text-align:center;color:#C8D1DA;margin-top: 40px;}
 .updateTime2 {margin-top: 15px;font-size:14px;color:#939CB2;}
-
+.toggleAfterSync {top: -1px; left: -1px; border: 3px solid #00D6B2}
 .nodeTit {text-align: center;font-size: 16px;margin:28px 94px 0 24px;color:#657292;}
 
 

@@ -38,6 +38,9 @@ const mutations = {
     state.progressCount = 0
     state.progress = 0
     state.progressAll = 0
+  },
+  setUpdateTime: (state) => {
+    state.updateTime = new Date().toString()
   }
 }
 
