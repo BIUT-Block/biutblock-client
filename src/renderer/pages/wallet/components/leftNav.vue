@@ -346,7 +346,7 @@ export default {
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
-          if (Number(this.newWalletName) !== "NaN") {
+          if (!isNaN(Number(this.newWalletName))) {
             keyDataJSON[`"${this.newWalletName}"`] = {
               privateKey: this.newPrivateKey,
               publicKey: this.newPublicKey,
@@ -532,7 +532,7 @@ export default {
       let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
       let keyDataJSON = JSON.parse(keyData)
       let walletNamesArr = Object.keys(keyDataJSON)
-      if (walletNamesArr.indexOf(name) > -1) {
+      if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`) > -1) {
          // In the array!
          this.$alert("Wallet name already exists", '', {
                confirmButtonText: 'OK',
@@ -673,7 +673,7 @@ export default {
             return
           }
 
-          if (Number(mnemonicName) !== "NaN") {
+          if (!isNaN(Number(mnemonicName))) {
             this.keyFileDataJS[`"${mnemonicName}"`] = {
               privateKey: this.mnemonicWallet.privateKey,
               publicKey: this.mnemonicWallet.pubKey128ToString,

@@ -227,7 +227,7 @@ export default {
         try {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
-          if (Number(this.newWalletName) !== "NaN") {
+          if (!isNaN(Number(this.newWalletName))) {
             keyDataJSON[`"${this.newWalletName}"`] = {
               privateKey: this.newPrivateKey,
               publicKey: this.newPublicKey,

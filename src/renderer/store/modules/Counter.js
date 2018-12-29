@@ -33,6 +33,11 @@ const mutations = {
   },
   setSelectedWallet: (state, walletAddress) => {
     state.selectedWallet = walletAddress
+  },
+  resetProgressValue: (state) => {
+    state.progressCount = 0
+    state.progress = 0
+    state.progressAll = 0
   }
 }
 

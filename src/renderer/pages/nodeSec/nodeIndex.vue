@@ -129,8 +129,6 @@ export default {
       timeCnt: "You still not sync the data",
       startBtn: 'Start syncing',
       startBtnActive: '',
-      alreadySelectWallet: !this.$store.state.Counter.disableMiningBtn,
-
       digContent: true, //主要内容页面
       digImg: false, // 挖矿动图默认不展示
 
@@ -138,11 +136,10 @@ export default {
   },
   created () {
     //关闭状态下 是true  打开状态下是 false this.progressVal
-    if (this.progressVal == true) {
+    if (this.progressVal === true) {
       this.digContent = true
       this.digImg = false
-      this.timeCntShow = true
-    } else {
+    } else {    
       this.digImg = true
       this.digContent = false
     }
@@ -153,10 +150,11 @@ export default {
     })
 
     if (this.$store.state.Counter.progressAll !== 0) {
-      this.timeCntShow = false   
-      this.startBtnActive = 'startBtnActive'
-    } else if (this.selectedWallet === '') {
-      this.startBtnActive = 'startBtnActive'
+      this.timeCntShow = false
+      //this.startBtnActive = 'startBtnActive'
+    } else {
+      this.timeCntShow = true
+      //this.startBtnActive = 'startBtnActive'
     }
 
     if(this.$store.state.Counter.selectedWallet !== '') {
@@ -190,8 +188,8 @@ export default {
       this.walletListActive = 'walletListActive'
       this.listIndex = false
       this.startBtnActive = ''
-      this.$store.commit('setMiningBtn', false)
       if(!this.$store.state.Counter.mining && this.$store.state.Counter.selectedWallet !== item.walletAddress ) {
+        this.$store.commit('setMiningBtn', false)
         this.$store.commit('setSelectedWallet', item.walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === item.walletAddress)
         this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
@@ -247,11 +245,6 @@ export default {
       this.$JsonRPCClient.switchToLocalHost()
 
       this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
-        console.log(err)
-        console.log(response)
-        if (err) {
-          return
-        }
         if (response) {
           
           this.startBtnActive = 'startBtnActive'
@@ -270,7 +263,7 @@ export default {
                 this.$store.commit('setMiningBtn', false)
               }
               this.startBtn = 'Syncing complete'
-              this.alreadySelectWallet = !this.$store.state.Counter.disableMiningBtn
+//              this.alreadySelectWallet = !this.$store.state.Counter.disableMiningBtn
               clearInterval(progressInterval)
             }
           }.bind(this), 2500)
@@ -294,6 +287,16 @@ export default {
     },
     disabledBtn() {
       return this.$store.state.Counter.disableMiningBtn
+    },
+    alreadySelectWallet() {
+      if (this.$store.state.Counter.progressCount === 0) {
+        this.startBtn = 'Start syncing'
+        return false
+      } else {
+        this.startBtn = 'Syncing complete'
+        return true
+      }
+     //return !this.$store.state.Counter.disableMiningBtn
     }
 
   },
@@ -318,6 +321,7 @@ export default {
           }   
           if (response) {
             this.$store.commit('setMining', false)
+            this.$store.commit('setMiningBtn', false)
             // this.$alert('Begin Mining successfull', 'prompt', {
             //     confirmButtonText: 'Confirm',
             // });
@@ -344,9 +348,8 @@ export default {
           
           if (response) {
             this.$store.commit('setMining', true)
-            // this.$alert('Stop Mining successfull', 'prompt', {
-            //     confirmButtonText: 'Confirm',
-            // });
+            this.$store.commit('setMiningBtn', true)
+            this.$store.commit('resetProgressValue')
             this.centerDialogVisible = true //挖矿弹窗
             this.digContainer = 'Stop Mining successfull' //弹窗内容
             this.digContent = true //停止挖矿就把内容页显示

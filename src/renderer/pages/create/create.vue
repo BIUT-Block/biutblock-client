@@ -375,7 +375,7 @@ export default {
       let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
       let keyDataJSON = JSON.parse(keyData)
       let walletNamesArr = Object.keys(keyDataJSON)
-      if (walletNamesArr.indexOf(name) > -1) {
+      if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`)) {
           //In the array!
           this.$alert("Wallet name already exists", '', {
                 confirmButtonText: 'OK',
@@ -575,7 +575,7 @@ export default {
             this.newDialogVisible6 = true
             return
           }
-          if (Number(mnemonicName) !== "NaN") {
+          if (!isNaN(Number(mnemonicName))) {
             this.keyFileDataJS[`"${mnemonicName}"`] = {
               privateKey: this.mnemonicWallet.privateKey,
               publicKey: this.mnemonicWallet.pubKey128ToString,
