@@ -318,9 +318,9 @@ export default {
           }   
           if (response) {
             this.$store.commit('setMining', false)
-            this.$alert('Begin Mining successfull', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
+            // this.$alert('Begin Mining successfull', 'prompt', {
+            //     confirmButtonText: 'Confirm',
+            // });
             this.centerDialogVisible = true //挖矿弹窗
             this.digContainer = 'Mining is enabled successfully' //弹窗内容
             this.digContent = false //开始挖矿就把内容页隐藏

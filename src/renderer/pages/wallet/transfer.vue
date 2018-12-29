@@ -171,7 +171,7 @@ export default {
         return true
       }
       if (!/^[a-z0-9]+$/.test(this.address) || (this.address.length !== 40 && this.address.length !== 42))  {
-        this.$alert('Invalid wallet address formatt', '', {
+        this.$alert('Addresses are generally 42-bit characters beginning with 0x', '', {
                 confirmButtonText: 'Confirm',
           });
         this.address = ""

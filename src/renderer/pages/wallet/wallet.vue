@@ -35,13 +35,13 @@
             <router-link :to="{name: 'receipt', 
               query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
-              <img src="../../assets/image/walletReceipt.png" alt="" class="walletListTxt">
+              <img src="../../assets/image/receipt.png" alt="" class="walletListTxt">
               Receive
             </router-link>
             <router-link :to="{name: 'transfer', 
               query: {privateKey: this.privateKey, publicKey: this.publicKey, walletsArr: this.walletsArr, walletName: this.walletName, walletPwd: this.walletPwd, walletAddress: this.walletAddress, walletMoney: this.walletMoney, colorArr: this.colorArr,pageId: 1}}" 
               tag="button" class="pointerTxt walletListBtn">
-               <img src="../../assets/image/walletTransfer.png" alt="" class="walletListTxt">
+               <img src="../../assets/image/transfer.png" alt="" class="walletListTxt">
               Sent
             </router-link>
           </section>
