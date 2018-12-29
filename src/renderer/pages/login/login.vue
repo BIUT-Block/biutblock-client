@@ -210,8 +210,8 @@ flex-direction: column; background: url('../../assets/image/loginBg.png') no-rep
 border:1px solid #C8D1DA;border-radius: 4px;font-size: 14px;}
 .logoBtnAcitve {background: #00D6B2;}
 
-.loginTit {color: #657292;font-size: 22px;margin-bottom: 32px;font-weight: normal;padding-top: 180px;}
-.loginTxt {margin-top: 43px;color: #657292;}
+.loginTit {color: #657292;font-size: 22px;margin-bottom: 32px;font-weight: normal;padding-top: 150px;}
+.loginTxt {margin-top: 40px;color: #657292;}
 .errorCnt {height: 20px;width:100%;text-align: center;line-height: 20px;margin-top: 17px;}
 .errorTxt {color: #FF8DB2;font-size: 14px;}
 .loginIpt {width: 346px;height: 36px;margin-bottom:24px;outline: none;color:#657292;border:1px solid #C8D1DA;text-align: center;}
