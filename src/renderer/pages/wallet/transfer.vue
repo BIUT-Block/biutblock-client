@@ -54,7 +54,7 @@
         <el-dialog
           title="Sent Confirmation"
           :visible.sync="centerDialogVisible"
-          width="432px"
+          width="450px"
           top="30vh"
           center>
           <section class="transferMockList">
@@ -64,12 +64,12 @@
             </section>
             <section>
               <span class="transferMockTxt">Receive</span>
-              {{formattedAddress.replace(/(.{12}).+(.{11})/,'$1...$2')}}
+              {{formattedAddress}}
             </section>
 
             <section>
               <span class="transferMockTxt">Sent</span>
-              0x{{oneselfAddress.replace(/(.{10}).+(.{10})/,'$1...$2')}}
+              0x{{oneselfAddress}}
             </section>
 
             <!-- <section>
