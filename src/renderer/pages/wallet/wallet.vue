@@ -408,6 +408,7 @@ export default {
           let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
           let keyDataJSON = JSON.parse(keyData)
           delete keyDataJSON[walletName]
+          delete keyDataJSON[`"${walletName}"`] // I don't why, but it is help
           this.keyFileDataJS = keyDataJSON
           let keyFileData = JSON.stringify(keyDataJSON)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
