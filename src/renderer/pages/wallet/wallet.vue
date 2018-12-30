@@ -115,7 +115,9 @@ import leftNav from "./components/leftNav";
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
+const BufferHandler = require('../../lib/BufferHandler')
 import {EventBus} from "../../lib/EventBus.js"
+const bufferHandler = new BufferHandler()
 
 export default {
   name: "",
@@ -229,6 +231,22 @@ export default {
   },
 
   mounted() {
+    EventBus.$on('insertTransactions', function (params){
+      this.$JsonRPCClient.client.request('sec_getTransactions', [this.walletAddress], (err, response)=>{
+        if(err){
+          return
+        }
+        let packedTransactions = bufferHandler.filterOutPackedTransactions(params.transactions, response.result.resultInChain)
+        if (packedTransactions.length > 0){
+            this.$JsonRPCClient.client.request('sec_sendRawTransaction', packedTransactions, (err, response) => {
+            if(err){
+              return
+            }
+          }) 
+        }
+      })
+    })
+
     EventBus.$on('updateWalletInfo', function (walletParams) {
       const res = new Array(this.walletsArr.length).fill(false)
       res[walletParams.walletIndex] = !res[walletParams.walletIndex]
@@ -322,6 +340,7 @@ export default {
 
   beforeDestroy () {
     EventBus.$off('updateWalletInfo')
+    EventBus.$off('insertTransactions')
   },
 
   methods: {

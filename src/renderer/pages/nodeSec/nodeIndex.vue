@@ -180,10 +180,10 @@ export default {
   methods: {
     //切换钱包选择
     checkWallet() {
- //     let toggle = document.querySelector('.el-switch__core')
- //     console.log(toggle)
- //     document.styleSheets[0].addRule('.el-switch__core:after', 'top: -2px; left: -1px; border: 3px solid #00D6B2')
-      this.listIndex = !this.listIndex
+    //  let toggle = document.querySelector('.el-switch__core')
+    //  console.log(toggle)
+    //  document.styleSheets[0].addRule('.el-switch__core:after', 'top: -2px !important; left:-2px; border: 3px solid #00D6B2')
+       this.listIndex = !this.listIndex
     },
     //选择钱包
     checkWalletName(item){
