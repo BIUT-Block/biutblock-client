@@ -103,14 +103,11 @@ function createWindow () {
   } catch(err) {
     console.log(err)
   }
-  
+
   mainWindow.on('closed', () => {
-      mainWindow = null
+    mainWindow = null
   })
 }
-
-
-
 
 app.on('ready', createWindow)
 
