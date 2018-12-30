@@ -1,10 +1,14 @@
 {
-  "name": "secblock-wallet",
+  "name": "secblock-client",
   "version": "1.2.38",
   "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",
   "main": "./dist/electron/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SEC-Block/secblock-client"
+  },
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
     "release": "node .electron-vue/build.js && electron-builder",
