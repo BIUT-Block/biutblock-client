@@ -133,7 +133,6 @@ export default {
       walletAddress: "",
       walletName: "wallet 01",
       walletMoney: "1,000.2345678 SEC",
-      walletAddress: "",
       walletsArr: [],
       walletPwd: "",
       colorArr: [],
@@ -232,7 +231,7 @@ export default {
 
   mounted() {
     EventBus.$on('insertTransactions', function (params){
-      this.$JsonRPCClient.client.request('sec_getTransactions', [this.walletAddress], (err, response)=>{
+      this.$JsonRPCClient.client.request('sec_getTransactions', [params.walletAddress], (err, response)=>{
         if(err){
           return
         }

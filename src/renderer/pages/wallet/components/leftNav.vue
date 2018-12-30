@@ -499,7 +499,8 @@ export default {
         if(this.$store.state.Counter.progressCount === 100){
           let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
           EventBus.$emit('insertTransactions', {
-            transactions: transactions
+            transactions: transactions,
+            walletAddress: item.walletAddress
           })
         }
         EventBus.$emit('updateWalletInfo', {
