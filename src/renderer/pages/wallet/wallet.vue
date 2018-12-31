@@ -115,7 +115,9 @@ import leftNav from "./components/leftNav";
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
+const BufferHandler = require('../../lib/BufferHandler')
 import {EventBus} from "../../lib/EventBus.js"
+const bufferHandler = new BufferHandler()
 
 export default {
   name: "",
@@ -131,7 +133,6 @@ export default {
       walletAddress: "",
       walletName: "wallet 01",
       walletMoney: "1,000.2345678 SEC",
-      walletAddress: "",
       walletsArr: [],
       walletPwd: "",
       colorArr: [],
@@ -157,6 +158,12 @@ export default {
     } else {
       this.colorArr = [true].concat(new Array(this.walletsArr.length-1).fill(false))
     }
+
+    let transactions = bufferHandler.selectPackedTransactions(this.walletAddress)
+    EventBus.$emit('insertTransactions', {
+      transactions: transactions,
+      walletAddress: this.walletAddress
+    })
 
     this.walletList = []
     this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
@@ -218,10 +225,15 @@ export default {
         }
         if (this.walletList.length>4){
           this.moreCnt = true
-          this.showList = this.walletList.slice(0, 4) 
+          let tempArr = this.walletList.slice(0, 4)
+          tempArr.forEach(list => {
+            this.showList.push(list)
+          })
         }
         else {
-          this.showList = this.walletList
+          this.walletList.forEach(list => {
+            this.showList.push(list)
+          })
         }
         this.refresh = false
       }
@@ -229,6 +241,47 @@ export default {
   },
 
   mounted() {
+    let moneyValue = ''
+    let walletAddressTempInChain = ''
+    EventBus.$on('insertTransactions', (params) => {
+      this.showList = []
+      for (let i = 0; i < params.transactions.length; i++){
+        if (params.transactions[i].TxTo === this.walletAddress) {
+          moneyValue = "+ " + params.transactions[i].value
+          walletAddressTempInChain = params.transactions[i].from
+        } else {
+          moneyValue = "- " + params.transactions[i].value
+          walletAddressTempInChain = params.transactions[i].to
+        }
+        this.showList.push({
+          id: params.transactions[i].txHash,
+          blockNumber: 'Not in Block yet',
+          listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
+          listFrom: params.transactions[i].from,
+          listTo: params.transactions[i].to,    
+          listTime: new Date(params.transactions[i].timestamp).toUTCString(),
+          listMoney: moneyValue,
+          listMinerCost: params.transactions[i].gas, 
+          listState: "Packed"
+        })
+      }
+      //let packedTransactions = bufferHandler.filterOutPackedTransactions(params.transactions, response.result.resultInChain)
+      // this.$JsonRPCClient.client.request('sec_getTransactions', [params.walletAddress], (err, response)=>{
+      //   if(err){
+      //     return
+      //   }
+      //   let packedTransactions = bufferHandler.filterOutPackedTransactions(params.transactions, response.result.resultInChain)
+      //   if (packedTransactions.length > 0){
+      //       this.$JsonRPCClient.client.request('sec_sendRawTransaction', packedTransactions, (err, response) => {
+      //       if(err){
+      //         return
+      //       }
+
+      //     }) 
+      //   }
+      // })
+    })
+
     EventBus.$on('updateWalletInfo', function (walletParams) {
       const res = new Array(this.walletsArr.length).fill(false)
       res[walletParams.walletIndex] = !res[walletParams.walletIndex]
@@ -255,7 +308,12 @@ export default {
       })
       this.refresh = true
       this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
+        if (this.walletsList) {
+          walletListTemp = this.walletsList
+        } 
+        
         console.log(response)
+        let packedTransactions = bufferHandler.filterOutPackedTransactions(walletParams.bufferTransactions, response.result.resultInChain)    
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
@@ -288,6 +346,13 @@ export default {
                 moneyValue = "- " + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxTo
               }
+            for (let j = 0; j < this.showList.length; j++) {
+              if(response.result.resultInChain[i].TxHash === this.showList[j].id) {
+                this.showList.splice(j, 1)
+              } else {
+                this.walletMoney = Number(this.walletMoney) - Number(this.showList[j].split(' ')[1])
+              }
+            }
             walletListTemp.push({
               id: response.result.resultInChain[i].TxHash,
               blockNumber: response.result.resultInChain[i].BlockNumber,
@@ -304,10 +369,15 @@ export default {
         this.walletList = walletListTemp
         if (this.walletList.length>4){
           this.moreCnt = true
-          this.showList = this.walletList.slice(0, 4) 
+          let tempArr = this.walletList.slice(0, 4)
+          tempArr.forEach(list => {
+            this.showList.push(list)
+          })
         }
         else {
-          this.showList = this.walletList
+          this.walletList.forEach(list => {
+            this.showList.push(list)
+          })
         }
         if (this.walletList.length === 0) {
           this.tradingCnt = true
@@ -322,6 +392,7 @@ export default {
 
   beforeDestroy () {
     EventBus.$off('updateWalletInfo')
+    EventBus.$off('insertTransactions')
   },
 
   methods: {
