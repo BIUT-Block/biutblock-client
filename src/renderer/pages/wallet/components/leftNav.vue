@@ -496,14 +496,15 @@ export default {
         colorArr: res
       })
       if (this.$route.name === 'wallet') {
-        if(this.$store.state.Counter.progressCount === 100){
-          let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
+        let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
+        if(this.$store.state.Counter.progressCount === 100){   
           EventBus.$emit('insertTransactions', {
             transactions: transactions,
             walletAddress: item.walletAddress
           })
         }
         EventBus.$emit('updateWalletInfo', {
+          bufferTransactions: transactions,
           walletPwd: this.walletPwd, 
           walletAddress: item.walletAddress, 
           walletPrivateKey: item.privateKey, 
