@@ -299,6 +299,9 @@ export default {
       this.walletsArr = walletParams.walletsArr;
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
+      if(this.$store.state.Counter.progressCount !== 100){
+        this.showList = []
+      }
 
 
       this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
@@ -350,7 +353,7 @@ export default {
               if(response.result.resultInChain[i].TxHash === this.showList[j].id) {
                 this.showList.splice(j, 1)
               } else {
-                this.walletMoney = Number(this.walletMoney) - Number(this.showList[j].split(' ')[1])
+                this.walletMoney = Number(this.walletMoney) - Number(this.showList[j].listMoney.split(' ')[1])
               }
             }
             walletListTemp.push({
