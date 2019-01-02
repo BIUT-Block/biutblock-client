@@ -6,7 +6,7 @@ let connection = new Telnet()
 export default {
   install: function (Vue, options) {
     let timeOut = 1500
-    let externalServerAddress = '35.158.171.46'
+    let externalServerAddress = '13.209.3.183'
     let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
