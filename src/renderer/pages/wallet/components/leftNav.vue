@@ -212,8 +212,8 @@ const fs = require("fs")
 const FileSaver = require('file-saver')
 const jwt = require("jsonwebtoken");
 const SECUtil = require("@sec-block/secjs-util");
-const BufferHandler = require("../../../lib/BufferHandler")
-const bufferHandler = new BufferHandler()
+//const BufferHandler = require("../../../lib/BufferHandler")
+//const bufferHandler = new BufferHandler()
 export default {
   name: '',
   components: {
@@ -496,15 +496,15 @@ export default {
         colorArr: res
       })
       if (this.$route.name === 'wallet') {
-        let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
-        if(this.$store.state.Counter.progressCount === 100){   
-          EventBus.$emit('insertTransactions', {
-            transactions: transactions,
-            walletAddress: item.walletAddress
-          })
-        }
+      //  let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
+        // if(this.$store.state.Counter.progressCount === 100){   
+        //   EventBus.$emit('insertTransactions', {
+        //     transactions: transactions,
+        //     walletAddress: item.walletAddress
+        //   })
+        // }
         EventBus.$emit('updateWalletInfo', {
-          bufferTransactions: transactions,
+        //  bufferTransactions: transactions,
           walletPwd: this.walletPwd, 
           walletAddress: item.walletAddress, 
           walletPrivateKey: item.privateKey, 

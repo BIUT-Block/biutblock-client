@@ -113,10 +113,10 @@
 <script>
 import leftNav from './components/leftNav'
 import {EventBus} from "../../lib/EventBus.js"
-const BufferHandler =  require("../../lib/BufferHandler") 
+//const BufferHandler =  require("../../lib/BufferHandler") 
 const SECUtil = require('@sec-block/secjs-util')
 const jwt = require('jsonwebtoken')
-const bufferHandler = new BufferHandler()
+//const bufferHandler = new BufferHandler()
 export default {
   name: '',
   data () {
@@ -248,9 +248,9 @@ export default {
 
           this.$JsonRPCClient.client.request('sec_sendRawTransaction', transferData, (err, response) => {
             if(response.result.status === '1') {
-              if(this.$store.state.Counter.progressCount !== 100){
-                bufferHandler.insertTransaction(transferData, response.result.txHash)
-              }
+              // if(this.$store.state.Counter.progressCount !== 100){
+              //   bufferHandler.insertTransaction(transferData, response.result.txHash)
+              // }
               //this.dialogVisible = false
               this.centerDialogVisible = false
               this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, responseBalance) => {
