@@ -21,6 +21,9 @@ export default {
       client: '',
       switchToLocalHost: function () {
         this.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
+      },
+      switchToExternalServer: function () {
+        this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
       }
     }
 

@@ -196,6 +196,7 @@ export default {
         this.$store.commit('setMiningBtn', false)
         this.$store.commit('setSelectedWallet', item.walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === item.walletAddress)
+        this.$JsonRPCClient.switchToLocalHost() // Changed by Yuan, Li
         this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
           if(err) {
             return
@@ -219,6 +220,7 @@ export default {
               });
             }
           })
+        this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
       }
     },
     //关闭列表
@@ -236,7 +238,6 @@ export default {
       this.timeCntShow = false
       this.startBtn = 'synchronizing...'
       this.$store.commit('setSelectedWallet', this.selectedWallet)
-      // this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_getTokenChainSize', [], (err, response) => {
         if (err) {
           return
@@ -246,8 +247,8 @@ export default {
           this.$store.commit('updateProgressAll', response.result.value)
         }
       })
-      this.$JsonRPCClient.switchToLocalHost()
 
+      this.$JsonRPCClient.switchToLocalHost() // Changed by Yuan, Li
       this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
         if (response) {
           
@@ -273,6 +274,7 @@ export default {
           }.bind(this), 2500)
         }
       })
+      this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
       //this.centerDialogVisible = true
     }
   },
@@ -307,67 +309,69 @@ export default {
   watch: {
     progressVal: {
       handler() {
-      console.log(this.progressVal)
-      if (!this.progressVal) {
-        this.$store.commit('setSelectedWallet', this.selectedWallet)
-        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
-          if (err) {
-            return
-          }
-        })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
-          if (err) {
-            this.$alert('Can not start mining', '', {
-                confirmButtonText: 'Confirm',
-            });
-            this.progressVal = true
-            return
-          }   
-          if (response) {
-            this.$store.commit('setMining', false)
-            this.$store.commit('setMiningBtn', false)
-            // this.$alert('Begin Mining successfull', 'prompt', {
-            //     confirmButtonText: 'Confirm',
-            // });
-            this.centerDialogVisible = true //挖矿弹窗
-            this.digContainer = 'Mining is enabled successfully' //弹窗内容
-            this.digContent = false //开始挖矿就把内容页隐藏
-            this.digImg = true //展示动画页
-          } else {
-            this.progressVal = true
-            this.$alert('Can not start mining', '', {
-                confirmButtonText: 'Confirm',
-            });
-          }
-        })
-      } else {
-        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
-          if (err) {
-            this.$alert('Can not stop mining', '', {
-                confirmButtonText: 'Confirm',
-            });
-            this.progressVal = false
-            return
-          }
-          
-          if (response) {
-            this.$store.commit('setUpdateTime')
-            this.$store.commit('setMining', true)
-            this.$store.commit('setMiningBtn', true)
-            this.$store.commit('resetProgressValue')
-            this.centerDialogVisible = true //挖矿弹窗
-            this.digContainer = 'Stop Mining successfull' //弹窗内容
-            this.digContent = true //停止挖矿就把内容页显示
-            this.digImg = false //关闭动画页
-            this.timeCntShow = true //展示最初的页面
-          } else {
-            this.progressVal = false
-            this.$alert('Can not stop mining', '', {
-                confirmButtonText: 'Confirm',
-            });
-          }
-        })
-      }
+        console.log(this.progressVal)
+        this.$JsonRPCClient.switchToLocalHost() // Changed by Yuan, Li
+        if (!this.progressVal) {
+          this.$store.commit('setSelectedWallet', this.selectedWallet)
+          this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
+            if (err) {
+              return
+            }
+          })
+          this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+            if (err) {
+              this.$alert('Can not start mining', '', {
+                  confirmButtonText: 'Confirm',
+              });
+              this.progressVal = true
+              return
+            }   
+            if (response) {
+              this.$store.commit('setMining', false)
+              this.$store.commit('setMiningBtn', false)
+              // this.$alert('Begin Mining successfull', 'prompt', {
+              //     confirmButtonText: 'Confirm',
+              // });
+              this.centerDialogVisible = true //挖矿弹窗
+              this.digContainer = 'Mining is enabled successfully' //弹窗内容
+              this.digContent = false //开始挖矿就把内容页隐藏
+              this.digImg = true //展示动画页
+            } else {
+              this.progressVal = true
+              this.$alert('Can not start mining', '', {
+                  confirmButtonText: 'Confirm',
+              });
+            }
+          })
+        } else {
+          this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+            if (err) {
+              this.$alert('Can not stop mining', '', {
+                  confirmButtonText: 'Confirm',
+              });
+              this.progressVal = false
+              return
+            }
+            
+            if (response) {
+              this.$store.commit('setUpdateTime')
+              this.$store.commit('setMining', true)
+              this.$store.commit('setMiningBtn', true)
+              this.$store.commit('resetProgressValue')
+              this.centerDialogVisible = true //挖矿弹窗
+              this.digContainer = 'Stop Mining successfull' //弹窗内容
+              this.digContent = true //停止挖矿就把内容页显示
+              this.digImg = false //关闭动画页
+              this.timeCntShow = true //展示最初的页面
+            } else {
+              this.progressVal = false
+              this.$alert('Can not stop mining', '', {
+                  confirmButtonText: 'Confirm',
+              });
+            }
+          })
+        }
+        this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
       },
       immediate: false
     }
