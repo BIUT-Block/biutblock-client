@@ -29,7 +29,7 @@
           <section class="walletHeader">
             <span class="el-icon-arrow-left icon_txt" @click="returnWallet"></span>
             <span class="walletHeaderTit">Wallet Creation</span>
-            <span class="el-icon-close icon_txt" @click="closeWallet"></span>
+            <span class="el-icon-close icon_txt" @click="closeCreateWindow"></span>
           </section>
           <section class="backupContent">
             <p class="backupTitle backupTitle1">Carefully write down these words</p>
@@ -296,6 +296,9 @@ export default {
       this.createDialog = true
       this.enterButton = true //备份助记词按钮可点击
       this.enterWalletContent = false //展示备份助记词的 内容页关闭
+    },
+    closeCreateWindow () {
+      this.walletPosition = false
     },
     //关闭备份助记词界面
     closeWallet () {
