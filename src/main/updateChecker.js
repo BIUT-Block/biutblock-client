@@ -6,7 +6,7 @@ const version = pkg.version
 const release = 'https://api.github.com/repositories/158717489/releases'
 const downloadUrl = 'https://github.com/SEC-Block/secblock-client/releases'
 
-const checkVersion = async () => {
+const checkVersion = async (app) => {
   let showTip
   // let showTip = db.read().get('picBed.showUpdateTip').value()
   // if (showTip === undefined) {
@@ -31,6 +31,7 @@ const checkVersion = async () => {
           if (res === 0) { // if selected yes
             shell.openExternal(downloadUrl + `/tag/${latest}`)
           }
+          app.quit()
         // db.read().set('picBed.showUpdateTip', !checkboxChecked).write()
         })
       }

@@ -37,7 +37,8 @@ function createWindow () {
   /**
    * Initial window options
    */
-  updateChecker()
+  updateChecker(app)
+  
   
   if (shouldQuit) {
     app.quit()
