@@ -12,20 +12,18 @@ const checkVersion = async (app) => {
   // if (showTip === undefined) {
   // db.read().set('picBed.showUpdateTip', true).write()
   showTip = true
-  // }
-  // 自动更新的弹窗如果用户没有设置不再提醒，就可以去查询是否需要更新
   if (showTip) {
     const res = await axios.get(release)
     if (res.status === 200) {
-      const latest = res.data[0].tag_name // 获取版本号
-      const result = compareVersion2Update(version, latest) // 比对版本号，如果本地版本低于远端则更新
+      const latest = res.data[0].tag_name
+      const result = compareVersion2Update(version, latest)
       if (result) {
         dialog.showMessageBox({
           type: 'info',
-          title: '发现新版本',
+          title: 'New Version',
           buttons: ['Yes', 'No'],
-          message: '发现新版本，更新了很多功能，是否去下载最新的版本？',
-          checkboxLabel: '以后不再提醒',
+          message: `Found new version ${latest}. Please update.`,
+          checkboxLabel: 'Do not show again',
           checkboxChecked: false
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
