@@ -4,7 +4,7 @@ import axios from 'axios'
 import pkg from '../../package.json'
 const version = pkg.version
 const release = 'https://api.github.com/repositories/158717489/releases'
-const downloadUrl = 'https://github.com/SEC-Block/secblock-client/releases'
+const downloadUrl = 'https://scan.secblock.io/secwallet'
 
 const checkVersion = async (app) => {
   let showTip
