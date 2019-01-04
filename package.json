@@ -1,6 +1,6 @@
 {
   "name": "secblock-client",
-  "version": "1.2.44",
+  "version": "1.2.45",
   "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",

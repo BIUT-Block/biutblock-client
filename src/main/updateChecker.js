@@ -3,8 +3,8 @@ import { dialog, shell } from 'electron'
 import axios from 'axios'
 import pkg from '../../package.json'
 const version = pkg.version
-const release = 'https://api.github.com/repos/FeiMinhao/secjs-client/releases/latest'
-const downloadUrl = 'https://github.com/Molunerfinn/secjs-client/releases/latest'
+const release = 'https://api.github.com/repositories/158717489/releases'
+const downloadUrl = 'https://github.com/SEC-Block/secblock-client/releases'
 
 const checkVersion = async () => {
   let showTip
@@ -16,9 +16,8 @@ const checkVersion = async () => {
   // 自动更新的弹窗如果用户没有设置不再提醒，就可以去查询是否需要更新
   if (showTip) {
     const res = await axios.get(release)
-    console.log('Current Version' + res)
     if (res.status === 200) {
-      const latest = res.data.name // 获取版本号
+      const latest = res.data[0].tag_name // 获取版本号
       const result = compareVersion2Update(version, latest) // 比对版本号，如果本地版本低于远端则更新
       if (result) {
         dialog.showMessageBox({
@@ -30,7 +29,7 @@ const checkVersion = async () => {
           checkboxChecked: false
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
-            shell.openExternal(downloadUrl)
+            shell.openExternal(downloadUrl + `/tag/${latest}`)
           }
         // db.read().set('picBed.showUpdateTip', !checkboxChecked).write()
         })

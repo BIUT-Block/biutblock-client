@@ -9,7 +9,7 @@ import {
   autoUpdater
 } from 'electron-updater'
 
-// import updateChecker from './updateChecker.js'
+import updateChecker from './updateChecker.js'
 
 const SECNODE = require('@sec-block/secjs-node')
 /**
@@ -37,7 +37,7 @@ function createWindow () {
   /**
    * Initial window options
    */
-  // updateChecker()
+  updateChecker()
   
   if (shouldQuit) {
     app.quit()
@@ -139,6 +139,7 @@ app.on('activate', () => {
  * support auto updating. Code Signing with a valid certificate is required.
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
  */
+
 
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
