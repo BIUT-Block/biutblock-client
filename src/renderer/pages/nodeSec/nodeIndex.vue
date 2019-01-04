@@ -167,14 +167,23 @@ export default {
         this.$store.commit('setSelectedWallet', this.selectedWallet)
       }
     }
-
     this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
-      if(response) {
-        this.ipAddress = response.result.ipv4
-        this.systemTime = new Date(response.result.time * 1000).toString()
-        this.localTime = new Date().toString()
-      } 
-    })
+        if(response) {
+          this.ipAddress = response.result.ipv4
+          this.systemTime = new Date(response.result.time * 1000).toString()
+          this.localTime = new Date().toString()
+        } 
+      })
+    setInterval(() => {
+        this.$JsonRPCClient.client.request('sec_getNodeInfo', [{timeServer: '0.de.pool.ntp.org'}], (err, response) => {
+        if(response) {
+          this.ipAddress = response.result.ipv4
+          this.systemTime = new Date(response.result.time * 1000).toString()
+          this.localTime = new Date().toString()
+        } 
+      })
+    }, 3000)
+    
   },
 
   methods: {
