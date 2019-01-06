@@ -1,6 +1,6 @@
 {
   "name": "secblock-client",
-  "version": "1.2.43",
+  "version": "1.2.48",
   "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",
@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-node": "^1.0.64",
+    "@sec-block/secjs-node": "^1.0.84",
     "@sec-block/secjs-util": "^1.1.22",
     "axios": "^0.16.1",
     "buefy": "^0.6.6",
@@ -134,6 +134,6 @@
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.11.3",
     "webpack-hot-middleware": "^2.23.1",
-    "webpack-merge": "^4.1.5"
+    "webpack-merge": "^4.2.1"
   }
 }

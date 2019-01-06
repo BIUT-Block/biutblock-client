@@ -115,9 +115,9 @@ import leftNav from "./components/leftNav";
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
-const BufferHandler = require('../../lib/BufferHandler')
+//const BufferHandler = require('../../lib/BufferHandler')
 import {EventBus} from "../../lib/EventBus.js"
-const bufferHandler = new BufferHandler()
+//const bufferHandler = new BufferHandler()
 
 export default {
   name: "",
@@ -159,11 +159,11 @@ export default {
       this.colorArr = [true].concat(new Array(this.walletsArr.length-1).fill(false))
     }
 
-    let transactions = bufferHandler.selectPackedTransactions(this.walletAddress)
-    EventBus.$emit('insertTransactions', {
-      transactions: transactions,
-      walletAddress: this.walletAddress
-    })
+    //let transactions = bufferHandler.selectPackedTransactions(this.walletAddress)
+    // EventBus.$emit('insertTransactions', {
+    //   transactions: transactions,
+    //   walletAddress: this.walletAddress
+    // })
 
     this.walletList = []
     this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
@@ -225,15 +225,17 @@ export default {
         }
         if (this.walletList.length>4){
           this.moreCnt = true
-          let tempArr = this.walletList.slice(0, 4)
-          tempArr.forEach(list => {
-            this.showList.push(list)
-          })
+          this.showList = this.walletList.slice(0, 4)
+          // let tempArr = this.walletList.slice(0, 4)
+          // tempArr.forEach(list => {
+          //   this.showList.push(list)
+          // })
         }
         else {
-          this.walletList.forEach(list => {
-            this.showList.push(list)
-          })
+          this.showList = this.walletList
+          // this.walletList.forEach(list => {
+          //   this.showList.push(list)
+          // })
         }
         this.refresh = false
       }
@@ -265,21 +267,6 @@ export default {
           listState: "Packed"
         })
       }
-      //let packedTransactions = bufferHandler.filterOutPackedTransactions(params.transactions, response.result.resultInChain)
-      // this.$JsonRPCClient.client.request('sec_getTransactions', [params.walletAddress], (err, response)=>{
-      //   if(err){
-      //     return
-      //   }
-      //   let packedTransactions = bufferHandler.filterOutPackedTransactions(params.transactions, response.result.resultInChain)
-      //   if (packedTransactions.length > 0){
-      //       this.$JsonRPCClient.client.request('sec_sendRawTransaction', packedTransactions, (err, response) => {
-      //       if(err){
-      //         return
-      //       }
-
-      //     }) 
-      //   }
-      // })
     })
 
     EventBus.$on('updateWalletInfo', function (walletParams) {
@@ -299,9 +286,9 @@ export default {
       this.walletsArr = walletParams.walletsArr;
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
-      if(this.$store.state.Counter.progressCount !== 100){
-        this.showList = []
-      }
+      // if(this.$store.state.Counter.progressCount !== 100){
+      //   this.showList = []
+      // }
 
 
       this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
@@ -316,7 +303,7 @@ export default {
         } 
         
         console.log(response)
-        let packedTransactions = bufferHandler.filterOutPackedTransactions(walletParams.bufferTransactions, response.result.resultInChain)    
+       // let packedTransactions = bufferHandler.filterOutPackedTransactions(walletParams.bufferTransactions, response.result.resultInChain)    
         if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === this.walletAddress) {
@@ -349,13 +336,13 @@ export default {
                 moneyValue = "- " + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxTo
               }
-            for (let j = 0; j < this.showList.length; j++) {
-              if(response.result.resultInChain[i].TxHash === this.showList[j].id) {
-                this.showList.splice(j, 1)
-              } else {
-                this.walletMoney = Number(this.walletMoney) - Number(this.showList[j].listMoney.split(' ')[1])
-              }
-            }
+            // for (let j = 0; j < this.showList.length; j++) {
+            //   if(response.result.resultInChain[i].TxHash === this.showList[j].id) {
+            //     this.showList.splice(j, 1)
+            //   } else {
+            //     this.walletMoney = Number(this.walletMoney) - Number(this.showList[j].listMoney.split(' ')[1])
+            //   }
+            // }
             walletListTemp.push({
               id: response.result.resultInChain[i].TxHash,
               blockNumber: response.result.resultInChain[i].BlockNumber,
@@ -372,15 +359,17 @@ export default {
         this.walletList = walletListTemp
         if (this.walletList.length>4){
           this.moreCnt = true
-          let tempArr = this.walletList.slice(0, 4)
-          tempArr.forEach(list => {
-            this.showList.push(list)
-          })
+          this.showList = this.walletList.slice(0,4)
+       //   let tempArr = this.walletList.slice(0, 4)
+       //   tempArr.forEach(list => {
+       //     this.showList.push(list)
+       //   })
         }
         else {
-          this.walletList.forEach(list => {
-            this.showList.push(list)
-          })
+          this.showList = this.walletList
+        //  this.walletList.forEach(list => {
+        //    this.showList.push(list)
+        //  })
         }
         if (this.walletList.length === 0) {
           this.tradingCnt = true
@@ -395,7 +384,7 @@ export default {
 
   beforeDestroy () {
     EventBus.$off('updateWalletInfo')
-    EventBus.$off('insertTransactions')
+  //  EventBus.$off('insertTransactions')
   },
 
   methods: {

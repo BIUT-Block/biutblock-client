@@ -29,7 +29,7 @@
           <section class="walletHeader">
             <span class="el-icon-arrow-left icon_txt" @click="returnWallet"></span>
             <span class="walletHeaderTit">Wallet Creation</span>
-            <span class="el-icon-close icon_txt" @click="closeWallet"></span>
+            <span class="el-icon-close icon_txt" @click="closeCreateWindow"></span>
           </section>
           <section class="backupContent">
             <p class="backupTitle backupTitle1">Carefully write down these words</p>
@@ -212,8 +212,8 @@ const fs = require("fs")
 const FileSaver = require('file-saver')
 const jwt = require("jsonwebtoken");
 const SECUtil = require("@sec-block/secjs-util");
-const BufferHandler = require("../../../lib/BufferHandler")
-const bufferHandler = new BufferHandler()
+//const BufferHandler = require("../../../lib/BufferHandler")
+//const bufferHandler = new BufferHandler()
 export default {
   name: '',
   components: {
@@ -296,6 +296,9 @@ export default {
       this.createDialog = true
       this.enterButton = true //备份助记词按钮可点击
       this.enterWalletContent = false //展示备份助记词的 内容页关闭
+    },
+    closeCreateWindow () {
+      this.walletPosition = false
     },
     //关闭备份助记词界面
     closeWallet () {
@@ -496,15 +499,15 @@ export default {
         colorArr: res
       })
       if (this.$route.name === 'wallet') {
-        let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
-        if(this.$store.state.Counter.progressCount === 100){   
-          EventBus.$emit('insertTransactions', {
-            transactions: transactions,
-            walletAddress: item.walletAddress
-          })
-        }
+      //  let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
+        // if(this.$store.state.Counter.progressCount === 100){   
+        //   EventBus.$emit('insertTransactions', {
+        //     transactions: transactions,
+        //     walletAddress: item.walletAddress
+        //   })
+        // }
         EventBus.$emit('updateWalletInfo', {
-          bufferTransactions: transactions,
+        //  bufferTransactions: transactions,
           walletPwd: this.walletPwd, 
           walletAddress: item.walletAddress, 
           walletPrivateKey: item.privateKey, 
