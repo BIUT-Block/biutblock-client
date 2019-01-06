@@ -43,7 +43,7 @@ const checkVersion = async (app) => {
 
 // if true -> update else return false
 const compareVersion2Update = (current, latest) => {
-  console.log('Current Version' + current)
+  console.log('Current Version: ' + current)
   const currentVersion = current.split('.').map(item => parseInt(item))
   const latestVersion = latest.split('.').map(item => parseInt(item))
   let flag = false

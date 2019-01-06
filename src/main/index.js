@@ -1,9 +1,9 @@
 import {
   app,
   BrowserWindow,
-  ipcMain,
-  Menu,
-  dialog
+  // ipcMain,
+  // dialog,
+  Menu
 } from 'electron'
 import {
   autoUpdater
@@ -22,39 +22,62 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
-const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000' 
+// const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000'
 
-let shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+let shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore()
     mainWindow.focus()
   }
-});
-
+})
 
 function createWindow () {
   /**
    * Initial window options
    */
   updateChecker(app)
-  
-  
+
   if (shouldQuit) {
     app.quit()
     return
   }
 
+  // ------------------------  SETUP DATABASE PATH  -----------------------
   let path = app.getPath('userData')
   console.log(path + '/data/')
-  
-  /**
-   * Start RPC Server
-   */ 
-    let SECCore = new SECNODE.Core({DBPath: path + '/data/', cacheDBPath: path + '/data/powCache'})
-    let SECRPC = new SECNODE.RPC(SECCore)
-  
-    SECRPC.runRPCServer()
+
+  // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
+  let SECCore = new SECNODE.Core({ DBPath: path + '/data/', cacheDBPath: path + '/data/powCache' })
+  let SECRPC = new SECNODE.RPC(SECCore)
+  SECRPC.runRPCServer()
+
+  // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
+  const { net } = require('electron')
+  const request = net.request('http://scan.secblock.io/genesisBlockHash')
+  request.on('response', response => {
+    response.on('data', remotegenesisHash => {
+      remotegenesisHash = remotegenesisHash.toString()
+      console.log(`remote GenesisHash: ${remotegenesisHash}`)
+      SECCore.APIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+        if (err) {
+          return console.log('Blockchain Database is empty')
+        }
+        console.log(`Local GenesisHash: ${genesisBlock[0].Hash}`)
+        if (genesisBlock[0].Hash === remotegenesisHash) {
+          return console.log('GenesisHash check passed')
+        } else {
+          SECCore.APIs.clearDB((err) => {
+            if (err) return console.error(err)
+            console.log('GenesisHash not passed, remove local database')
+          })
+        }
+      })
+    })
+    response.on('end', () => { })
+  })
+  request.end()
+
   mainWindow = new BrowserWindow({
     height: 580,
     useContentSize: true,
@@ -101,7 +124,7 @@ function createWindow () {
   }
   try {
     mainWindow.loadURL(winURL)
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 
@@ -142,7 +165,6 @@ app.on('activate', () => {
  * support auto updating. Code Signing with a valid certificate is required.
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
  */
-
 
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
