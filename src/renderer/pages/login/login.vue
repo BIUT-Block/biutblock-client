@@ -49,6 +49,7 @@ const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
 
+
 export default {
   name: '',
   data() {
@@ -61,21 +62,6 @@ export default {
   methods: {
     createNew () {
       this.centerDialogVisible = true
-      // this.$alert('This operation will delete all your local wallet data, please confirm to continue or you can close this prompt.', '', {
-      //     confirmButtonText: 'Confirm',
-      // }).then(function(){
-      //   this.$router.push(
-      //     {
-      //       name: 'create',
-      //       query: {
-      //         id: '1'
-      //       }
-      //     }
-      //   )
-      // }.bind(this)).catch(function(e){
-      //   return
-      // })
-
     },
     createNew2 () {
       this.centerDialogVisible = false
@@ -88,7 +74,7 @@ export default {
           }
         )
     },
-    loginBtn () { // 登陆方法
+    loginBtn () {
       let filePath = ''
       if(require('os').type() === 'Darwin' || require('os').type() === 'Linux') {
         filePath = require('os').homedir() + '/secwallet/default.data'
@@ -99,11 +85,6 @@ export default {
         this.errorTxt = true
       } else {
         fs.readFile(filePath, 'utf-8', this._fileRequest.bind(this, this.loginValue))
-        //登陆成功跳转至下一页
-        //this.$router.push({ path: '/create?id=1' })
-
-        //登陆失败
-        //this.errorTxt = true  展示错误的信息，不做任何跳转
       }
     },
     _fileRequest: function(loginValue, err, data){
@@ -127,41 +108,17 @@ export default {
         }
     },
     _userAuthRequest: function(walletsArr, loginValue) {
-      let tokenInfo = {
-        password: loginValue
-      }
-
-      let token = jwt.sign(tokenInfo, 'MongoX-Block', {
-        'expiresIn': 60 * 60 * 24
-      })
-
-      window.localStorage.setItem('userToken', token)
       let walletsBalanceJS = {}
-      for (let wallet of walletsArr) {
-        this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
-          console.log(response)
-          if(response.result.status === 'false') {
-            this.loginError = true
-          } else if (response.result.status == '0') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          } else if (response.result.status === '1') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          }
-          if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
-            for (let wallet of walletsArr) {
-                wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
-            }
-            this._navToAccountDetail({
-              privateKey: walletsArr[0].privateKey,
-              publicKey: walletsArr[0].publicKey,
-              walletAddress: walletsArr[0].walletAddress,
-              walletBalance: walletsArr[0].walletBalance,
-              walletsArr: walletsArr,
-              walletName: walletsArr[0].walletName
-            })
-          }
-        })        
-      }      
+      walletsBalanceJS = this.$JsonRPCClient.getAllWalletsBalance(walletsArr)
+      walletsHandler.fillUpWalletsBalance(walletsArr, walletsBalanceJS)
+      this._navToAccountDetail({
+        privateKey: walletsArr[0].privateKey,
+        publicKey: walletsArr[0].publicKey,
+        walletAddress: walletsArr[0].walletAddress,
+        walletBalance: walletsArr[0].walletBalance,
+        walletsArr: walletsArr,
+        walletName: walletsArr[0].walletName
+      })      
     },
     _navToAccountDetail: function(params) {
       this.$router.push({

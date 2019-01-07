@@ -303,8 +303,6 @@ export default {
   },
   methods: {
     createBtn() {
-      //检查钱包名字是否重复
-      console.log('Button')
       if (this.walletName === ''){
         this.$alert('You need to give the wallet a name.', 'prompt', {
               confirmButtonText: 'Confirm',
@@ -336,24 +334,6 @@ export default {
           let pubKey128 = keys.publicKey;
           this.pubKey128ToString = pubKey128.toString("hex");
           this.userAddressToString = keys.secAddress;
-
-          let tokenInfo = {
-            password: this.newUserAccount.password
-          };
-
-          let token = jwt.sign(tokenInfo, "MongoX-Block", {
-            expiresIn: 60 * 60 * 24
-          });
-          this.decoded = this.$JWT.verifyToken(token);
-          //成功就跳转到助记词
-          //this.$router.push('/backup')
-          //失败  弹出提示框，不做任何跳转
-          if (this.decoded === "") {
-            return;
-          } else {
-            // save to local file
-            this.userToken = token;
-          }
           this.$router.push({
             name: "backup",
             query: {
@@ -382,8 +362,6 @@ export default {
           });
           return
       } else {
-          //Not in the array
-        // 创建钱包方法
         if (this.confirmP != this.password) {
            this.$alert('The password input is inconsistent twice, please re-enter', '', {
               confirmButtonText: 'Confirm',
@@ -397,28 +375,7 @@ export default {
 
           let pubKey128 = keys.publicKey;
           this.pubKey128ToString = pubKey128.toString("hex");
-
-          //let userAddressBuffer = keys.secAddress;
-          //let userAddress = userAddressBuffer.toString("hex");
           this.userAddressToString = keys.secAddress;
-
-          let tokenInfo = {
-            password: this.newUserAccount.password
-          };
-
-          let token = jwt.sign(tokenInfo, "MongoX-Block", {
-            expiresIn: 60 * 60 * 24
-          });
-          this.decoded = this.$JWT.verifyToken(token);
-          //成功就跳转到助记词
-          //this.$router.push('/backup')
-          //失败  弹出提示框，不做任何跳转
-          if (this.decoded === "") {
-            return;
-          } else {
-            // save to local file
-            this.userToken = token;
-          }
           this.$router.push({
             name: "backup",
             query: {
@@ -438,6 +395,13 @@ export default {
       }
     },
 
+    _navToBackUp(params) {
+      this.$router.push({
+        name: 'backup',
+        query: params
+      })
+    },
+
     newDialogFn1() {
       this.keyFileDataJS = {
         [this.newDialogInput1]:
@@ -454,7 +418,6 @@ export default {
         if (this.walletPwd && this.walletPwd!=="") {
           fs.readFile(this.filePath, 'utf-8', this._fileRequest.bind(this, this.walletPwd, this.newDialogInput1))
         } else {
-          // let isNewKeyFile = prompt('检测到本地已有账户，如果想保存您已有账户，请输入1，如果想新建账户(原账户内所有钱包信息将丢失), 请输入2')
           this.newDialogVisible3 = true
         }
       }
@@ -477,11 +440,8 @@ export default {
 
     newDialogFn3() {
       if (this.newDialogInput3==="1") {
-        // let mnemonicPwd = prompt('您选择了保存账户，请登陆原有账户')
         this.newDialogVisible4 = true
-
       } else if (this.newDialogInput3==="2") {
-        // let mnemonicPwd = prompt('您选择了新建账户，请设置密码')
         this.newDialogVisible5 = true
       } else {
         this.$alert('Please enter 1 or 2', '', {
@@ -532,9 +492,6 @@ export default {
 
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
         this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
-        // this.$alert('Successfully imported', 'prompt', {
-        //       confirmButtonText: 'Confirm',
-        //  });
       } catch(e) {
         this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
               confirmButtonText: 'Confirm',
@@ -571,7 +528,6 @@ export default {
               }
           }
           if(walletNamesArr.indexOf(mnemonicName)>-1){
-            // mnemonicName = prompt('您导入的钱包与已有账户中的钱包名字重复，请重命名')
             this.newDialogVisible6 = true
             return
           }
@@ -619,32 +575,10 @@ export default {
     },
 
     _userAuthRequest: function(walletsArr, walletPwd) {
-      let tokenInfo = {
-        password: walletPwd
-      }
-      let token = jwt.sign(tokenInfo, 'MongoX-Block', {
-        'expiresIn': 60 * 60 * 24
-      })
-
-      window.localStorage.setItem('userToken', token)
       let walletsBalanceJS = {}
-      for (let wallet of walletsArr) {
-        this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
-          console.log(response)
-          if(response.result.status === 'false') {
-            this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
-          } else if (response.result.status == '0') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          } else if (response.result.status === '1') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          }
-          if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
-            for (let wallet of walletsArr) {
-                wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
-            }
-            this._navToAccountDetail({
+      walletsBalanceJS = this.$JsonRPCClient.getAllWalletsBalance(walletsArr)
+      walletsHandler.fillUpWalletsBalance(walletsArr, walletsBalanceJS)
+      this._navToAccountDetail({
               walletPwd: walletPwd,
               privateKey: walletsArr[walletsArr.length-1].privateKey,
               publicKey: walletsArr[walletsArr.length-1].publicKey,
@@ -654,10 +588,7 @@ export default {
               walletName: walletsArr[walletsArr.length-1].walletName,
               colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
               pageId: 1
-            })
-          }
-        })        
-      }      
+            })      
     },
     _navToAccountDetail: function(params) {
       this.$router.push({

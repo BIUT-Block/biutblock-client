@@ -1,6 +1,5 @@
 import jayson from 'jayson/lib/client'
 import Telnet from 'telnet-client'
-
 let connection = new Telnet()
 
 export default {
@@ -24,22 +23,26 @@ export default {
       },
       switchToExternalServer: function () {
         this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+      },
+      getAllWalletsBalance: function (walletsArray) {
+        let walletsBalanceJS = {}
+        for (let wallet of walletsArray) {
+          this.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
+            if (response.result.status === 'false') {
+              return false
+            } else if (response.result.status === '1' || response.result.status == '0') {
+              walletsBalanceJS[wallet.walletName] = response.result.value.toString()
+            }
+          })
+        }
+        return walletsBalanceJS
       }
     }
 
-    // connection.connect(localHostParam)
+      jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
 
-    // connection.on('connect', () => {
-    //   jsonRPC.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
-    // })
-
-    // connection.on('error', (err) => {
-    //   console.log(err)
-    jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-    // })
-
-    Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
-      value: jsonRPC
-    })
+      Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
+        value: jsonRPC
+      })
+    }
   }
-}
