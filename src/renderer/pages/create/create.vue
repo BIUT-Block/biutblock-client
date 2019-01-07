@@ -309,91 +309,75 @@ export default {
         });
         return
       }
-
-      if (this.walletPwd && this.walletPwd!==""){
-        let dirPath = require('os').homedir() + '/secwallet'
-        let filePath = dirPath + '/default.data'
-        fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.name))
+      
+      if (this.confirmP != this.password) {
+        this.$alert('The input passwords are not same. Please enter again.', 'prompt', {
+          confirmButtonText: 'Confirm',
+        });
+        return;
+      } else if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.password)){
+        this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
+          confirmButtonText: 'Confirm',
+        });
+        return;
       } else {
-        if (this.confirmP != this.password) {
-          this.$alert('The input passwords are not same. Please enter again.', 'prompt', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        } else if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.password)){
-          this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        } else {
-          let keys = SECUtil.generateSecKeys();
-          let privKey64 = keys.privKey;
-          this.privateKey = privKey64;
-          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-
-          let pubKey128 = keys.publicKey;
-          this.pubKey128ToString = pubKey128.toString("hex");
-          this.userAddressToString = keys.secAddress;
-          this.$router.push({
-            name: "backup",
-            query: {
-              id: this.$route.query.id,
-              privateKey: this.privateKey,
-              publicKey: this.pubKey128ToString,
-              userAddress: this.userAddressToString,
-              password: this.password,
-              englishWords: this.englishWords,
-              walletPwd: this.walletPwd,
-              walletName: this.name,
-            }
-          });
-        }
+        let keys = walletsHandler.getWalletKeys()
+        this._navToBackUp({
+          id: this.$route.query.id,
+          privateKey: keys.privateKey,
+          publicKey: keys.publicKey,
+          userAddress: keys.userAddress,
+          password: this.password,
+          englishWords: keys.englishWords,
+          walletName: this.name,
+          walletPwd: this.walletPwd
+        });
       }
     },
 
-    _checkWalletName(name, err, data) {
-      let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
-      let keyDataJSON = JSON.parse(keyData)
-      let walletNamesArr = Object.keys(keyDataJSON)
-      if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`)) {
-          //In the array!
-          this.$alert("Wallet name already exists", '', {
-                confirmButtonText: 'OK',
-          });
-          return
-      } else {
-        if (this.confirmP != this.password) {
-           this.$alert('The password input is inconsistent twice, please re-enter', '', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        }  else {
-          let keys = SECUtil.generateSecKeys();
-          let privKey64 = keys.privKey;
-          this.privateKey = privKey64;
-          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
+    // _checkWalletName(name, err, data) {
+    //   let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
+    //   let keyDataJSON = JSON.parse(keyData)
+    //   let walletNamesArr = Object.keys(keyDataJSON)
+    //   if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`)) {
+    //       //In the array!
+    //       this.$alert("Wallet name already exists", '', {
+    //             confirmButtonText: 'OK',
+    //       });
+    //       return
+    //   } else {
+    //     if (this.confirmP != this.password) {
+    //        this.$alert('The password input is inconsistent twice, please re-enter', '', {
+    //           confirmButtonText: 'Confirm',
+    //       });
+    //       return;
+    //     }  else {
+    //       let keys = SECUtil.generateSecKeys();
+    //       let privKey64 = keys.privKey;
+    //       this.privateKey = privKey64;
+    //       this.englishWords = SECUtil.entropyToMnemonic(privKey64);
 
-          let pubKey128 = keys.publicKey;
-          this.pubKey128ToString = pubKey128.toString("hex");
-          this.userAddressToString = keys.secAddress;
-          this.$router.push({
-            name: "backup",
-            query: {
-              id: this.$route.query.id,
-              privateKey: this.privateKey,
-              publicKey: this.pubKey128ToString,
-              userAddress: this.userAddressToString,
-              password: this.password,
-              englishWords: this.englishWords,
-              walletsArr: this.$route.query.walletsArr,
-              walletPwd: this.walletPwd,
-              walletName: this.name,
-              colorArr: this.tempColorArr
-            }
-          });
-        }
-      }
-    },
+    //       let pubKey128 = keys.publicKey;
+    //       this.pubKey128ToString = pubKey128.toString("hex");
+    //       this.userAddressToString = keys.secAddress;
+    //       this.$router.push({
+    //         name: "backup",
+    //         query: {
+    //           id: this.$route.query.id,
+    //           privateKey: this.privateKey,
+    //           publicKey: this.pubKey128ToString,
+    //           userAddress: this.userAddressToString,
+    //           password: this.password,
+    //           englishWords: this.englishWords,
+    //           walletsArr: this.$route.query.walletsArr,
+    //           walletPwd: this.walletPwd,
+    //           walletName: this.name,
+    //           colorArr: this.tempColorArr
+    //         }
+    //       });
+    //     }
+    //   }
+    // },
 
     _navToBackUp(params) {
       this.$router.push({
