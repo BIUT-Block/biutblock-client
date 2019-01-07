@@ -27,7 +27,7 @@ const checkVersion = async (app) => {
           checkboxChecked: false
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
-            shell.openExternal(downloadUrl + `/tag/${latest}`)
+            shell.openExternal(downloadUrl)
           }
           app.quit()
         // db.read().set('picBed.showUpdateTip', !checkboxChecked).write()
