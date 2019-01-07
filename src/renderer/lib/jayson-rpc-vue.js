@@ -28,6 +28,9 @@ export default {
         let walletsBalanceJS = {}
         for (let wallet of walletsArray) {
           this.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
+            if (err) {
+              return false
+            }
             if (response.result.status === 'false') {
               return false
             } else if (response.result.status === '1' || response.result.status == '0') {
@@ -39,10 +42,10 @@ export default {
       }
     }
 
-      jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+    jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
 
-      Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
-        value: jsonRPC
-      })
-    }
+    Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
+      value: jsonRPC
+    })
   }
+}

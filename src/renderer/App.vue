@@ -20,7 +20,6 @@ import Vue from 'vue'
 // import Vuetify from "vuetify"
 // import "vuetify/dist/vuetify.min.css"
 import walletsHandler from './lib/WalletsHandler'
-import loginHandler from './lib/LoginHandler'
 import JsonRPCClient from './lib/jayson-rpc-vue'
 
 // Vue.use(Vuetify, {
