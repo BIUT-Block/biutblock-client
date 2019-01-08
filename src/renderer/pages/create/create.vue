@@ -126,69 +126,6 @@
 
       <el-dialog
           title="prompt"
-          :visible.sync="newDialogVisible2"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel2}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput2"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible2 = false; newDialogFn2()">OK</button>
-          </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"
-          :visible.sync="newDialogVisible3"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel3}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput3"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible3 = false; newDialogFn3()">OK</button>
-          </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"     
-          :visible.sync="newDialogVisible4"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel4}}
-          </p>
-          <el-input
-              type="password"
-              placeholder="Please input"
-              v-model="newDialogInput4"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible4 = false; newDialogFn4()">OK</button>
-          </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"
           :visible.sync="newDialogVisible5"
           width="432px"
           :show-close = true
@@ -207,34 +144,9 @@
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="newDialogVisible5 = false; newDialogFn5()">OK</button>
           </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"
-          :visible.sync="newDialogVisible6"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel6}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput6"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible6 = false; newDialogFn6()">OK</button>
-          </span>
-      </el-dialog>                              
+      </el-dialog>           
     </main>
-
   </el-container>
-
-
- 
 </template>
 
 <script>
@@ -251,12 +163,12 @@ export default {
   name: "",
   data() {
     return {
-      layoutPosition: false, // 设置 false隐藏
-      layoutPositionImg: waitingImg, // waitingImg 导入中的图片  successImg 导入成功的图片
-      layoutPositionTxt: 'Import into the wallet...',// Import into the wallet... 导入中的文字 Pass the test 导入成功的文字
-      passTxt: false, //默认密码提示不显示
+      layoutPosition: false,
+      layoutPositionImg: waitingImg,
+      layoutPositionTxt: 'Import into the wallet...',
+      passTxt: false,
       returnPage: "/",
-      name: '', //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
+      name: '',
       password: "",
       confirmP: "",
       privateKey: "",
@@ -268,21 +180,9 @@ export default {
       newDialogVisible1: false,
       newDialogLabel1: "Please set the name of the wallet you imported",
       newDialogInput1: "",
-      newDialogVisible2: false,
-      newDialogLabel2: "There is no account information locally. This is your first wallet. Please set your new account password.",
-      newDialogInput2: "",
-      newDialogVisible3: false,
-      newDialogLabel3: "If you want to save your existing account, please enter 1. If you want to create a new account (all wallet information in the original account will be lost), please enter 2",
-      newDialogInput3: "",
-      newDialogVisible4: false,
-      newDialogLabel4: "You have chosen to save your account, please log in to your original account.",
-      newDialogInput4: "",
       newDialogVisible5: false,
       newDialogLabel5: "You have chosen to create a new account, please set a password.",
       newDialogInput5: "",
-      newDialogVisible6: false,
-      newDialogLabel6: "The wallet you imported is duplicated with the name of the wallet in the existing account. Please rename it.",
-      newDialogInput6: "",
       filePath: "",
       keyFileDataJS: {},                  
       btn: "btn",
@@ -290,11 +190,6 @@ export default {
       navTit: 'Wallet Creation',
       tempColorArr: [],
       mnemonicTxt: "",
-      newUserAccount: {
-        walletName: "",
-        password: "",
-        repeatPassword: ""
-      },
       mnemonicWallet: {
         privateKey: '',
         pubKey128ToString: '',
@@ -395,63 +290,8 @@ export default {
       if (!fs.existsSync(dirPath)){
         fs.mkdirSync(dirPath);
       }
-
       this.filePath = dirPath + '/default.data'
-      // let mnemonicName = prompt("请设置您导入的钱包名称")
       this.newDialogVisible1=true
-    },
-
-    _fileRequest: function(pwd, mnemonicName, err, data){
-        if (err) {
-          return
-        }
-        try {
-          let keyData = CryptoJS.AES.decrypt(data.toString(), pwd).toString(CryptoJS.enc.Utf8)
-          this.keyFileDataJS = JSON.parse(keyData)
-          let walletNamesArr = Object.keys(this.keyFileDataJS)
-          let localPrivatKey = ""
-          for (let walletName of walletNamesArr) {
-              localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
-              if (localPrivatKey===this.mnemonicWallet.privateKey) {
-                this.$alert(`The wallet information is already local, local wallet name ${walletName}`, 'prompt', {
-                    confirmButtonText: 'Confirm',
-                });
-                return 
-              }
-          }
-          if(walletNamesArr.indexOf(mnemonicName)>-1){
-            this.newDialogVisible6 = true
-            return
-          }
-          if (!isNaN(Number(mnemonicName))) {
-            this.keyFileDataJS[`"${mnemonicName}"`] = {
-              privateKey: this.mnemonicWallet.privateKey,
-              publicKey: this.mnemonicWallet.pubKey128ToString,
-              walletAddress: this.mnemonicWallet.userAddressToString
-            }
-          } else {
-            this.keyFileDataJS[mnemonicName] = {
-              privateKey: this.mnemonicWallet.privateKey,
-              publicKey: this.mnemonicWallet.pubKey128ToString,
-              walletAddress: this.mnemonicWallet.userAddressToString
-            }
-          }
-          let keyFileData = JSON.stringify(this.keyFileDataJS)
-          let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, pwd)
-          fs.writeFile(this.filePath, cipherKeyData, (err) => {
-            if(err) {
-              return
-            }
-            this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
-                confirmButtonText: 'Confirm',
-            });
-          })
-          this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
-        } catch(e) {
-          this.$alert('Can not import the wallet', '', {
-                confirmButtonText: 'Confirm',
-            });
-        }
     },
 
     _mnemonicNavToWallet: function(keyDataJSON, pwd) {
