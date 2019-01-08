@@ -48,7 +48,7 @@
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
-
+import walletsHandler from '../../lib/WalletsHandler'
 
 export default {
   name: '',
