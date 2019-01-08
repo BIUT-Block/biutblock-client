@@ -142,7 +142,6 @@ export default {
       }
       return this.loginValue.length > 7 ? true : false
     },
-    //创建钱包
     createActiveBtn () {
       return this.walletName.length > 0 ? true : false
     },
