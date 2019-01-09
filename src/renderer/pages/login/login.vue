@@ -48,7 +48,7 @@
 const fs = require("fs")
 const CryptoJS = require("crypto-js")
 const jwt = require('jsonwebtoken')
-
+import walletsHandler from '../../lib/WalletsHandler'
 
 export default {
   name: '',
@@ -67,10 +67,7 @@ export default {
       this.centerDialogVisible = false
       this.$router.push(
           {
-            name: 'create',
-            query: {
-              id: '1'
-            }
+            name: 'create'
           }
         )
     },
@@ -142,7 +139,6 @@ export default {
       }
       return this.loginValue.length > 7 ? true : false
     },
-    //创建钱包
     createActiveBtn () {
       return this.walletName.length > 0 ? true : false
     },
