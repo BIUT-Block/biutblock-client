@@ -33,7 +33,7 @@ export default {
             }
             if (response.result.status === 'false') {
               return false
-            } else if (response.result.status === '1' || response.result.status == '0') {
+            } else if (response.result.status === '1' || response.result.status === '0') {
               walletsBalanceJS[wallet.walletName] = response.result.value.toString()
             }
           })

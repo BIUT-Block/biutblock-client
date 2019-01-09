@@ -27,11 +27,17 @@ let WalletHandler = {
     }
   },
 
-  getWalletNamesFromEncrypt: function (encryptedData) {
-    let keyData = CryptoJS.AES.decrypt(encryptedData.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
+  getWalletNamesFromEncrypt: function (encryptedData, pwd) {
+    let keyData = CryptoJS.AES.decrypt(encryptedData.toString(), pwd).toString(CryptoJS.enc.Utf8)
     let keyDataJSON = JSON.parse(keyData)
     let walletNamesArr = Object.keys(keyDataJSON)
     return walletNamesArr
+  },
+
+  getWalletEncryptedKeys: function (encryptedData, pwd) {
+    let keyData = CryptoJS.AES.decrypt(encryptedData.toString(), pwd).toString(CryptoJS.enc.Utf8)
+    let keyDataJSON = JSON.parse(keyData)
+    return keyDataJSON
   }
 }
 

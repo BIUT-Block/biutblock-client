@@ -361,26 +361,12 @@ export default {
   },
   computed: {
     createActiveBtn() {
-      if (this.$route.query.id === "1") {
-        if (this.password.length > 0) {
-          this.passTxt = true
-        } else {
-          this.passTxt = false
-        }
-        return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
+      if (this.password.length > 0) {
+        this.passTxt = true
+      } else {
+        this.passTxt = false
       }
-      if (this.$route.query.id === "3") {
-        return this.name.length > 0 ? true : false;
-      }
-      if (this.$route.query.id === "2") {
-        this.navTit = 'Import wallet'
-        if (this.password.length > 0) {
-          this.passTxt = true
-        } else {
-          this.passTxt = false
-        }
-        return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
-      }
+      return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
     },
     publicBtnAcitve() {
       return this.mnemonicTxt.length > 0 ? true : false;

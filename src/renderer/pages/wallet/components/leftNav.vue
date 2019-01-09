@@ -341,23 +341,13 @@ export default {
           return
         }
         try {
-          let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
-          let keyDataJSON = JSON.parse(keyData)
-          if (!isNaN(Number(this.newWalletName))) {
-            keyDataJSON[`"${this.newWalletName}"`] = {
-              privateKey: this.newPrivateKey,
-              publicKey: this.newPublicKey,
-              walletAddress: this.newAddress
-            }
-          } else {
-            keyDataJSON[this.newWalletName] = {
-              privateKey: this.newPrivateKey,
-              publicKey: this.newPublicKey,
-              walletAddress: this.newAddress
-            }
-          }    
-          this.keyFileDataJS = keyDataJSON
-          let keyFileData = JSON.stringify(keyDataJSON)
+          let keyDataJSON = walletsHandler.getWalletEncryptedKeys(data, this.walletPwd)
+          this.keyFileDataJS = this._setFileOfWallletKeys(keyDataJSON, this.newWalletName, {
+            privateKey: this.newPrivateKey,
+            publicKey: this.newPublicKey,
+            walletAddress: this.newAddress
+          })
+          let keyFileData = JSON.stringify(this.keyFileDataJS)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
           fs.writeFile(filePath, cipherKeyData, (err) => {
             if(err) {
@@ -511,14 +501,14 @@ export default {
     },
 
     _checkWalletName(name, err, data) {
-      let walletNamesArr = walletsHandler.getWalletNamesFromEncrypt(data)
+      let walletNamesArr = walletsHandler.getWalletNamesFromEncrypt(data, this.walletPwd)
       if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`) > -1) {
          this.$alert("Wallet name already exists", '', {
                confirmButtonText: 'OK',
          });
          return
       } else {
-        let keys = walletsHandler.getWalletKeys
+        let keys = walletsHandler.getWalletKeys()
         this.newPrivateKey = keys.privateKey
         this.englishWords = keys.englishWords
         this.englishWordsArr = this.englishWords.split(' ')
@@ -530,14 +520,6 @@ export default {
     },
 
     newDialogFn1() {
-      this.keyFileDataJS = {
-        [this.newDialogInput1]:
-        {
-          privateKey: this.mnemonicWallet.privateKey,
-          publicKey: this.mnemonicWallet.pubKey128ToString,
-          walletAddress: this.mnemonicWallet.userAddressToString
-        }
-      }
       this.createTabBtnActive1 = 'createTabBtnActive'
       this.createTabBtnActive2 = ''
       this.mainCntTab1 = true
@@ -577,64 +559,37 @@ export default {
           return
         }
         try {
-          let walletNamesArr = walletsHandler.getWalletNamesFromEncrypt(data)
-          let localPrivatKey = ""
-          for (let walletName of walletNamesArr) {
-              localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
-              if (localPrivatKey===this.mnemonicWallet.privateKey) {
-                this.$alert(`This wallet has already been existed in the name of ${walletName}`, '', {
-                    confirmButtonText: 'Confirm',
-                    callback: action => {
-                      this.newDialogVisible1 = false
-                      this.createDialog = false
-                      this.createTabBtnActive1 = 'createTabBtnActive'
-                      this.createTabBtnActive2 = ''
-                      this.mainCntTab1 = true
-                      this.mainCntTab2 = false
-                      this.mnemonicTxt = ''
-                      this.newDialogInput1 = ""
-                      this.importError = false
-                    }
-                });
-                return 
+          let keyDataJSON = walletsHandler.getWalletEncryptedKeys(data, pwd)
+          let walletNamesArr = walletsHandler.getWalletNamesFromEncrypt(data, pwd)
+ 
+          if(!this._checkDuplicatePrivateKey(keyDataJSON, walletNamesArr)) {
+            this.$alert(`This wallet has already been existed`, '', {
+              confirmButtonText: 'Confirm',
+                callback: action => {
+                  this._closeCreateDialog()
               }
+            });
+            return
           }
           if(walletNamesArr.indexOf(mnemonicName)>-1){
-            //In the array!
             this.$alert("Importing is interrupted. Because wallet name already exists.", 'prompt', {
                   confirmButtonText: 'OK',
             });
             return
           }
 
-          if (!isNaN(Number(mnemonicName))) {
-            this.keyFileDataJS[`"${mnemonicName}"`] = {
-              privateKey: this.mnemonicWallet.privateKey,
-              publicKey: this.mnemonicWallet.pubKey128ToString,
-              walletAddress: this.mnemonicWallet.userAddressToString
-            }
-          } else {
-            this.keyFileDataJS[mnemonicName] = {
-              privateKey: this.mnemonicWallet.privateKey,
-              publicKey: this.mnemonicWallet.pubKey128ToString,
-              walletAddress: this.mnemonicWallet.userAddressToString
-            }
-          }
+          this.keyFileDataJS = this._setFileOfWallletKeys(keyDataJSON, mnemonicName, {
+            privateKey: this.mnemonicWallet.privateKey,
+            publicKey: this.mnemonicWallet.pubKey128ToString,
+            walletAddress: this.mnemonicWallet.userAddressToString
+          })
           let keyFileData = JSON.stringify(this.keyFileDataJS)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, pwd)
           fs.writeFile(this.filePath, cipherKeyData, (err) => {
             if(err) {
               return
             }
-            this.newDialogVisible1 = false
-            this.createDialog = false
-            this.createTabBtnActive1 = 'createTabBtnActive'
-            this.createTabBtnActive2 = ''
-            this.mainCntTab1 = true
-            this.mainCntTab2 = false
-            this.mnemonicTxt = ''
-            this.newDialogInput1 = ""
-            this.importError = false
+            this._closeCreateDialog()
           })
           this.newDialogVisible1 = false
           this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
@@ -643,6 +598,18 @@ export default {
                 confirmButtonText: 'Confirm',
             });
         }
+    },
+
+    _closeCreateDialog: function () {
+      this.newDialogVisible1 = false
+      this.createDialog = false
+      this.createTabBtnActive1 = 'createTabBtnActive'
+      this.createTabBtnActive2 = ''
+      this.mainCntTab1 = true
+      this.mainCntTab2 = false
+      this.mnemonicTxt = ''
+      this.newDialogInput1 = ""
+      this.importError = false
     },
 
     _mnemonicNavToWallet: function(keyDataJSON, pwd) {
@@ -657,8 +624,34 @@ export default {
       this._userAuthRequest(walletsArr, pwd)
     },
 
+    _checkDuplicatePrivateKey: function (keyDataJSON, walletNames) {
+      for (let walletName of walletNames) {
+        if (keyDataJSON[walletName]["privateKey"]===this.mnemonicWallet.privateKey) {
+            return false
+          }
+        }
+        return true
+    },
+
+    _setFileOfWallletKeys: function (keyDataJson, propertyName, params) {
+      if (!isNaN(Number(propertyName))) {
+        keyDataJson[`"${propertyName}"`] = {
+          privateKey: params.privateKey,
+          publicKey: params.publicKey,
+          walletAddress: params.walletAddress
+        }
+      } else {
+        keyDataJson[propertyName] = {
+          privateKey: params.privateKey,
+          publicKey: params.publicKey,
+          walletAddress: params.walletAddress
+        }
+      }
+      return keyDataJson
+    },
+
     _userAuthRequest: function(walletsArr, walletPwd) {
-      let walletsBalanceJS = this.$JsonRPCClient.getWalletsBalance(walletsArr)
+      let walletsBalanceJS = this.$JsonRPCClient.getAllWalletsBalance(walletsArr)
       walletsHandler.fillUpWalletsBalance(walletsArr, walletsBalanceJS)
       this._navToAccountDetail({
               walletPwd: walletPwd,
