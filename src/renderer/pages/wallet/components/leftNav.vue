@@ -204,6 +204,7 @@
 
 <script>
 import {EventBus} from "../../../lib/EventBus.js"
+import walletsHandler from '../../../lib/WalletsHandler'
 import Clipboard from 'clipboard'
 import qrCode from './qrCode'
 import domtoimage from 'dom-to-image'
@@ -277,16 +278,7 @@ export default {
 
       englishWords: '',
       englishWordsArr: [],
-      alreadySaved: true,
-
-      decoded: '',
-
       closeAllowed: true,
-      //助记词列表假数据
-      testWordsList:[{
-        id: '1',
-        cnt: 'permanently'
-      }]
     }
   },
   methods: {
@@ -363,8 +355,7 @@ export default {
               publicKey: this.newPublicKey,
               walletAddress: this.newAddress
             }
-          }
-          
+          }    
           this.keyFileDataJS = keyDataJSON
           let keyFileData = JSON.stringify(keyDataJSON)
           let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.walletPwd)
@@ -388,7 +379,6 @@ export default {
           domtoimage.toBlob(domSection)
                     .then( (blob) => {
                         FileSaver.saveAs(blob, 'englishWords.png');
-                        this.alreadySaved=true
                     })
           this._AppendWallet(filePath, data)
           return
@@ -400,7 +390,6 @@ export default {
               link.download = 'englishWords.jpeg'
               link.href = dataUrl
               link.click()
-              this.alreadySaved = true
           })
           this._AppendWallet(filePath, data)
           return
@@ -452,15 +441,13 @@ export default {
       })
     },
     enterWallet () {
-      //先打开协议
       let dirPath = require('os').homedir() + '/secwallet'
       let filePath = dirPath + '/default.data'
       if (!fs.existsSync(dirPath)){
         fs.mkdirSync(dirPath);
       }
       fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))
-      
-      //this.agreementDialog = true
+    
       this.enterWalletContent = true
       this.enterButton = false
     },
@@ -470,22 +457,12 @@ export default {
       this.createContent = true
       this.enterWalletContent = false
       this.enterButton = true
-      //this.backUpContent = false
       this.closeAllowed = true
       let walletOrd = this.walletsArr.length + 1
-      //this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-      // let result = this.walletsArr.filter((wallet) => {
-      //   return wallet.walletName === this.newWalletName
-      // })
-      // if(result.length > 0) {
-      //   walletOrd = walletOrd + 1
-      //   this.newWalletName = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-      // }   
     },
     tabWallet (item,index) {
       this.colorArr.fill(false)
       this.colorArr[index] = true
-      console.log(item) //需要的参数可以通过方法 拿
       let res = new Array(this.colorArr.length).fill(false)
       res[index] = !res[index]
       EventBus.$emit('updateQuery', {
@@ -499,15 +476,7 @@ export default {
         colorArr: res
       })
       if (this.$route.name === 'wallet') {
-      //  let transactions = bufferHandler.selectPackedTransactions(item.walletAddress)
-        // if(this.$store.state.Counter.progressCount === 100){   
-        //   EventBus.$emit('insertTransactions', {
-        //     transactions: transactions,
-        //     walletAddress: item.walletAddress
-        //   })
-        // }
         EventBus.$emit('updateWalletInfo', {
-        //  bufferTransactions: transactions,
           walletPwd: this.walletPwd, 
           walletAddress: item.walletAddress, 
           walletPrivateKey: item.privateKey, 
@@ -542,56 +511,21 @@ export default {
     },
 
     _checkWalletName(name, err, data) {
-      let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
-      let keyDataJSON = JSON.parse(keyData)
-      let walletNamesArr = Object.keys(keyDataJSON)
+      let walletNamesArr = walletsHandler.getWalletNamesFromEncrypt(data)
       if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`) > -1) {
-         // In the array!
          this.$alert("Wallet name already exists", '', {
                confirmButtonText: 'OK',
          });
          return
       } else {
-          //Not in the array
-        // 创建钱包方法
-        if (this.confirmP != this.password) {
-           this.$alert('The password input is inconsistent twice, please re-enter', '', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        }  else {
-          let keys = SECUtil.generateSecKeys();
-          let privKey64 = keys.privKey;
-          this.newPrivateKey = privKey64;
-          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-          this.englishWordsArr = this.englishWords.split(' ')
-          let pubKey128 = keys.publicKey;
-          this.newPublicKey = pubKey128.toString("hex");
-
-          //let userAddressBuffer = keys.secAddress;
-          //let userAddress = userAddressBuffer.toString("hex");
-          this.newAddress = keys.secAddress;
-
-          let tokenInfo = {
-            password: this.walletPwd
-          };
-
-          let token = jwt.sign(tokenInfo, "MongoX-Block", {
-            expiresIn: 60 * 60 * 24
-          });
-          this.decoded = this.$JWT.verifyToken(token);
-          if (this.decoded === "") {
-            return;
-          } else {
-            // save to local file
-            this.userToken = token;
-          }
-          //this.createContent = false
-          this.alreadySaved = false
-          //this.closeAllowed = false
-          this.walletPosition = true
-          this.createDialog = false
-        }
+        let keys = walletsHandler.getWalletKeys
+        this.newPrivateKey = keys.privateKey
+        this.englishWords = keys.englishWords
+        this.englishWordsArr = this.englishWords.split(' ')
+        this.newPublicKey = keys.publicKey
+        this.newAddress = keys.userAddress
+        this.walletPosition = true
+        this.createDialog = false
       }
     },
 
@@ -624,17 +558,7 @@ export default {
 
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
         this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
-        // this.$alert('Successfully imported', 'prompt', {
-        //       confirmButtonText: 'Confirm',
-        //  });
       } catch(e) {
-        //之前提示助记词错误弹窗，现在关闭了
-        // this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
-        //       confirmButtonText: 'Confirm',
-        //       callback: action => {
-                
-        //       }
-        //   });
           this.importError = true
           return
       }
@@ -645,7 +569,6 @@ export default {
       }
 
       this.filePath = dirPath + '/default.data'
-      // let mnemonicName = prompt("请设置您导入的钱包名称")
       this.newDialogVisible1=true
     },
 
@@ -654,9 +577,7 @@ export default {
           return
         }
         try {
-          let keyData = CryptoJS.AES.decrypt(data.toString(), pwd).toString(CryptoJS.enc.Utf8)
-          this.keyFileDataJS = JSON.parse(keyData)
-          let walletNamesArr = Object.keys(this.keyFileDataJS)
+          let walletNamesArr = walletsHandler.getWalletNamesFromEncrypt(data)
           let localPrivatKey = ""
           for (let walletName of walletNamesArr) {
               localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
@@ -705,9 +626,6 @@ export default {
             if(err) {
               return
             }
-            // this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
-            //     confirmButtonText: 'Confirm',
-            // });
             this.newDialogVisible1 = false
             this.createDialog = false
             this.createTabBtnActive1 = 'createTabBtnActive'
@@ -740,32 +658,9 @@ export default {
     },
 
     _userAuthRequest: function(walletsArr, walletPwd) {
-      let tokenInfo = {
-        password: walletPwd
-      }
-      let token = jwt.sign(tokenInfo, 'MongoX-Block', {
-        'expiresIn': 60 * 60 * 24
-      })
-
-      window.localStorage.setItem('userToken', token)
-      let walletsBalanceJS = {}
-      for (let wallet of walletsArr) {
-        this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
-          console.log(response)
-          if(response.result.status === 'false') {
-            this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
-          } else if (response.result.status == '0') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          } else if (response.result.status === '1') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          }
-          if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
-            for (let wallet of walletsArr) {
-                wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
-            }
-            this._navToAccountDetail({
+      let walletsBalanceJS = this.$JsonRPCClient.getWalletsBalance(walletsArr)
+      walletsHandler.fillUpWalletsBalance(walletsArr, walletsBalanceJS)
+      this._navToAccountDetail({
               walletPwd: walletPwd,
               privateKey: walletsArr[walletsArr.length-1].privateKey,
               publicKey: walletsArr[walletsArr.length-1].publicKey,
@@ -776,9 +671,26 @@ export default {
               colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
               pageId: 1
             })
-          }
-        })        
-      }      
+      // for (let wallet of walletsArr) {
+      //   this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
+      //     console.log(response)
+      //     if(response.result.status === 'false') {
+      //       this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
+      //           confirmButtonText: 'Confirm',
+      //       });
+      //     } else if (response.result.status == '0') {
+      //       walletsBalanceJS[wallet.walletName] = response.result.value.toString()
+      //     } else if (response.result.status === '1') {
+      //       walletsBalanceJS[wallet.walletName] = response.result.value.toString()
+      //     }
+      //     if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
+      //       for (let wallet of walletsArr) {
+      //           wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
+      //       }
+            
+      //     }
+      //   })        
+      // }      
     },
     _navToAccountDetail: function(params) {
       EventBus.$emit('updateWalletInfo', {
@@ -818,10 +730,6 @@ export default {
     //导入助记词
     mnemonicBtn () {
       return this.mnemonicTxt.length > 0 ? true : false
-    },
-    //循环假数据
-    testList() {
-       return  Array(24).fill(this.testWordsList[0])
     }
    }
 }

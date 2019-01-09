@@ -218,13 +218,11 @@ export default {
         } else {
           let keys = walletsHandler.getWalletKeys()
           this._navToBackUp({
-            id: this.$route.query.id,
             privateKey: keys.privateKey,
             publicKey: keys.publicKey,
             userAddress: keys.userAddress,
             password: this.password,
             englishWords: keys.englishWords,
-            walletPwd: this.walletPwd,
             walletName: this.name
           })
         }
@@ -350,7 +348,6 @@ export default {
       this.btn = "btn2";
       this.btn2 = "btn";
       this.navTit = 'Import wallet'
-      //fs.readFile(filePath, 'utf-8', this._fileRequest.bind(this, this.loginValue))
     },
     exitApp() {
       ipc.send('close')
@@ -395,53 +392,6 @@ export default {
     this.mainCntTab2 = false;
     this.btn = "btn";
     this.btn2 = "btn2";
-  //   if (this.$route.query.id === "1") {
-  //     this.returnPage = "/";
-  //     this.mainCntTab1 = true;
-  //     this.mainCntTab2 = false;
-  //     this.btn = "btn";
-  //     this.btn2 = "btn2";
-  //     this.passCntList = true
-  //   }
-  //   if (this.$route.query.id === "3") {
-  //     this.returnPage = {
-  //       name: 'wallet',
-  //       query: {
-  //         walletPrivateKey: this.$route.query.walletPrivateKey,
-  //         walletPublicKey: this.$route.query.walletPublicKey,
-  //         walletAddress: this.$route.query.walletAddress,
-  //         walletBalance: this.$route.query.walletBalance,
-  //         walletsArr: this.$route.query.walletsArr,
-  //         walletPwd: this.$route.query.walletPwd,
-  //         walletName: this.$route.query.walletName,
-  //         colorArr: this.$route.query.colorArr
-  //       }
-  //     };
-  //     this.tempColorArr = this.$route.query.colorArr
-  //     this.mainCntTab1 = true;
-  //     this.mainCntTab2 = false;
-  //     this.btn = "btn";
-  //     this.btn2 = "btn2";
-  //     this.passCntList = false;
-  //     let walletOrd = this.$route.query.walletsArr.length + 1
-  //     this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-  //     let result = this.$route.query.walletsArr.filter((wallet) => {
-  //       return wallet.walletName === this.name
-  //     })
-  //     if(result.length > 0) {
-  //       walletOrd = walletOrd + 1
-  //       this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-  //     }   
-  //   }
-  //   if (this.$route.query.id === "2") {
-  //     this.returnPage = "/backup";
-  //     this.mainCntTab1 = false;
-  //     this.mainCntTab2 = true;
-  //     this.btn = "btn2";
-  //     this.btn2 = "btn";
-  //     this.passCntList = true
-  //   }
-  //   this.walletPwd = this.$route.query.walletPwd;
    }
 };
 </script>

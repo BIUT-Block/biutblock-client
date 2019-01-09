@@ -67,10 +67,7 @@ export default {
       this.centerDialogVisible = false
       this.$router.push(
           {
-            name: 'create',
-            query: {
-              id: '1'
-            }
+            name: 'create'
           }
         )
     },

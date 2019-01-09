@@ -1,4 +1,5 @@
 const SECUtil = require("@sec-block/secjs-util");
+const CryptoJS = require("crypto-js")
 
 let WalletHandler = {
   getWalletKeys: function () {
@@ -24,6 +25,13 @@ let WalletHandler = {
         wallet['walletBalance'] = walletsBalanceJS[wallet.walletName]
       }
     }
+  },
+
+  getWalletNamesFromEncrypt: function (encryptedData) {
+    let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
+    let keyDataJSON = JSON.parse(keyData)
+    let walletNamesArr = Object.keys(keyDataJSON)
+    return walletNamesArr
   }
 }
 
