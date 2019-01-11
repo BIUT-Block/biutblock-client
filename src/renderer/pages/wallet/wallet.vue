@@ -159,12 +159,6 @@ export default {
       this.colorArr = [true].concat(new Array(this.walletsArr.length-1).fill(false))
     }
 
-    //let transactions = bufferHandler.selectPackedTransactions(this.walletAddress)
-    // EventBus.$emit('insertTransactions', {
-    //   transactions: transactions,
-    //   walletAddress: this.walletAddress
-    // })
-
     this.walletList = []
     this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
       if(response.result.status === '1'){
@@ -172,104 +166,18 @@ export default {
       }
     })
     this.refresh = true
-    this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
-        if (response.result.resultInPool) {
-            for (let j = 0; j < response.result.resultInPool.length; j++) {
-              if (response.result.resultInPool[j].TxTo === this.walletAddress) {
-                  continue
-              //  moneyValue = "+ " + response.result.resultInPool[j].Value
-              //  walletAddressTempInPool = response.result.resultInPool[j].TxFrom
-              } else {
-                moneyValue = "- " + response.result.resultInPool[j].Value
-                walletAddressTempInPool = response.result.resultInPool[j].TxTo
-              }
-              this.walletList.push({
-                id: response.result.resultInPool[j].TxHash,
-                blockNumber: "Not in Block yet",
-                listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
-                listFrom: response.result.resultInPool[j].TxFrom, 
-                listTo: response.result.resultInPool[j].TxTo,              
-                listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
-                listMoney: moneyValue,
-                listMinerCost: response.result.resultInPool[j].TxFee, 
-                listState: "Packed"
-            });
-          }
-        }
-        if (response.result.resultInChain) {
-          for (let i = 0; i < response.result.resultInChain.length; i++) {
-            if (response.result.resultInChain[i].TxTo === this.walletAddress) {
-                moneyValue = "+ " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
-              } else {
-                moneyValue = "- " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[i].TxTo
-              }
-            this.walletList.push({
-              id: response.result.resultInChain[i].TxHash,
-              blockNumber: response.result.resultInChain[i].BlockNumber,
-              listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
-              listFrom: response.result.resultInChain[i].TxFrom,
-              listTo: response.result.resultInChain[i].TxTo,    
-              listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
-              listMoney: moneyValue,
-              listMinerCost: response.result.resultInChain[i].TxFee, 
-              listState: "Successful"
-            });
-          }
-        }
-        if (this.walletList.length === 0) {
-          this.tradingCnt = true
-        } else {
-          this.tradingCnt = false
-        }
-        if (this.walletList.length>4){
-          this.moreCnt = true
-          this.showList = this.walletList.slice(0, 4)
-          // let tempArr = this.walletList.slice(0, 4)
-          // tempArr.forEach(list => {
-          //   this.showList.push(list)
-          // })
-        }
-        else {
-          this.showList = this.walletList
-          // this.walletList.forEach(list => {
-          //   this.showList.push(list)
-          // })
-        }
-        this.refresh = false
-      }
-    );
+
+    this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+      this.walletList = walletList
+      this._tableShow()
+    })
   },
 
   mounted() {
     let moneyValue = ''
     let walletAddressTempInChain = ''
-    EventBus.$on('insertTransactions', (params) => {
-      this.showList = []
-      for (let i = 0; i < params.transactions.length; i++){
-        if (params.transactions[i].TxTo === this.walletAddress) {
-          moneyValue = "+ " + params.transactions[i].value
-          walletAddressTempInChain = params.transactions[i].from
-        } else {
-          moneyValue = "- " + params.transactions[i].value
-          walletAddressTempInChain = params.transactions[i].to
-        }
-        this.showList.push({
-          id: params.transactions[i].txHash,
-          blockNumber: 'Not in Block yet',
-          listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
-          listFrom: params.transactions[i].from,
-          listTo: params.transactions[i].to,    
-          listTime: new Date(params.transactions[i].timestamp).toUTCString(),
-          listMoney: moneyValue,
-          listMinerCost: params.transactions[i].gas, 
-          listState: "Packed"
-        })
-      }
-    })
 
-    EventBus.$on('updateWalletInfo', function (walletParams) {
+    EventBus.$on('updateWalletInfo', (walletParams) => {
       const res = new Array(this.walletsArr.length).fill(false)
       res[walletParams.walletIndex] = !res[walletParams.walletIndex]
       this.colorArr = res
@@ -297,97 +205,33 @@ export default {
         }
       })
       this.refresh = true
-      this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
-        if (this.walletsList) {
-          walletListTemp = this.walletsList
-        } 
-        
-        console.log(response)
-       // let packedTransactions = bufferHandler.filterOutPackedTransactions(walletParams.bufferTransactions, response.result.resultInChain)    
-        if (response.result.resultInPool) {
-            for (let j = 0; j < response.result.resultInPool.length; j++) {
-              if (response.result.resultInPool[j].TxTo === this.walletAddress) {
-                continue
-                //moneyValue = "+ " + response.result.resultInPool[j].Value
-                //walletAddressTempInPool = response.result.resultInPool[j].TxFrom
-              } else {
-                moneyValue = "- " + response.result.resultInPool[j].Value
-                walletAddressTempInPool = response.result.resultInPool[j].TxTo
-              }
-              walletListTemp.push({
-                id: response.result.resultInPool[j].TxHash,
-                blockNumber: "Not in Block yet",
-                listAddress: (walletAddressTempInPool === '0000000000000000000000000000000000000000') ? 'Mined' : `0x${walletAddressTempInPool}`,
-                listFrom: response.result.resultInPool[j].TxFrom,
-                listTo: response.result.resultInPool[j].TxTo,    
-                listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
-                listMoney: moneyValue,
-                listMinerCost: response.result.resultInPool[j].TxFee,
-                listState: "Packed"
-            });
-          }
-        }
-        if (response.result.resultInChain) {
-          for (let i = 0; i < response.result.resultInChain.length; i++) {
-            if (response.result.resultInChain[i].TxTo === this.walletAddress) {
-                moneyValue = "+ " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
-              } else {
-                moneyValue = "- " + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[i].TxTo
-              }
-            // for (let j = 0; j < this.showList.length; j++) {
-            //   if(response.result.resultInChain[i].TxHash === this.showList[j].id) {
-            //     this.showList.splice(j, 1)
-            //   } else {
-            //     this.walletMoney = Number(this.walletMoney) - Number(this.showList[j].listMoney.split(' ')[1])
-            //   }
-            // }
-            walletListTemp.push({
-              id: response.result.resultInChain[i].TxHash,
-              blockNumber: response.result.resultInChain[i].BlockNumber,
-              listAddress: (walletAddressTempInChain === '0000000000000000000000000000000000000000') ? 'Mined' : `0x${walletAddressTempInChain}`,
-              listFrom: response.result.resultInChain[i].TxFrom,
-              listTo: response.result.resultInChain[i].TxTo,
-              listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
-              listMoney: moneyValue,
-              listMinerCost: response.result.resultInChain[i].TxFee,
-              listState: "Successful"
-            });
-          }
-        }
-        this.walletList = walletListTemp
-        if (this.walletList.length>4){
-          this.moreCnt = true
-          this.showList = this.walletList.slice(0,4)
-       //   let tempArr = this.walletList.slice(0, 4)
-       //   tempArr.forEach(list => {
-       //     this.showList.push(list)
-       //   })
-        }
-        else {
-          this.showList = this.walletList
-        //  this.walletList.forEach(list => {
-        //    this.showList.push(list)
-        //  })
-        }
+      this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+        this.walletList = walletList
+        this._tableShow()
+      })
+    })
+  },
+
+  beforeDestroy () {
+    EventBus.$off('updateWalletInfo')
+  },
+
+  methods: {
+    _tableShow() {
         if (this.walletList.length === 0) {
           this.tradingCnt = true
         } else {
           this.tradingCnt = false
         }
+        if (this.walletList.length>4){
+          this.moreCnt = true
+          this.showList = this.walletList.slice(0, 4)
+        }
+        else {
+          this.showList = this.walletList
+        }
         this.refresh = false
-      }
-    );
-    }.bind(this))
-  },
-
-  beforeDestroy () {
-    EventBus.$off('updateWalletInfo')
-  //  EventBus.$off('insertTransactions')
-  },
-
-  methods: {
+    },
     showMore() {
       this.showList = this.walletList
       this.moreCnt = false

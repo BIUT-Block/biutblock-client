@@ -1,5 +1,8 @@
 import jayson from 'jayson/lib/client'
 import Telnet from 'telnet-client'
+import {
+  callbackify
+} from 'util';
 let connection = new Telnet()
 
 export default {
@@ -39,6 +42,58 @@ export default {
           })
         }
         return walletsBalanceJS
+      },
+      getWalletTransactions: function (walletAddress, fnFillWalletList) {
+        let walletList = []
+        let walletAddressTempInPool = ''
+        let walletAddressTempInChain = ''
+        let moneyValue = ''
+        this.client.request('sec_getTransactions', [walletAddress], (err, response) => {
+          if (response.result.resultInPool) {
+            for (let j = 0; j < response.result.resultInPool.length; j++) {
+              if (response.result.resultInPool[j].TxTo === this.walletAddress) {
+                continue
+              } else {
+                moneyValue = "- " + response.result.resultInPool[j].Value
+                walletAddressTempInPool = response.result.resultInPool[j].TxTo
+              }
+              walletList.push({
+                id: response.result.resultInPool[j].TxHash,
+                blockNumber: "Not in Block yet",
+                listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
+                listFrom: response.result.resultInPool[j].TxFrom,
+                listTo: response.result.resultInPool[j].TxTo,
+                listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
+                listMoney: moneyValue,
+                listMinerCost: response.result.resultInPool[j].TxFee,
+                listState: "Packed"
+              })
+            }
+          }
+          if (response.result.resultInChain) {
+            for (let i = 0; i < response.result.resultInChain.length; i++) {
+              if (response.result.resultInChain[i].TxTo === this.walletAddress) {
+                moneyValue = "+ " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
+              } else {
+                moneyValue = "- " + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[i].TxTo
+              }
+              walletList.push({
+                id: response.result.resultInChain[i].TxHash,
+                blockNumber: response.result.resultInChain[i].BlockNumber,
+                listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
+                listFrom: response.result.resultInChain[i].TxFrom,
+                listTo: response.result.resultInChain[i].TxTo,
+                listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
+                listMoney: moneyValue,
+                listMinerCost: response.result.resultInChain[i].TxFee,
+                listState: "Successful"
+              })
+            }
+          }
+          fnFillWalletList(walletList)
+        })
       }
     }
 
