@@ -1,23 +1,12 @@
 import jayson from 'jayson/lib/client'
-import Telnet from 'telnet-client'
-import {
-  callbackify
-} from 'util';
-let connection = new Telnet()
 
 export default {
   install: function (Vue, options) {
-    let timeOut = 1500
     let externalServerAddress = '13.209.3.183'
     let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
-    let localHostParam = {
-      host: localhostAddress,
-      port: localhostPort,
-      shellPrompt: '/ # ',
-      timeout: timeOut
-    }
+
     let jsonRPC = {
       target: '',
       client: '',
@@ -43,40 +32,49 @@ export default {
         }
         return walletsBalanceJS
       },
+      getWalletBalance: function (walletAddress, fnUpdateBalance) {
+        this.client.request('sec_getBalance', [walletAddress], (err, response) => {
+          if (err) return
+          if (response.result.status === '1') {
+            fnUpdateBalance(response.result.value)
+          }
+        })
+      },
       getWalletTransactions: function (walletAddress, fnFillWalletList) {
         let walletList = []
         let walletAddressTempInPool = ''
         let walletAddressTempInChain = ''
         let moneyValue = ''
         this.client.request('sec_getTransactions', [walletAddress], (err, response) => {
+          if (err) return
           if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
-              if (response.result.resultInPool[j].TxTo === this.walletAddress) {
+              if (response.result.resultInPool[j].TxTo === walletAddress) {
                 continue
               } else {
-                moneyValue = "- " + response.result.resultInPool[j].Value
+                moneyValue = '- ' + response.result.resultInPool[j].Value
                 walletAddressTempInPool = response.result.resultInPool[j].TxTo
               }
               walletList.push({
                 id: response.result.resultInPool[j].TxHash,
-                blockNumber: "Not in Block yet",
+                blockNumber: 'Not in Block yet',
                 listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTo: response.result.resultInPool[j].TxTo,
                 listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInPool[j].TxFee,
-                listState: "Packed"
+                listState: 'Packed'
               })
             }
           }
           if (response.result.resultInChain) {
             for (let i = 0; i < response.result.resultInChain.length; i++) {
-              if (response.result.resultInChain[i].TxTo === this.walletAddress) {
-                moneyValue = "+ " + response.result.resultInChain[i].Value
+              if (response.result.resultInChain[i].TxTo === walletAddress) {
+                moneyValue = '+ ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxFrom
               } else {
-                moneyValue = "- " + response.result.resultInChain[i].Value
+                moneyValue = '- ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxTo
               }
               walletList.push({
@@ -88,11 +86,19 @@ export default {
                 listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInChain[i].TxFee,
-                listState: "Successful"
+                listState: 'Successful'
               })
             }
           }
           fnFillWalletList(walletList)
+        })
+      },
+      sendTransactions: function (walletAddress, transferData, fnAfterTransaction) {
+        this.client.request('sec_sendRawTransaction', transferData, (err, response) => {
+          if (err) return
+          if (response.result.status === '1') {
+            this.getWalletBalance(walletAddress, fnAfterTransaction)
+          }
         })
       }
     }

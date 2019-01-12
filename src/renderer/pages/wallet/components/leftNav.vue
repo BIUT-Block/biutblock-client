@@ -253,9 +253,6 @@ export default {
       newDialogVisible1: false,
       newDialogLabel1: "",
       newDialogInput1: "",
-      newDialogVisible2: false,
-      newDialogLabel2: "There is no account information locally. This is your first wallet. Please set your new account password.",
-      newDialogInput2: "",
       mnemonicWallet: {
         privateKey: '',
         pubKey128ToString: '',
