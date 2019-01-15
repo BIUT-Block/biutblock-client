@@ -171,9 +171,6 @@ export default {
   },
 
   mounted() {
-    let moneyValue = ''
-    let walletAddressTempInChain = ''
-
     EventBus.$on('updateWalletInfo', (walletParams) => {
       const res = new Array(this.walletsArr.length).fill(false)
       res[walletParams.walletIndex] = !res[walletParams.walletIndex]
