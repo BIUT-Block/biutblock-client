@@ -207,7 +207,7 @@ export default {
                 confirmButtonText: 'Confirm',
           });
       } else {
-          this._encryptTransaction()
+          let transferData = this._encryptTransaction()
           this.$JsonRPCClient.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
             this.allMoney = walletBalance
             this.$alert('Submitted Successfully.', '', {

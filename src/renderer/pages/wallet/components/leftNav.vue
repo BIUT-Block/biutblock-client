@@ -17,7 +17,7 @@
             </li> -->
           </ul>
           <button class="btn pointerTxt" @click="createWallet">
-            <icon class="el-icon-plus" style="font-weight: bold;font-size:14px;marign-right:5px;"></icon>
+            <i class="el-icon-plus" style="font-weight: bold;font-size:14px;marign-right:5px;"></i>
             Create A New Wallet</button>
         </section>
       </el-col>
