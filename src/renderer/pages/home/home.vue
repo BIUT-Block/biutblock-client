@@ -142,8 +142,7 @@ export default {
           this.icon_set = icon_set
           this.setList = false
           break
-      }
-      
+      } 
     })
   },
   methods: {

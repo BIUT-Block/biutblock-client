@@ -648,27 +648,7 @@ export default {
               walletName: walletsArr[walletsArr.length-1].walletName,
               colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
               pageId: 1
-            })
-      // for (let wallet of walletsArr) {
-      //   this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
-      //     console.log(response)
-      //     if(response.result.status === 'false') {
-      //       this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
-      //           confirmButtonText: 'Confirm',
-      //       });
-      //     } else if (response.result.status == '0') {
-      //       walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-      //     } else if (response.result.status === '1') {
-      //       walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-      //     }
-      //     if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
-      //       for (let wallet of walletsArr) {
-      //           wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
-      //       }
-            
-      //     }
-      //   })        
-      // }      
+            })    
     },
     _navToAccountDetail: function(params) {
       EventBus.$emit('updateWalletInfo', {

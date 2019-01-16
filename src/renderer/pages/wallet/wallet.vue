@@ -329,68 +329,15 @@ export default {
           
           this.walletList = []
           let moneyValue = ""
-          this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, response) => {
-            if(response.result.status === '1'){
-              this.walletMoney = response.result.value
-            }
+
+          this.$JsonRPCClient.getWalletBalance(this.walletAddress, (walletBalance) => {
+            this.walletMoney = walletBalance
           })
           this.refresh = true
-          this.$JsonRPCClient.client.request("sec_getTransactions", [this.walletAddress], (err, response) => {
-              if (response.result.resultInPool) {
-                  for (let j = 0; j < response.result.resultInPool.length; j++) {
-                    if (response.result.resultInPool[j].TxTo === this.walletAddress) {
-                      moneyValue = "+ " + response.result.resultInPool[j].Value
-                    } else {
-                      moneyValue = "- " + response.result.resultInPool[j].Value
-                    }
-                    this.walletList.push({
-                      id: response.result.resultInPool[j].TxHash,
-                      blockNumber: "Not in Block yet",
-                      listAddress: response.result.resultInPool[j].TxTo === '0000000000000000000000000000000000000000' ? 'Mined' : response.result.resultInPool[j].TxTo,
-                      listFrom: response.result.resultInPool[j].TxFrom,
-                      listTo: response.result.resultInPool[j].TxTo,
-                      listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
-                      listMoney: moneyValue,
-                      listMinerCost: response.result.resultInPool[j].TxFee,
-                      listState: "Packed"
-                  });
-                }
-              }
-              if (response.result.resultInChain) {
-                for (let i = 0; i < response.result.resultInChain.length; i++) {
-                  if (response.result.resultInChain[i].TxTo === this.walletAddress) {
-                      moneyValue = "+ " + response.result.resultInChain[i].Value
-                    } else {
-                      moneyValue = "- " + response.result.resultInChain[i].Value
-                    }
-                  this.walletList.push({
-                    id: response.result.resultInChain[i].TxHash,
-                    blockNumber: response.result.resultInChain[i].BlockNumber,
-                    listAddress: response.result.resultInChain[i].TxTo === '0000000000000000000000000000000000000000' ? 'Mined' : response.result.resultInChain[i].TxTo,
-                    listFrom: response.result.resultInChain[i].TxFrom,     
-                    listTo: response.result.resultInChain[i].TxTo,                   
-                    listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
-                    listMoney: moneyValue,
-                    listMinerCost: response.result.resultInChain[i].TxFee,
-                    listState: "Successful"
-                  });
-                }
-              }
-              if (this.walletList.length>4){
-                this.moreCnt = true
-                this.showList = this.walletList.slice(0, 4) 
-              }
-              else {
-                this.showList = this.walletList
-              }
-              if (this.walletList.length === 0) {
-                this.tradingCnt = true
-              } else {
-                this.tradingCnt = false
-              }
-              this.refresh = false
-            }
-          );
+          this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+            this.walletList = walletList
+            this._tableShow()
+          })
           fs.writeFile(filePath, cipherKeyData, (err) => {
             if(err) {
               return
@@ -405,6 +352,9 @@ export default {
       //有列表  直接 加载
       //无数据 this.tradingCnt = true
     }
+  },
+  computed: {
+
   },
   components: {
     leftNav
