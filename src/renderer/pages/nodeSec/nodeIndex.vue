@@ -283,7 +283,7 @@ export default {
           }.bind(this), 2500)
         }
       })
-     this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
+      this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
       //this.centerDialogVisible = true
     }
   },

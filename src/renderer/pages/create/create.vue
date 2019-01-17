@@ -41,7 +41,7 @@
               maxlength="12"
               clearable>
             </el-input>
-            <section v-show="passCntList">
+            <section>
               <!-- <p class="mainCntTab1Txt">password</p> -->
               <section style="margin: 12px 0;">
                   <el-input
@@ -126,69 +126,6 @@
 
       <el-dialog
           title="prompt"
-          :visible.sync="newDialogVisible2"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel2}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput2"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible2 = false; newDialogFn2()">OK</button>
-          </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"
-          :visible.sync="newDialogVisible3"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel3}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput3"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible3 = false; newDialogFn3()">OK</button>
-          </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"     
-          :visible.sync="newDialogVisible4"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel4}}
-          </p>
-          <el-input
-              type="password"
-              placeholder="Please input"
-              v-model="newDialogInput4"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible4 = false; newDialogFn4()">OK</button>
-          </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"
           :visible.sync="newDialogVisible5"
           width="432px"
           :show-close = true
@@ -207,34 +144,9 @@
           <span slot="footer" class="dialog-footer">
             <button class="publicBtn publicBtnAcitve" @click="newDialogVisible5 = false; newDialogFn5()">OK</button>
           </span>
-      </el-dialog>
-      <el-dialog
-          title="prompt"
-          :visible.sync="newDialogVisible6"
-          width="432px"
-          :show-close = true
-          :closeOnClickModal = false
-          top="25vh"
-          center>
-          <p style="color: #939CB2;font-size:14px;text-align: center;margin: 60px 0 93px;">
-            {{newDialogLabel6}}
-          </p>
-          <el-input
-              type="text"
-              placeholder="Please input"
-              v-model="newDialogInput6"
-              clearable>
-          </el-input>
-          <span slot="footer" class="dialog-footer">
-            <button class="publicBtn publicBtnAcitve" @click="newDialogVisible6 = false; newDialogFn6()">OK</button>
-          </span>
-      </el-dialog>                              
+      </el-dialog>           
     </main>
-
   </el-container>
-
-
- 
 </template>
 
 <script>
@@ -245,17 +157,18 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs")
 import waitingImg from '../../assets/image/waitingImg.png'
 import successImg from '../../assets/image/successImg.png'
+import walletsHandler from '../../lib/WalletsHandler'
 //const secUtil = new SECUtil()
 export default {
   name: "",
   data() {
     return {
-      layoutPosition: false, // 设置 false隐藏
-      layoutPositionImg: waitingImg, // waitingImg 导入中的图片  successImg 导入成功的图片
-      layoutPositionTxt: 'Import into the wallet...',// Import into the wallet... 导入中的文字 Pass the test 导入成功的文字
-      passTxt: false, //默认密码提示不显示
+      layoutPosition: false,
+      layoutPositionImg: waitingImg,
+      layoutPositionTxt: 'Import into the wallet...',
+      passTxt: false,
       returnPage: "/",
-      name: '', //默认钱包显示，格式为“wallet+个数”，个数是根据目前应用中存在的钱包个数+1；若存在重复，则个数继续+1
+      name: '',
       password: "",
       confirmP: "",
       privateKey: "",
@@ -267,21 +180,9 @@ export default {
       newDialogVisible1: false,
       newDialogLabel1: "Please set the name of the wallet you imported",
       newDialogInput1: "",
-      newDialogVisible2: false,
-      newDialogLabel2: "There is no account information locally. This is your first wallet. Please set your new account password.",
-      newDialogInput2: "",
-      newDialogVisible3: false,
-      newDialogLabel3: "If you want to save your existing account, please enter 1. If you want to create a new account (all wallet information in the original account will be lost), please enter 2",
-      newDialogInput3: "",
-      newDialogVisible4: false,
-      newDialogLabel4: "You have chosen to save your account, please log in to your original account.",
-      newDialogInput4: "",
       newDialogVisible5: false,
       newDialogLabel5: "You have chosen to create a new account, please set a password.",
       newDialogInput5: "",
-      newDialogVisible6: false,
-      newDialogLabel6: "The wallet you imported is duplicated with the name of the wallet in the existing account. Please rename it.",
-      newDialogInput6: "",
       filePath: "",
       keyFileDataJS: {},                  
       btn: "btn",
@@ -289,11 +190,6 @@ export default {
       navTit: 'Wallet Creation',
       tempColorArr: [],
       mnemonicTxt: "",
-      newUserAccount: {
-        walletName: "",
-        password: "",
-        repeatPassword: ""
-      },
       mnemonicWallet: {
         privateKey: '',
         pubKey128ToString: '',
@@ -303,20 +199,12 @@ export default {
   },
   methods: {
     createBtn() {
-      //检查钱包名字是否重复
-      console.log('Button')
       if (this.walletName === ''){
         this.$alert('You need to give the wallet a name.', 'prompt', {
               confirmButtonText: 'Confirm',
         });
         return
       }
-
-      if (this.walletPwd && this.walletPwd!==""){
-        let dirPath = require('os').homedir() + '/secwallet'
-        let filePath = dirPath + '/default.data'
-        fs.readFile(filePath, 'utf-8', this._checkWalletName.bind(this, this.name))
-      } else {
         if (this.confirmP != this.password) {
           this.$alert('The input passwords are not same. Please enter again.', 'prompt', {
               confirmButtonText: 'Confirm',
@@ -328,114 +216,23 @@ export default {
           });
           return;
         } else {
-          let keys = SECUtil.generateSecKeys();
-          let privKey64 = keys.privKey;
-          this.privateKey = privKey64;
-          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-
-          let pubKey128 = keys.publicKey;
-          this.pubKey128ToString = pubKey128.toString("hex");
-          this.userAddressToString = keys.secAddress;
-
-          let tokenInfo = {
-            password: this.newUserAccount.password
-          };
-
-          let token = jwt.sign(tokenInfo, "MongoX-Block", {
-            expiresIn: 60 * 60 * 24
-          });
-          this.decoded = this.$JWT.verifyToken(token);
-          //成功就跳转到助记词
-          //this.$router.push('/backup')
-          //失败  弹出提示框，不做任何跳转
-          if (this.decoded === "") {
-            return;
-          } else {
-            // save to local file
-            this.userToken = token;
-          }
-          this.$router.push({
-            name: "backup",
-            query: {
-              id: this.$route.query.id,
-              privateKey: this.privateKey,
-              publicKey: this.pubKey128ToString,
-              userAddress: this.userAddressToString,
-              password: this.password,
-              englishWords: this.englishWords,
-              walletPwd: this.walletPwd,
-              walletName: this.name,
-            }
-          });
+          let keys = walletsHandler.getWalletKeys()
+          this._navToBackUp({
+            privateKey: keys.privateKey,
+            publicKey: keys.publicKey,
+            userAddress: keys.userAddress,
+            password: this.password,
+            englishWords: keys.englishWords,
+            walletName: this.name
+          })
         }
-      }
     },
 
-    _checkWalletName(name, err, data) {
-      let keyData = CryptoJS.AES.decrypt(data.toString(), this.walletPwd).toString(CryptoJS.enc.Utf8)
-      let keyDataJSON = JSON.parse(keyData)
-      let walletNamesArr = Object.keys(keyDataJSON)
-      if (walletNamesArr.indexOf(name) > -1 || walletNamesArr.indexOf(`"${name}"`)) {
-          //In the array!
-          this.$alert("Wallet name already exists", '', {
-                confirmButtonText: 'OK',
-          });
-          return
-      } else {
-          //Not in the array
-        // 创建钱包方法
-        if (this.confirmP != this.password) {
-           this.$alert('The password input is inconsistent twice, please re-enter', '', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        }  else {
-          let keys = SECUtil.generateSecKeys();
-          let privKey64 = keys.privKey;
-          this.privateKey = privKey64;
-          this.englishWords = SECUtil.entropyToMnemonic(privKey64);
-
-          let pubKey128 = keys.publicKey;
-          this.pubKey128ToString = pubKey128.toString("hex");
-
-          //let userAddressBuffer = keys.secAddress;
-          //let userAddress = userAddressBuffer.toString("hex");
-          this.userAddressToString = keys.secAddress;
-
-          let tokenInfo = {
-            password: this.newUserAccount.password
-          };
-
-          let token = jwt.sign(tokenInfo, "MongoX-Block", {
-            expiresIn: 60 * 60 * 24
-          });
-          this.decoded = this.$JWT.verifyToken(token);
-          //成功就跳转到助记词
-          //this.$router.push('/backup')
-          //失败  弹出提示框，不做任何跳转
-          if (this.decoded === "") {
-            return;
-          } else {
-            // save to local file
-            this.userToken = token;
-          }
-          this.$router.push({
-            name: "backup",
-            query: {
-              id: this.$route.query.id,
-              privateKey: this.privateKey,
-              publicKey: this.pubKey128ToString,
-              userAddress: this.userAddressToString,
-              password: this.password,
-              englishWords: this.englishWords,
-              walletsArr: this.$route.query.walletsArr,
-              walletPwd: this.walletPwd,
-              walletName: this.name,
-              colorArr: this.tempColorArr
-            }
-          });
-        }
-      }
+    _navToBackUp(params) {
+      this.$router.push({
+        name: 'backup',
+        query: params
+      })
     },
 
     newDialogFn1() {
@@ -447,57 +244,7 @@ export default {
           walletAddress: this.mnemonicWallet.userAddressToString
         }
       }
-
-      if (!fs.existsSync(this.filePath)){
-        this.newDialogVisible2 = true
-      } else {
-        if (this.walletPwd && this.walletPwd!=="") {
-          fs.readFile(this.filePath, 'utf-8', this._fileRequest.bind(this, this.walletPwd, this.newDialogInput1))
-        } else {
-          // let isNewKeyFile = prompt('检测到本地已有账户，如果想保存您已有账户，请输入1，如果想新建账户(原账户内所有钱包信息将丢失), 请输入2')
-          this.newDialogVisible3 = true
-        }
-      }
-    },
-
-    newDialogFn2() {
-      let keyFileData = JSON.stringify(this.keyFileDataJS)
-      let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.newDialogInput2)
-      fs.writeFile(this.filePath, cipherKeyData, (err) => {
-        if(err) {
-          return
-        }
-        this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
-              confirmButtonText: 'Confirm',
-              confirmButtonClass: 'ListBtn'
-          });
-      })
-      this._mnemonicNavToWallet(this.keyFileDataJS, this.mnemonicPwd)
-    },
-
-    newDialogFn3() {
-      if (this.newDialogInput3==="1") {
-        // let mnemonicPwd = prompt('您选择了保存账户，请登陆原有账户')
-        this.newDialogVisible4 = true
-
-      } else if (this.newDialogInput3==="2") {
-        // let mnemonicPwd = prompt('您选择了新建账户，请设置密码')
-        this.newDialogVisible5 = true
-      } else {
-        this.$alert('Please enter 1 or 2', '', {
-              confirmButtonText: 'Confirm',
-          });
-      }    
-    },
-
-    newDialogFn4() {
-      if(!new RegExp(/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/).test(this.newDialogInput4)){
-          this.$alert('The password formatt is wrong. Please enter 8 - 30 character with number and letter.', 'prompt', {
-              confirmButtonText: 'Confirm',
-          });
-          return;
-        }
-      fs.readFile(this.filePath, 'utf-8', this._fileRequest.bind(this, this.newDialogInput4, this.newDialogInput1))
+      this.newDialogVisible5 = true   
     },
 
     newDialogFn5() {
@@ -519,9 +266,7 @@ export default {
       })
       this._mnemonicNavToWallet(this.keyFileDataJS, this.newDialogInput5)
     },
-    newDialogFn6() {
-      fs.readFile(this.filePath, 'utf-8', this._fileRequest.bind(this, this.newDialogInput4, this.newDialogInput6))
-    },                    
+                 
     importingFrom() {
       try{
         this.mnemonicWallet.privateKey = SECUtil.mnemonicToEntropy(this.mnemonicTxt)
@@ -532,9 +277,6 @@ export default {
 
         let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
         this.mnemonicWallet.userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
-        // this.$alert('Successfully imported', 'prompt', {
-        //       confirmButtonText: 'Confirm',
-        //  });
       } catch(e) {
         this.$alert('The mnemonic import failed, please confirm that the mnemonic is correct.', 'prompt', {
               confirmButtonText: 'Confirm',
@@ -546,64 +288,8 @@ export default {
       if (!fs.existsSync(dirPath)){
         fs.mkdirSync(dirPath);
       }
-
       this.filePath = dirPath + '/default.data'
-      // let mnemonicName = prompt("请设置您导入的钱包名称")
       this.newDialogVisible1=true
-    },
-
-    _fileRequest: function(pwd, mnemonicName, err, data){
-        if (err) {
-          return
-        }
-        try {
-          let keyData = CryptoJS.AES.decrypt(data.toString(), pwd).toString(CryptoJS.enc.Utf8)
-          this.keyFileDataJS = JSON.parse(keyData)
-          let walletNamesArr = Object.keys(this.keyFileDataJS)
-          let localPrivatKey = ""
-          for (let walletName of walletNamesArr) {
-              localPrivatKey = this.keyFileDataJS[walletName]["privateKey"]
-              if (localPrivatKey===this.mnemonicWallet.privateKey) {
-                this.$alert(`The wallet information is already local, local wallet name ${walletName}`, 'prompt', {
-                    confirmButtonText: 'Confirm',
-                });
-                return 
-              }
-          }
-          if(walletNamesArr.indexOf(mnemonicName)>-1){
-            // mnemonicName = prompt('您导入的钱包与已有账户中的钱包名字重复，请重命名')
-            this.newDialogVisible6 = true
-            return
-          }
-          if (!isNaN(Number(mnemonicName))) {
-            this.keyFileDataJS[`"${mnemonicName}"`] = {
-              privateKey: this.mnemonicWallet.privateKey,
-              publicKey: this.mnemonicWallet.pubKey128ToString,
-              walletAddress: this.mnemonicWallet.userAddressToString
-            }
-          } else {
-            this.keyFileDataJS[mnemonicName] = {
-              privateKey: this.mnemonicWallet.privateKey,
-              publicKey: this.mnemonicWallet.pubKey128ToString,
-              walletAddress: this.mnemonicWallet.userAddressToString
-            }
-          }
-          let keyFileData = JSON.stringify(this.keyFileDataJS)
-          let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, pwd)
-          fs.writeFile(this.filePath, cipherKeyData, (err) => {
-            if(err) {
-              return
-            }
-            this.$alert(`The encrypted file saved in ${this.filePath}`, '', {
-                confirmButtonText: 'Confirm',
-            });
-          })
-          this._mnemonicNavToWallet(this.keyFileDataJS, pwd)
-        } catch(e) {
-          this.$alert('Can not import the wallet', '', {
-                confirmButtonText: 'Confirm',
-            });
-        }
     },
 
     _mnemonicNavToWallet: function(keyDataJSON, pwd) {
@@ -619,32 +305,10 @@ export default {
     },
 
     _userAuthRequest: function(walletsArr, walletPwd) {
-      let tokenInfo = {
-        password: walletPwd
-      }
-      let token = jwt.sign(tokenInfo, 'MongoX-Block', {
-        'expiresIn': 60 * 60 * 24
-      })
-
-      window.localStorage.setItem('userToken', token)
       let walletsBalanceJS = {}
-      for (let wallet of walletsArr) {
-        this.$JsonRPCClient.client.request('sec_getBalance', [wallet.walletAddress], (err, response) => {
-          console.log(response)
-          if(response.result.status === 'false') {
-            this.$alert('Unable to get balance, wallet address may be invalid', 'prompt', {
-                confirmButtonText: 'Confirm',
-            });
-          } else if (response.result.status == '0') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          } else if (response.result.status === '1') {
-            walletsBalanceJS[wallet.walletName] = response.result.value.toString()
-          }
-          if (Object.keys(walletsBalanceJS).length === walletsArr.length) {
-            for (let wallet of walletsArr) {
-                wallet["walletBalance"] = walletsBalanceJS[wallet.walletName]
-            }
-            this._navToAccountDetail({
+      walletsBalanceJS = this.$JsonRPCClient.getAllWalletsBalance(walletsArr)
+      walletsHandler.fillUpWalletsBalance(walletsArr, walletsBalanceJS)
+      this._navToAccountDetail({
               walletPwd: walletPwd,
               privateKey: walletsArr[walletsArr.length-1].privateKey,
               publicKey: walletsArr[walletsArr.length-1].publicKey,
@@ -654,10 +318,7 @@ export default {
               walletName: walletsArr[walletsArr.length-1].walletName,
               colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
               pageId: 1
-            })
-          }
-        })        
-      }      
+            })      
     },
     _navToAccountDetail: function(params) {
       this.$router.push({
@@ -687,7 +348,6 @@ export default {
       this.btn = "btn2";
       this.btn2 = "btn";
       this.navTit = 'Import wallet'
-      //fs.readFile(filePath, 'utf-8', this._fileRequest.bind(this, this.loginValue))
     },
     exitApp() {
       ipc.send('close')
@@ -701,80 +361,24 @@ export default {
   },
   computed: {
     createActiveBtn() {
-      if (this.$route.query.id === "1") {
-        if (this.password.length > 0) {
-          this.passTxt = true
-        } else {
-          this.passTxt = false
-        }
-        return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
+      if (this.password.length > 0) {
+        this.passTxt = true
+      } else {
+        this.passTxt = false
       }
-      if (this.$route.query.id === "3") {
-        return this.name.length > 0 ? true : false;
-      }
-      if (this.$route.query.id === "2") {
-        this.navTit = 'Import wallet'
-        if (this.password.length > 0) {
-          this.passTxt = true
-        } else {
-          this.passTxt = false
-        }
-        return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
-      }
+      return (this.name.length > 0 && this.password.length > 7 && this.confirmP.length > 7) ? true : false;
     },
     publicBtnAcitve() {
       return this.mnemonicTxt.length > 0 ? true : false;
     }
   },
   created() {
-    if (this.$route.query.id === "1") {
-      this.returnPage = "/";
-      this.mainCntTab1 = true;
-      this.mainCntTab2 = false;
-      this.btn = "btn";
-      this.btn2 = "btn2";
-      this.passCntList = true
-    }
-    if (this.$route.query.id === "3") {
-      this.returnPage = {
-        name: 'wallet',
-        query: {
-          walletPrivateKey: this.$route.query.walletPrivateKey,
-          walletPublicKey: this.$route.query.walletPublicKey,
-          walletAddress: this.$route.query.walletAddress,
-          walletBalance: this.$route.query.walletBalance,
-          walletsArr: this.$route.query.walletsArr,
-          walletPwd: this.$route.query.walletPwd,
-          walletName: this.$route.query.walletName,
-          colorArr: this.$route.query.colorArr
-        }
-      };
-      this.tempColorArr = this.$route.query.colorArr
-      this.mainCntTab1 = true;
-      this.mainCntTab2 = false;
-      this.btn = "btn";
-      this.btn2 = "btn2";
-      this.passCntList = false;
-      let walletOrd = this.$route.query.walletsArr.length + 1
-      this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-      let result = this.$route.query.walletsArr.filter((wallet) => {
-        return wallet.walletName === this.name
-      })
-      if(result.length > 0) {
-        walletOrd = walletOrd + 1
-        this.name = walletOrd < 10 ? "wallet 0" + walletOrd : "wallet " + walletOrd
-      }   
-    }
-    if (this.$route.query.id === "2") {
-      this.returnPage = "/backup";
-      this.mainCntTab1 = false;
-      this.mainCntTab2 = true;
-      this.btn = "btn2";
-      this.btn2 = "btn";
-      this.passCntList = true
-    }
-    this.walletPwd = this.$route.query.walletPwd;
-  }
+    this.returnPage = "/";
+    this.mainCntTab1 = true;
+    this.mainCntTab2 = false;
+    this.btn = "btn";
+    this.btn2 = "btn2";
+   }
 };
 </script>
 

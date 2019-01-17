@@ -113,10 +113,9 @@
 <script>
 import leftNav from './components/leftNav'
 import {EventBus} from "../../lib/EventBus.js"
-//const BufferHandler =  require("../../lib/BufferHandler") 
 const SECUtil = require('@sec-block/secjs-util')
 const jwt = require('jsonwebtoken')
-//const bufferHandler = new BufferHandler()
+
 export default {
   name: '',
   data () {
@@ -138,7 +137,7 @@ export default {
       walletPwd: this.$route.query.walletPwd,
       walletName: this.$route.query.walletName,
       colorArr: this.$route.query.colorArr,
-      password: '', //转账密码,
+      password: '',
       isDetermineClick: false
     }
   },
@@ -198,13 +197,9 @@ export default {
         this.centerDialogVisible = true
       }
     },
-    // determineTransferGo () {
-    //   this.centerDialogVisible = false
-    //   this.dialogVisible = true
-    // },
+
     determineTransfer () {
       this.transferBtn = true
-      //转账功能   转账的结果 给个 alert提示
       this.isDetermineClick = true
       let determineTransfer = false
       if(parseFloat(this.amount) > parseFloat(this.walletMoney)) {
@@ -212,9 +207,20 @@ export default {
                 confirmButtonText: 'Confirm',
           });
       } else {
-          let addressFormat = this.address.replace('0x', '')
-          let timeStamp = new Date().getTime()
-          let transferData = [{
+          let transferData = this._encryptTransaction()
+          this.$JsonRPCClient.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
+            this.allMoney = walletBalance
+            this.$alert('Submitted Successfully.', '', {
+                confirmButtonText: 'Confirm',
+              });
+            this._navBackToWallet()
+          })
+      }
+    },
+    _encryptTransaction: function () {
+      let addressFormat = this.address.replace('0x', '')
+      let timeStamp = new Date().getTime()
+      let transferData = [{
             timestamp: timeStamp,
             from: this.walletAddress,
             to: addressFormat,
@@ -227,56 +233,41 @@ export default {
             data: this.remarks,
             inputData: this.remarks
           }]
-          const tokenTxBuffer = [
-            SECUtil.bufferToInt(transferData[0].timestamp),
-            Buffer.from(transferData[0].from, 'hex'),
-            Buffer.from(transferData[0].to, 'hex'),
-            Buffer.from(transferData[0].value),
-            Buffer.from(transferData[0].contractAddress),
-            Buffer.from(transferData[0].gasLimit),
-            Buffer.from(transferData[0].gas),
-            Buffer.from(transferData[0].gasPrice),
-            Buffer.from(transferData[0].inputData)
-          ]
-          let txSigHash = Buffer.from(SECUtil.rlphash(tokenTxBuffer).toString('hex'), 'hex')
-          let signature = SECUtil.ecsign(txSigHash, Buffer.from(this.privateKey, 'hex'))
+      const tokenTxBuffer = [
+        SECUtil.bufferToInt(transferData[0].timestamp),
+        Buffer.from(transferData[0].from, 'hex'),
+        Buffer.from(transferData[0].to, 'hex'),
+        Buffer.from(transferData[0].value),
+        Buffer.from(transferData[0].contractAddress),
+        Buffer.from(transferData[0].gasLimit),
+        Buffer.from(transferData[0].gas),
+        Buffer.from(transferData[0].gasPrice),
+        Buffer.from(transferData[0].inputData)
+      ]
+      let txSigHash = Buffer.from(SECUtil.rlphash(tokenTxBuffer).toString('hex'), 'hex')
+      let signature = SECUtil.ecsign(txSigHash, Buffer.from(this.privateKey, 'hex'))
           transferData[0].data = {
             v: signature.v,
             r: signature.r.toString('hex'),
             s: signature.s.toString('hex')
-          }
+        }
+      return transferData
+    },
 
-          this.$JsonRPCClient.client.request('sec_sendRawTransaction', transferData, (err, response) => {
-            if(response.result.status === '1') {
-              // if(this.$store.state.Counter.progressCount !== 100){
-              //   bufferHandler.insertTransaction(transferData, response.result.txHash)
-              // }
-              //this.dialogVisible = false
-              this.centerDialogVisible = false
-              this.$JsonRPCClient.client.request('sec_getBalance', [this.walletAddress], (err, responseBalance) => {
-                if(responseBalance.result.status === '1'){
-                  this.allMoney = responseBalance.result.value
-                }
-              })
-              this.$alert('Submitted Successfully.', '', {
-                confirmButtonText: 'Confirm',
-              });
-              this.$router.push(
-                {
-                  name: 'wallet', 
-                  query: {
-                    walletAddress: this.walletAddress, 
-                    walletPrivateKey: this.privateKey, 
-                    walletName:this.walletName, 
-                    walletsArr: this.walletsArr, 
-                    walletPwd: this.walletPwd, 
-                    walletPublicKey: this.publicKey, 
-                    walletBalance: this.walletMoney, 
-                    colorArr: this.colorArr}
-              })
-            }
-          })
-      }
+    _navBackToWallet: function () {
+      this.$router.push({
+        name: 'wallet', 
+        query: {
+          walletAddress: this.walletAddress, 
+          walletPrivateKey: this.privateKey, 
+          walletName:this.walletName, 
+          walletsArr: this.walletsArr, 
+          walletPwd: this.walletPwd, 
+          walletPublicKey: this.publicKey, 
+          walletBalance: this.walletMoney, 
+          colorArr: this.colorArr
+        }
+      })
     }
   },
   computed: {

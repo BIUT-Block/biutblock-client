@@ -39,7 +39,7 @@
               {{privateKey}}
             </section>
             <section class="backupBtn">
-              <button class="publicBtn publicBtnAcitve" @click="enterWallet1">Backed up, enter the wallet</button>
+              <button class="publicBtn publicBtnAcitve" @click="backUpComplete">Backed up, enter the wallet</button>
             </section>
           </section>
         </el-col> 
@@ -104,7 +104,8 @@
               </div>
             </section>
           </el-dialog> -->
-
+      <el-row class="backupCnt">
+        <el-col :span="24">
           <el-dialog
             title=""
             :visible.sync="dialogVisible"
@@ -130,7 +131,6 @@
               <button class="publicBtn publicBtnAcitve" style="margin-top:30px"  @click="enterWallet">Enter the wallet</button>
             </span>
           </el-dialog>
-
         </el-col>
       </el-row>
     </main>
@@ -159,22 +159,16 @@ export default {
       dialogVisible: false,
       englishWords: [],
       englishWordsString: '',
-      privateKey: "",
-      password: "",
+      privateKey: '',
+      password: '',
       keyFileDataJS: {},
-      walletPwd: "",
-      walletName: "",
+      walletPwd: '',
+      walletName: '',
       walletsArr: '',
-      walletBalance: "",
+      walletBalance: '',
       alreadySaved: true,
       colorArr: [],
-      saveSuccess: true,
-      testWordsList:[
-        {
-          id: '1',
-          cnt: 'transaction'
-        }
-      ]
+      saveSuccess: true
     }
   },
   methods: {
@@ -287,7 +281,7 @@ export default {
       //     confirmButtonText: 'Confirm',
       // });
     },
-    enterWallet1 () {
+    backUpComplete () {
       let dirPath = require('os').homedir() + '/secwallet'
       let filePath = dirPath + '/default.data'
       if (!fs.existsSync(dirPath)){
@@ -323,43 +317,23 @@ export default {
         walletInfo["walletName"] = walletName
         walletsArr.push(walletInfo)
       }
-      if (this.walletPwd) {
-        this.$router.push({name: 'wallet', query: {
-            privateKey: this.privateKey,
-            publicKey: this.publicKey,
-            walletAddress: this.secAddress,
-            walletBalance: '10',
-            walletsArr: walletsArr,
-            walletPwd: this.walletPwd,
-            walletName: this.walletName,
-            colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
-            pageId: 1
-        }})
-      } else {
-        this.$router.push({name: 'wallet', query: {
-            privateKey: this.privateKey,
-            publicKey: this.publicKey,
-            walletAddress: this.secAddress,
-            walletBalance: '10',
-            walletsArr: walletsArr,
-            walletPwd: this.password,
-            walletName: this.walletName,
-            colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
-            pageId: 1
-        }})
-      }
+      this.$router.push({name: 'wallet', query: {
+        privateKey: this.privateKey,
+        publicKey: this.publicKey,
+        walletAddress: this.secAddress,
+        walletBalance: '10',
+        walletsArr: walletsArr,
+        walletPwd: this.password,
+        walletName: this.walletName,
+        colorArr: new Array(walletsArr.length-1).fill(false).concat([true]),
+        pageId: 1
+      }})
     }
   },
   created() {
-    this.id = this.$route.query.id
     this.privateKey = this.$route.query.privateKey
     this.publicKey = this.$route.query.publicKey
-    this.walletPwd = this.$route.query.walletPwd
-    if(this.id==="3"){
-      this.password = this.$route.query.walletPwd
-    } else {
-      this.password = this.$route.query.password
-    }
+    this.password = this.$route.query.password
     this.secAddress = this.$route.query.userAddress
     this.walletName = this.$route.query.walletName
     this.walletBalance = this.$route.query.walletBalance
@@ -369,26 +343,11 @@ export default {
     if (this.$route.query.walletsArr) {
       this.walletsArr = this.$route.query.walletsArr
     }
-    let lineCount = 0
     //let englishWords = this.$route.query.englishWords.split(' ')
     this.englishWordsString = this.$route.query.englishWords
     this.englishWords = this.englishWordsString.split(' ')
-    // for(let i = 0; i < englishWords.length; i++) {
-    //   if ( i % 4 === 0 && i !== 0 ) {
-    //     lineCount ++
-    //     this.englishWords[lineCount] = []
-    //     //continue
-    //   }
-    //   this.englishWords[lineCount][i % 4] = englishWords[i]
-    // }
     this.walletPwd = this.$route.query.walletPwd
-  },
-  computed: {
-    //循环假数据
-    testList() {
-       return  Array(24).fill(this.testWordsList[0])
-    }
-   }
+  }
 }
 </script>
 
