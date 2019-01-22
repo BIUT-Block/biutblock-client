@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-node": "^1.0.94",
+    "@sec-block/secjs-node": "^1.0.101",
     "@sec-block/secjs-util": "^1.1.22",
     "axios": "^0.16.1",
     "buefy": "^0.6.6",
@@ -82,7 +82,7 @@
     "qrious": "^4.0.2",
     "secp256k1": "^3.6.1",
     "telnet-client": "^0.16.1",
-    "vue": "^2.5.20",
+    "vue": "^2.5.22",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"
@@ -130,7 +130,7 @@
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.7.3",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.21",
+    "vue-template-compiler": "^2.5.22",
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.11.3",
     "webpack-hot-middleware": "^2.23.1",
