@@ -321,7 +321,7 @@ export default {
         privateKey: this.privateKey,
         publicKey: this.publicKey,
         walletAddress: this.secAddress,
-        walletBalance: '10',
+        walletBalance: '1000',
         walletsArr: walletsArr,
         walletPwd: this.password,
         walletName: this.walletName,
