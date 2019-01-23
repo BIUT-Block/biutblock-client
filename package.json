@@ -1,6 +1,6 @@
 {
   "name": "secblock-client",
-  "version": "1.2.55",
+  "version": "1.2.56",
   "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",
@@ -63,7 +63,9 @@
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-node": "^1.0.101",
+    "@sec-block/secjs-blockchain": "^1.0.128",
+    "@sec-block/secjs-datahandler": "^1.1.29",
+    "@sec-block/secjs-node": "^1.0.102",
     "@sec-block/secjs-util": "^1.1.22",
     "axios": "^0.16.1",
     "buefy": "^0.6.6",
