@@ -21,12 +21,14 @@ import Vue from 'vue'
 // import "vuetify/dist/vuetify.min.css"
 import walletsHandler from './lib/WalletsHandler'
 import JsonRPCClient from './lib/jayson-rpc-vue'
+import WalletClientHandler from './lib/WalletClientHandler'
 
 // Vue.use(Vuetify, {
 //   iconfont: "mdi"
 // })
 
 Vue.use(JsonRPCClient)
+Vue.use(WalletClientHandler)
 
 export default {
   name: "webapp",

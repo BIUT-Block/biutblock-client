@@ -208,13 +208,20 @@ export default {
           });
       } else {
           let transferData = this._encryptTransaction()
-          this.$JsonRPCClient.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
+          this.$wallet.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
             this.allMoney = walletBalance
             this.$alert('Submitted Successfully.', '', {
                 confirmButtonText: 'Confirm',
               });
             this._navBackToWallet()
           })
+          // this.$JsonRPCClient.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
+          //   this.allMoney = walletBalance
+          //   this.$alert('Submitted Successfully.', '', {
+          //       confirmButtonText: 'Confirm',
+          //     });
+          //   this._navBackToWallet()
+          // })
       }
     },
     _encryptTransaction: function () {
