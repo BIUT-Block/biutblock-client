@@ -163,11 +163,14 @@ export default {
     this.$JsonRPCClient.getWalletBalance(this.walletAddress, (walletBalance) => {
       this.walletMoney = walletBalance
     })
-
-    this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+    this.$wallet.getTransactions(this.walletAddress, (walletList) => {
       this.walletList = walletList
       this._tableShow()
     })
+    // this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+    //   this.walletList = walletList
+    //   this._tableShow()
+    // })
   },
 
   mounted() {
@@ -193,10 +196,14 @@ export default {
         this.walletMoney = walletBalance
       })
       this.refresh = true
-      this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+      this.$wallet.getTransactions(this.walletAddress, (walletList) => {
         this.walletList = walletList
         this._tableShow()
       })
+      // this.$JsonRPCClient.getWalletTransactions(this.walletAddress, (walletList) => {
+      //   this.walletList = walletList
+      //   this._tableShow()
+      // })
     })
   },
 
