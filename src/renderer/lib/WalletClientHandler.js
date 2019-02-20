@@ -164,10 +164,23 @@ export default {
           walletList = this._getWalletList(walletAddress, excludedTransactions, packedTrans, successTrans)
           fnFillWalletList(walletList)
         })
+      },
+
+      switchToLocalHost: function () {
+        rpc.switchToLocalHost()
+      },
+
+      switchToExternalServer: function () {
+        rpc.switchToExternalServer()
+      },
+
+      getRpcClientInstance: function () {
+        return rpc.client
       }
+
     }
 
-    Object.defineProperty(Vue.prototype, '$wallet', {
+    Object.defineProperty(Vue.prototype, '$WalletHandlerHandler', {
       value: wallet
     })
   }

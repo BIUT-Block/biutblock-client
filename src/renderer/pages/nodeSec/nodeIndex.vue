@@ -205,13 +205,13 @@ export default {
         this.$store.commit('setMiningBtn', false)
         this.$store.commit('setSelectedWallet', item.walletAddress)
         let selectedWalletObj = this.walletsArr.filter((wallet) => wallet.walletAddress === item.walletAddress)
-        this.$JsonRPCClient.switchToLocalHost() // Changed by Yuan, Li
-        this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet], (err, response) => {
+        this.$WalletHandler.switchToLocalHost() // Changed by Yuan, Li
+        this.$WalletHandler.getRpcClientInstance().request('sec_setAddress', [this.selectedWallet], (err, response) => {
           if(err) {
             return
           }
         })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+        this.$WalletHandler.getRpcClientInstance().request('sec_setPOW', ['0'], (err, response) => {
           if (err) {
             this.$alert('Can not stop mining', '', {
                 confirmButtonText: 'Confirm',
@@ -219,7 +219,7 @@ export default {
             return
           }
         })
-        this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+        this.$WalletHandler.getRpcClientInstance().request('sec_setPOW', ['1'], (err, response) => {
               if (err) {
                 return
               }   
@@ -229,7 +229,7 @@ export default {
               });
             }
           })
-        this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
+        this.$WalletHandler.switchToExternalServer() // Changed by Yuan, Li
       }
     },
     //关闭列表
@@ -247,7 +247,7 @@ export default {
       this.timeCntShow = false
       this.startBtn = 'synchronizing...'
       this.$store.commit('setSelectedWallet', this.selectedWallet)
-      this.$JsonRPCClient.client.request('sec_getTokenChainSize', [], (err, response) => {
+      this.$WalletHandler.getRpcClientInstance().request('sec_getTokenChainSize', [], (err, response) => {
         if (err) {
           return
         }
@@ -257,8 +257,8 @@ export default {
         }
       })
 
-      this.$JsonRPCClient.switchToLocalHost() // Changed by Yuan, Li
-      this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
+      this.$WalletHandler.switchToLocalHost() // Changed by Yuan, Li
+      this.$$WalletHandler.getRpcClientInstance().request('sec_startNetworkEvent', [], (err, response) => {
         if (response) {
           
           this.startBtnActive = 'startBtnActive'
@@ -283,7 +283,7 @@ export default {
           }.bind(this), 2500)
         }
       })
-      this.$JsonRPCClient.switchToExternalServer() // Changed by Yuan, Li
+      this.$WalletHandler.switchToExternalServer() // Changed by Yuan, Li
       //this.centerDialogVisible = true
     }
   },

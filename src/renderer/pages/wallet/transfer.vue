@@ -208,7 +208,7 @@ export default {
           });
       } else {
           let transferData = this._encryptTransaction()
-          this.$wallet.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
+          this.$WalletHandler.sendTransactions(this.walletAddress, transferData, (walletBalance) => {
             this.allMoney = walletBalance
             this.$alert('Submitted Successfully.', '', {
                 confirmButtonText: 'Confirm',

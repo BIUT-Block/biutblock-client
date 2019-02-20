@@ -160,10 +160,10 @@ export default {
     }
 
     this.walletList = []
-    this.$JsonRPCClient.getWalletBalance(this.walletAddress, (walletBalance) => {
+    this.$WalletHandler.getWalletBalance(this.walletAddress, (walletBalance) => {
       this.walletMoney = walletBalance
     })
-    this.$wallet.getTransactions(this.walletAddress, (walletList) => {
+    this.$WalletHandler.getTransactions(this.walletAddress, (walletList) => {
       this.walletList = walletList
       this._tableShow()
     })
@@ -192,11 +192,11 @@ export default {
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
 
-      this.$JsonRPCClient.getWalletBalance(this.walletAddress, (walletBalance) => {
+      this.$WalletHandle.getWalletBalance(this.walletAddress, (walletBalance) => {
         this.walletMoney = walletBalance
       })
       this.refresh = true
-      this.$wallet.getTransactions(this.walletAddress, (walletList) => {
+      this.$WalletHandler.getTransactions(this.walletAddress, (walletList) => {
         this.walletList = walletList
         this._tableShow()
       })
