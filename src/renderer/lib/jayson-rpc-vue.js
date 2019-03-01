@@ -100,6 +100,11 @@ export default {
             this.getWalletBalance(walletAddress, fnAfterTransaction)
           }
         })
+      },
+      chargeWallet: function(args, fnAfterCharging) {
+        this.client.request('sec_freeCharge', args, (err, response) => {
+          fnAfterCharging()
+        })
       }
     }
 
