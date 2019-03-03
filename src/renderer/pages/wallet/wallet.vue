@@ -234,7 +234,7 @@ export default {
     },
     closeDetailsList(event) {
       let detailsList = document.getElementById('detailsList')
-      if (!detailsList.contains(event.target) && this.positionBtnH) {
+      if (detailsList && !detailsList.contains(event.target) && this.positionBtnH) {
         this.positionBtnH = false;
       }
     },
