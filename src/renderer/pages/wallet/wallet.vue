@@ -192,7 +192,7 @@ export default {
       this.walletPwd = walletParams.walletPwd;
       this.walletName = walletParams.walletName;
 
-      this.$WalletHandle.getWalletBalance(this.walletAddress, (walletBalance) => {
+      this.$WalletHandler.getWalletBalance(this.walletAddress, (walletBalance) => {
         this.walletMoney = walletBalance
       })
       this.refresh = true

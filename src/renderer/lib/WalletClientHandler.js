@@ -180,7 +180,7 @@ export default {
 
     }
 
-    Object.defineProperty(Vue.prototype, '$WalletHandlerHandler', {
+    Object.defineProperty(Vue.prototype, '$WalletHandler', {
       value: wallet
     })
   }
