@@ -148,6 +148,10 @@ export default {
         return walletList
       },
 
+      getWalletBalance: function (walletAddress, fnWalletBalance) {
+        rpc.getWalletBalance(walletAddress, fnWalletBalance)
+      },
+
       sendTransactions: function (walletAddress, transferData, fnWalletBalance) {
         rpc.sendTransactions(transferData, (txHash) => {
           this._insertTransactionToStorage(transferData, txHash)
