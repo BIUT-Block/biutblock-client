@@ -89,3 +89,42 @@ export default new Router({
     }
   ]
 })
+
+/**
+ * {
+      path: '/',
+      name: 'walletCreate',
+      component: walletCreate
+    },
+    {
+      path: '/index',
+      name: 'index',
+      component: Index,
+      redirect: 'walletIndex',
+      children: [
+        {
+          path: '/walletIndex',
+          name: 'walletIndex',
+          component: WalletIndex
+        },
+        {
+          path: '/walletTrading',
+          name: 'walletTrading',
+          component: WalletTrading
+        },
+        {
+          path: '/walletNode',
+          name: 'walletNode',
+          component: WalletNode
+        },
+        {
+          path: '/walletDig',
+          name: 'walletDig',
+          component: WalletDig
+        },
+        {
+          path: '/walletDigMore',
+          name: 'walletDigMore',
+          component: WalletDigMore
+        }
+ */

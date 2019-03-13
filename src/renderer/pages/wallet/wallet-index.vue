@@ -1,0 +1,299 @@
+<template>
+  <main class="wallet-container"  @click="closeMenuList">
+    <!-- 钱包列表 -->
+    <section class="wallet-list">
+      <left-nav/>
+    </section>
+    <!-- 钱包相关信息 -->
+    <section class="wallet-content">
+      <section class="wallet-content-header">
+        
+        <section class="wallet-content-header-left">
+          <section>
+            <img src="../../assets/images/menu.png" alt="" @click="tabMenuList" id='menuListImg'>
+            <section class="wallet-content-header-left-update"
+                    :class="inputActive?'input-active':''"
+                     @click="updateName">
+              <span v-show="inputReadonly">{{oldWalletName}}</span>
+              <input type="text" 
+                   maxlength="14"
+                   ref="content"
+                   v-model="walletName"
+                   v-show="!inputReadonly"
+                   :readonly="inputReadonly"
+                   @blur="saveName"/>
+              <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput">
+            </section>
+            
+            <ul v-show="menuShow">
+              <li v-for="(item, index) in menuList" 
+                @click="lookMask(index)">{{item.text}}</li>
+            </ul>
+          </section>
+          <h2>1,000 <span>SEC Token</span></h2>
+          <section>
+            <span id="address">0x75f04e06b80b4b249a878000714e038fcc746ac54f</span>
+            <img src="../../assets/images/copy.png" alt="" @click="copyCnt" data-clipboard-target="#address" class="copyButton">
+          </section>
+        </section>
+
+        <section class="wallet-content-header-right">
+          <wallet-button :text="receiptButton" :imgUrl="receiptImg" @click.native="lookMask(5)"/>
+          <wallet-button :text="transferButon" :imgUrl="transferImg" @click.native="lookMask(4)"/>
+        </section>
+      </section>
+      <section class="wallet-content-body" :class="moreShow?'wallet-padidng-bottom':''">
+        <p class="wallet-content-body-title">Transaction Record</p>
+        <!-- 没有数据列表 walletContent == 1 -->
+        <section class="wallet-content-body-mull" style="display: none;">
+          <img src="../../assets/images/wallet-null.png" alt="">
+        </section>
+        <!-- 有数据列表 walletContent == 1 -->
+        <section class="wallet-content-body-list">
+          <trading-list :tradingList="tradingList"/>
+        </section>
+      </section>
+    </section>
+  <section class="moreList" v-show="moreShow">
+    <img src="../../assets/images/moreList.png" alt="">
+    <span>Click to load more</span>
+  </section>
+  <!-- 半透明弹窗 -->
+  <wallet-translucent :text="translucentText" v-show="translucentShow"/>
+  <!-- 遮罩层弹窗 -->
+  <wallet-mask :maskPages="maskPages" :maskShow="maskShow" @changeClose="closeMask"/>
+  </main>
+</template>
+
+<script>
+import leftNav from './components/wallet-left-nav'
+import walletMask from './components/wallet-mask'
+import tradingList from './components/wallet-trading-list'
+import walletTranslucent from '../../components/wallet-translucent'
+import walletButtonImg from '../../components/wallet-button-img'
+import receiptImg from '../../assets/images/receiptImg.png'
+import transferImg from '../../assets/images/transferImg.png'
+import Clipboard from 'clipboard'
+export default {
+  name: '',
+  components: {
+    leftNav,
+    walletTranslucent,
+    walletButton: walletButtonImg,
+    walletMask,
+    tradingList
+  },
+  props: {},
+  data () {
+    return {
+      receiptButton: 'Receipt',
+      receiptImg: receiptImg,
+      transferButon: 'Transfer',
+      transferImg: transferImg,
+      menuShow: false,
+      walletName: 'wallet Name',
+      oldWalletName: 'wallet Name',
+      inputReadonly: true,
+      inputActive: false,
+      menuList: [
+        {
+          id: '01',
+          text: 'Export Private key',
+        },
+        {
+          id: '02',
+          text: 'Export Keystore',
+        },
+        {
+          id: '03',
+          text: 'Export Phrase',
+        },
+        {
+          id: '04',
+          text: 'Delete Wallet',
+        }
+      ],
+      moreShow: true,//加载更多是否显示
+      translucentText: '透明弹窗',
+      translucentShow: false,
+      maskPages: 0,
+      maskShow: false,
+      tradingList: [
+        {
+          id: '01',
+          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
+          state: 'Packed',
+          sec: '-100'
+        },
+        {
+          id: '01',
+          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
+          state: 'Successful',
+          sec: '-100'
+        },
+        {
+          id: '01',
+          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
+          state: 'Failed',
+          sec: '-100'
+        },
+        {
+          id: '01',
+          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
+          state: 'Mining',
+          sec: '-100'
+        },
+        {
+          id: '01',
+          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
+          state: 'Packed',
+          sec: '-100'
+        },
+        {
+          id: '01',
+          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
+          state: 'Packed',
+          sec: '-100'
+        }
+      ]
+    }
+  },
+  computed: {
+
+  },
+  created () {
+
+  },
+  mounted () {
+
+  },
+  destroyed () {},
+  methods: {
+    //遮罩层相关弹窗
+    lookMask (index) {
+      // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
+      this.maskPages = index
+      this.maskShow = true
+    },
+    
+    //复制地址
+    copyCnt () {
+      var clipboard = new Clipboard('.copyButton')
+      clipboard.on('success', e => {
+          clipboard.destroy()
+          alert("复制成功")
+      })
+      clipboard.on('error', e => {
+          alert("复制失败")
+          clipboard.destroy()
+      })
+    },
+
+    //切换操作菜单是否显示
+    tabMenuList () {
+      this.menuShow = !this.menuShow
+    },
+
+    //修改钱包名称
+    updateName () {
+      this.inputReadonly = false
+      this.inputActive = true
+      this.$refs.content.focus()
+    },
+
+    //失去焦点保存名称
+    saveName () {
+       //修改成功
+       this.translucentShow = true
+       this.translucentText = "The wallet name already exists"
+       setTimeout(() => {
+          this.translucentShow = false
+       }, 4000)
+      //修改失败
+      //  this.translucentShow = true
+      //  this.translucentText = "Name option no empty"
+       this.inputReadonly = true
+       this.inputActive = false
+      
+       if (this.walletName == "") {
+         this.walletName = this.oldWalletName
+       } else {
+         this.oldWalletName = this.walletName
+       }
+    },
+
+    //清楚输入框
+    clearInput () {
+      this.walletName = ""
+    },
+
+    //点击其他的地方关闭菜单列表
+    closeMenuList (event) {
+      let menuList = document.getElementById('menuListImg')
+      if (!menuList.contains(event.target) && this.menuShow) {
+        this.menuShow = false;
+      }
+    },
+    
+    //关闭遮罩层
+    closeMask () {
+      this.maskShow = false
+    }
+  },
+}
+</script>
+
+<style scoped>
+  .wallet-content {padding: 36px 32px 24px;}
+  .wallet-content-header {height: 130px;display: flex;justify-content: space-between;}
+  .wallet-content-header-left section {display: flex;align-items: center;color: #576066;}
+  .wallet-content-header-left section:first-child img {width: 16px;height: 12px;margin-right: 12px;}
+  .wallet-content-header-left section:first-child {position: relative;}
+  .wallet-content-header-left section:first-child ul {width:146px;background:rgba(66,83,91,1);
+    box-shadow:0px 10px 10px rgba(66,83,91,0.2);position: absolute;top: 24px;left:-7px;z-index: 9;
+    border-radius: 4px;color: #AFC3CC;font-size: 14px;}
+  .wallet-content-header-left section:first-child ul li {height: 37px;line-height: 37px;padding-left: 12px;
+    border-bottom: 1px solid #536973;}
+  .wallet-content-header-left section:first-child ul li:first-child {border-top-left-radius: 4px;
+    border-top-right-radius: 4px;position: relative;}
+  .wallet-content-header-left section:first-child ul li:last-child {border:0;border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;}
+  .wallet-content-header-left section:first-child ul li:hover {cursor: pointer;background: #536973;}
+  .wallet-content-header-left section:last-child img {width: 14px;height: 14px;margin-left: 12px;}
+  .wallet-content-header-left h2 {font-size: 32px;color: #252F33;font-weight: 300;margin: 20px 0 10px;}
+  .wallet-content-header-left h2 span {font-size: 14px;}
+   
+  .wallet-content-header-left-update {display: flex;align-items: center;height:24px;
+    border: 1px solid #fff;width: 124px;border-radius: 4px;} 
+  .wallet-content-header-left-update input {border: 0;height:20px;color: #576066;width: 106px;}
+  .wallet-content-header-left-update img {width: 10px!important;height: 10px!important;margin-right: 8px!important;}
+  .input-active {border-color:rgba(229,229,229,1);}
+  .wallet-content-header-left-update span {display: inline-block;height: 24px;line-height: 24px;}
+  .wallet-content-header-left-update span:hover {background: #F2F2F2;cursor: pointer;}
+
+  .wallet-content-header-right {display: flex;flex-direction: column;padding-bottom: 16px;}
+  .wallet-content-header-right section {width: 130px;height:54px;line-height:54px;border-radius: 4px;
+    box-shadow:0px 3px 6px rgba(37,47,51,0.16);font-size: 14px;}
+  .wallet-content-header-right section:first-child {margin-bottom: 6px;}
+
+  
+  .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);border-radius:4px;overflow: auto;
+    flex: 1;padding-top: 54px;}
+  .wallet-content-body .wallet-content-body-title {padding: 23px 0 14px;color: #839299;background: #fff;
+    border-bottom: 1px solid #E5E5E5;font-size: 13px;font-family: Montserrat-Regular;position: fixed;
+    top: 196px;right: 64px;left: 354px;}
+  .wallet-content-body .wallet-content-body-mull {display: flex;align-items: center;justify-content: center;
+    min-height: 320px;}
+  .wallet-content-body .wallet-content-body-mull img {width: 71px;height: 71px;}
+
+  .moreList {position: fixed;bottom: 24px;right: 64px;left: 354px;background: #fff;height: 47px;
+    display: flex;align-items: center;justify-content: center;color: #576066;}
+  .moreList img {width: 11px;height: 7px;margin-right: 5px;}
+  .wallet-padidng-bottom {padding-bottom: 47px;}
+</style>
