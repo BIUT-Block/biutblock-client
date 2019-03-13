@@ -241,6 +241,8 @@ export default {
             if(err) {
               return
             }
+            var blob = new Blob([keyFileData], {type: 'text/plain;charset=utf-8'})
+            FileSaver.saveAs(blob, this.newWalletName + '')
             this._createImageFile(require('os').homedir() + '/secwallet')
           //  this._saveWalletSuccess(filePath)          
           })
@@ -306,7 +308,7 @@ export default {
       //   })
       // }
       // this.dialogVisible = true
-      FileSaver.saveAs(new Blob(), "hello.data")
+      //FileSaver.saveAs(new Blob(), "hello.data")
       //document.getElementById("filepath").click()
     },
 
