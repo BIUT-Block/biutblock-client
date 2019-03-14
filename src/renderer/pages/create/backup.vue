@@ -284,32 +284,29 @@ export default {
       // });
     },
     backUpComplete () {
-      // let dirPath = require('os').homedir() + '/secwallet'
-      // let filePath = dirPath + '/default.data'
-      // if (!fs.existsSync(dirPath)){
-      //   fs.mkdirSync(dirPath);
-      // }
-      // if (!fs.existsSync(filePath) || !this.walletPwd || this.walletPwd === ""){
-      //   this.keyFileDataJS = {
-      //     [this.walletName]:
-      //     {
-      //       privateKey: this.privateKey,
-      //       publicKey: this.publicKey,
-      //       walletAddress: this.secAddress
-      //     }
-      //   }
-      //   let keyFileData = JSON.stringify(this.keyFileDataJS)
-      //   let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.password)
-      //   fs.writeFile(dirPath+'/default.data', cipherKeyData, (err) => {
-      //     if(err) {
-      //       return
-      //     }
-      //     fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))  
-      //   })
-      // }
-      // this.dialogVisible = true
-      //FileSaver.saveAs(new Blob(), "hello.data")
-      //document.getElementById("filepath").click()
+      let dirPath = require('os').homedir() + '/secwallet'
+      let filePath = dirPath + '/default.data'
+      if (!fs.existsSync(dirPath)){
+        fs.mkdirSync(dirPath);
+      }
+      if (!fs.existsSync(filePath) || !this.walletPwd || this.walletPwd === ""){
+        this.keyFileDataJS = {
+          [this.walletName]:
+          {
+            privateKey: this.privateKey,
+            publicKey: this.publicKey,
+            walletAddress: this.secAddress
+          }
+        }
+        let keyFileData = JSON.stringify(this.keyFileDataJS)
+        let cipherKeyData = CryptoJS.AES.encrypt(keyFileData, this.password)
+        fs.writeFile(dirPath+'/default.data', cipherKeyData, (err) => {
+          if(err) {
+            return
+          }
+          fs.readFile(filePath, 'utf-8', this._AppendWallet.bind(this, filePath))  
+        })
+      }
     },
 
     handleFileSave(e) {

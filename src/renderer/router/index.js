@@ -1,14 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+const walletCreate = resolve => require(['@/pages/login/wallet-create'], resolve)
+const Index = resolve => require(['@/pages/index'], resolve)
+const WalletIndex = resolve => require(['@/pages/wallet/wallet-index'], resolve)
+const WalletTrading = resolve => require(['@/pages/wallet/wallet-trading'], resolve)
+const WalletNode = resolve => require(['@/pages/node/wallet-node'], resolve)
+const WalletDig = resolve => require(['@/pages/dig/wallet-dig'], resolve)
+const WalletDigMore = resolve => require(['@/pages/dig/wallet-dig-more'], resolve)
+
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'login',
+    //   component: require('@/pages/login/login').default
+    // },
     {
       path: '/',
-      name: 'login',
-      component: require('@/pages/login/login').default
+      name: 'walletCreate',
+      component: walletCreate
     },
     {
       path: '/create',

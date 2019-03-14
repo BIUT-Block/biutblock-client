@@ -1,77 +1,31 @@
-html {font-family: "PingFang SC",Arial,sans-serif;font-size: 12px;}
-body,ul,p,figure {margin: 0;padding: 0;}
-ul li {list-style: none;}
+html {font-family: Lato-Regular!important;font-size: 12px;}
+body,p,ul,li {margin: 0;padding: 0;}
+ul li {list-style: none!important;}
+input,button {outline: none!important;}
+input,textarea{-webkit-appearance: none;appearance: none;}
+input::-webkit-input-placeholder{ color:#839299;font-family: Lato-Light;}
+input::-moz-placeholder{color:#839299;font-family: Lato-Light;}
+input:-moz-placeholder{color:#839299;font-family: Lato-Light;}
+input:-ms-input-placeholder{ color:#839299;font-family: Lato-Light;}
 
-.publicContent {width: 960px;height: 580px;}
+.clearfix:after{content:'';display:block; height:0; line-height:0; visibility:hidden;}
+.clearfix{*zoom:1;}
+.mask {display: flex;align-items: center;justify-content: center;position: fixed;
+    top: 0;left: 0;bottom: 0;right: 0;z-index: 99;background: rgba(0,0,0,.2);}
+.mask-container {width: 436px;background: #fff;box-shadow:0px 0px 10px rgba(0,0,0,0.16);
+  border-radius: 4px;}
 
-.TxtColor {color: #00D6B2}
-.TxtColor2 {color: #FF8DB2}
-.TxtColor3 {color: #657292}
+.passCorrect {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
 
-.pointerTxt:hover {cursor: pointer;}
+.wallet-container {display: flex;height: calc(100vh - 30px);align-content: stretch;display:-webkit-flex;}
+.wallet-container .wallet-list {width: 220px;background:rgba(237,242,241,1);}
+.wallet-container .wallet-content {flex: 1;display: flex;flex-direction: column;}
 
-.el-button,.el-input {font-size: 12px;}
-.publicBtn {width:184px;height:36px;background: #C8D1DA;color: #fff;outline: none;
-  border:1px solid #C8D1DA;border-radius: 4px;}
-.publicBtnAcitve {background: #00D6B2;}
-
-.publicCntBtn {display: flex;justify-content: center;}
-
-.publicBtn:hover {cursor: pointer;}
-
-.publicNav {display: flex;height: 48px;align-items: center;box-shadow:0px 1px 1px rgba(96,98,115,0.1);}
-.publicHomeNav {display: flex;height: 60px;align-items: center;box-shadow:0px 1px 1px rgba(96,98,115,0.1);}
-
-.icon_nav{font-size: 18px;margin-left: 16px;color:#C8D1DA;}
-.icon_nav:hover {cursor: pointer;}
-.windowsCnt {display: flex;justify-content: center;align-items: center;}
-.amplification {display:inline-block;width:11px;height:11px;border:1px solid #C8D1DA;
-  background: #fff;vertical-align:middle;margin-left:18px;border-radius: 0;}
-.navTit{text-align: center;font-size: 16px;color: #657292}
-
-.publicWalletH {width: 606px;height: 532px;border-radius: 2px;background: #fff;margin-top: 24px;box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
-.publicWalletHF {display: flex;flex-direction: column;box-shadow:0px 0px 15px rgba(0,91,76,0.05);}
-.publicWalletHList {height: 48px; display: flex;align-items: center;border-bottom: 1px solid rgba(200,209,218,.5);}
-.publicWalletHTit {font-size: 14px;color: #939CB2;flex:1;text-align: center;padding-right: 30px;}
-.publicWalletHListIcon {width:30px;height:16px;}
-
-
-.mt30 {margin-top: 32px;}
-.mt10 {margin-top: 10px;}
-.mt50 {margin-top: 55px;}
-
-
-:-moz-placeholder {color: #C8D1DA; opacity:1; }
-::-moz-placeholder {color: #C8D1DA;opacity:1;}
-input:-ms-input-placeholder,textarea:-ms-input-placeholder {color: #C8D1DA;opacity:1;}
-input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color: #C8D1DA;opacity:1;}
-
-
-.publicWalletP {width:606px;background: #FAFAFA;}
-
-
-.homeHNav {width: 70px;height:60px;display: flex;background:#00D6B2;justify-content: center;align-items: center;}
-.lds-dual-ring {
-  display: inline-block;
-  width: 64px;
-  height: 64px;
-}
-.lds-dual-ring:after {
-  content: " ";
-  display: block;
-  width: 46px;
-  height: 46px;
-  margin: 1px;
-  border-radius: 50%;
-  border: 5px solid #00D6B2;
-  border-color: #00D6B2 transparent #00D6B2 transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
-}
-@keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+.wallet-create .wallet-button-important:hover,.wallet-import ul li:hover,button:hover,.setting-mask-header img:hover,
+.wallet-import .go-create span:hover,.wallet-content-header-right section:hover,main .closeImg:hover,
+.wallet-content-header-left section img:hover,.dig-body-title .dig-body-title-list section:last-child:hover,
+.wallet-index .wallet-index-content aside .wallet-aside-list li:hover,.dig-more-header img:hover,
+.setting-mask-body-left ul li:hover,.setting-mask-body-right-network section img:hover,.wallet-mask-priivate-key .priivate-key-button:hover,
+.mask-wallet-index .closeImg:hover,.wallet-mask .wallet-button:hover,.wallet-mask img:hover,
+.wallet-mask-sent-amount-tips section span:last-child:hover,.wallet-import-keystore div input[type='file']:hover,
+.wallet-content-return img:hover,.moreList:hover {cursor: pointer;}

@@ -1,7 +1,7 @@
 import {
   app,
   BrowserWindow,
-  // ipcMain,
+  ipcMain,
   // dialog,
   Menu
 } from 'electron'
@@ -146,6 +146,16 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
+  }
+})
+
+ipcMain.on('min', () => mainWindow.minimize())
+ipcMain.on('close', () => mainWindow.close())
+ipcMain.on('max', () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize()
+  } else {
+    mainWindow.maximize()
   }
 })
 

@@ -117,6 +117,9 @@ import phraseList from './components/phraseList'
 import walletNav from '../../components/wallet-nav'
 import agreement from '../../assets/images/agreement.png'
 import agreements from '../../assets/images/agreements.png'
+import walletsHandler from '../../lib/WalletsHandler'
+import WalletHandler from '../../lib/WalletsHandler';
+
 export default {
   name: 'walletCreate',
   components: {
@@ -149,12 +152,7 @@ export default {
       radioImg: agreement,//协议按钮
       radioIndex: 1,// 1 表示默认不选择 相反选择
       agreedId: false, //备份助记词按钮默认不可点击
-      itemList: [
-        {
-          id: '01',
-          cnt: 'important'
-        }
-      ],//助记词列表
+      itemList: [],//助记词列表
 
       tabList: [
         {
@@ -250,9 +248,29 @@ export default {
 
     //创建钱包
     createWallet() {
+      let keys = walletsHandler.getWalletKeys() //create all keys of wallet
+      let wordsArray = keys.englishWords.split(' ')
+      this.itemList = []
+      this.privateKey = keys.privateKey
+      wordsArray.forEach((word, index)=>{
+        this.itemList.push({
+          id: index.toString(),
+          cnt: word
+        })
+      })
+
+      WalletHandler.backUpWalletIntoFile({
+        walletName: this.walletName,
+        privateKey: keys.privateKey,
+        publicKey: keys.publicKey,
+        walletAddress: keys.userAddress,
+        englishWords: keys.englishWords
+      })
+
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
     },
+
     //创建钱包的关闭方法
     closeCreate () {
       let createId = this.$route.params.createId // 获取路由参数，如果 是 0 是从主页进入的 ，否则点击关闭按钮返回创建页面

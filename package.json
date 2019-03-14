@@ -67,6 +67,7 @@
     "@sec-block/secjs-datahandler": "^1.1.29",
     "@sec-block/secjs-node": "^1.0.102",
     "@sec-block/secjs-util": "^1.1.22",
+    "@xkeshi/vue-qrcode": "^1.0.0",
     "axios": "^0.16.1",
     "buefy": "^0.6.6",
     "clipboard": "^2.0.4",
