@@ -60,6 +60,7 @@
 
       <!-- 私钥导入 -->
       <section class="wallet-import-private-key" v-show="tabIndex == 0">
+        <wallet-input placeholder="Wallet Name" maxlength="30" v-model="walletNameImport"></wallet-input>
         <textarea placeholder="Eenter your private key here" maxlength="64" v-model="walletPrivateKey"></textarea>
         <wallet-tips :tips="privateKeyErrorText" v-show="privateKeyError"/>
         <wallet-button  class="wallet-button-backup" 
@@ -91,7 +92,8 @@
 
       <!-- 助记词导入 -->
       <section  class="wallet-import-phrase" v-show="tabIndex == 2">
-        <textarea placeholder="Eenter your private key here" v-model="walletPhrase"></textarea>
+        <wallet-input placeholder="Wallet Name" maxlength="30" v-model="walletNameImport"></wallet-input>
+        <textarea placeholder="Eenter your phrase here" v-model="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
         <wallet-button  class="wallet-button-backup" 
                       :text="walletImportButton"
@@ -119,6 +121,7 @@ import agreement from '../../assets/images/agreement.png'
 import agreements from '../../assets/images/agreements.png'
 import walletsHandler from '../../lib/WalletsHandler'
 import WalletHandler from '../../lib/WalletsHandler';
+let fs = require('fs')
 
 export default {
   name: 'walletCreate',
@@ -169,9 +172,11 @@ export default {
         }
       ],//导入钱包title
       tabIndex: 0,
+      walletNameImport: '',
       walletPrivateKey: '',//私钥
       walletNewPass: '',//导入keystroe文件输入密码
       walletPhrase: '',//助记词
+      selectedKeystorePath: '',
       walletImportButton: 'Login',
       privateKeyErrorText: 'Private Error',//私钥错误提示语
       privateKeyError: false,//私钥错误提示是否显示
@@ -217,18 +222,33 @@ export default {
     }
   },
   created () {
-    let createId = this.$route.params.createId
-    console.log(createId)
-    if (createId == 0 && this.createPages == 1) {
+    let createId = this.$route.query.createId
+    if ((createId == 0 && this.createPages == 1) || createId === 1) {
       this.createClose = true
     } else {
       this.createClose = false
+    }
+
+    if (createId !== 1) {
+      let dirPath = require('os').homedir() + '/secwallet'
+      let filePath = dirPath + '/default.data'
+      let wallets = {}
+      walletsHandler.getAllWalletsFromFile((wallets) => {
+        this.$router.push({
+          name: 'walletIndex',
+          query: {
+            wallets: wallets,
+            selectedPrivateKey: Object.keys(wallets)[0]
+          }
+        })
+      })
     }
   },
   mounted () {
 
   },
   destroyed () {},
+
   methods: {
     //失去焦点
     loseFocus () {
@@ -248,24 +268,25 @@ export default {
 
     //创建钱包
     createWallet() {
-      let keys = walletsHandler.getWalletKeys() //create all keys of wallet
-      let wordsArray = keys.englishWords.split(' ')
+      this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
+      let wordsArray = this.keys.englishWords.split(' ')
+      let keyDataJSON = {}
       this.itemList = []
-      this.privateKey = keys.privateKey
+      this.privateKey = this.keys.privateKey
       wordsArray.forEach((word, index)=>{
         this.itemList.push({
           id: index.toString(),
           cnt: word
         })
       })
-
-      WalletHandler.backUpWalletIntoFile({
+      keyDataJSON[this.keys.privateKey] = {
         walletName: this.walletName,
-        privateKey: keys.privateKey,
-        publicKey: keys.publicKey,
-        walletAddress: keys.userAddress,
-        englishWords: keys.englishWords
-      })
+        privateKey: this.keys.privateKey,
+        publicKey: this.keys.publicKey,
+        walletAddress: this.keys.userAddress,
+        englishWords: this.keys.englishWords
+      }
+      WalletHandler.saveKeyStore(keyDataJSON, this.walletPass1)
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
@@ -273,29 +294,65 @@ export default {
 
     //创建钱包的关闭方法
     closeCreate () {
-      let createId = this.$route.params.createId // 获取路由参数，如果 是 0 是从主页进入的 ，否则点击关闭按钮返回创建页面
-      if (createId == 0 && this.createPages == 1) {
+      let createId = this.$route.query.createId // 获取路由参数，如果 是 0 是从主页进入的 ，否则点击关闭按钮返回创建页面
+      if (createId === 0 && this.createPages === 1) {
         this.$router.push({ name: 'index',params: { createId: 1 }})
       } else if (this.createPages == 2 || this.createPages == 3) {
         this.createPages = 1
-      } else {
+      } else if (createId === 1){
         this.createPages = 1
+        this.$router.push({name: 'walletIndex', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
       }
     },
     //备份助记词成功进入钱包主页
     backupWallet () {
-      this.$router.push({ name: 'index',params: { createId: 1 }})
+      WalletHandler.backUpWalletIntoFile({
+        walletName: this.walletName,
+        privateKey: this.keys.privateKey,
+        publicKey: this.keys.publicKey,
+        walletAddress: this.keys.userAddress,
+        englishWords: this.keys.englishWords
+      }, (keyDataJSON) => {
+        this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
+      })
     },
 
     //导入钱包
     importWallet () {
       let walletIdx = this.tabIndex // walletIdx 0 私钥导入 1 keystroe 2 助记词导入
       if (walletIdx == 0) {
-        this.$router.push({ name: 'index',params: { createId: 2 }})
+        walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport, (wallets, selectedPrivateKey) => {
+          if (wallets === 'error') {
+            this.privateKeyError = true
+          } else if (wallets === 'DuplicateKey') {
+            this.phraseErrorText = 'Wallet already exisits or imported.'
+          } else {
+            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+          }
+        })
+        //this.$router.push({ name: 'index',params: { createId: 2 }})
       } else if (walletIdx == 1) {
-        this.$router.push({ name: 'index',params: { createId: 2 }})
+        WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, this.walletNewPass, (wallets, selectedPrivateKey) => {
+          if (wallets === 'error') {
+            this.walletnNewPassError = true
+          } else if (wallets === 'DuplicateKey'){
+            this.walletnNewPassErrorText = 'Wallet already exists or imported.'
+            this.walletnNewPassError = true
+          } else {
+            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+          }
+        }) 
       } else {
-        this.$router.push({ name: 'index',params: { createId: 3 }})
+        WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport, (wallets, selectedPrivateKey) => {
+          if (wallets === 'error') {
+            this.phraseErrorText = true
+          } else if (wallets === 'DuplicateKey') {
+            this.phraseErrorText = 'Wallet already exists or imported.'
+          } else {
+            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+          }
+        })
+        //this.$router.push({ name: 'index',params: { createId: 3 }})
       }
     },
 
@@ -304,11 +361,12 @@ export default {
       var file = event.target.files;
       if (file.length === 1) {
         this.KeyStoreVal = file[0].name
+        this.selectedKeystorePath = file[0].path
         this.showPass = true
       } else {
         this.KeyStoreVal = 'Select Keystore'
         this.walletNewPass = ''
-        this.walletnNewPassErrorText = false
+        this.walletnNewPassError = false
         this.showPass = false
       }
     },

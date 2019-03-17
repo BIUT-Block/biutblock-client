@@ -3,15 +3,15 @@
     <!-- 默认加载五条数据，点击查看更多就加载更多数据 -->
     <li @click="tradingDetails" v-for="(item, index) in tradingList" v-if="index < 5">
       <section class="list-img">
-        <img :src="item.state | stateImg" alt="">
+        <img :src="item.listState | stateImg" alt="">
         <section>
-          <p>{{item.address}}</p>
-          <p>{{item.time}}</p>
+          <p>{{item.listAddress}}</p>
+          <p>{{item.listTime}}</p>
         </section>
       </section>
-      <section class="list-amount" :class="item.state | stateColor">
-        <p>{{item.sec}} SEC</p>
-        <p>{{item.state}}</p>
+      <section class="list-amount" :class="item.listState | stateColor">
+        <p>{{item.listMoney}} SEC</p>
+        <p>{{item.listState}}</p>
       </section>
     </li>
   </ul>

@@ -2,7 +2,7 @@
   <main class="wallet-container"  @click="closeMenuList">
     <!-- 钱包列表 -->
     <section class="wallet-list">
-      <left-nav/>
+      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" @walletSelectionChanged = "onSelectWalletChanged" />
     </section>
     <!-- 钱包相关信息 -->
     <section class="wallet-content">
@@ -30,9 +30,9 @@
                 @click="lookMask(index)">{{item.text}}</li>
             </ul>
           </section>
-          <h2>1,000 <span>SEC Token</span></h2>
+          <h2>{{walletBalance}} <span>SEC Token</span></h2>
           <section>
-            <span id="address">0x75f04e06b80b4b249a878000714e038fcc746ac54f</span>
+            <span id="address">0x{{selectedWallet.walletAddress}}</span>
             <img src="../../assets/images/copy.png" alt="" @click="copyCnt" data-clipboard-target="#address" class="copyButton">
           </section>
         </section>
@@ -61,8 +61,10 @@
   <!-- 半透明弹窗 -->
   <wallet-translucent :text="translucentText" v-show="translucentShow"/>
   <!-- 遮罩层弹窗 -->
-  <wallet-mask :maskPages="maskPages" :maskShow="maskShow" @changeClose="closeMask"/>
+  <wallet-mask :maskPages="maskPages" :walletData="selectedWalletData" :balance="walletBalance" :selectedWallet="selectedWallet"  
+      :maskShow="maskShow" @changeClose="closeMask" @updateWalletList="onUpdateWalletList" @updateWalletBalance=""/>
   </main>
+
 </template>
 
 <script>
@@ -74,6 +76,8 @@ import walletButtonImg from '../../components/wallet-button-img'
 import receiptImg from '../../assets/images/receiptImg.png'
 import transferImg from '../../assets/images/transferImg.png'
 import Clipboard from 'clipboard'
+import WalletsHandler from '../../lib/WalletsHandler'
+let FileSaver = require('file-saver')
 export default {
   name: '',
   components: {
@@ -89,10 +93,16 @@ export default {
       receiptButton: 'Receipt',
       receiptImg: receiptImg,
       transferButon: 'Transfer',
+      wallets: {},
+      selectedWallet: {},
+      selectedPrivateKey: '',
+      selectedWalletData: {},
       transferImg: transferImg,
       menuShow: false,
       walletName: 'wallet Name',
       oldWalletName: 'wallet Name',
+      walletBalance: '1000',
+      walletAddress: '',
       inputReadonly: true,
       inputActive: false,
       menuList: [
@@ -118,57 +128,15 @@ export default {
       translucentShow: false,
       maskPages: 0,
       maskShow: false,
-      tradingList: [
-        {
-          id: '01',
-          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
-          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
-          state: 'Packed',
-          sec: '-100'
-        },
-        {
-          id: '01',
-          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
-          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
-          state: 'Successful',
-          sec: '-100'
-        },
-        {
-          id: '01',
-          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
-          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
-          state: 'Failed',
-          sec: '-100'
-        },
-        {
-          id: '01',
-          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
-          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
-          state: 'Mining',
-          sec: '-100'
-        },
-        {
-          id: '01',
-          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
-          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
-          state: 'Packed',
-          sec: '-100'
-        },
-        {
-          id: '01',
-          address: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
-          time: 'Mon, 25 Feb 2019 11:54:49 GMT',
-          state: 'Packed',
-          sec: '-100'
-        }
-      ]
+      tradingList: []
     }
   },
   computed: {
 
   },
   created () {
-
+    this.wallets = this.$route.query.wallets
+    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
   },
   mounted () {
 
@@ -209,9 +177,17 @@ export default {
 
     //失去焦点保存名称
     saveName () {
-       //修改成功
-       this.translucentShow = true
-       this.translucentText = "The wallet name already exists"
+       let newKeyStore = {}
+       this.selectedWallet.name = this.walletName
+       this.wallets[this.selectedWallet.privateKey].walletName = this.walletName
+       this.selectedWalletData.walletName = this.walletName
+       newKeyStore[this.selectedWalletData.privateKey] = this.selectedWalletData
+       WalletsHandler.updateWalletFile(this.selectedWalletData, () => {
+         this.translucentShow = true
+         this.translucentText = "Change wallet name success"
+         this.oldWalletName = this.walletName
+       })
+
        setTimeout(() => {
           this.translucentShow = false
        }, 4000)
@@ -244,6 +220,40 @@ export default {
     //关闭遮罩层
     closeMask () {
       this.maskShow = false
+    },
+
+    /** Event Method, triggerd if wallet selection changed*/
+    onSelectWalletChanged (selectedWallet) {
+      this.selectedWallet = selectedWallet
+      this.selectedWalletData = this.wallets[selectedWallet.privateKey]
+      this.oldWalletName = selectedWallet.name
+      this.walletName = selectedWallet.name
+      this._getWalletBalance(selectedWallet.walletAddress)
+      this._getWalletTransactions(selectedWallet.walletAddress)
+    },
+    _getWalletBalance (walletAddress) {
+      this.$JsonRPCClient.getWalletBalance(walletAddress, (balance) => {
+        this.walletBalance = balance
+      })
+    },
+    _getWalletTransactions (walletAddress) {
+      this.$JsonRPCClient.getWalletTransactions(walletAddress, (transactions) => {
+        this.tradingList = transactions
+      })
+    },
+
+    /** Event Method, triggered if wallet removed, update the wallet list */
+    onUpdateWalletList (wallets) {
+      if (JSON.stringify(wallets) === '{}') {
+        this.$router.push({name: 'walletCreate'})
+      } else {
+        this.wallets = wallets
+      } 
+    },
+
+    /** Event Method, triggered if wallet balance updated */
+    onUpdateWalletBalance (balance) {
+      this.walletBalance = balance
     }
   },
 }

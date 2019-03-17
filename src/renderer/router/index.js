@@ -24,6 +24,39 @@ export default new Router({
       component: walletCreate
     },
     {
+      path: '/index',
+      name: 'index',
+      component: Index,
+      redirect: 'walletIndex',
+      children: [{
+        path: '/walletIndex',
+        name: 'walletIndex',
+        component: WalletIndex
+      },
+      {
+        path: '/walletTrading',
+        name: 'walletTrading',
+        component: WalletTrading
+      },
+      {
+        path: '/walletNode',
+        name: 'walletNode',
+        component: WalletNode
+      },
+      {
+        path: '/walletDig',
+        name: 'walletDig',
+        component: WalletDig
+      },
+      {
+        path: '/walletDigMore',
+        name: 'walletDigMore',
+        component: WalletDigMore
+      }
+      ]
+    },
+
+    {
       path: '/create',
       name: 'create',
       component: require('@/pages/create/create').default
@@ -38,37 +71,36 @@ export default new Router({
       name: 'home',
       component: require('@/pages/home/home').default,
       props: true,
-      children: [
-        {
-          path: '/wallet',
-          name: 'wallet',
-          component: require('@/pages/wallet/wallet').default
-        },
-        {
-          path: '/recordsDetails',
-          name: 'recordsDetails',
-          component: require('@/pages/wallet/recordsDetails').default
-        },
-        {
-          path: '/walletDetails',
-          name: 'walletDetails',
-          component: require('@/pages/wallet/walletDetails').default
-        },        
-        {
-          path: '/transfer',
-          name: 'transfer',
-          component: require('@/pages/wallet/transfer').default
-        },
-        {
-          path: '/receipt',
-          name: 'receipt',
-          component: require('@/pages/wallet/receipt').default
-        },
-        {
-          path: '/nodeSec',
-          name: 'nodeSec',
-          component: require('@/pages/nodeSec/nodeIndex').default
-        }
+      children: [{
+        path: '/wallet',
+        name: 'wallet',
+        component: require('@/pages/wallet/wallet').default
+      },
+      {
+        path: '/recordsDetails',
+        name: 'recordsDetails',
+        component: require('@/pages/wallet/recordsDetails').default
+      },
+      {
+        path: '/walletDetails',
+        name: 'walletDetails',
+        component: require('@/pages/wallet/walletDetails').default
+      },
+      {
+        path: '/transfer',
+        name: 'transfer',
+        component: require('@/pages/wallet/transfer').default
+      },
+      {
+        path: '/receipt',
+        name: 'receipt',
+        component: require('@/pages/wallet/receipt').default
+      },
+      {
+        path: '/nodeSec',
+        name: 'nodeSec',
+        component: require('@/pages/nodeSec/nodeIndex').default
+      }
       ]
     },
     // {

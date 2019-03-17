@@ -2,7 +2,7 @@ import jayson from 'jayson/lib/client'
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '13.209.3.183'
+    let externalServerAddress = '54.250.166.137'
     let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
@@ -101,8 +101,9 @@ export default {
           }
         })
       },
-      chargeWallet: function(args, fnAfterCharging) {
+      chargeWallet: function (args, fnAfterCharging) {
         this.client.request('sec_freeCharge', args, (err, response) => {
+          if (err) return
           fnAfterCharging()
         })
       }

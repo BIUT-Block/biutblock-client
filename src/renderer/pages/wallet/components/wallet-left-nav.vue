@@ -2,8 +2,8 @@
   <main>
     <ul>
       <li v-for="(item, index) in walletList"
-          :class="navIdx == index ? 'checked-nav' : ''"
-          @click="tabWallet(index)">
+          :class="navIdx === item.privateKey ? 'checked-nav' : ''"
+          @click="tabWallet(item, index)">
         <span :class="[bgColorArr[index%4], navIdx == index ? 'border-hidden' : '']"></span>
         <section>
           <p>{{item.name}}</p>  
@@ -24,54 +24,60 @@ export default {
   components: {
     walletButton: walletButtonImg
   },
-  props: {},
+  props: {wallets: Object, selectedPrivateKey: String},
   data () {
     return {
       bgColorArr: ['bgColor1','bgColor2','bgColor3','bgColor4'],
       navIdx: 0,
       createButtonText: "Create and Import Wallets",
-      imgUrl: imgUrl,
-      walletList: [
-        {
-          id: '01',
-          name: 'wallet 01',
-          address: '0x75f04e......b9449828'
-        },
-        {
-          id: '01',
-          name: 'wallet 01',
-          address: '0x75f04e......b9449828'
-        },
-        {
-          id: '01',
-          name: 'wallet 01',
-          address: '0x75f04e......b9449828'
-        },
-        {
-          id: '01',
-          name: 'wallet 01',
-          address: '0x75f04e......b9449828'
-        }
-      ]
+      imgUrl: imgUrl
     }
   },
   computed: {
-
+    walletList: function () {
+      let list = []
+      Object.keys(this.wallets).forEach( (privateKey) => {
+      list.push({
+        id: '01',
+        name: this.wallets[privateKey].walletName,
+        address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(30, 41)}`,
+        walletAddress: this.wallets[privateKey].walletAddress,
+        privateKey: privateKey,
+        publicKey: this.wallets[privateKey].publicKey,
+        englishWords: this.wallets[privateKey].englishWords
+        })
+      })
+      if (list.length > 0) {
+        this.navIdx = list[0].privateKey
+      } 
+      this.$emit("walletSelectionChanged", list[0] || [])
+      return list
+    }
   },
-  created () {
-
+  created () {   
+    
   },
   mounted () {
-
+    this.navIdx = this.selectedPrivateKey
+    this.$emit("walletSelectionChanged", {
+      id: '01',
+      name: this.wallets[this.selectedPrivateKey].walletName,
+      address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(30, 41)}`,
+      walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
+      privateKey: this.selectedPrivateKey,
+      publicKey: this.wallets[this.selectedPrivateKey].publicKey,
+      englishWords: this.wallets[this.selectedPrivateKey].englishWords
+    })
   },
   destroyed () {},
   methods: {
-    tabWallet (index) {
-      this.navIdx = index
+    tabWallet (item, index) {
+      this.navIdx = item.privateKey
+      this.$emit("walletSelectionChanged", item)
     },
 
     createWallet () {
-      this.$router.push({ name: 'walletCreate', params: { createId: 0 }})
+      this.$router.push({ name: 'walletCreate', query: { wallets: this.$route.query.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
     }
   }
 }

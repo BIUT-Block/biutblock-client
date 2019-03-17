@@ -99,6 +99,7 @@ export default {
   props: {},
   data () {
     return {
+      wallets: {},
       navList: [
         {
           id: "01",
@@ -157,7 +158,8 @@ export default {
 
   },
   created () {
-
+    this.wallets = this.$route.query.wallets
+    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
   },
   mounted () {
 
@@ -167,7 +169,7 @@ export default {
     //左侧菜单切换
     istab (index,url) {
       this.idx = index
-      this.$router.push({ path: ""+url+"" })
+      this.$router.push({ path: ""+url+"", query: {wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey }})
       if (index == 3) {
         let asideIdx = sessionStorage.getItem("asideIdx")
         sessionStorage.setItem("asideIdx", asideIdx)

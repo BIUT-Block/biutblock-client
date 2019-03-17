@@ -14,7 +14,7 @@
       <section class="wallet-mask-sent" v-show="maskPages == 4">
         <h3>Sent</h3>
         <p>FROM</p>
-        <span class="wallet-mask-sent-from-address">0x9e877f87854d996ef6830d191abe76e8813a1f91</span>
+        <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
         <p>TO</p>
         <section class="wallet-mask-sent-to-address">
           <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
@@ -45,13 +45,13 @@
       <section class="wallet-mask-receive" v-show="maskPages == 5">
         <h3>Receive</h3>
         <p>Account</p>
-        <span>0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3</span>
+        <span>0x{{selectedWallet.walletAddress}}</span>
         <p>Account</p>
         <section>
           <input type="text" />
           <label>SEC</label>
         </section>
-        <qrcode :value="walletAddress" :options="{ size: 93 }"></qrcode>
+        <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
         <span>Your address(QR Code)</span>
       </section>
 
@@ -60,7 +60,7 @@
         <h3>Export Private key</h3>
         <wallet-tips :tips="privateKey" />
         <section id="priivateKey">
-          8305dcbb827255ef79f348654cd381768bd95349d330530ab33a9b2336a8f2e6
+          {{selectedWallet.privateKey}}
         </section>
         <span class="priivate-key-button copyButton" @click="copyCnt" data-clipboard-target="#priivateKey">Copy</span>
       </section>
@@ -82,7 +82,7 @@
       <section class="wallet-mask-phrase" v-show="maskPages == 2">
         <h3>Export Phrase</h3>
         <ul>
-          <li>test</li>
+          <li>{{selectedWallet.englishWords}}</li>
         </ul>
         <span class="wallet-button" @click="importantPhrase">Confirm</span>
       </section>
@@ -104,6 +104,7 @@ import walletTips from '../../../components/wallet-tips'
 import walletInputPass from '../../../components/wallet-input-pass'
 import Qrcode from '@xkeshi/vue-qrcode'
 import Clipboard from 'clipboard'
+import WalletHandler from '../../../lib/WalletsHandler';
 export default {
   name: 'walletMask',
   components: {
@@ -113,7 +114,10 @@ export default {
   },
   props: {
     maskPages: Number,
-    maskShow: Boolean
+    maskShow: Boolean,
+    selectedWallet: Object,
+    walletData: Object,
+    balance: String
   },
   data() {
     return {
@@ -126,7 +130,7 @@ export default {
 
       sentAddress: '',//转账地址
       sentAmount: '',//转账金额
-      allAmount: 1000,//总金额
+      allAmount: this.balance,//总金额
     }
   },
   computed: {
@@ -155,21 +159,40 @@ export default {
     
     //转账
     sent () {
-
+      let sendToAddress = ''
+      if (this.sentAddress.substring(0, 2) === '0x' && this.sentAddress.length === 42) {
+        sendToAddress = this.sentAddress.substring(2, this.sentAddress.length)
+      } else {
+        sendToAddress = this.sentAddress
+      }
+      let encryptTransferData = WalletHandler.encryptTransaction(this.selectedWallet.privateKey, {
+        walletAddress: this.selectedWallet.walletAddress,
+        sendToAddress: sendToAddress,
+        amount: this.sentAmount
+      })
+      this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
+        this.$emit('updateWalletBalance', balance)
+      })
+      this.clostMask()
     },
 
     //导出keystroe文件
     importantKeystroe () {
-
+      WalletHandler.saveKeyStore(this.walletData, this.walletNewPass)
+      this.clostMask()
     },
 
     //导出助记词
     importantPhrase () {
-
+      WalletHandler.savePhrase(this.selectedWallet.englishWords)
+      this.clostMask()
     },
 
     //删除钱包
     deleteWallet () {
+      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {
+        this.$emit('updateWalletList', wallets)
+      })
       this.clostMask ()
     },
 
