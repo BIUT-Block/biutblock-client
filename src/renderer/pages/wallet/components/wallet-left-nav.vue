@@ -77,7 +77,7 @@ export default {
     },
 
     createWallet () {
-      this.$router.push({ name: 'walletCreate', query: { wallets: this.$route.query.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
+      this.$router.push({ name: 'walletCreate', query: { wallets: this.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
     }
   }
 }

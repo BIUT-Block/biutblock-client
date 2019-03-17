@@ -168,14 +168,15 @@ let WalletHandler = {
       if (err) return
       try {
         keyData = JSON.parse(CryptoJS.AES.decrypt(data.toString(), pwd).toString(CryptoJS.enc.Utf8))
-        if (fs.existsSync(defaultFilePath)) {
-          fs.readFile(defaultFilePath, 'utf-8', this._appendWalletIntoFile.bind(this, defaultFilePath, keyData[Object.keys(keyData)[0]], fnAfterImport))
-        } else {
-          fs.writeFile(defaultFilePath, JSON.stringify(keyData), (err) => {
-            if (err) return
-            fnAfterImport(keyData, Object.keys(keyData)[0])
-          })
-        }
+        this.backUpWalletIntoFile(keyData[Object.keys(keyData)[0]], fnAfterImport)
+        // if (fs.existsSync(defaultFilePath)) {
+        //   fs.readFile(defaultFilePath, 'utf-8', this._appendWalletIntoFile.bind(this, defaultFilePath, keyData[Object.keys(keyData)[0]], fnAfterImport))
+        // } else {
+        //   fs.writeFile(defaultFilePath, JSON.stringify(keyData), (err) => {
+        //     if (err) return
+        //     fnAfterImport(keyData, Object.keys(keyData)[0])
+        //   })
+        // }
       } catch (e) {
         fnAfterImport('error')
       }
@@ -183,7 +184,7 @@ let WalletHandler = {
   },
 
   importWalletFromPrivateKey: function (privateKey, walletName, fnAfterImport) {
-    let wallet = this._getKeysFromPrivateKey(privateKey)
+    let wallet = this._getKeysFromPrivateKey(privateKey, walletName, fnAfterImport)
     this.backUpWalletIntoFile(wallet, fnAfterImport)
   },
 
@@ -198,15 +199,15 @@ let WalletHandler = {
         privateKey: privateKey,
         publicKey: extractPublicKey,
         englishWords: extractPhrase,
-        userAddress: extractAddress
+        walletAddress: extractAddress
       }
     } catch (e) {
       fnAfterImport('error')
     }
   },
 
-  importWalletFromPhrase: function (phrase, fnAfterImport) {
-    let wallet = this._getKeysFromPhrase(phrase, fnAfterImport)
+  importWalletFromPhrase: function (phrase, walletName, fnAfterImport) {
+    let wallet = this._getKeysFromPhrase(phrase, walletName, fnAfterImport)
     this.backUpWalletIntoFile(wallet, fnAfterImport)
   },
 
@@ -222,10 +223,10 @@ let WalletHandler = {
       let userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
       return {
         walletName: walletName,
-        privateKey: privKey64Buffer,
+        privateKey: privateKey,
         publicKey: pubKey128ToString,
         englishWords: phrase,
-        userAddress: userAddressToString
+        walletAddress: userAddressToString
       }
     } catch (e) {
       fnAfterImport('error')

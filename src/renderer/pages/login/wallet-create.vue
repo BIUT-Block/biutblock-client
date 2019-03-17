@@ -218,7 +218,7 @@ export default {
 
     //导入钱包助记词按钮是否激活
     phraseActive () {
-      return (this.walletPhrase).split(" ").length-1 > 23 ? true : false
+      return this.walletPhrase ? true : false
     }
   },
   created () {
@@ -330,7 +330,6 @@ export default {
             this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         })
-        //this.$router.push({ name: 'index',params: { createId: 2 }})
       } else if (walletIdx == 1) {
         WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, this.walletNewPass, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
@@ -352,7 +351,6 @@ export default {
             this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         })
-        //this.$router.push({ name: 'index',params: { createId: 3 }})
       }
     },
 
