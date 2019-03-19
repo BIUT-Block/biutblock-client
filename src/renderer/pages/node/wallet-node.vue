@@ -25,6 +25,7 @@
 import nodeTitle from './components/wallet-node-title'
 import nodeList from './components/wallet-node-list'
 import walletMargin from '../../components/wallet-margin'
+const ipify = require('ipify')
 export default {
   name: 'walletNode',
   components: {
@@ -36,13 +37,14 @@ export default {
   data () {
     return {
       address: "IP Address",
-      addressText: "13.209.3.183", //ip
+      ntcServer: '0.de.pool.ntp.org',
+      addressText: "-", //ip
       localTime: "Local Time",
-      localTimeText: "2019-01-19 16:00:00 GMT+8", //本地时间
+      localTimeText: "-", //本地时间
       node: "Connected Node",
-      nodeText: "35.158.171.46", //连接的节点
+      nodeText: "-", //连接的节点
       nodeTime: "Node Time",
-      nodeTimeText: "", //节点时间
+      nodeTimeText: "-", //节点时间
       nodeList: [
         {
           id: '01',
@@ -107,14 +109,24 @@ export default {
 
   },
   created () {
-
+    ipify().then(ip => {
+      this.addressText = ip
+    })
+    this.localTimeText = new Date().toString()
+    setInterval(() => {
+      this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
+        this.nodeTimeText = new Date(response.result.time * 1000).toString()
+        this.localTimeText = new Date().toString()
+        this.nodeText = response.result.ipv4
+      })
+    }, 2500)
   },
   mounted () {
 
   },
   destroyed () {},
   methods: {
-    
+
   },
 }
 </script>

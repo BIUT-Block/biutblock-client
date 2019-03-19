@@ -15,8 +15,8 @@
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3>- 1000 sec</h3>
-        <p>Successful</p>
+        <h3>{{amount}}</h3>
+        <p>{{status}}</p>
       </section>
 
       <!-- 交易详情 -->
@@ -60,6 +60,8 @@ export default {
       beneficiary: '0x75f04e06b80b4b249a878000714e038fcc746ac548',
       party: '0x75f04e06b80b4b249a878000714e038fcc746ac548',
       cost: '8.89729807 sec',
+      amount: '',
+      status: '',
       stateImg: tradingPacked //根据状态切换图片及颜色
     }
   },
@@ -100,6 +102,25 @@ export default {
     }
   },
   created () {
+    let trade = this.$route.query.item
+    this.transactionNumber = `0x${trade.id}`
+    this.block = trade.blockNumber
+    this.time = trade.listTime
+    this.beneficiary = trade.listFrom
+    this.party = trade.listTo
+    this.amount = trade.listMoney
+    this.cost = trade.listMinerCost
+    this.status = trade.listState
+    switch(trade.listState) {
+      case 'Successful':
+        this.stateImg = tradingSuccess
+        break
+      case 'Packed':
+        this.stateImg = tradingPacked
+        break
+      default:
+        break
+    }
 
   },
   mounted () {
@@ -108,7 +129,7 @@ export default {
   destroyed () {},
   methods: {
     returnWallet () {
-      this.$router.push({ name: 'index'})
+      this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivate: this.$route.query.selectedPrivateKey}})
     }
   },
 }

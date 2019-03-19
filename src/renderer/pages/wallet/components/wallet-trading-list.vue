@@ -1,7 +1,7 @@
 <template>
   <ul>
     <!-- 默认加载五条数据，点击查看更多就加载更多数据 -->
-    <li @click="tradingDetails" v-for="(item, index) in tradingList" v-if="index < 5">
+    <li @click="tradingDetails(item)" v-for="(item, index) in tradingList" v-if="index < 5">
       <section class="list-img">
         <img :src="item.listState | stateImg" alt="">
         <section>
@@ -24,7 +24,9 @@ export default {
      
   },
   props: {
-    tradingList: Array
+    tradingList: Array,
+    wallets: Object,
+    selectedPrivateKey: String
   },
   data () {
     return {
@@ -42,8 +44,8 @@ export default {
   },
   destroyed () {},
   methods: {
-    tradingDetails () {
-      this.$router.push({ name: 'walletTrading'})
+    tradingDetails (item) {
+      this.$router.push({ name: 'walletTrading', query: {trade: item, wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey}})
     }
   },
   filters: {

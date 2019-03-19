@@ -106,6 +106,12 @@ export default {
           if (err) return
           fnAfterCharging()
         })
+      },
+      getNodeInfo: function (timeServer, fnAfterGetInfo) {
+        this.client.request('sec_getNodeInfo', [timeServer], (err, response) => {
+          if (err) return
+          fnAfterGetInfo(response)
+        })
       }
     }
 

@@ -234,13 +234,16 @@ export default {
       let filePath = dirPath + '/default.data'
       let wallets = {}
       walletsHandler.getAllWalletsFromFile((wallets) => {
-        this.$router.push({
-          name: 'walletIndex',
-          query: {
-            wallets: wallets,
-            selectedPrivateKey: Object.keys(wallets)[0]
-          }
-        })
+        if (JSON.stringify(wallets) !== '{}') {
+            this.$router.push({
+              name: 'walletIndex',
+              query: {
+                wallets: wallets,
+                selectedPrivateKey: Object.keys(wallets)[0]
+              }
+          })
+        } 
+
       })
     }
   },

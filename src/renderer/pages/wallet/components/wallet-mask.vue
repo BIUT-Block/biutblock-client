@@ -191,6 +191,7 @@ export default {
     //删除钱包
     deleteWallet () {
       WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {
+        
         this.$emit('updateWalletList', wallets)
       })
       this.clostMask ()

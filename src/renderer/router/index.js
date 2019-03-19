@@ -8,7 +8,6 @@ const WalletNode = resolve => require(['@/pages/node/wallet-node'], resolve)
 const WalletDig = resolve => require(['@/pages/dig/wallet-dig'], resolve)
 const WalletDigMore = resolve => require(['@/pages/dig/wallet-dig-more'], resolve)
 
-
 Vue.use(Router)
 
 export default new Router({

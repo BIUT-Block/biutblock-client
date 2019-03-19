@@ -7,13 +7,13 @@
           <h3>Mining</h3>
           <p>Wallet Account</p>
           <ul>
-            <li @click="downCheckWallet">
-              <span>wallet name</span>
+            <li @click="downCheckWallet" :disabled="checkedWallet">
+              <span>{{selectedWalletName}}</span>
               <img src="../../assets/images/moreDown.png" alt="">
             </li>
             <li v-show="checkWallet">
               <ul>
-                <li @click="checkDigWallet">111111</li>
+                <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">{{ wallet.walletName }}</li>
               </ul>
             </li>
           </ul>
@@ -39,7 +39,7 @@
       <wallet-margin/>
       <!-- 挖矿底部 -->
       <section class="dig-footer">
-        <dig-footer/>
+        <dig-footer :walletAddress="selectedWallet.walletAddress"/>
       </section>
     </section>
     <!-- 遮罩层 -->
@@ -67,6 +67,7 @@ import digTitle from './components/wallet-dig-title'
 import walletButton from '../../components/wallet-button'
 import digList from './components/wallet-dig-list'
 import walletMargin from '../../components/wallet-margin'
+import { setInterval, clearTimeout } from 'timers';
 export default {
   name: 'walletDig',
   components: {
@@ -83,8 +84,14 @@ export default {
       digNumber: '1000',
       digIncome: '100',
       checkWallet: false,
-      checkedWallet: false,
+      checkedWallet: true,
+      wallets: [],
+      selectedPrivateKey: '',
+      selectedWallet: '',
+      selectedWalletName: '',
       miningIn: false, //挖矿中改变按钮样式
+      isSynced: false,
+      updateListJob: '',
       moreList: [
         {
           id: '01',
@@ -144,41 +151,131 @@ export default {
 
   },
   created () {
+    let wallets = this.$route.query.wallets
+    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
+    for (let key in wallets) {
+      if (wallets.hasOwnProperty(key)) {
+        this.wallets.push(wallets[key])
+      }
+    }
 
+    this.initMiningStatus()
   },
   mounted () {
 
   },
   destroyed () {},
   methods: {
+    initMiningStatus () {
+      let miningStatus = window.sessionStorage.getItem('miningStatus')
+      if (miningStatus) {
+        mingingStatus = JSON.parse(mingingStatus)
+        this.selectedWallet = miningStatus.wallet
+        this.selectedWalletName = miningStatus.wallet.walletName
+        this.miningIn = miningStatus.miningIn
+        this.checkedWallet = false
+        this.isSynced = miningStatus.isSynced
+      } else {
+        this.selectedWallet = this.wallets[0]
+        this.selectedWalletName = this.wallets[0].walletName
+      }
+      this._getWalletMiningHistory()
+      // method to get total mined and number of block
+    },
+
     //选择挖矿钱包
     downCheckWallet () {
       this.checkWallet = true
     },
 
     //选择钱包
-    checkDigWallet () {
+    checkDigWallet (wallet) {
+      this.selectedWallet = wallet
+      this.selectedWalletName = wallet.walletName
+      this._getWalletMiningHistory()
       this.checkWallet = false
       this.checkedWallet = true
     },
     
+    _getWalletMiningHistory () {
+      this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
+        let miningHistory = history.filter((hist) => {
+          return hist.listAddress === 'Mined'
+        })
+        miningHistory.forEach((element, index) => {
+          this.moreList.push({
+            id: index,
+            age: element.listTime,
+            reward: `${element.listMoney} SEC`,
+            blicks: element.blockNumber,
+            block: element.blockHeight
+          })
+        })
+      })
+    },
+
     //开启挖矿
     beginDig () {
       if (this.digButton == "Start Mining") {
-        //开始挖矿
+        this.moreList = []
+        this.startMining()
         this.digButton = "Stop Mining"
-        this.maskText = "Mining will start soon, confirm using the wallet 3 binding?"
+        this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
         this.maskShow = true
         this.miningIn = true
         this.checkedWallet = false
       } else {
-        //停止挖矿
+        this.stopMining()
         this.digButton = "Start Mining"
         this.maskText = "Confirm to Stop Mining?"
         this.maskShow = true
         this.miningIn = false
-        this.checkedWallet = false
+        this.checkedWallet = true
       }
+    },
+
+    saveMingingStatus () {
+      let status = {
+        wallet: this.selectedWallet,
+        mingingIn: this.miningIn,
+        isSynced: this.isSynced
+      }
+      window.sessionStorage.setItem('miningStatus', JSON.stringify(status))
+    },
+
+    startMining () {
+      this.$JsonRPCClient.switchToLocalHost()
+      if (!this.isSynced) {
+        this.$JsonRPCClient.client.request('sec_startNetWorkEvent', [], (err, response) => {
+          if (response) {
+            this.isSynced = true
+            this.saveMingingStatus()
+            this._beginMiningWithWallet()
+          }
+        })
+        return
+      }
+      this._beginMiningWithWallet()
+    },
+
+    stopMining () {
+      this.$JsonRPCClient.switchToLocalHost()
+      this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+        if (err) return
+      })
+      clearInterval(this.updateListJob)
+    },
+
+    _beginMiningWithWallet () {
+      this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet.walletAddress], (err, response) => {
+        if (err) return
+      })
+      this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+        if (err) return
+      })
+      this.$JsonRPCClient.switchToExternalServer()
+      this._getWalletMiningHistory()
+      this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
     }
   },
 }

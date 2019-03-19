@@ -14,7 +14,7 @@
     </li>
     <li>
       <span>Mined by：</span>
-      <span>0xe84ccc49...56a9bbf952</span>
+      <span>0x{{walletAddress}}</span>
     </li>
   </ul>
 </template>
@@ -25,7 +25,7 @@ export default {
   components: {
 
   },
-  props: {},
+  props: {walletAddress: String, totalBlockHeight: String, totalMining: String},
   data() {
     return {
 
