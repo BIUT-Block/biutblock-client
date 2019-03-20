@@ -24,7 +24,7 @@ export default {
   components: {
     walletButton: walletButtonImg
   },
-  props: {wallets: Object, selectedPrivateKey: String},
+  props: {wallets: Object, selectedPrivateKey: String, createdId: String},
   data () {
     return {
       bgColorArr: ['bgColor1','bgColor2','bgColor3','bgColor4'],
@@ -59,15 +59,17 @@ export default {
   },
   mounted () {
     this.navIdx = this.selectedPrivateKey
-    this.$emit("walletSelectionChanged", {
-      id: '01',
-      name: this.wallets[this.selectedPrivateKey].walletName,
-      address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(30, 41)}`,
-      walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
-      privateKey: this.selectedPrivateKey,
-      publicKey: this.wallets[this.selectedPrivateKey].publicKey,
-      englishWords: this.wallets[this.selectedPrivateKey].englishWords
-    })
+    if (this.createdId === 'walletIndex') {
+      this.$emit("walletSelectionChanged", {
+        id: '01',
+        name: this.wallets[this.selectedPrivateKey].walletName,
+        address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(30, 41)}`,
+        walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
+        privateKey: this.selectedPrivateKey,
+        publicKey: this.wallets[this.selectedPrivateKey].publicKey,
+        englishWords: this.wallets[this.selectedPrivateKey].englishWords
+      })
+    }  
   },
   destroyed () {},
   methods: {

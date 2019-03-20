@@ -2,7 +2,7 @@
   <main class="wallet-container"  @click="closeMenuList">
     <!-- 钱包列表 -->
     <section class="wallet-list">
-      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" @walletSelectionChanged = "onSelectWalletChanged" />
+      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex" @walletSelectionChanged = "onSelectWalletChanged" />
     </section>
     <!-- 钱包相关信息 -->
     <section class="wallet-content">
@@ -50,7 +50,7 @@
         </section>
         <!-- 有数据列表 walletContent == 1 -->
         <section class="wallet-content-body-list">
-          <trading-list :tradingList="tradingList"/>
+          <trading-list :tradingList="tradingList" :wallets="wallets" :selectedPrivateKey="selectedPrivateKey"/>
         </section>
       </section>
     </section>
@@ -77,7 +77,9 @@ import receiptImg from '../../assets/images/receiptImg.png'
 import transferImg from '../../assets/images/transferImg.png'
 import Clipboard from 'clipboard'
 import WalletsHandler from '../../lib/WalletsHandler'
+import { clearInterval, setInterval } from 'timers';
 let FileSaver = require('file-saver')
+let jobID
 export default {
   name: '',
   components: {
@@ -224,12 +226,21 @@ export default {
 
     /** Event Method, triggerd if wallet selection changed*/
     onSelectWalletChanged (selectedWallet) {
+      if (jobID) {
+        clearInterval(jobID)
+      }
       this.selectedWallet = selectedWallet
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
+      this.selectedPrivateKey = selectedWallet.privateKey
       this.oldWalletName = selectedWallet.name
       this.walletName = selectedWallet.name
       this._getWalletBalance(selectedWallet.walletAddress)
       this._getWalletTransactions(selectedWallet.walletAddress)
+      jobID = setInterval(()=>{
+        this._getWalletBalance(selectedWallet.walletAddress)
+        this._getWalletTransactions(selectedWallet.walletAddress)
+      }, 5000)
+      //return
     },
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalance(walletAddress, (balance) => {
@@ -252,8 +263,9 @@ export default {
     },
 
     /** Event Method, triggered if wallet balance updated */
-    onUpdateWalletBalance (balance) {
+    onUpdateWalletBalance (balance, walletAddress) {
       this.walletBalance = balance
+      this._getWalletTransactions(walletAddress)
     }
   },
 }

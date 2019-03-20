@@ -2,7 +2,7 @@ import jayson from 'jayson/lib/client'
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '54.250.166.137'
+    let externalServerAddress = '18.197.120.79'
     let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
@@ -58,6 +58,7 @@ export default {
               walletList.push({
                 id: response.result.resultInPool[j].TxHash,
                 blockNumber: 'Not in Block yet',
+                blockHash: '',
                 listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTo: response.result.resultInPool[j].TxTo,
@@ -80,6 +81,7 @@ export default {
               walletList.push({
                 id: response.result.resultInChain[i].TxHash,
                 blockNumber: response.result.resultInChain[i].BlockNumber,
+                blockHash: `0x${response.result.resultInChain[i].BlockHash}`,
                 listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
                 listFrom: response.result.resultInChain[i].TxFrom,
                 listTo: response.result.resultInChain[i].TxTo,
@@ -111,6 +113,18 @@ export default {
         this.client.request('sec_getNodeInfo', [timeServer], (err, response) => {
           if (err) return
           fnAfterGetInfo(response)
+        })
+      },
+      getNodesTable: function (fnAfterGetNodes) {
+        this.client.request('sec_getNodesTable', [], (err, response) => {
+          if (err) return
+          fnAfterGetNodes(response.result.NodesTable)
+        })
+      },
+      getBlockHeight: function (fnGetBlockHeight) {
+        this.client.request('sec_getChainHeight', [], (err, response) => {
+          if (err) return
+          fnGetBlockHeight(response.result.ChainHeight)
         })
       }
     }

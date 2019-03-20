@@ -2,11 +2,11 @@
   <ul>
     <li>
       <span>Whole Network Mining：</span>
-      <span>123456789.1234 SEC</span>
+      <span>{{totalMining}} SEC</span>
     </li>
     <li>
       <span>Blocks：</span>
-      <span>1117</span>
+      <span>{{totalBlockHeight}}</span>
     </li>
     <li>
       <span class="dig-round"></span>

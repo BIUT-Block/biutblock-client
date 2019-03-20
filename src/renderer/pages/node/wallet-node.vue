@@ -25,7 +25,9 @@
 import nodeTitle from './components/wallet-node-title'
 import nodeList from './components/wallet-node-list'
 import walletMargin from '../../components/wallet-margin'
+import { clearInterval } from 'timers';
 const ipify = require('ipify')
+let jobId
 export default {
   name: 'walletNode',
   components: {
@@ -45,64 +47,7 @@ export default {
       nodeText: "-", //连接的节点
       nodeTime: "Node Time",
       nodeTimeText: "-", //节点时间
-      nodeList: [
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        },
-        {
-          id: '01',
-          nodeIp: '35.158.171.46',
-          nodeCountry: 'Japan',
-          nodeCity: 'Tokyo',
-          nodeTime: '2019-01-19 10:00:00 ',
-        }
-      ]
+      nodeList: []
     }
   },
   computed: {
@@ -113,7 +58,18 @@ export default {
       this.addressText = ip
     })
     this.localTimeText = new Date().toString()
-    setInterval(() => {
+    this.$JsonRPCClient.getNodesTable((nodestable)=>{
+      nodestable.forEach( (node, index) => {
+        this.nodeList.push({
+          id: index,
+          nodeIp: node.location.traits.ipAddress,
+          nodeCountry: node.location.country.names.en,
+          nodeCity: node.location.city.names ? node.location.city.names.en : '',
+          nodeTime: new Date(node.node.TimeStamp).toString()
+        })
+      })
+    })
+    jobId = setInterval(() => {
       this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
         this.nodeTimeText = new Date(response.result.time * 1000).toString()
         this.localTimeText = new Date().toString()
@@ -124,7 +80,9 @@ export default {
   mounted () {
 
   },
-  destroyed () {},
+  destroyed () {
+    clearInterval(jobId)
+  },
   methods: {
 
   },

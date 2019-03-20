@@ -30,7 +30,7 @@
       <!-- 挖矿内容 -->
       <section class="dig-body">
          <!-- 挖矿内容-头部 -->
-        <dig-title :digTitleShow="true" :number="digNumber" :income="digIncome"/>
+        <dig-title :digTitleShow="true" :number="chainHeight" :income="digIncome"/>
         <!-- 挖矿内容-列表 -->
         <section>
           <dig-list :digLists="moreList"/>
@@ -39,7 +39,7 @@
       <wallet-margin/>
       <!-- 挖矿底部 -->
       <section class="dig-footer">
-        <dig-footer :walletAddress="selectedWallet.walletAddress"/>
+        <dig-footer :walletAddress="selectedWallet.walletAddress" :totalBlockHeight="chainHeight" :totalMining="networkMining"/>
       </section>
     </section>
     <!-- 遮罩层 -->
@@ -67,7 +67,7 @@ import digTitle from './components/wallet-dig-title'
 import walletButton from '../../components/wallet-button'
 import digList from './components/wallet-dig-list'
 import walletMargin from '../../components/wallet-margin'
-import { setInterval, clearTimeout } from 'timers';
+import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers';
 export default {
   name: 'walletDig',
   components: {
@@ -91,57 +91,60 @@ export default {
       selectedWalletName: '',
       miningIn: false, //挖矿中改变按钮样式
       isSynced: false,
+      chainHeight: '0',
+      networkMining: '0',
       updateListJob: '',
+      getBlockHeightJob: '',
       moreList: [
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '02',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '03',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '04',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '05',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '06',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '06',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        }
+        // {
+        //   id: '01',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // },
+        // {
+        //   id: '02',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // },
+        // {
+        //   id: '03',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // },
+        // {
+        //   id: '04',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // },
+        // {
+        //   id: '05',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // },
+        // {
+        //   id: '06',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // },
+        // {
+        //   id: '06',
+        //   age: '3 days 4 hours 15 secs ago',
+        //   reward: '+2.00 SEC',
+        //   blicks: '155565',
+        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
+        // }
       ],
       maskShow: false,
       maskText: ''
@@ -160,20 +163,35 @@ export default {
     }
 
     this.initMiningStatus()
+    this.$JsonRPCClient.getBlockHeight((chainHeight) => {
+      this.chainHeight = chainHeight.toString()
+      this.networkMining = (Number(chainHeight)*2).toString()
+    })
+    this.getBlockHeightJob = setInterval(()=>{
+        this.$JsonRPCClient.getBlockHeight((chainHeight) => {
+        this.chainHeight = chainHeight.toString()
+        this.networkMining = (Number(chainHeight)*2).toString()
+      })
+    }, 2500)
   },
   mounted () {
 
   },
-  destroyed () {},
+  destroyed () {
+    clearInterval(this.getBlockHeightJob)
+    if (this.updateListJob !== '') {
+      clearInterval(this.updateListJob)
+    }
+  },
   methods: {
     initMiningStatus () {
       let miningStatus = window.sessionStorage.getItem('miningStatus')
       if (miningStatus) {
-        mingingStatus = JSON.parse(mingingStatus)
+        miningStatus = JSON.parse(miningStatus)
         this.selectedWallet = miningStatus.wallet
         this.selectedWalletName = miningStatus.wallet.walletName
         this.miningIn = miningStatus.miningIn
-        this.checkedWallet = false
+        this._setButton()
         this.isSynced = miningStatus.isSynced
       } else {
         this.selectedWallet = this.wallets[0]
@@ -188,6 +206,16 @@ export default {
       this.checkWallet = true
     },
 
+    _setButton () {
+      if (this.miningIn) {
+        this.digButton = "Stop Mining"
+        this.checkedWallet = false
+      } else {
+        this.digButton = "Start Mining"
+        this.checkedWallet = true
+      }
+    },
+
     //选择钱包
     checkDigWallet (wallet) {
       this.selectedWallet = wallet
@@ -198,17 +226,19 @@ export default {
     },
     
     _getWalletMiningHistory () {
+      this.digIncome = "0"
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
         let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined'
+          return hist.listAddress === 'Mined' && hist.listState === 'Successful'
         })
         miningHistory.forEach((element, index) => {
+          this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString() 
           this.moreList.push({
             id: index,
             age: element.listTime,
             reward: `${element.listMoney} SEC`,
             blicks: element.blockNumber,
-            block: element.blockHeight
+            block: element.blockHash
           })
         })
       })
@@ -222,14 +252,12 @@ export default {
         this.digButton = "Stop Mining"
         this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
         this.maskShow = true
-        this.miningIn = true
         this.checkedWallet = false
       } else {
         this.stopMining()
         this.digButton = "Start Mining"
         this.maskText = "Confirm to Stop Mining?"
         this.maskShow = true
-        this.miningIn = false
         this.checkedWallet = true
       }
     },
@@ -237,7 +265,7 @@ export default {
     saveMingingStatus () {
       let status = {
         wallet: this.selectedWallet,
-        mingingIn: this.miningIn,
+        miningIn: this.miningIn,
         isSynced: this.isSynced
       }
       window.sessionStorage.setItem('miningStatus', JSON.stringify(status))
@@ -246,11 +274,13 @@ export default {
     startMining () {
       this.$JsonRPCClient.switchToLocalHost()
       if (!this.isSynced) {
-        this.$JsonRPCClient.client.request('sec_startNetWorkEvent', [], (err, response) => {
+        this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
+          console.log(response)
           if (response) {
             this.isSynced = true
-            this.saveMingingStatus()
-            this._beginMiningWithWallet()
+            setTimeout(()=>{
+              this._beginMiningWithWallet()
+            }, 2000)  
           }
         })
         return
@@ -262,6 +292,8 @@ export default {
       this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
         if (err) return
+        this.miningIn = false
+        this.saveMingingStatus()
       })
       clearInterval(this.updateListJob)
     },
@@ -271,7 +303,12 @@ export default {
         if (err) return
       })
       this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
-        if (err) return
+        if (err) {
+          this.miningIn = false
+          return
+        }
+        this.miningIn = true
+        this.saveMingingStatus()
       })
       this.$JsonRPCClient.switchToExternalServer()
       this._getWalletMiningHistory()

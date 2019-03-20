@@ -2,7 +2,7 @@
   <main class="wallet-container">
     <!-- 钱包列表 -->
     <section class="wallet-list">
-      <left-nav/>
+      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletTrade"/>
     </section>
 
     <section class="wallet-content">
@@ -62,6 +62,8 @@ export default {
       cost: '8.89729807 sec',
       amount: '',
       status: '',
+      wallets: {},
+      selectedPrivateKey: '',
       stateImg: tradingPacked //根据状态切换图片及颜色
     }
   },
@@ -102,12 +104,12 @@ export default {
     }
   },
   created () {
-    let trade = this.$route.query.item
+    let trade = this.$route.query.trade
     this.transactionNumber = `0x${trade.id}`
     this.block = trade.blockNumber
     this.time = trade.listTime
-    this.beneficiary = trade.listFrom
-    this.party = trade.listTo
+    this.beneficiary = `0x${trade.listFrom}`
+    this.party = `0x${trade.listTo}`
     this.amount = trade.listMoney
     this.cost = trade.listMinerCost
     this.status = trade.listState
@@ -124,12 +126,13 @@ export default {
 
   },
   mounted () {
-
+    this.wallets = this.$route.query.wallets
+    this.selectedPrivate = this.$route.query.selectedPrivateKey
   },
   destroyed () {},
   methods: {
     returnWallet () {
-      this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivate: this.$route.query.selectedPrivateKey}})
+      this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
     }
   },
 }

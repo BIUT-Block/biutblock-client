@@ -171,7 +171,7 @@ export default {
         amount: this.sentAmount
       })
       this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
-        this.$emit('updateWalletBalance', balance)
+        this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
       })
       this.clostMask()
     },
