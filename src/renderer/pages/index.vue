@@ -18,7 +18,7 @@
         </ul>
         <section class="wallet-index-version">
           <span>{{networkContent}}</span>
-          <span>V1.0.0</span>
+          <span>V{{versionNumber}}</span>
         </section>
       </aside>
       <main class="wallet-index-content-home">
@@ -65,7 +65,7 @@
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
               <p>Version Information</p>
-              <span>SEC wallet 1.2.56</span>
+              <span>SEC wallet {{versionNumber}}</span>
             </section>
           </section>
         </section>
@@ -91,6 +91,7 @@ import agreement from '../assets/images/agreement.png'
 import agreements from '../assets/images/agreements.png'
 
 import walletNav from '../components/wallet-nav'
+const pkg = require('../../../package.json')
 export default {
   name: '',
   components: {
@@ -145,6 +146,7 @@ export default {
           cnt: "Version"
         }
       ],
+      versionNumber: '',
       maskPages: 0, //setting
       settingIdex: 0,
       networkIdx: 1,
@@ -158,6 +160,7 @@ export default {
 
   },
   created () {
+    this.versionNumber = pkg.version
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = this.$route.query.selectedPrivateKey
   },
