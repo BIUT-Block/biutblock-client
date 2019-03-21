@@ -27,13 +27,13 @@ let WalletHandler = {
 
   updateWalletFile: function (wallet, fnAfterSave) {
     let dirPath = require('os').homedir() + '/secwallet'
-    let filePath = dirPath + '/default.data'
+    let filePath = dirPath + '/wallets.data'
     fs.readFile(filePath, 'utf-8', this._modifyWalletFile.bind(this, filePath, wallet, fnAfterSave))
   },
 
   getAllWalletsFromFile: function (fnAfterReadFinish) {
     let dirPath = require('os').homedir() + '/secwallet'
-    let filePath = dirPath + '/default.data'
+    let filePath = dirPath + '/wallets.data'
     if (fs.existsSync(dirPath)) {
       fs.readFile(filePath, (err, data) => {
         if (err) return
@@ -69,7 +69,7 @@ let WalletHandler = {
 
   _backupAllWallets: function (wallet, fnAfterSave) {
     let dirPath = require('os').homedir() + '/secwallet'
-    let filePath = dirPath + '/default.data'
+    let filePath = dirPath + '/wallets.data'
     let keyFileDataJS = {}
 
     if (!fs.existsSync(dirPath)) {
@@ -89,7 +89,7 @@ let WalletHandler = {
       fs.readFile(filePath, 'utf-8', this._appendWalletIntoFile.bind(this, filePath, wallet, fnAfterSave))
     } else {
       let keyFileData = JSON.stringify(keyFileDataJS)
-      fs.writeFile(dirPath + '/default.data', keyFileData, (err) => {
+      fs.writeFile(dirPath + '/wallets.data', keyFileData, (err) => {
         if (err) {
           return
         }
@@ -135,7 +135,7 @@ let WalletHandler = {
 
   removeWalletFromFile: function (walletData, fnAfterRemove) {
     let dirPath = require('os').homedir() + '/secwallet'
-    let filePath = dirPath + '/default.data'
+    let filePath = dirPath + '/wallets.data'
     fs.readFile(filePath, 'utf-8', (err, data) => {
       if (err) return
       let allData = JSON.parse(data)
@@ -161,7 +161,7 @@ let WalletHandler = {
 
   decryptKeyStoreFile: function (filePath, pwd, fnAfterImport) {
     let dirPath = require('os').homedir() + '/secwallet'
-    let defaultFilePath = dirPath + '/default.data'
+    let defaultFilePath = dirPath + '/wallets.data'
     let keyData = {}
 
     fs.readFile(filePath, 'utf-8', (err, data) => {

@@ -121,7 +121,8 @@ import agreement from '../../assets/images/agreement.png'
 import agreements from '../../assets/images/agreements.png'
 import walletsHandler from '../../lib/WalletsHandler'
 import WalletHandler from '../../lib/WalletsHandler';
-let fs = require('fs')
+const fs = require('fs')
+const pkg = require('../../../../package.json')
 
 export default {
   name: 'walletCreate',
@@ -156,7 +157,7 @@ export default {
       radioIndex: 1,// 1 表示默认不选择 相反选择
       agreedId: false, //备份助记词按钮默认不可点击
       itemList: [],//助记词列表
-
+      versionNumber: '',
       tabList: [
         {
           id: '01',
@@ -228,10 +229,10 @@ export default {
     } else {
       this.createClose = false
     }
-
+    this.versionNumber = pkg.version
     if (createId !== 1) {
       let dirPath = require('os').homedir() + '/secwallet'
-      let filePath = dirPath + '/default.data'
+      let filePath = dirPath + '/wallets.data'
       let wallets = {}
       walletsHandler.getAllWalletsFromFile((wallets) => {
         if (JSON.stringify(wallets) !== '{}') {
