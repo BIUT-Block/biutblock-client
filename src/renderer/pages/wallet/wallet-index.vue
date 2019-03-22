@@ -214,7 +214,7 @@ export default {
     //点击其他的地方关闭菜单列表
     closeMenuList (event) {
       let menuList = document.getElementById('menuListImg')
-      if (!menuList.contains(event.target) && this.menuShow) {
+      if (this.menuShow && !menuList.contains(event.target)) {
         this.menuShow = false;
       }
     },

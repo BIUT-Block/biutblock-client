@@ -296,6 +296,7 @@ export default {
         this.saveMingingStatus()
       })
       clearInterval(this.updateListJob)
+      this.$JsonRPCClient.switchToExternalServer()
     },
 
     _beginMiningWithWallet () {
