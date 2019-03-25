@@ -54,7 +54,7 @@
         />
         <section class="dig-mask-body">
           <p>{{maskText}}</p>
-          <button type="button"  @click="maskShow = false">Confirm</button>
+          <button type="button"  @click="_confirm()">Confirm</button>
         </section>
       </section>
     </section>
@@ -247,17 +247,27 @@ export default {
     //开启挖矿
     beginDig () {
       if (this.digButton == "Start Mining") {
-        this.moreList = []
-        this.startMining()
         this.digButton = "Stop Mining"
         this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
         this.maskShow = true
-        this.checkedWallet = false
-      } else {
-        this.stopMining()
+        
+      } else {        
         this.digButton = "Start Mining"
         this.maskText = "Confirm to Stop Mining?"
         this.maskShow = true
+        
+      }
+    },
+
+    _confirm () {
+      if (this.digButton == "Start Mining") {
+        this.moreList = []
+        this.startMining()
+        maskShow = false
+        this.checkedWallet = false
+      } else {
+        this.stopMining()
+        maskShow = false
         this.checkedWallet = true
       }
     },
