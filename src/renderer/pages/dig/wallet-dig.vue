@@ -156,6 +156,7 @@ export default {
         this.processTexts = JSON.parse(processTexts)
       }
       this._getWalletMiningHistory()
+      this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
       // method to get total mined and number of block
     },
 
@@ -186,12 +187,14 @@ export default {
     
     _getWalletMiningHistory () {
       this.digIncome = "0"
+      
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Successful'
         })
         miningHistory.forEach((element, index) => {
-          this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString() 
+          this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString() 
+          this.moreList = []
           this.moreList.push({
             id: index,
             age: element.listTime,
@@ -287,8 +290,8 @@ export default {
         this.saveMingingStatus()
       })
       this.$JsonRPCClient.switchToExternalServer()
-      this._getWalletMiningHistory()
-      this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
+      //this._getWalletMiningHistory()
+      //this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
     }
   },
 }

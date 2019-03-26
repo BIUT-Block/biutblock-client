@@ -36,14 +36,16 @@ export default {
     }
   },
   computed: {
-
+    digTitleShow: function(){
+      if (this.income === "" || this.income === "0" || Number(this.income) < 10) {
+        return false
+      } else {
+        return  true
+      }
+    }
   },
   created() {
-    if (this.income === "" || this.income === "0") {
-      this.digTitleShow = false
-    } else {
-      this.digTitleShow = true
-    }
+    
   },
   mounted() {
 
