@@ -231,7 +231,7 @@ export default {
     }
     this.versionNumber = pkg.version
     if (createId !== 1) {
-      let dirPath = require('os').homedir() + '/secwallet'
+      let dirPath = require('os').homedir() + '/.secwallet'
       let filePath = dirPath + '/wallets.data'
       let wallets = {}
       walletsHandler.getAllWalletsFromFile((wallets) => {
@@ -244,7 +244,6 @@ export default {
               }
           })
         } 
-
       })
     }
   },
@@ -290,7 +289,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      WalletHandler.saveKeyStore(keyDataJSON, this.walletPass1)
+      WalletHandler.saveKeyStore(this.walletName, keyDataJSON, this.walletPass1)
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
@@ -324,17 +323,27 @@ export default {
     //导入钱包
     importWallet () {
       let walletIdx = this.tabIndex // walletIdx 0 私钥导入 1 keystroe 2 助记词导入
+
       if (walletIdx == 0) {
+        if (this.walletNameImport === '' || this.walletNameImport === ' ') {
+          this._importNameError(0)
+          return
+        } 
         walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
             this.privateKeyError = true
           } else if (wallets === 'DuplicateKey') {
-            this.phraseErrorText = 'Wallet already exisits or imported.'
+            this.privateKeyErrorText = 'Wallet already exisits or imported.'
+            this.privateKeyError = true
           } else {
             this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         })
       } else if (walletIdx == 1) {
+        if (this.walletNameImport === '' || this.walletNameImport === ' ') {
+          this._importNameError(1)
+          return
+        } 
         WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, this.walletNewPass, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
             this.walletnNewPassError = true
@@ -346,15 +355,37 @@ export default {
           }
         }) 
       } else {
+        if (this.walletNameImport === '' || this.walletNameImport === ' ') {
+          this._importNameError(2)
+          return
+        } 
         WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
             this.phraseErrorText = true
           } else if (wallets === 'DuplicateKey') {
             this.phraseErrorText = 'Wallet already exists or imported.'
+            this.phraseError = true
           } else {
             this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         })
+      }
+    },
+
+    _importNameError (index) {
+      switch (index) {
+        case 0:
+          this.privateKeyErrorText = 'No empty wallet name'
+          this.privateKeyError = true
+          break
+        case 1:
+          this.walletnNewPassErrorText = 'No empty wallet name'
+          this.walletnNewPassError = true
+          break
+        case 2:
+          this.phraseErrorText = 'No empty wallet name'
+          this.phraseError = true
+          break
       }
     },
 
@@ -386,6 +417,9 @@ export default {
 
     //切换导入钱包的方式
     isTab (index) {
+      this.walletNameImport = ''
+      this.walletPrivateKey = ''
+      this.walletPhrase = ''
       this.tabIndex = index
     }
   }

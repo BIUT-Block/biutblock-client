@@ -7,11 +7,11 @@
         <section class="dig-more-header-title">
           <section>
             <p>Wallet Name</p>
-            <p>Wallet 01</p>
+            <p>Wallet {{selectedWallet.walletName}}</p>
           </section>
           <section>
             <p>Wallet Account</p>
-            <p>0x75f04e06b80b4b249a878000714e038fcc746ac54f</p>
+            <p>0x{{selectedWallet.walletAddress}}</p>
           </section>
         </section>
       </section>
@@ -29,6 +29,7 @@
 <script>
 import digTitle from './components/wallet-dig-title'
 import digList from './components/wallet-dig-more-list'
+let updateListJob
 export default {
   name: '',
   components: {
@@ -39,96 +40,57 @@ export default {
   data () {
     return {
       loadMoren: true, //加载更多按钮
-      digNumber: '1000',
-      digIncome: '100',
-      moreList: [
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        },
-        {
-          id: '01',
-          age: '3 days 4 hours 15 secs ago',
-          reward: '+2.00 SEC',
-          blicks: '155565',
-          block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        }
-      ]
+      digNumber: '0',
+      digIncome: '0',
+      wallets: {},
+      selectedPrivateKey: '',
+      selectedWallet: {},
+      moreList: [],
+      updateListJob: ''
     }
   },
   computed: {
 
   },
   created () {
-
+    this.wallets = this.$route.query.wallets
+    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
+    if (this.wallets.hasOwnProperty(this.selectedPrivateKey)) {
+      this.selectedWallet = this.wallets[this.selectedPrivateKey]
+    }
+    this.getMiningList()
+    updateListJob = setInterval(this.getMiningList, 5000)
   },
   mounted () {
 
   },
-  destroyed () {},
+  destroyed () {
+    if (updateListJob) {
+      clearInterval(updateListJob)
+    }
+  },
   methods: {
+    getMiningList () {
+      this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
+        let miningHistory = history.filter((hist) => {
+          return hist.listAddress === 'Mined' && hist.listState === 'Successful'
+        })
+        miningHistory.forEach((element, index) => {
+          this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString() 
+          this.moreList.push({
+            id: index,
+            age: element.listTime,
+            reward: `${element.listMoney} SEC`,
+            blocknumber: element.blockNumber,
+            blockhash: element.blockHash
+          })
+        })
+      })
+    },
+
     //返回挖矿页面
     returnDig () {
-      this.$router.push({ path: '/walletDig' })
+      this.$router.push({ path: '/walletDig', query: {wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey} })
     }
   },
 }

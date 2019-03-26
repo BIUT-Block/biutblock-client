@@ -65,7 +65,7 @@
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
               <p>Version Information</p>
-              <span>SEC wallet {{versionNumber}}</span>
+              <span>SEC Wallet {{versionNumber}}</span>
             </section>
           </section>
         </section>

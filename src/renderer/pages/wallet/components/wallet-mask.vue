@@ -178,13 +178,13 @@ export default {
 
     //导出keystroe文件
     importantKeystroe () {
-      WalletHandler.saveKeyStore(this.walletData, this.walletNewPass)
+      WalletHandler.saveKeyStore(this.selectedWallet.name, this.walletData, this.walletNewPass)
       this.clostMask()
     },
 
     //导出助记词
     importantPhrase () {
-      WalletHandler.savePhrase(this.selectedWallet.englishWords)
+      WalletHandler.savePhrase(this.selectedWallet.name, this.selectedWallet.englishWords)
       this.clostMask()
     },
 

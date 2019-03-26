@@ -23,14 +23,16 @@
               @click.native="beginDig"/>
         </section>
         <section class="dig-header-list">
-          ss
+          <ol>
+            <li v-for="text in processTexts">{{text}}</li>
+          </ol>
         </section>
       </section>
       <wallet-margin/>
       <!-- 挖矿内容 -->
       <section class="dig-body">
          <!-- 挖矿内容-头部 -->
-        <dig-title :digTitleShow="true" :number="chainHeight" :income="digIncome"/>
+        <dig-title :number="chainHeight"  :selectedWallet="selectedWallet" :selectedPrivateKey="selectedPrivateKey" :wallets="this.$route.query.wallets" :income="digIncome"/>
         <!-- 挖矿内容-列表 -->
         <section>
           <dig-list :digLists="moreList"/>
@@ -95,57 +97,8 @@ export default {
       networkMining: '0',
       updateListJob: '',
       getBlockHeightJob: '',
-      moreList: [
-        // {
-        //   id: '01',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // },
-        // {
-        //   id: '02',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // },
-        // {
-        //   id: '03',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // },
-        // {
-        //   id: '04',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // },
-        // {
-        //   id: '05',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // },
-        // {
-        //   id: '06',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // },
-        // {
-        //   id: '06',
-        //   age: '3 days 4 hours 15 secs ago',
-        //   reward: '+2.00 SEC',
-        //   blicks: '155565',
-        //   block: '0x75f04e06b80b4b249a878000714e038fcc746ac54f'
-        // }
-      ],
+      processTexts: [],
+      moreList: [],
       maskShow: false,
       maskText: ''
     }
@@ -161,7 +114,7 @@ export default {
         this.wallets.push(wallets[key])
       }
     }
-
+    this.selectedWallet = wallets[this.selectedPrivateKey]
     this.initMiningStatus()
     this.$JsonRPCClient.getBlockHeight((chainHeight) => {
       this.chainHeight = chainHeight.toString()
@@ -178,6 +131,7 @@ export default {
 
   },
   destroyed () {
+    window.sessionStorage.setItem('processTexts', JSON.stringify(this.processTexts))
     clearInterval(this.getBlockHeightJob)
     if (this.updateListJob !== '') {
       clearInterval(this.updateListJob)
@@ -186,6 +140,7 @@ export default {
   methods: {
     initMiningStatus () {
       let miningStatus = window.sessionStorage.getItem('miningStatus')
+      let processTexts = window.sessionStorage.getItem('processTexts')
       if (miningStatus) {
         miningStatus = JSON.parse(miningStatus)
         this.selectedWallet = miningStatus.wallet
@@ -194,8 +149,11 @@ export default {
         this._setButton()
         this.isSynced = miningStatus.isSynced
       } else {
-        this.selectedWallet = this.wallets[0]
-        this.selectedWalletName = this.wallets[0].walletName
+        //this.selectedWallet = this.wallets[0]
+        this.selectedWalletName = this.selectedWallet.walletName
+      }
+      if (processTexts) {
+        this.processTexts = JSON.parse(processTexts)
       }
       this._getWalletMiningHistory()
       // method to get total mined and number of block
@@ -220,6 +178,7 @@ export default {
     checkDigWallet (wallet) {
       this.selectedWallet = wallet
       this.selectedWalletName = wallet.walletName
+      this.selectedPrivateKey = wallet.privateKey
       this._getWalletMiningHistory()
       this.checkWallet = false
       this.checkedWallet = true
@@ -237,8 +196,8 @@ export default {
             id: index,
             age: element.listTime,
             reward: `${element.listMoney} SEC`,
-            blicks: element.blockNumber,
-            block: element.blockHash
+            blocknumber: element.blockNumber,
+            blockhash: element.blockHash
           })
         })
       })
@@ -246,28 +205,27 @@ export default {
 
     //开启挖矿
     beginDig () {
-      if (this.digButton == "Start Mining") {
-        this.digButton = "Stop Mining"
+      if (this.digButton === "Start Mining") {    
         this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-        this.maskShow = true
-        
+        this.maskShow = true    
       } else {        
         this.digButton = "Start Mining"
         this.maskText = "Confirm to Stop Mining?"
         this.maskShow = true
-        
       }
     },
 
     _confirm () {
-      if (this.digButton == "Start Mining") {
+      if (this.digButton === "Start Mining") {
+        this.digButton = "Stop Mining"
         this.moreList = []
         this.startMining()
-        maskShow = false
+        this.maskShow = false
         this.checkedWallet = false
       } else {
+        this.digButton = "Start Mining"
         this.stopMining()
-        maskShow = false
+        this.maskShow = false
         this.checkedWallet = true
       }
     },
@@ -284,13 +242,16 @@ export default {
     startMining () {
       this.$JsonRPCClient.switchToLocalHost()
       if (!this.isSynced) {
+        this.processTexts.push(`Start syncing blocks. Start minging after sync finished.`)
         this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
-          console.log(response)
+          console.log(err)
           if (response) {
+            this.processTexts.push(`Local networking success ${new Date().toString()}`)
+            this.processTexts.push(`Complete syncing blocks`)
             this.isSynced = true
             setTimeout(()=>{
               this._beginMiningWithWallet()
-            }, 2000)  
+            }, 6000) 
           }
         })
         return
@@ -311,13 +272,17 @@ export default {
 
     _beginMiningWithWallet () {
       this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet.walletAddress], (err, response) => {
+        console.log(err)
         if (err) return
+        this.processTexts.push(`Begin to mine with ${this.selectedWallet.walletAddress}`)
       })
       this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+        console.log(err)
         if (err) {
           this.miningIn = false
           return
         }
+        this.processTexts.push(`Begin to mine.`)
         this.miningIn = true
         this.saveMingingStatus()
       })

@@ -26,7 +26,9 @@ export default {
   props: {
     number: String,
     income: String,
-    digTitleShow: Boolean
+    selectedWallet: Object,
+    selectedPrivateKey: String,
+    wallets: Object
   },
   data() {
     return {
@@ -37,7 +39,11 @@ export default {
 
   },
   created() {
-
+    if (this.income === "" || this.income === "0") {
+      this.digTitleShow = false
+    } else {
+      this.digTitleShow = true
+    }
   },
   mounted() {
 
@@ -45,7 +51,7 @@ export default {
   destroyed() { },
   methods: {
     digMore () {
-      this.$router.push({ path: '/walletDigMore' })
+      this.$router.push({ path: '/walletDigMore', query: {wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey} })
     }
   },
 }

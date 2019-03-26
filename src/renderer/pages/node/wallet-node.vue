@@ -65,14 +65,14 @@ export default {
           nodeIp: node.location.traits.ipAddress,
           nodeCountry: node.location.country.names.en,
           nodeCity: node.location.city.names ? node.location.city.names.en : '',
-          nodeTime: new Date(node.node.TimeStamp).toString()
+          nodeTime: new Date(node.node.TimeStamp).toString().replace(/\(.+\)/, '')
         })
       })
     })
     jobId = setInterval(() => {
       this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
-        this.nodeTimeText = new Date(response.result.time * 1000).toString()
-        this.localTimeText = new Date().toString()
+        this.nodeTimeText = new Date(response.result.time * 1000).toString().replace(/\(.+\)/, '')
+        this.localTimeText = new Date().toString().replace(/\(.+\)/, '')
         this.nodeText = response.result.ipv4
       })
     }, 2500)

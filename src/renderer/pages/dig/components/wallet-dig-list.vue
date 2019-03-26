@@ -3,14 +3,14 @@
     <ul class="clearfix">
       <li style="width: 26%">AGE</li>
       <li style="width: 18%">REWARD</li>
-      <li style="width: 18%">BLICKS</li>
+      <li style="width: 18%">BLOCKS</li>
       <li style="width: 38%">BLOCK HASH</li>
     </ul>
     <ul class="clearfix" v-for="(item, index) in digLists">
       <li style="width: 26%">{{ item.age }}</li>
       <li style="width: 18%">{{ item.reward }}</li>
-      <li style="width: 18%">{{ item.blicks }}</li>
-      <li style="width: 38%">{{ item.block }}</li>
+      <li style="width: 18%">{{ item.blocknumber }}</li>
+      <li style="width: 38%">{{ item.blockhash }}</li>
     </ul>
   </section>
 </template>
