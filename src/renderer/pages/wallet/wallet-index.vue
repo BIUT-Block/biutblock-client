@@ -45,7 +45,7 @@
       <section class="wallet-content-body" :class="moreShow?'wallet-padidng-bottom':''">
         <p class="wallet-content-body-title">Transaction Record</p>
         <!-- 没有数据列表 walletContent == 1 -->
-        <section class="wallet-content-body-mull" style="display: none;">
+        <section class="wallet-content-body-mull" :style="noTradingStyle">
           <img src="../../assets/images/wallet-null.png" alt="">
         </section>
         <!-- 有数据列表 walletContent == 1 -->
@@ -62,7 +62,7 @@
   <wallet-translucent :text="translucentText" v-show="translucentShow"/>
   <!-- 遮罩层弹窗 -->
   <wallet-mask :maskPages="maskPages" :walletData="selectedWalletData" :balance="walletBalance" :selectedWallet="selectedWallet"  
-      :maskShow="maskShow" @changeClose="closeMask" @updateWalletList="onUpdateWalletList" @updateWalletBalance=""/>
+      :maskShow="maskShow" @changeClose="closeMask" @updateWalletList="onUpdateWalletList" @updateWalletBalance="onUpdateWalletBalance"/>
   </main>
 
 </template>
@@ -125,7 +125,7 @@ export default {
           text: 'Delete Wallet',
         }
       ],
-      moreShow: true,//加载更多是否显示
+      
       translucentText: '透明弹窗',
       translucentShow: false,
       maskPages: 0,
@@ -134,7 +134,20 @@ export default {
     }
   },
   computed: {
-
+    noTradingStyle () {
+      if (this.tradingList.length > 0){
+        return {
+          display: 'none'
+        }
+      }
+    },
+    moreShow () {
+      if (this.tradingList.length > 5) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   created () {
     this.wallets = this.$route.query.wallets
@@ -148,7 +161,16 @@ export default {
     //遮罩层相关弹窗
     lookMask (index) {
       // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
-      this.maskPages = index
+      if (index === 3) {
+        let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
+        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
+          this.maskPages = 6
+        } else {
+          this.maskPages = index
+        }
+      } else {
+        this.maskPages = index
+      }
       this.maskShow = true
     },
     
@@ -180,6 +202,16 @@ export default {
     //失去焦点保存名称
     saveName () {
        let newKeyStore = {}
+      
+       if (this.walletName.trim().length === 0) {
+         this.translucentShow = true
+         this.translucentText = "Wallet name cannot be empty or only with space"
+         setTimeout(() => {
+          this.translucentShow = false
+       }, 4000)
+         return
+       }
+
        this.selectedWallet.name = this.walletName
        this.wallets[this.selectedWallet.privateKey].walletName = this.walletName
        this.selectedWalletData.walletName = this.walletName
@@ -231,7 +263,9 @@ export default {
       }
       this.selectedWallet = selectedWallet
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
+
       this.selectedPrivateKey = selectedWallet.privateKey
+      //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
       this.oldWalletName = selectedWallet.name
       this.walletName = selectedWallet.name
       this._getWalletBalance(selectedWallet.walletAddress)
@@ -259,6 +293,7 @@ export default {
         this.$router.push({name: 'walletCreate'})
       } else {
         this.wallets = wallets
+        //this.$route.query.wallets = this.wallets
       } 
     },
 

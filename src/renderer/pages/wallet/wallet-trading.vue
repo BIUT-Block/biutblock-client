@@ -15,8 +15,8 @@
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3>{{amount}}</h3>
-        <p>{{status}}</p>
+        <h3 :class="textStyle">{{amount}}</h3>
+        <p :class="textStyle">{{status}}</p>
       </section>
 
       <!-- 交易详情 -->
@@ -31,9 +31,9 @@
       </section>
 
       <!-- 查看交易详情 -->
-      <section class="wallet-content-footer">
+      <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img src="../../assets/images/tradingLogo.png" alt="">
-        <span>See more details at SEC BLOCKCHAIN</span>
+        <a :href="transactionLink" target="_blank">See more details at SEC BLOCKCHAIN</a>
       </section>
     </section>
   </main>
@@ -64,7 +64,10 @@ export default {
       status: '',
       wallets: {},
       selectedPrivateKey: '',
-      stateImg: tradingPacked //根据状态切换图片及颜色
+      textStyle: 'packed',
+      stateImg: tradingPacked, //根据状态切换图片及颜色
+      transactionLink: ''
+      
     }
   },
   computed: {
@@ -116,9 +119,12 @@ export default {
     switch(trade.listState) {
       case 'Successful':
         this.stateImg = tradingSuccess
+        this.textStyle = 'successful'
+        this.transactionLink = `http://scan.secblock.io/tokentxdetails?hash=${this.transactionNumber}`
         break
       case 'Packed':
         this.stateImg = tradingPacked
+        this.textStyle = 'packed'
         break
       default:
         break
@@ -154,4 +160,11 @@ export default {
 
   .wallet-content-footer {color: #0B7FE6;text-align: center;}
   .wallet-content-footer img {width: 18px;height: 18px;margin-right: 8px;vertical-align: middle;}
+
+  .packed {color: #F5A623;}
+  .successful {color: #29D893;}
+  .mining {color: #388ED9;}
+  .failed {color: #EE1C39;}
+
+  .hideLink {display: none;}
 </style>

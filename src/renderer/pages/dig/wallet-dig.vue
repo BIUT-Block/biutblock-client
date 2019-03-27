@@ -212,7 +212,7 @@ export default {
         this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
         this.maskShow = true    
       } else {        
-        this.digButton = "Start Mining"
+        this.digButton = "Stop Mining"
         this.maskText = "Confirm to Stop Mining?"
         this.maskShow = true
       }
@@ -267,6 +267,7 @@ export default {
       this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
         if (err) return
         this.miningIn = false
+        this.processTexts.push(`${this.selectedWallet.walletAddress} stop mining`)
         this.saveMingingStatus()
       })
       clearInterval(this.updateListJob)

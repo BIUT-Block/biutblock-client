@@ -23,17 +23,22 @@
         <wallet-tips :tips="addressError"/>
         <p>AMOUNT</p>
         <section class="wallet-mask-sent-amount">
-          <input type="text" v-model="sentAmount" placeholder="Maximum input of 1234.12345678" maxlength="42"/>
+          <input type="text" v-model="sentAmount" v-bind:placeholder="'Maximum input of ' + balance" maxlength="42"/>
           <section>
             <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
-            <span>SEC</span>
+            
           </section>
+          <section style="margin-bottom: 0px;" class="wallet-mask-sent-amount-tips" >
+              <section>
+                <span @click="sentAllAmount">ALL</span>
+              </section>
+            </section>
         </section>
         <section class="wallet-mask-sent-amount-tips">
-          <section>
+          <!-- <section>
             <span>Balance：{{allAmount}} SEC</span>
             <span @click="sentAllAmount">ALL</span>
-          </section>
+          </section> -->
           <wallet-tips :tips="amountError"/>
         </section>
 
@@ -59,10 +64,10 @@
       <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
         <h3>Export Private key</h3>
         <wallet-tips :tips="privateKey" />
-        <section id="priivateKey">
+        <section id="privateKey">
           {{selectedWallet.privateKey}}
         </section>
-        <span class="priivate-key-button copyButton" @click="copyCnt" data-clipboard-target="#priivateKey">Copy</span>
+        <span class="priivate-key-button copyButton" @click="copyCnt" data-clipboard-target="#privateKey">Copy</span>
       </section>
 
       <!-- 导出keyStore文件 maskPages = 1  Export Keystore -->
@@ -94,6 +99,13 @@
           your wallet.
         </p>
         <span class="wallet-button" @click="deleteWallet">Delete</span>
+      </section>
+
+      <section class="wallet-mask-delete" v-show="maskPages == 6">
+        <p>
+          The wallet is bind to mining. You can not remove it.
+        </p>
+        <span class="wallet-button" @click="clostMask">Confirm</span>
       </section>
     </section>
   </section>
@@ -127,10 +139,11 @@ export default {
       privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
       walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
       walletNewPass: '',
-
+      
       sentAddress: '',//转账地址
       sentAmount: '',//转账金额
       allAmount: this.balance,//总金额
+      amountPlaceHolder: `Maximum input of ${this.balance}`
     }
   },
   computed: {
@@ -151,15 +164,66 @@ export default {
 
   },
   destroyed() { },
+
   methods: {
+    isNumber () {
+      if (!/^[0-9.]+$/i.test(this.sentAmount)) {
+        return -1
+      } else if (!/^(\d|[1-9]\d+)(\.\d+)?$/i.test(this.sentAmount) ) {
+        return -1
+      } else if (!/^[0-9]+(.[0-9]{1,8})?$/i.test(this.sentAmount)) {
+        return -1
+      }else if (parseFloat(this.sentAmount)>parseFloat(this.allAmount)) {
+        return 0
+      } else {
+        return 1;
+      }
+    },
+
+    isAddress () {
+      if (!/^[a-z0-9]+$/.test(this.sentAddress) || this.sentAddress.length !== 42)  {
+        return false
+      } else {
+        return true;
+      }
+    },
+
     //关闭弹窗调用该组件
     clostMask () {
+      this._resetErrorText()
+      this.sentAddress = ''
+      this.sentAmount = ''
       this.$emit("changeClose","")
     },
     
+    _resetErrorText () {
+      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+      this.amountError = ''
+    },
+
     //转账
     sent () {
       let sendToAddress = ''
+
+      if (!this.isAddress()) {
+        this.addressError = "Invalid address formatt."
+        return
+      }
+
+      if (this.sentAddress === this.selectedWallet.walletAddress || this.sentAddress.replace("0x", "") === this.selectedWallet.walletAddress) {
+        this.addressError = "You can not tranfer to yourself."
+        return
+      }
+
+      if (this.isNumber() === -1) {
+        this.amountError = "Invalid input of amount."
+        return
+      } else if (this.isNumber() === 0) {
+        this.amountError = "You don't have enough balance."
+        return
+      }
+
+
       if (this.sentAddress.substring(0, 2) === '0x' && this.sentAddress.length === 42) {
         sendToAddress = this.sentAddress.substring(2, this.sentAddress.length)
       } else {
@@ -190,8 +254,7 @@ export default {
 
     //删除钱包
     deleteWallet () {
-      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {
-        
+      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
         this.$emit('updateWalletList', wallets)
       })
       this.clostMask ()
@@ -213,17 +276,20 @@ export default {
 
     //清空转账地址
     clearSentAddress () {
+      this._resetErrorText()
       this.sentAddress = ""
     },
 
     //清空转账金额
     clearSentAmount () {
+      this._resetErrorText()
       this.sentAmount = ""
     },
 
     //转出全部金额
     sentAllAmount () {
-      this.sentAmount = this.allAmount
+      this._resetErrorText()
+      this.sentAmount = this.balance
     }
   },
 }
