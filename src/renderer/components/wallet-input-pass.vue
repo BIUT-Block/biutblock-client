@@ -7,7 +7,8 @@
            ref="input"
            @blur="blue"
            @focus="focus"
-           @input="$emit('input', $event.target.value)"/>
+           @input="$emit('input', $event.target.value)"
+           onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
     <img :src="imgUrl" @click="tabInputType">
   </section>
 </template>

@@ -38,7 +38,10 @@
         </section>
 
         <button type="button" @click="clostMask">Cancel</button>
-        <button type="button" @click="sent">Sent</button>
+        <button type="button"
+                :disabled="!sentActive"
+                :class="sentActive ? 'passCorrect' : ''"
+                @click="sent">Sent</button>
       </section>
 
       <!-- 二维码 maskPages = 5 receive -->
@@ -48,7 +51,8 @@
         <span>0x{{selectedWallet.walletAddress}}</span>
         <p>Account</p>
         <section>
-          <input type="text" />
+          <input type="text"  v-model="qrcodeAmount" maxlength="30"
+            onkeypress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d{7}$/.test(value))event.returnValue=false"/>
           <label>SEC</label>
         </section>
         <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
@@ -71,11 +75,15 @@
         <wallet-input-pass
           placeholder="Enter your new password"
           maxlength="30"
-          v-model="walletNewPass"
-        ></wallet-input-pass>
+          v-model="walletNewPass"></wallet-input-pass>
         <wallet-tips :tips="passFormat" class="tips" />
         <span class="wallet-button" @click="clostMask">Cancel</span>
-        <span class="wallet-button" @click="importantKeystroe">Confirm</span>
+        <span class="wallet-button" 
+              :disabled="!keystroeActive"
+              :class="keystroeActive ? 'passCorrect' : ''"
+              @click="importantKeystroe">
+            Confirm
+        </span>
       </section>
 
       <!-- 导出助记词Export maskPages = 2 Phrase -->
@@ -96,12 +104,15 @@
         <span class="wallet-button" @click="deleteWallet">Delete</span>
       </section>
     </section>
+    <!-- 透明弹窗 -->
+    <wallet-translucent :text="translucentText" v-show="translucentShow"/>
   </section>
 </template>
 
 <script>
 import walletTips from '../../../components/wallet-tips'
 import walletInputPass from '../../../components/wallet-input-pass'
+import walletTranslucent from '../../../components/wallet-translucent'
 import Qrcode from '@xkeshi/vue-qrcode'
 import Clipboard from 'clipboard'
 import WalletHandler from '../../../lib/WalletsHandler';
@@ -111,6 +122,7 @@ export default {
     qrcode: Qrcode,
     walletInputPass,
     walletTips,
+    walletTranslucent
   },
   props: {
     maskPages: Number,
@@ -121,6 +133,7 @@ export default {
   },
   data() {
     return {
+      qrcodeAmount: '',//二维码收款金额
       addressError: 'Addresses are generally 42-bit characters beginning with 0x',
       amountError: '',
       passFormat: 'your password must be at least 9 characters.Password should not start or end with space',
@@ -131,12 +144,32 @@ export default {
       sentAddress: '',//转账地址
       sentAmount: '',//转账金额
       allAmount: this.balance,//总金额
+      translucentShow: false, //弹窗
+      translucentText: 'Copy success',
+
+      copyButtonText: 'copy',
+      copySuccess: false,
+      copyTime: 5
     }
   },
   computed: {
     //转账地址清空按钮
     clearSentAddressImg () {
       return this.sentAddress.length > 0 ? true : false
+    },
+
+    //保存私钥按钮是否可点击
+    keystroeActive () {
+      let pass = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
+      return this.walletNewPass.length > 7 && pass.test(this.walletNewPass) ? true : false
+    },
+
+    //转账按钮是否可点击
+    sentActive () {
+      let walletAddress = '0x' + selectedWallet.walletAddress
+      return this.sentAddress.length > 41 
+              && Number(this.sentAmount) > 0 
+              && this.sentAddress != walletAddress ? true : false
     },
 
     //转账金额清空按钮
@@ -154,6 +187,11 @@ export default {
   methods: {
     //关闭弹窗调用该组件
     clostMask () {
+      this.qrcodeAmount = ''
+      this.sentAddress = ''
+      this.sentAmount = ''
+      this.sentAmount = ''
+      this.walletNewPass = ''
       this.$emit("changeClose","")
     },
     
@@ -191,7 +229,6 @@ export default {
     //删除钱包
     deleteWallet () {
       WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {
-        
         this.$emit('updateWalletList', wallets)
       })
       this.clostMask ()
@@ -199,14 +236,32 @@ export default {
 
     //复制私钥
     copyCnt () {
-      this.clostMask ()
       var clipboard = new Clipboard('.copyButton')
+      this.copySuccess = true
       clipboard.on('success', e => {
           clipboard.destroy()
-          alert("复制成功")
+          let clock = window.setInterval(() => {
+            var x = this.copyTime--
+            this.copyButtonText = "copy("+ x +")"
+            if(this.copyTime < 0){ // = 0 就停止
+              this.copyTime = 5  //恢复默认值
+              this.copySuccess = false
+              this.copyButtonText = "Copy"
+              window.clearInterval(clock) //清空计时器
+            }
+          },1000)
       })
       clipboard.on('error', e => {
-          alert("复制失败")
+          let clock = window.setInterval(() => {
+            var x = this.copyTime--
+            this.copyButtonText = "Copy the failure("+ x +")"
+            if(this.copyTime < 0){ // = 0 就停止
+              this.copyTime = 5  //恢复默认值
+              this.copySuccess = false
+              this.copyButtonText = "Copy"
+              window.clearInterval(clock) //清空计时器
+            }
+          },1000)
           clipboard.destroy()
       })
     },
@@ -250,8 +305,8 @@ export default {
   .wallet-mask-sent-amount-tips section span:last-child {color: #29D893;margin-left: 12px;}
   .wallet-mask-sent button {width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
     border: 0;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
-  .wallet-mask-sent button:last-child {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    margin-left: 8px;}
+
+  .wallet-mask-sent button:last-child {margin-left: 8px;}
   
 
   .wallet-mask-receive {padding: 36px 32px 28px;}

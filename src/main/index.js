@@ -79,11 +79,13 @@ function createWindow () {
   request.end()
 
   mainWindow = new BrowserWindow({
-    height: 580,
+    height: 640,
     useContentSize: true,
     width: 960,
     transparent: false,
-    frame: true
+    frame: true,
+    minHeight: 640,
+    minWidth: 960,
   })
   mainWindow.setResizable(true)
 

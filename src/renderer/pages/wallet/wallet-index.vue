@@ -14,14 +14,15 @@
             <section class="wallet-content-header-left-update"
                     :class="inputActive?'input-active':''"
                      @click="updateName">
-              <span v-show="inputReadonly">{{oldWalletName}}</span>
+              <span v-show="inputReadonly">{{ oldWalletName }}</span>
               <input type="text" 
                    maxlength="14"
-                   ref="content"
+                   ref="contentInput"
                    v-model="walletName"
                    v-show="!inputReadonly"
                    :readonly="inputReadonly"
-                   @blur="saveName"/>
+                   @blur="saveName"
+                   onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
               <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput">
             </section>
             
@@ -126,7 +127,7 @@ export default {
         }
       ],
       moreShow: true,//加载更多是否显示
-      translucentText: '透明弹窗',
+      translucentText: '',
       translucentShow: false,
       maskPages: 0,
       maskShow: false,
@@ -155,12 +156,19 @@ export default {
     //复制地址
     copyCnt () {
       var clipboard = new Clipboard('.copyButton')
+      this.translucentShow = true
       clipboard.on('success', e => {
           clipboard.destroy()
-          alert("复制成功")
+          this.translucentText = 'Copy success'
+          setTimeout(() => {
+            this.translucentShow = false
+       }, 3000)
       })
       clipboard.on('error', e => {
-          alert("复制失败")
+          this.translucentText = 'Copy the failure'
+          setTimeout(() => {
+            this.translucentShow = false
+          }, 3000)
           clipboard.destroy()
       })
     },
@@ -174,25 +182,11 @@ export default {
     updateName () {
       this.inputReadonly = false
       this.inputActive = true
-      this.$refs.content.focus()
+      this.$refs.contentInput.focus()
     },
 
     //失去焦点保存名称
     saveName () {
-       let newKeyStore = {}
-       this.selectedWallet.name = this.walletName
-       this.wallets[this.selectedWallet.privateKey].walletName = this.walletName
-       this.selectedWalletData.walletName = this.walletName
-       newKeyStore[this.selectedWalletData.privateKey] = this.selectedWalletData
-       WalletsHandler.updateWalletFile(this.selectedWalletData, () => {
-         this.translucentShow = true
-         this.translucentText = "Change wallet name success"
-         this.oldWalletName = this.walletName
-       })
-
-       setTimeout(() => {
-          this.translucentShow = false
-       }, 4000)
       //修改失败
       //  this.translucentShow = true
       //  this.translucentText = "Name option no empty"
@@ -200,10 +194,22 @@ export default {
        this.inputActive = false
       
        if (this.walletName == "") {
-         this.walletName = this.oldWalletName
-       } else {
-         this.oldWalletName = this.walletName
-       }
+          this.walletName = this.oldWalletName
+        } else {
+          let newKeyStore = {}
+          this.selectedWallet.name = this.walletName
+          this.wallets[this.selectedWallet.privateKey].walletName = this.walletName
+          this.selectedWalletData.walletName = this.walletName
+          newKeyStore[this.selectedWalletData.privateKey] = this.selectedWalletData
+          WalletsHandler.updateWalletFile(this.selectedWalletData, () => {
+              this.translucentShow = true
+              this.translucentText = "Change wallet name success"
+              this.oldWalletName = this.walletName
+              setTimeout(() => {
+                this.translucentShow = false
+              }, 4000)
+          })
+        }
     },
 
     //清楚输入框
@@ -255,6 +261,7 @@ export default {
 
     /** Event Method, triggered if wallet removed, update the wallet list */
     onUpdateWalletList (wallets) {
+      // Delete wallet successfully 删除成功 Delete wallet failure 删除失败
       if (JSON.stringify(wallets) === '{}') {
         this.$router.push({name: 'walletCreate'})
       } else {

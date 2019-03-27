@@ -40,7 +40,7 @@ export default {
       list.push({
         id: '01',
         name: this.wallets[privateKey].walletName,
-        address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(30, 41)}`,
+        address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(32, 41)}`,
         walletAddress: this.wallets[privateKey].walletAddress,
         privateKey: privateKey,
         publicKey: this.wallets[privateKey].publicKey,
@@ -63,7 +63,7 @@ export default {
       this.$emit("walletSelectionChanged", {
         id: '01',
         name: this.wallets[this.selectedPrivateKey].walletName,
-        address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(30, 41)}`,
+        address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(32, 41)}`,
         walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
         privateKey: this.selectedPrivateKey,
         publicKey: this.wallets[this.selectedPrivateKey].publicKey,
@@ -87,14 +87,18 @@ export default {
 
 <style scoped>
   main {display: flex;flex-direction: column;align-items: center;position: relative;height: calc(100vh - 30px);}
-  ul {padding-top: 24px;}
+  ul {margin-top: 24px;overflow: auto;height: calc(100vh - 158px);width: 100%;}
+  ul::-webkit-scrollbar { width: 2px; height: 2px;}
+  ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  
   ul li {width:170px;height:64px;background:rgba(255,255,255,1);opacity:1;border-radius:4px;
     margin: 0 auto;margin-bottom: 8px;display: flex;align-items: center;}
   ul li span {display: inline-block;height: 64px;width: 3px;
     border-top-left-radius: 4px;border-bottom-left-radius: 4px;margin-right: 20px;}
   ul li section p:first-child {color: #576066;font-size: 14px;font-family: Lato-Bold;}
   ul li section p {color: #839299;}
-  ul li:hover {cursor: pointer;}
+  ul li:hover,.create-button:hover {cursor: pointer;}
   .checked-nav {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
     box-shadow:0px 0px 10px rgba(41,216,147,0.5);padding-left: 23px;width:147px;}
   ul .checked-nav section p,ul .checked-nav section p:first-child {color: #fff;}
