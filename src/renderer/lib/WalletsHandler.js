@@ -26,13 +26,13 @@ let WalletHandler = {
   },
 
   updateWalletFile: function (wallet, fnAfterSave) {
-    let dirPath = require('os').homedir() + '/secwallet'
+    let dirPath = require('os').homedir() + '/.secwallet'
     let filePath = dirPath + '/wallets.data'
     fs.readFile(filePath, 'utf-8', this._modifyWalletFile.bind(this, filePath, wallet, fnAfterSave))
   },
 
   getAllWalletsFromFile: function (fnAfterReadFinish) {
-    let dirPath = require('os').homedir() + '/secwallet'
+    let dirPath = require('os').homedir() + '/.secwallet'
     let filePath = dirPath + '/wallets.data'
     if (fs.existsSync(dirPath)) {
       fs.readFile(filePath, (err, data) => {
@@ -45,30 +45,30 @@ let WalletHandler = {
     }
   },
 
-  saveKeyStore: function (walletData, pwd) {
+  saveKeyStore: function (walletName, walletData, pwd) {
     let ciperData = this.ecryptWalletKeys(JSON.stringify(walletData), pwd)
     let blob = new Blob([ciperData], {
       type: 'text/plain;charset=utf-8'
     })
-    FileSaver.saveAs(blob, 'walletKeyStore.data')
+    FileSaver.saveAs(blob, `${walletName}.data`)
   },
 
-  savePhrase: function (phrase) {
+  savePhrase: function (walletName, phrase) {
     let blob = new Blob([phrase], {
       type: 'text/plain;charset=utf-8'
     })
-    FileSaver.saveAs(blob, 'myPhrase.data')
+    FileSaver.saveAs(blob, `${walletName}_Phrase.data`)
   },
 
-  savePrivteKey: function (privateKey) {
+  savePrivteKey: function (walletName, privateKey) {
     let blob = new Blob([privateKey], {
       type: 'text/plain;charset=utf-8'
     })
-    FileSaver.saveAs(blob, 'myPrivateKey.data')
+    FileSaver.saveAs(blob, `${walletName}_PrivateKey.data`)
   },
 
   _backupAllWallets: function (wallet, fnAfterSave) {
-    let dirPath = require('os').homedir() + '/secwallet'
+    let dirPath = require('os').homedir() + '/.secwallet'
     let filePath = dirPath + '/wallets.data'
     let keyFileDataJS = {}
 
@@ -134,7 +134,7 @@ let WalletHandler = {
   },
 
   removeWalletFromFile: function (walletData, fnAfterRemove) {
-    let dirPath = require('os').homedir() + '/secwallet'
+    let dirPath = require('os').homedir() + '/.secwallet'
     let filePath = dirPath + '/wallets.data'
     fs.readFile(filePath, 'utf-8', (err, data) => {
       if (err) return
@@ -160,7 +160,7 @@ let WalletHandler = {
   },
 
   decryptKeyStoreFile: function (filePath, pwd, fnAfterImport) {
-    let dirPath = require('os').homedir() + '/secwallet'
+    let dirPath = require('os').homedir() + '/.secwallet'
     let defaultFilePath = dirPath + '/wallets.data'
     let keyData = {}
 

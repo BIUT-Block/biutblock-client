@@ -1,16 +1,16 @@
 <template>
   <section>
-    <ul class="clearfix dig-list">
-      <li style="width: 26%">AGE</li>
-      <li style="width: 18%">REWARD</li>
-      <li style="width: 18%">BLICKS</li>
-      <li style="width: 38%">BLOCK HASH</li>
+    <ul class="clearfix">
+      <li style="width: 24%">AGE</li>
+      <li style="width: 12%">REWARD</li>
+      <li style="width: 14%">BLOCKS</li>
+      <li style="width: 40%">BLOCK HASH</li>
     </ul>
-    <ul class="clearfix" v-for="(item, index) in digLists" :key="index" v-show="!digListShow">
-      <li style="width: 26%">{{ item.age }}</li>
-      <li style="width: 18%">{{ item.reward }}</li>
-      <li style="width: 18%">{{ item.blicks }}</li>
-      <li style="width: 38%">{{ item.block }}</li>
+    <ul class="clearfix" v-for="(item, index) in digLists">
+      <li style="width: 24%">{{ item.age }}</li>
+      <li style="width: 12%">{{ item.reward }}</li>
+      <li style="width: 14%">{{ item.blocknumber }}</li>
+      <li style="width: 40%">{{ item.blockhash }}</li>
     </ul>
     <h4 v-show="digListShow">No mining records yet</h4>
   </section>

@@ -66,7 +66,7 @@
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
               <p>Version Information</p>
-              <span>SEC wallet {{versionNumber}}</span>
+              <span>SEC Wallet {{versionNumber}}</span>
             </section>
           </section>
         </section>
@@ -93,6 +93,7 @@ import agreements from '../assets/images/agreements.png'
 
 import walletNav from '../components/wallet-nav'
 const pkg = require('../../../package.json')
+import WalletsHandler from '../lib/WalletsHandler.js'
 export default {
   name: '',
   components: {
@@ -173,14 +174,22 @@ export default {
     //左侧菜单切换
     istab (index,url) {
       this.idx = index
-      this.$router.push({ path: ""+url+"", query: {wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey }})
-      if (index == 3) {
-        let asideIdx = sessionStorage.getItem("asideIdx")
-        sessionStorage.setItem("asideIdx", asideIdx)
-        this.maskShow = true
-      } else {
-        sessionStorage.setItem("asideIdx", this.idx)
-      }
+
+      WalletsHandler.getAllWalletsFromFile( (wallets) => {
+        if (wallets.hasOwnProperty(this.selectedPrivateKey)) {
+          this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: this.selectedPrivateKey }})
+        } else {
+          this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: Object.keys(wallets)[0] }})
+        }
+      
+        if (index == 3) {
+          let asideIdx = sessionStorage.getItem("asideIdx")
+          sessionStorage.setItem("asideIdx", asideIdx)
+          this.maskShow = true
+        } else {
+          sessionStorage.setItem("asideIdx", this.idx)
+        }
+      })
     },
 
     //设置切换

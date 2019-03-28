@@ -44,7 +44,7 @@ function createWindow () {
   }
 
   // ------------------------  SETUP DATABASE PATH  -----------------------
-  let path = app.getPath('userData')
+  let path = app.getPath('appData')
   console.log(path + '/data/')
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------

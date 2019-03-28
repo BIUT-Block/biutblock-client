@@ -5,15 +5,15 @@
         <li style="width: 4%"> &nbsp; </li>
         <li style="width: 20%">AGE</li>
         <li style="width: 19%">REWARD</li>
-        <li style="width: 19%">BLICKS</li>
+        <li style="width: 19%">BLOCKS</li>
         <li style="width: 38%">BLOCK HASH</li>
       </ul>
       <ul class="clearfix" v-for="(item, index) in moreList" :key="index">
         <li style="width: 4%">{{index + 1}}</li>
         <li style="width: 20%">{{item.age}}</li>
         <li style="width: 19%">{{item.reward}}</li>
-        <li style="width: 19%">{{item.blicks}}</li>
-        <li style="width: 38%">{{item.block}}</li>
+        <li style="width: 19%">{{item.blocknumber}}</li>
+        <li style="width: 38%">{{item.blockhash}}</li>
       </ul>
     </section>
   </section>

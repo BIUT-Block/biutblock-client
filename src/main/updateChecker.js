@@ -22,9 +22,7 @@ const checkVersion = async (app) => {
           type: 'info',
           title: 'New Version',
           buttons: ['Yes', 'No'],
-          message: `Found new version ${latest}. Please update.`,
-          checkboxLabel: 'Do not show again',
-          checkboxChecked: false
+          message: `Found new version ${latest}. Please update.`
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
             shell.openExternal(downloadUrl)

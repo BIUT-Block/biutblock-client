@@ -47,7 +47,7 @@
           <h3>Confirm The Following information</h3>
           <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
           <p>FROM</p>
-          <span class="wallet-mask-sent-from-address">0x9e877f87854d996ef6830d191abe76e8813a1f91</span>
+          <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
           <p>TO</p>
           <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
           <p>AMOUNT</p>
@@ -65,11 +65,11 @@
         <span>0x{{selectedWallet.walletAddress}}</span>
         <p>Account</p>
         <section>
-          <input type="text"  v-model="qrcodeAmount" maxlength="30"
-            onkeypress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d{7}$/.test(value))event.returnValue=false"/>
+          <input type="number" v-model="receiveAmount" @blur="outOfReceiveInput"/>
           <label>SEC</label>
         </section>
-        <qrcode :value="qrcodeWalletAddress" :options="{ size: 93 }"></qrcode>
+        <wallet-tips :tips="receiveError" />
+        <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
         <span>Your address(QR Code)</span>
       </section>
 
@@ -77,10 +77,10 @@
       <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
         <h3>Export Private key</h3>
         <wallet-tips :tips="privateKey" />
-        <section id="priivateKey">
+        <section id="privateKey">
           {{selectedWallet.privateKey}}
         </section>
-        <span class="priivate-key-button copyButton" @click="copyCnt" data-clipboard-target="#priivateKey">Copy</span>
+        <span class="priivate-key-button copyButton" @click="copyCnt" data-clipboard-target="#privateKey">Copy</span>
       </section>
 
       <!-- 导出keyStore文件 maskPages = 1  Export Keystore -->
@@ -117,6 +117,13 @@
         </p>
         <span class="wallet-button" @click="deleteWallet">Delete</span>
       </section>
+
+      <section class="wallet-mask-delete" v-show="maskPages == 6">
+        <p>
+          The wallet is bind to mining. You can not remove it.
+        </p>
+        <span class="wallet-button" @click="clostMask">Confirm</span>
+      </section>
     </section>
     <!-- 透明弹窗 -->
     <wallet-translucent :text="translucentText" v-show="translucentShow"/>
@@ -151,11 +158,13 @@ export default {
       qrcodeWalletAddress: '',//二维码内容
       sessionAddress: 'You are sending assets to the following address, please confirm the operation',
       addressError: 'Addresses are generally 42-bit characters beginning with 0x',
+      amountError: '',
+      receiveError: '',
       passFormat: 'your password must be at least 9 characters.Password should not start or end with space',
       privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
       walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
       walletNewPass: '',
-
+      
       sentAddress: '',//转账地址
       sentAmount: '',//转账金额
       sentPages: 1,//默认显示转账页面
@@ -166,7 +175,9 @@ export default {
 
       copyButtonText: 'copy',
       copySuccess: false,
-      copyTime: 5
+      copyTime: 5,
+      receiveAmount: '',
+      amountPlaceHolder: `Maximum input of ${this.balance}`
     }
   },
   computed: {
@@ -183,7 +194,7 @@ export default {
 
     //转账按钮是否可点击
     sentActive () {
-      let walletAddress = '0x' + selectedWallet.walletAddress
+      let walletAddress = '0x' + this.selectedWallet.walletAddress
       return this.sentAddress.length > 41 
               && Number(this.sentAmount) > 0 
               && this.sentAddress != walletAddress ? true : false
@@ -192,17 +203,59 @@ export default {
     //转账金额清空按钮
     clearSentAmountImg () {
       return this.sentAmount.length > 0 ? true : false
-    }
+    },
+
+
   },
   created() {
     //移动端扫描格式
-    this.qrcodeWalletAddress = selectedWallet.walletAddress + "###" + this.qrcodeAmount
+    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this.qrcodeAmount
   },
   mounted() {
 
   },
   destroyed() { },
+
   methods: {
+    isNumber () {
+      if (!/^[0-9.]+$/i.test(this.sentAmount)) {
+        return -1
+      } else if (!/^(\d|[1-9]\d+)(\.\d+)?$/i.test(this.sentAmount) ) {
+        return -1
+      } else if (!/^[0-9]+(.[0-9]{1,8})?$/i.test(this.sentAmount)) {
+        return -1
+      }else if (parseFloat(this.sentAmount)>parseFloat(this.balance)) {
+        return 0
+      } else if (Number(this.sentAmount) <= 0) {
+        return -1
+      }else {
+        return 1;
+      }
+    },
+
+    isAddress () {
+      if (!/^[a-z0-9]+$/.test(this.sentAddress) || this.sentAddress.length !== 42)  {
+        return false
+      } else {
+        return true;
+      }
+    },
+
+    outOfReceiveInput () {
+      if (/^[0-9]+$/i.test(this.receiveAmount)) {
+        this.receiveError = ''
+        this.receiveAmount = this.receiveAmount + '.00000000'
+      } else if (/^[0-9]+\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
+        this.receiveError = ''
+        let beforepoint = this.receiveAmount.split('.')[1].length
+        for (let i = 0; i < 8 - beforepoint; i++) {
+          this.receiveAmount = this.receiveAmount + '0'
+        }
+      } else if (!/^[0-9]+$|^[0-9]+\.([0-9]{1,8})$/i.test(this.receiveAmount)) {
+        this.receiveError = 'Invalid input'
+      }
+    },  
+
     //关闭弹窗调用该组件
     clostMask () {
       this.qrcodeAmount = ''
@@ -221,11 +274,42 @@ export default {
     //返回转账页面
     backSent () {
       this.sentPages = 1
+      this._resetErrorText()
+      this.sentAddress = ''
+      this.sentAmount = ''
+      this.receiveAmount = ''
+      this.$emit("changeClose","")
+    },
+    
+    _resetErrorText () {
+      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+      this.amountError = ''
+      this.receiveError = ''
     },
 
     //转账
     sent () {
       let sendToAddress = ''
+
+      if (!this.isAddress()) {
+        this.addressError = "Invalid address formatt."
+        return
+      }
+
+      if (this.sentAddress === this.selectedWallet.walletAddress || this.sentAddress.replace("0x", "") === this.selectedWallet.walletAddress) {
+        this.addressError = "You can not tranfer to yourself."
+        return
+      }
+
+      if (this.isNumber() === -1) {
+        this.amountError = "Invalid input of amount."
+        return
+      } else if (this.isNumber() === 0) {
+        this.amountError = "You don't have enough balance."
+        return
+      }
+
+
       if (this.sentAddress.substring(0, 2) === '0x' && this.sentAddress.length === 42) {
         sendToAddress = this.sentAddress.substring(2, this.sentAddress.length)
       } else {
@@ -249,19 +333,19 @@ export default {
 
     //导出keystroe文件
     importantKeystroe () {
-      WalletHandler.saveKeyStore(this.walletData, this.walletNewPass)
+      WalletHandler.saveKeyStore(this.selectedWallet.name, this.walletData, this.walletNewPass)
       this.clostMask()
     },
 
     //导出助记词
     importantPhrase () {
-      WalletHandler.savePhrase(this.selectedWallet.englishWords)
+      WalletHandler.savePhrase(this.selectedWallet.name, this.selectedWallet.englishWords)
       this.clostMask()
     },
 
     //删除钱包
     deleteWallet () {
-      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {
+      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
         this.$emit('updateWalletList', wallets)
       })
       this.clostMask ()
@@ -301,17 +385,20 @@ export default {
 
     //清空转账地址
     clearSentAddress () {
+      this._resetErrorText()
       this.sentAddress = ""
     },
 
     //清空转账金额
     clearSentAmount () {
+      this._resetErrorText()
       this.sentAmount = ""
     },
 
     //转出全部金额
     sentAllAmount () {
-      this.sentAmount = this.allAmount
+      this._resetErrorText()
+      this.sentAmount = this.balance
     }
   },
 }
@@ -381,4 +468,10 @@ export default {
     height:32px;line-height: 32px;color: #fff;margin-top: 40px;}
 
   .wallet-mask .wallet-button {text-align: center;font-size: 14px;display: inline-block;border-radius:4px;}
+
+  input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 </style>
