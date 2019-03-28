@@ -122,6 +122,22 @@
     </section>
     <!-- 钱包版本号 -->
     <span class="wallet-version"> {{ versionNumber }}</span>
+    <!-- 遮罩层 -->
+    <section class="mask" v-show="maskShow">
+      <section class="mask-container phrase-mask">
+        <img
+          src="../../assets/images/closeMask.png"
+          alt=""
+          class="maskCloseImg"
+          title="close"
+          @click="maskShow = false"
+        />
+        <section class="phrase-mask-body">
+          <p>This is a new wallet, are you confirm to import and save it locally?</p>
+          <button type="button"  @click="importWalletMask">Confirm</button>
+        </section>
+      </section>
+    </section>
   </main>
 </template>
 
@@ -213,8 +229,9 @@ export default {
       phraseErrorText: 'Phrase error',//助记词提示语错误
       phraseError: false,//助记词提示语是否显示
       KeyStoreColor: true,
-      copyText: 'Copy success',
+      copyText: 'Copy success',//私钥复制
       copyShow: false,
+      maskShow: false //助记词导入钱包提示
     }
   },
   computed: {
@@ -306,6 +323,8 @@ export default {
     importCreate () {
       this.createClose = true //进入导入钱包关闭按钮显示
       this.createPages = 3
+      this.createTitle1 = 'Import'
+      this.createTitle2 = 'Wallet'
     },
 
     //创建钱包
@@ -332,6 +351,8 @@ export default {
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
+      this.createTitle1 = 'Wallet'
+      this.createTitle2 = 'Created!'
     },
 
     //创建钱包的关闭方法
@@ -436,6 +457,22 @@ export default {
         }) 
       } else {
         WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
+            if (wallets === 'error') {
+              this.phraseErrorText = true
+            } else if (wallets === 'DuplicateKey') {
+              this.phraseErrorText = 'Wallet already exists or imported.'
+            } else {
+              this.maskShow = true //新钱包的话就弹窗提示
+              //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+            }
+        })
+      }
+    },
+
+    //点击弹窗确定按钮导入钱包
+    importWalletMask () {
+      this.maskShow = false
+      WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
             this.phraseErrorText = true
           } else if (wallets === 'DuplicateKey') {
@@ -443,8 +480,7 @@ export default {
           } else {
             this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
-        })
-      }
+      })
     },
 
     //获取input file上传文件的相关属性
@@ -549,4 +585,12 @@ export default {
     position: relative;}
   .wallet-import-keystore div input[type='file'] {position: absolute;top: 0;left: 0;right: 0;bottom: 0;
     height: 36px;z-index: 2;width: 100%;opacity: 0;}
+
+  .phrase-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;}
+  .maskCloseImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
+  .maskCloseImg:hover {cursor: pointer;} 
+  .phrase-mask-body {padding: 44px 20px 16px 24px;text-align: right;}
+  .phrase-mask-body p {text-align: left;margin-bottom: 58px;}
+  .phrase-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
+    height:32px;border: 0;border-radius: 4px;}
 </style>

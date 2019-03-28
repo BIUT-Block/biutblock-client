@@ -3,10 +3,10 @@ body,p,ul,li {margin: 0;padding: 0;}
 ul li {list-style: none!important;}
 input,button {outline: none!important;}
 input,textarea{-webkit-appearance: none;appearance: none;}
-input::-webkit-input-placeholder{ color:#839299;font-family: Lato-Light;}
-input::-moz-placeholder{color:#839299;font-family: Lato-Light;}
-input:-moz-placeholder{color:#839299;font-family: Lato-Light;}
-input:-ms-input-placeholder{ color:#839299;font-family: Lato-Light;}
+input::-webkit-input-placeholder,textarea::-webkit-input-placeholder { color:#839299;font-family: Lato-Light;}
+input::-moz-placeholder,textarea::-moz-placeholder {color:#839299;font-family: Lato-Light;}
+input:-moz-placeholder,textarea:-moz-placeholder {color:#839299;font-family: Lato-Light;}
+input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-family: Lato-Light;}
 
 .clearfix:after{content:'';display:block; height:0; line-height:0; visibility:hidden;}
 .clearfix{*zoom:1;}

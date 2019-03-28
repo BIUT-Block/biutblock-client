@@ -23,7 +23,7 @@
                    :readonly="inputReadonly"
                    @blur="saveName"
                    onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
-              <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput">
+              <!-- <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput"> -->
             </section>
             
             <ul v-show="menuShow">
@@ -48,6 +48,7 @@
         <!-- 没有数据列表 walletContent == 1 -->
         <section class="wallet-content-body-mull" style="display: none;">
           <img src="../../assets/images/wallet-null.png" alt="">
+          <p>No transaction data</p>
         </section>
         <!-- 有数据列表 walletContent == 1 -->
         <section class="wallet-content-body-list">
@@ -182,7 +183,9 @@ export default {
     updateName () {
       this.inputReadonly = false
       this.inputActive = true
-      this.$refs.contentInput.focus()
+      this.$nextTick( () =>{
+        this.$refs.contentInput.focus()
+      } )
     },
 
     //失去焦点保存名称
@@ -213,9 +216,9 @@ export default {
     },
 
     //清楚输入框
-    clearInput () {
-      this.walletName = ""
-    },
+    // clearInput () {
+    //   this.walletName = ""
+    // },
 
     //点击其他的地方关闭菜单列表
     closeMenuList (event) {
@@ -264,6 +267,12 @@ export default {
       // Delete wallet successfully 删除成功 Delete wallet failure 删除失败
       if (JSON.stringify(wallets) === '{}') {
         this.$router.push({name: 'walletCreate'})
+        this.translucentShow = true
+        this.translucentText = "Delete wallet successfully"
+        setTimeout(() => {
+          this.translucentShow = false
+          this.translucentText = ""
+        }, 3000)
       } else {
         this.wallets = wallets
       } 
@@ -314,12 +323,17 @@ export default {
   
   .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);border-radius:4px;overflow: auto;
     flex: 1;padding-top: 54px;}
+  .wallet-content-body::-webkit-scrollbar { width: 2px; height: 2px;}
+  .wallet-content-body::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .wallet-content-body::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+
   .wallet-content-body .wallet-content-body-title {padding: 23px 0 14px;color: #839299;background: #fff;
     border-bottom: 1px solid #E5E5E5;font-size: 13px;font-family: Montserrat-Regular;position: fixed;
     top: 196px;right: 64px;left: 354px;}
   .wallet-content-body .wallet-content-body-mull {display: flex;align-items: center;justify-content: center;
-    min-height: 320px;}
+    min-height: 300px;flex-direction: column;}
   .wallet-content-body .wallet-content-body-mull img {width: 71px;height: 71px;}
+  .wallet-content-body .wallet-content-body-mull p {color: #999999;font-family: Lato-Bold;margin-top: 14px;}
 
   .moreList {position: fixed;bottom: 24px;right: 64px;left: 354px;background: #fff;height: 47px;
     display: flex;align-items: center;justify-content: center;color: #576066;}
