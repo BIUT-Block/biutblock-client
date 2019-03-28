@@ -120,7 +120,7 @@ export default {
       case 'Successful':
         this.stateImg = tradingSuccess
         this.textStyle = 'successful'
-        this.transactionLink = `http://scan.secblock.io/tokentxdetails?hash=${this.transactionNumber}`
+        this.transactionLink = `http://scan.secblock.io/search?search=${this.transactionNumber}`
         break
       case 'Packed':
         this.stateImg = tradingPacked

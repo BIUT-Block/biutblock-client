@@ -178,9 +178,11 @@ export default {
         return -1
       } else if (!/^[0-9]+(.[0-9]{1,8})?$/i.test(this.sentAmount)) {
         return -1
-      }else if (parseFloat(this.sentAmount)>parseFloat(this.allAmount)) {
+      }else if (parseFloat(this.sentAmount)>parseFloat(this.balance)) {
         return 0
-      } else {
+      } else if (Number(this.sentAmount) <= 0) {
+        return -1
+      }else {
         return 1;
       }
     },
