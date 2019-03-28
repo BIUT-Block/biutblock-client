@@ -187,14 +187,14 @@ export default {
     
     _getWalletMiningHistory () {
       this.digIncome = "0"
-      
+      this.moreList = []
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Successful'
         })
         miningHistory.forEach((element, index) => {
           this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString() 
-          this.moreList = []
+          
           this.moreList.push({
             id: index,
             age: element.listTime,
