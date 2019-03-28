@@ -53,9 +53,10 @@
         <span>0x{{selectedWallet.walletAddress}}</span>
         <p>Account</p>
         <section>
-          <input type="text" />
+          <input type="number" v-model="receiveAmount" @blur="outOfReceiveInput"/>
           <label>SEC</label>
         </section>
+        <wallet-tips :tips="receiveError" />
         <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
         <span>Your address(QR Code)</span>
       </section>
@@ -135,6 +136,7 @@ export default {
     return {
       addressError: 'Addresses are generally 42-bit characters beginning with 0x',
       amountError: '',
+      receiveError: '',
       passFormat: 'your password must be at least 9 characters.Password should not start or end with space',
       privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
       walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
@@ -142,6 +144,7 @@ export default {
       
       sentAddress: '',//转账地址
       sentAmount: '',//转账金额
+      receiveAmount: '',
       allAmount: this.balance,//总金额
       amountPlaceHolder: `Maximum input of ${this.balance}`
     }
@@ -155,7 +158,9 @@ export default {
     //转账金额清空按钮
     clearSentAmountImg () {
       return this.sentAmount.length > 0 ? true : false
-    }
+    },
+
+
   },
   created() {
 
@@ -188,17 +193,34 @@ export default {
       }
     },
 
+    outOfReceiveInput () {
+      if (/^[0-9]+$/i.test(this.receiveAmount)) {
+        this.receiveError = ''
+        this.receiveAmount = this.receiveAmount + '.00000000'
+      } else if (/^[0-9]+\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
+        this.receiveError = ''
+        let beforepoint = this.receiveAmount.split('.')[1].length
+        for (let i = 0; i < 8 - beforepoint; i++) {
+          this.receiveAmount = this.receiveAmount + '0'
+        }
+      } else if (!/^[0-9]+$|^[0-9]+\.([0-9]{1,8})$/i.test(this.receiveAmount)) {
+        this.receiveError = 'Invalid input'
+      }
+    },  
+
     //关闭弹窗调用该组件
     clostMask () {
       this._resetErrorText()
       this.sentAddress = ''
       this.sentAmount = ''
+      this.receiveAmount = ''
       this.$emit("changeClose","")
     },
     
     _resetErrorText () {
       this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
       this.amountError = ''
+      this.receiveAmount = ''
     },
 
     //转账
@@ -362,4 +384,10 @@ export default {
     height:32px;line-height: 32px;color: #fff;margin-top: 40px;}
 
   .wallet-mask .wallet-button {text-align: center;font-size: 14px;display: inline-block;border-radius:4px;}
+
+  input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 </style>
