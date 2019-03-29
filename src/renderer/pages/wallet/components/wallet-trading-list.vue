@@ -18,6 +18,11 @@
 </template>
 
 <script>
+import tradingPacked from '../../../assets/images/tradingPackeds.png'
+import tradingSuccess from '../../../assets/images/tradingSuccesss.png'
+import tradingFailed from '../../../assets/images/tradingFaileds.png'
+import tradingMining from '../../../assets/images/tradingMinings.png'
+
 export default {
   name: '',
   components: {
@@ -61,10 +66,10 @@ export default {
     stateImg(status) {
       console.log(status)
       const statusMap = {
-        Packed: '/src/renderer/assets/images/tradingPacked.png',
-        Successful: '/src/renderer/assets/images/tradingSuccess.png',
-        Failed: '/src/renderer/assets/images/tradingMining.png',
-        Mining: '/src/renderer/assets/images/tradingFailed.png',
+        Packed: tradingPacked,
+        Successful: tradingSuccess,
+        Failed: tradingFailed,
+        Mining: tradingMining,
       };
       return statusMap[status];
     },

@@ -188,7 +188,7 @@ export default {
     },
 
     isAddress () {
-      if (!/^[a-z0-9]+$/.test(this.sentAddress) || this.sentAddress.length !== 42)  {
+      if (!/^0x([a-z0-9]{40})$/.test(this.sentAddress))  {
         return false
       } else {
         return true;
@@ -196,7 +196,7 @@ export default {
     },
 
     outOfReceiveInput () {
-      if (/^[0-9]+$/i.test(this.receiveAmount)) {
+      if (/^[1-9]+$/i.test(this.receiveAmount)) {
         this.receiveError = ''
         this.receiveAmount = this.receiveAmount + '.00000000'
       } else if (/^[0-9]+\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
@@ -206,6 +206,8 @@ export default {
           this.receiveAmount = this.receiveAmount + '0'
         }
       } else if (!/^[0-9]+$|^[0-9]+\.([0-9]{1,8})$/i.test(this.receiveAmount)) {
+        this.receiveError = 'Invalid input'
+      } else {
         this.receiveError = 'Invalid input'
       }
     },  
