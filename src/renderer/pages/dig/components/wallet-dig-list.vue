@@ -10,7 +10,7 @@
       <li style="width: 24%">{{ item.age }}</li>
       <li style="width: 12%">{{ item.reward }}</li>
       <li style="width: 14%">{{ item.blocknumber }}</li>
-      <li style="width: 40%">{{ item.blockhash }}</li>
+      <li style="width: 40%">{{ item.blockhash.substring(0, 20) }}......{{item.blockhash.substring(44, item.blockhash.length)}}</li>
     </ul>
   </section>
 </template>
