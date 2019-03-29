@@ -48,7 +48,7 @@ function createWindow () {
   console.log(path + '/data/')
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
-  let SECCore = new SECNODE.Core({ DBPath: path + '/data/', cacheDBPath: path + '/data/powCache' })
+  let SECCore = new SECNODE.Core({ DBPath: path + '/data/', cacheDBPath: path + '/data/powCache', ID: [] })
   let SECRPC = new SECNODE.RPC(SECCore)
   SECRPC.runRPCServer()
 
