@@ -23,9 +23,9 @@
               @click.native="beginDig"/>
         </section>
         <section class="dig-header-list">
-          <ol>
+          <ul>
             <li v-for="text in processTexts">{{text}}</li>
-          </ol>
+          </ul>
         </section>
       </section>
       <wallet-margin/>
@@ -60,6 +60,24 @@
         </section>
       </section>
     </section>
+
+    <section class="mask" v-show="mineStatusError">
+      <section class="mask-container dig-mask">
+        <img
+          src="../../assets/images/closeMask.png"
+          alt=""
+          class="closeImg"
+          title="close"
+          @click="mineStatusError = false"
+        />
+        <section class="dig-mask-body">
+          <p>{{mineStatusText}}</p>
+          <button type="button"  @click="onCloseMessage()">Confirm</button>
+        </section>
+      </section>
+    </section>
+
+            
   </main>
 </template>
 
@@ -100,7 +118,9 @@ export default {
       processTexts: [],
       moreList: [],
       maskShow: false,
-      maskText: ''
+      maskText: '',
+      mineStatusText: 'Please stop mining before changing wallet',
+      mineStatusError: false
     }
   },
   computed: {
@@ -177,12 +197,24 @@ export default {
 
     //选择钱包
     checkDigWallet (wallet) {
+      let miningStatus = window.sessionStorage.getItem('miningStatus')
+      if (miningStatus) {
+        miningStatus = JSON.parse(miningStatus)
+        if (miningStatus.miningIn && wallet.walletAddress !== miningStatus.wallet.walletAddress) {
+          this.mineStatusError = true
+          return
+        }
+      }
       this.selectedWallet = wallet
       this.selectedWalletName = wallet.walletName
       this.selectedPrivateKey = wallet.privateKey
       this._getWalletMiningHistory()
       this.checkWallet = false
       this.checkedWallet = true
+    },
+
+    onCloseMessage () {
+      this.mineStatusError = false
     },
     
     _getWalletMiningHistory () {
@@ -246,7 +278,9 @@ export default {
     startMining () {
       this.$JsonRPCClient.switchToLocalHost()
       if (!this.isSynced) {
-        this.processTexts.push(`Start syncing blocks. Start minging after sync finished.`)
+        this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
+        this.processTexts.push(`Start mining (connecting nodes...).`)
+        this.processTexts.push(`Node connection successful, synchronizing node...`)
         this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
           console.log(err)
           if (response) {
@@ -279,7 +313,6 @@ export default {
       this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet.walletAddress], (err, response) => {
         console.log(err)
         if (err) return
-        this.processTexts.push(`Begin to mine with ${this.selectedWallet.walletAddress}`)
       })
       this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
         console.log(err)
@@ -287,7 +320,7 @@ export default {
           this.miningIn = false
           return
         }
-        this.processTexts.push(`Begin to mine.`)
+        this.processTexts.push(`The sync node is completed and is being mined...`)
         this.miningIn = true
         this.saveMingingStatus()
       })

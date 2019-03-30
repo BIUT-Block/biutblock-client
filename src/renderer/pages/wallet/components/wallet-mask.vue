@@ -51,7 +51,7 @@
         <h3>Receive</h3>
         <p>Account</p>
         <span>0x{{selectedWallet.walletAddress}}</span>
-        <p>Account</p>
+        <p>Amount</p>
         <section>
           <input type="number" v-model="receiveAmount" @blur="outOfReceiveInput"/>
           <label>SEC</label>
