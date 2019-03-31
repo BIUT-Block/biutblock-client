@@ -115,6 +115,10 @@ export default {
 
   .dig-more-body {background: #fff;padding: 67px 32px 0;border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;overflow: auto;flex: 1;position: relative;}
+  .dig-more-body::-webkit-scrollbar { width: 2px; height: 2px;}
+  .dig-more-body::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .dig-more-body::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  
   .dig-more-body-header {position: fixed;top: 157px;left: 126px;right: 56px;background: #fff;
     padding: 36px 0 13px;}
   .dig-more-body p {height: 40px;text-align: center;line-height: 40px;color: #839299;font-weight: 400;

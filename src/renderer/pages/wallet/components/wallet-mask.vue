@@ -12,38 +12,50 @@
       />
       <!-- 转账 maskPages = 4 Sent -->
       <section class="wallet-mask-sent" v-show="maskPages == 4">
-        <h3>Sent</h3>
-        <p>FROM</p>
-        <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-        <p>TO</p>
-        <section class="wallet-mask-sent-to-address">
-          <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
-          <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
-        </section>
-        <wallet-tips :tips="addressError"/>
-        <p>AMOUNT</p>
-        <section class="wallet-mask-sent-amount">
-          <input type="text" v-model="sentAmount" v-bind:placeholder="'Maximum input of ' + balance" maxlength="42"/>
-          <section>
-            <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
-            
+         <!-- 填写转账信息 --> 
+        <section v-show="sentPages == 1">
+          <h3>Sent</h3>
+          <p>FROM</p>
+          <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
+          <p>TO</p>
+          <section class="wallet-mask-sent-to-address">
+            <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
+            <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
           </section>
-          <section style="margin-bottom: 0px;" class="wallet-mask-sent-amount-tips" >
+          <wallet-tips :tips="addressError"/>
+          <p>AMOUNT</p>
+          <section class="wallet-mask-sent-amount">
+            <input type="text" v-model="sentAmount" :placeholder="allAmountPlace" maxlength="42"/>
+            <section>
+              <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
               <section>
+                <span>SEC</span>
                 <span @click="sentAllAmount">ALL</span>
               </section>
             </section>
-        </section>
-        <section class="wallet-mask-sent-amount-tips">
-          <!-- <section>
-            <span>Balance：{{allAmount}} SEC</span>
-            <span @click="sentAllAmount">ALL</span>
-          </section> -->
-          <wallet-tips :tips="amountError"/>
+          </section>
+
+          <button type="button" @click="clostMask">Cancel</button>
+          <button type="button"
+                  :disabled="!sentActive"
+                  :class="sentActive ? 'passCorrect' : ''"
+                  @click="sentConfirm">Sent</button>
         </section>
 
-        <button type="button" @click="clostMask">Cancel</button>
-        <button type="button" @click="sent">Sent</button>
+        <!-- 确认转账 -->
+        <section v-show="sentPages == 2">
+          <h3>Confirm The Following information</h3>
+          <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
+          <p>FROM</p>
+          <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
+          <p>TO</p>
+          <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
+          <p>AMOUNT</p>
+          <span class="wallet-mask-sent-from-address">{{sentAmount}}</span>
+          <button type="button" @click="backSent">Back</button>
+          <button type="button" class="passCorrect" @click="sent">Confirm</button>
+        </section>
+
       </section>
 
       <!-- 二维码 maskPages = 5 receive -->
@@ -77,11 +89,15 @@
         <wallet-input-pass
           placeholder="Enter your new password"
           maxlength="30"
-          v-model="walletNewPass"
-        ></wallet-input-pass>
+          v-model="walletNewPass"></wallet-input-pass>
         <wallet-tips :tips="passFormat" class="tips" />
         <span class="wallet-button" @click="clostMask">Cancel</span>
-        <span class="wallet-button" @click="importantKeystroe">Confirm</span>
+        <span class="wallet-button" 
+              :disabled="!keystroeActive"
+              :class="keystroeActive ? 'passCorrect' : ''"
+              @click="importantKeystroe">
+            Confirm
+        </span>
       </section>
 
       <!-- 导出助记词Export maskPages = 2 Phrase -->
@@ -109,12 +125,15 @@
         <span class="wallet-button" @click="clostMask">Confirm</span>
       </section>
     </section>
+    <!-- 透明弹窗 -->
+    <wallet-translucent :text="translucentText" v-show="translucentShow"/>
   </section>
 </template>
 
 <script>
 import walletTips from '../../../components/wallet-tips'
 import walletInputPass from '../../../components/wallet-input-pass'
+import walletTranslucent from '../../../components/wallet-translucent'
 import Qrcode from '@xkeshi/vue-qrcode'
 import Clipboard from 'clipboard'
 import WalletHandler from '../../../lib/WalletsHandler';
@@ -124,6 +143,7 @@ export default {
     qrcode: Qrcode,
     walletInputPass,
     walletTips,
+    walletTranslucent
   },
   props: {
     maskPages: Number,
@@ -134,6 +154,9 @@ export default {
   },
   data() {
     return {
+      qrcodeAmount: '',//二维码收款金额
+      qrcodeWalletAddress: '',//二维码内容
+      sessionAddress: 'You are sending assets to the following address, please confirm the operation',
       addressError: 'Addresses are generally 42-bit characters beginning with 0x',
       amountError: '',
       receiveError: '',
@@ -144,8 +167,16 @@ export default {
       
       sentAddress: '',//转账地址
       sentAmount: '',//转账金额
-      receiveAmount: '',
+      sentPages: 1,//默认显示转账页面
+      allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       allAmount: this.balance,//总金额
+      translucentShow: false, //弹窗
+      translucentText: 'Copy success',
+
+      copyButtonText: 'copy',
+      copySuccess: false,
+      copyTime: 5,
+      receiveAmount: '',
       amountPlaceHolder: `Maximum input of ${this.balance}`
     }
   },
@@ -153,6 +184,20 @@ export default {
     //转账地址清空按钮
     clearSentAddressImg () {
       return this.sentAddress.length > 0 ? true : false
+    },
+
+    //保存私钥按钮是否可点击
+    keystroeActive () {
+      let pass = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
+      return this.walletNewPass.length > 7 && pass.test(this.walletNewPass) ? true : false
+    },
+
+    //转账按钮是否可点击
+    sentActive () {
+      let walletAddress = '0x' + this.selectedWallet.walletAddress
+      return this.sentAddress.length > 41 
+              && Number(this.sentAmount) > 0 
+              && this.sentAddress != walletAddress ? true : false
     },
 
     //转账金额清空按钮
@@ -163,7 +208,8 @@ export default {
 
   },
   created() {
-
+    //移动端扫描格式
+    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this.qrcodeAmount
   },
   mounted() {
 
@@ -214,6 +260,22 @@ export default {
 
     //关闭弹窗调用该组件
     clostMask () {
+      this.qrcodeAmount = ''
+      this.sentAddress = ''
+      this.sentAmount = ''
+      this.sentAmount = ''
+      this.walletNewPass = ''
+      this.$emit("changeClose","")
+    },
+
+    //确认转账页面
+    sentConfirm () {
+      this.sentPages = 2
+    },
+
+    //返回转账页面
+    backSent () {
+      this.sentPages = 1
       this._resetErrorText()
       this.sentAddress = ''
       this.sentAmount = ''
@@ -224,7 +286,7 @@ export default {
     _resetErrorText () {
       this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
       this.amountError = ''
-      this.receiveAmount = ''
+      this.receiveError = ''
     },
 
     //转账
@@ -263,6 +325,11 @@ export default {
       this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
       })
+      this.translucentShow = true
+      this.translucentText = "Submitted successfully"
+      setTimeout(() => {
+        this.translucentShow = false
+      }, 3000)
       this.clostMask()
     },
 
@@ -288,14 +355,32 @@ export default {
 
     //复制私钥
     copyCnt () {
-      this.clostMask ()
       var clipboard = new Clipboard('.copyButton')
+      this.copySuccess = true
       clipboard.on('success', e => {
           clipboard.destroy()
-          alert("复制成功")
+          let clock = window.setInterval(() => {
+            var x = this.copyTime--
+            this.copyButtonText = "copy("+ x +")"
+            if(this.copyTime < 0){ // = 0 就停止
+              this.copyTime = 5  //恢复默认值
+              this.copySuccess = false
+              this.copyButtonText = "Copy"
+              window.clearInterval(clock) //清空计时器
+            }
+          },1000)
       })
       clipboard.on('error', e => {
-          alert("复制失败")
+          let clock = window.setInterval(() => {
+            var x = this.copyTime--
+            this.copyButtonText = "Copy the failure("+ x +")"
+            if(this.copyTime < 0){ // = 0 就停止
+              this.copyTime = 5  //恢复默认值
+              this.copySuccess = false
+              this.copyButtonText = "Copy"
+              window.clearInterval(clock) //清空计时器
+            }
+          },1000)
           clipboard.destroy()
       })
     },
@@ -335,17 +420,14 @@ export default {
   .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;}
   .wallet-mask-sent-amount section {display: flex;align-items: center;}
   .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;}
-  .wallet-mask-sent-amount-tips {display: flex;justify-items: center;align-items: center;
-    justify-content: space-between;margin: 6px 0 36px;}
-  .wallet-mask-sent-amount-tips span {padding-top: 0;}
-  .wallet-mask-sent-amount-tips section span {font-size: 12px;color: #839299;}
-  .wallet-mask-sent-amount-tips section span:last-child {color: #29D893;margin-left: 12px;}
-  .wallet-mask-sent button {width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
-    border: 0;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
-  .wallet-mask-sent button:last-child {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    margin-left: 8px;}
+  .wallet-mask-sent-amount section span:last-child {color: #29D893;margin-left: 10px;}
+  .wallet-mask-sent-amount section span:last-child:hover {cursor: pointer;}
   
-
+  .wallet-mask-sent button {margin-top: 36px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
+    border: 0;background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
+  .wallet-mask-sent button:last-child {margin-left: 8px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
+  
+  
   .wallet-mask-receive {padding: 36px 32px 28px;}
   .wallet-mask-receive h3 {color: #252F33;font-size: 28px;margin: 0;padding-bottom: 28px;font-family: Montserrat-SemiBold;}
   .wallet-mask-receive p {color: #839299;font-size: 14px;margin: 0;padding-top: 24px;}

@@ -14,7 +14,7 @@
     </li>
     <li>
       <span>Mined by：</span>
-      <span>0x{{walletAddress}}</span>
+      <span>0x{{walletAddress.replace(/(.{6}).+(.{8})/,'$1...$2')}}</span>
     </li>
   </ul>
 </template>

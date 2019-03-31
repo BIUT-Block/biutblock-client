@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main @click="closeWalletList">
     <section class="dig-container">
       <!-- 挖矿头部 -->
       <section class="dig-header">
@@ -7,7 +7,7 @@
           <h3>Mining</h3>
           <p>Wallet Account</p>
           <ul>
-            <li @click="downCheckWallet" :disabled="checkedWallet">
+            <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" id="walletListImg">
               <span>{{selectedWalletName}}</span>
               <img src="../../assets/images/moreDown.png" alt="">
             </li>
@@ -19,8 +19,11 @@
           </ul>
           <wallet-button type="button" 
               :text="digButton"
-              :class="[miningIn?'miningIn':'', checkedWallet?'passCorrect':'']"
-              @click.native="beginDig"/>
+              :disabled="disabledButton"
+              :class="[miningIn ? 'miningIn' : '', 
+                checkedWallet ? 'passCorrect' : '', 
+                disabledButton ? 'noCursor' : '']"
+              @click.native="beginDigMask"/>
         </section>
         <section class="dig-header-list">
           <ul>
@@ -110,6 +113,8 @@ export default {
       selectedWallet: '',
       selectedWalletName: '',
       miningIn: false, //挖矿中改变按钮样式
+      noCursor: false, //默认可以选择钱包
+      disabledButton: false,//默认不可点击
       isSynced: false,
       chainHeight: '0',
       networkMining: '0',
@@ -180,9 +185,21 @@ export default {
       // method to get total mined and number of block
     },
 
+    //点击其他的地方关闭钱包选择
+    closeWalletList (event) {
+      let menuList = document.getElementById('walletListImg')
+      if (!menuList.contains(event.target) && this.checkWallet) {
+        this.checkWallet = false;
+      }
+    },
+
     //选择挖矿钱包
     downCheckWallet () {
-      this.checkWallet = true
+      if (this.digButton == "Start Mining") {
+        this.checkWallet = true
+      } else {
+        this.checkWallet = false
+      }
     },
 
     _setButton () {
@@ -211,6 +228,7 @@ export default {
       this._getWalletMiningHistory()
       this.checkWallet = false
       this.checkedWallet = true
+      this.disabledButton = false
     },
 
     onCloseMessage () {
@@ -237,6 +255,18 @@ export default {
       })
     },
 
+    //开启挖矿弹窗显示
+    beginDigMask () {
+      this.maskShow = true
+      if (this.digButton == "Start Mining") {
+        //开始挖矿
+        this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+      } else {
+        //停止挖矿状态
+        this.maskText = "Confirm to Stop Mining?"
+      }
+    },
+
     //开启挖矿
     beginDig () {
       if (this.digButton === "Start Mining") {    
@@ -256,11 +286,13 @@ export default {
         this.startMining()
         this.maskShow = false
         this.checkedWallet = false
+        this.noCursor = true
       } else {
         this.digButton = "Start Mining"
         this.stopMining()
         this.maskShow = false
         this.checkedWallet = true
+        this.noCursor = false
       }
     },
 
@@ -369,5 +401,7 @@ export default {
   .dig-mask-body {padding: 44px 20px 16px 24px;text-align: right;}
   .dig-mask-body p {text-align: left;margin-bottom: 58px;}
   .dig-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    height:32px;border: 0;border-radius: 4px;}
+    height:32px;border: 0;border-radius: 4px; width: 100%;}
+  
+  .noCursor {cursor: no-drop;}
 </style>

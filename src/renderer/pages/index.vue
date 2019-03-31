@@ -57,10 +57,11 @@
                 <img :src="networkIdx == 1 ? agreements : agreement" alt="" @click="isNetwork(1)">
                 <span>Test Network</span>
               </section>
+              <!-- 主网暂时不提供选择
               <section>
                 <img :src="networkIdx == 2 ? agreements : agreement" alt="" @click="isNetwork(2)">
                 <span>Main Network</span>
-              </section>
+              </section> -->
             </section>
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
