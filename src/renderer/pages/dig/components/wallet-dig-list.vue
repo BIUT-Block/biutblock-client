@@ -12,7 +12,7 @@
       <li style="width: 14%">{{ item.blocknumber }}</li>
       <li style="width: 40%">{{ item.blockhash.substring(0, 20) }}......{{item.blockhash.substring(44, item.blockhash.length)}}</li>
     </ul>
-    <h4 v-show="digListShow">No mining records yet</h4>
+    <!-- <h4 v-show="digListShow">No mining records yet</h4> -->
   </section>
 </template>
 

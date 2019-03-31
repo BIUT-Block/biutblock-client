@@ -242,10 +242,12 @@ export default {
     },
 
     outOfReceiveInput () {
-      if (/^[1-9]+$/i.test(this.receiveAmount)) {
+      if (/^([1-9]\d*|0)?$/i.test(this.receiveAmount)) {
         this.receiveError = ''
         this.receiveAmount = this.receiveAmount + '.00000000'
-      } else if (/^[0-9]+\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
+      } else if (/^0\d+$/i.test(this.receiveAmount)) {
+        this.receiveAmount = this.receiveAmount.replace(/^0*/g, '')
+      } else if (/^((0{1})|([1-9])+)\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
         this.receiveError = ''
         let beforepoint = this.receiveAmount.split('.')[1].length
         for (let i = 0; i < 8 - beforepoint; i++) {
