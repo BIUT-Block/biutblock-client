@@ -1,4 +1,5 @@
 import jayson from 'jayson/lib/client'
+import WalletsHandler from './WalletsHandler'
 
 export default {
   install: function (Vue, options) {
@@ -62,7 +63,7 @@ export default {
                 listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTo: response.result.resultInPool[j].TxTo,
-                listTime: new Date(response.result.resultInPool[j].TimeStamp).toUTCString(),
+                listTime: WalletsHandler.formatDate(new Date(response.result.resultInChain[j].TimeStamp), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInPool[j].TxFee,
                 listState: 'Packed'
@@ -85,7 +86,7 @@ export default {
                 listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
                 listFrom: response.result.resultInChain[i].TxFrom,
                 listTo: response.result.resultInChain[i].TxTo,
-                listTime: new Date(response.result.resultInChain[i].TimeStamp).toUTCString(),
+                listTime: WalletsHandler.formatDate(new Date(response.result.resultInChain[i].TimeStamp), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInChain[i].TxFee,
                 listState: 'Successful'

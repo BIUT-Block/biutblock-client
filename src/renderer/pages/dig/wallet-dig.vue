@@ -90,6 +90,7 @@ import digTitle from './components/wallet-dig-title'
 import walletButton from '../../components/wallet-button'
 import digList from './components/wallet-dig-list'
 import walletMargin from '../../components/wallet-margin'
+import WalletsHandler from '../../lib/WalletsHandler'
 import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers';
 export default {
   name: 'walletDig',
@@ -314,7 +315,7 @@ export default {
         this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
           console.log(err)
           if (response) {
-            this.processTexts.push(`Local networking success ${new Date().toString()}`)
+            this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())}`)
             this.processTexts.push(`Complete syncing blocks`)
             this.isSynced = true
             setTimeout(()=>{

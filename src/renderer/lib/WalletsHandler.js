@@ -50,7 +50,7 @@ let WalletHandler = {
     let blob = new Blob([ciperData], {
       type: 'text/plain;charset=utf-8'
     })
-    FileSaver.saveAs(blob, `${walletName}.data`)
+    FileSaver.saveAs(blob, `${walletName}.json`)
   },
 
   savePhrase: function (walletName, phrase) {
@@ -277,6 +277,18 @@ let WalletHandler = {
       s: signature.s.toString('hex')
     }
     return transferData
+  },
+
+  formatDate (date, offset) {
+    let timezone = 0
+    if (offset / -60 >= 0) {
+      timezone = `+${offset / -60}`
+    } else {
+      timezone = `${offset / -60}`
+    }
+    let time = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} 
+                ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} GMT${timezone}`
+    return time
   }
 }
 

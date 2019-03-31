@@ -25,9 +25,12 @@
 import nodeTitle from './components/wallet-node-title'
 import nodeList from './components/wallet-node-list'
 import walletMargin from '../../components/wallet-margin'
+import WalletsHandler from '../../lib/WalletsHandler';
 import { clearInterval } from 'timers';
+const moment = require('moment-timezone')
 const ipify = require('ipify')
 let jobId
+let nodeJob
 export default {
   name: 'walletNode',
   components: {
@@ -57,22 +60,25 @@ export default {
     ipify().then(ip => {
       this.addressText = ip
     })
-    this.localTimeText = new Date().toString()
-    this.$JsonRPCClient.getNodesTable((nodestable)=>{
-      nodestable.forEach( (node, index) => {
-        this.nodeList.push({
-          id: index,
-          nodeIp: node.location.traits.ipAddress,
-          nodeCountry: node.location.country.names.en,
-          nodeCity: node.location.city.names ? node.location.city.names.en : '',
-          nodeTime: new Date(node.node.TimeStamp).toString().replace(/\(.+\)/, '')
-        })
-      })
+    let localDate = new Date()
+    this.localTimeText = WalletsHandler.formatDate(localDate, localDate.getTimezoneOffset())
+    
+    this._getNodeLists()
+
+    nodeJob = setInterval(() => {
+      this._getNodeLists()
+    }, 2500)
+
+
+    this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
+        this.nodeTimeText = WalletsHandler.formatDate(new Date(response.result.time * 1000), -120)
+        this.localTimeText = WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())
+        this.nodeText = response.result.ipv4
     })
     jobId = setInterval(() => {
       this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
-        this.nodeTimeText = new Date(response.result.time * 1000).toString().replace(/\(.+\)/, '')
-        this.localTimeText = new Date().toString().replace(/\(.+\)/, '')
+        this.nodeTimeText = WalletsHandler.formatDate(new Date(response.result.time * 1000), -120)
+        this.localTimeText = WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())
         this.nodeText = response.result.ipv4
       })
     }, 2500)
@@ -82,10 +88,27 @@ export default {
   },
   destroyed () {
     clearInterval(jobId)
+    clearInterval(nodeJob)
   },
   methods: {
-
-  },
+    _getNodeLists () {
+      this.$JsonRPCClient.getNodesTable((nodestable)=>{
+        this.nodeList = []
+        nodestable.forEach( (node, index) => {
+          let date = moment(node.node.TimeStamp).tz(node.location.location.timeZone)
+          let formatTime = WalletsHandler.formatDate(new Date(date.toString()), -date._offset)
+          this.nodeList.push({
+            id: index,
+            nodeIp: node.location.traits.ipAddress,
+            nodeCountry: node.location.country.names.en,
+            nodeCity: node.location.city.names ? node.location.city.names.en : '',
+            nodeTime: formatTime
+          })
+        })
+      })
+    },
+    
+  }
 }
 </script>
 

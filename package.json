@@ -81,6 +81,7 @@
     "jayson": "^2.1.2",
     "jsonwebtoken": "^8.5.1",
     "mdi": "^2.2.43",
+    "moment-timezone": "^0.5.23",
     "net-ping": "^1.2.3",
     "portfinder": "^1.0.20",
     "qrious": "^4.0.2",

@@ -346,7 +346,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      WalletHandler.saveKeyStore(this.walletName, keyDataJSON, this.walletPass1)
+      WalletHandler.saveKeyStore(`SEC${this.keys.privateKey}`, keyDataJSON, this.walletPass1)
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
@@ -435,11 +435,11 @@ export default {
       let walletIdx = this.tabIndex // walletIdx 0 私钥导入 1 keystroe 2 助记词导入
 
       if (walletIdx == 0) {
-        if (this.walletNameImport === '' || this.walletNameImport === ' ') {
+        if (this.walletNameImport1 === '' || this.walletNameImport1.trim().length === ' ') {
           this._importNameError(0)
           return
         } 
-        walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport, (wallets, selectedPrivateKey) => {
+        walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport1, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
             this.privateKeyError = true
           } else if (wallets === 'DuplicateKey') {
@@ -450,10 +450,6 @@ export default {
           }
         })
       } else if (walletIdx == 1) {
-        if (this.walletNameImport === '' || this.walletNameImport === ' ') {
-          this._importNameError(1)
-          return
-        } 
         WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, this.walletNewPass, (wallets, selectedPrivateKey) => {
           if (wallets === 'error') {
             this.walletnNewPassError = true
@@ -540,7 +536,8 @@ export default {
 
     //切换导入钱包的方式
     isTab (index) {
-      this.walletNameImport = ''
+      this.walletNameImport1 = ''
+      this.walletNameImport2 = ''
       this.walletPrivateKey = ''
       this.walletPhrase = ''
       this.tabIndex = index
