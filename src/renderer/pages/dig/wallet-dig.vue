@@ -115,7 +115,7 @@ export default {
       networkMining: '0',
       updateListJob: '',
       getBlockHeightJob: '',
-      processTexts: [],
+      processTexts: ['Enter the mining page and wait for mining.'],
       moreList: [],
       maskShow: false,
       maskText: '',
@@ -219,15 +219,13 @@ export default {
     
     _getWalletMiningHistory () {
       this.digIncome = "0"
-      
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
         this.moreList = []
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Successful'
         })
         miningHistory.forEach((element, index) => {
-          this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString() 
-          
+          this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString()
           this.moreList.push({
             id: index,
             age: element.listTime,
