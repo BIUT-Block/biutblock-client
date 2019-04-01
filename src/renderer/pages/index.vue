@@ -164,7 +164,7 @@ export default {
   created () {
     this.versionNumber = pkg.version
     this.wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
+    this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
   },
   mounted () {
 
@@ -174,7 +174,7 @@ export default {
     //左侧菜单切换
     istab (index,url) {
       this.idx = index
-
+      this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
       WalletsHandler.getAllWalletsFromFile( (wallets) => {
         if (wallets.hasOwnProperty(this.selectedPrivateKey)) {
           this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: this.selectedPrivateKey }})

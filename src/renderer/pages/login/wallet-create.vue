@@ -134,7 +134,7 @@
         />
         <section class="phrase-mask-body">
           <p>This is a new wallet, are you confirm to import and save it locally?</p>
-          <button type="button"  @click="importWalletMask">Confirm</button>
+          <button type="button"  @click="_navToNext">Confirm</button>
         </section>
       </section>
     </section>
@@ -231,7 +231,8 @@ export default {
       KeyStoreColor: true,
       copyText: 'Copy success',//私钥复制
       copyShow: false,
-      maskShow: false //助记词导入钱包提示
+      maskShow: false, //助记词导入钱包提示
+      navQuery: {}
     }
   },
   computed: {
@@ -429,6 +430,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }, (keyDataJSON) => {
+        window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
         this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
       })
     },
@@ -449,7 +451,11 @@ export default {
             this.privateKeyErrorText = 'Wallet already exisits or imported.'
             this.privateKeyError = true
           } else {
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+            this.maskShow = true
+            this.navQuery = {
+              wallets: wallets,
+              selectedPrivateKey: selectedPrivateKey
+            }
           }
         })
       } else if (walletIdx == 1) {
@@ -460,7 +466,11 @@ export default {
             this.walletnNewPassErrorText = 'Wallet already exists or imported.'
             this.walletnNewPassError = true
           } else {
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+            this.maskShow = true
+            this.navQuery = {
+              wallets: wallets,
+              selectedPrivateKey: selectedPrivateKey
+            }
           }
         }) 
       } else {
@@ -470,26 +480,20 @@ export default {
             } else if (wallets === 'DuplicateKey') {
               this.phraseErrorText = 'Wallet already exists or imported.'
             } else {
-              this.maskShow = true //新钱包的话就弹窗提示
-              //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+              this.maskShow = true
+              this.navQuery = {
+                wallets: wallets,
+                selectedPrivateKey: selectedPrivateKey
+              }
             }
         })
       }
     },
 
-    //点击弹窗确定按钮导入钱包
-    importWalletMask () {
+    _navToNext () {
       this.maskShow = false
-      WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
-          if (wallets === 'error') {
-            this.phraseErrorText = true
-          } else if (wallets === 'DuplicateKey') {
-            this.phraseErrorText = 'Wallet already exists or imported.'
-            this.phraseError = true
-          } else {
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
-          }
-      })
+      window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
+      this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
     },
 
     _importNameError (index) {

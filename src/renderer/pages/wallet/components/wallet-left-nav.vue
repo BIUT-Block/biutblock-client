@@ -36,6 +36,7 @@ export default {
   computed: {
     walletList: function () {
       let list = []
+      let selectedWallet = {}
       Object.keys(this.wallets).forEach( (privateKey) => {
       list.push({
         id: '01',
@@ -46,11 +47,22 @@ export default {
         publicKey: this.wallets[privateKey].publicKey,
         englishWords: this.wallets[privateKey].englishWords
         })
+        if (privateKey === this.selectedPrivateKey) {
+          selectedWallet = {
+            id: '01',
+            name: this.wallets[privateKey].walletName,
+            address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(32, 41)}`,
+            walletAddress: this.wallets[privateKey].walletAddress,
+            privateKey: privateKey,
+            publicKey: this.wallets[privateKey].publicKey,
+            englishWords: this.wallets[privateKey].englishWords
+          }
+        }
       })
       if (list.length > 0) {
-        this.navIdx = list[0].privateKey
+        this.navIdx = selectedWallet.privateKey
       } 
-      this.$emit("walletSelectionChanged", list[0] || [])
+      this.$emit("walletSelectionChanged", selectedWallet || [])
       return list
     }
   },

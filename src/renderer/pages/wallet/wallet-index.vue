@@ -286,9 +286,11 @@ export default {
       if (jobID) {
         clearInterval(jobID)
       }
+      window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
+
       this.selectedWallet = selectedWallet
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
-
+      
       this.selectedPrivateKey = selectedWallet.privateKey
       //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
       this.oldWalletName = selectedWallet.name

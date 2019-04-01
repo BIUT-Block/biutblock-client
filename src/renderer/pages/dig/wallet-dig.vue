@@ -233,6 +233,7 @@ export default {
           return
         }
       }
+      window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
       this.selectedWallet = wallet
       this.selectedWalletName = wallet.walletName
       this.selectedPrivateKey = wallet.privateKey
