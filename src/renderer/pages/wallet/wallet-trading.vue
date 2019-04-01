@@ -91,12 +91,12 @@ export default {
           {
             id: '04',
             title: 'Beneficiary',
-            cnt: this.beneficiary
+            cnt: this.party
           },
           {
             id: '05',
             title: 'Sending party',
-            cnt: this.party
+            cnt: this.beneficiary
           },
           {
             id: '06',

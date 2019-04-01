@@ -26,7 +26,7 @@
   resolved "https://registry.yarnpkg.com/@mdi/font/-/font-2.8.94.tgz#b6d55026693f4ac5c38ec01e05e2ec412a215673"
   integrity sha512-QSmuK0BedRMDSgh7RCOc0yO+cAHAaAKfj11BPv0XDxvGKNNKGRqDJcJKdrWUpVmO1/xiFLWfPEmqMi/PKwvjcg==
 
-"@sec-block/secjs-blockchain@^1.0.147", "@sec-block/secjs-blockchain@^1.0.151":
+"@sec-block/secjs-blockchain@^1.0.151":
   version "1.0.151"
   resolved "https://registry.yarnpkg.com/@sec-block/secjs-blockchain/-/secjs-blockchain-1.0.151.tgz#9e5292be3545e90f2f95fc6752b16625895d3f6b"
   integrity sha512-RAp4gv7iOH4DNgQPuJOPcYmEpWpM+YR00798kEo2o+rEtholrQzf7C347utN5P8uAhundT9BJsBW7CUDqhJxbw==
@@ -41,7 +41,7 @@
     mocha "^5.2.0"
     standard "^11.0.1"
 
-"@sec-block/secjs-datahandler@^1.1.45", "@sec-block/secjs-datahandler@^1.1.46":
+"@sec-block/secjs-datahandler@^1.1.46":
   version "1.1.46"
   resolved "https://registry.yarnpkg.com/@sec-block/secjs-datahandler/-/secjs-datahandler-1.1.46.tgz#0c65c04a78ec19e16f02bc7c2a69cceafd857b68"
   integrity sha512-u0o7gQBO7bee6BXkvKqQMpoc7CnfgkaN1RsvB4rZ+FgkAoBkj+aMwZdyFdm/2elJ78Qm1TKqhOaNZemySh1UqA==
@@ -80,10 +80,10 @@
     chai "^4.1.2"
     describe "^1.2.0"
 
-"@sec-block/secjs-node@^1.2.3":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@sec-block/secjs-node/-/secjs-node-1.2.6.tgz#5a15dd8391ceeaa741ba503436ef6bca7c02c4e4"
-  integrity sha512-AzwprAibG1bAVPg0mN370RVxC2a+QPTXfrvhvY2CAcsWipNIa4GyoqDy5VFIZxGFUBMJNSvVLXfdsqBEOLebng==
+"@sec-block/secjs-node@^1.2.6":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@sec-block/secjs-node/-/secjs-node-1.2.7.tgz#9e5e31959a1bb90569b8a16a71d52bd59c37e5a0"
+  integrity sha512-kO6gjq9VbT2BrMep0M7Dg2cnmT3LEGwwSBjPICjxhVqDi2bUCRbAQRbBLCYCGk9uUTR1hKGVkGuqs+1eo/5Xvw==
   dependencies:
     "@maxmind/geoip2-node" "^0.4.0"
     "@sec-block/secjs-blockchain" "^1.0.151"
@@ -3713,10 +3713,10 @@ electron@^1.8.8:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
-element-ui@^2.6.2:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.6.3.tgz#e5c87ca3cdc988586320c826872720a8cdc7db44"
-  integrity sha512-vV2HfFkCH8KhxunSBFLnA+/jJY3UxMMbhBjiHoO3pZOX/8OQ8QbeatAnjBFDu6dRRGb0DGERUtY2WBeVYegs/A==
+element-ui@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.7.0.tgz#6bfcdfa5c75bfc4cda835186f2a1f98b93cd5d14"
+  integrity sha512-FalWzOmT/K4w4C/8tw2kGvzzQnRJ5MqEvSL5rEKNa081PFGIcUS9exyVpYrNPKF8ua/W6qaqrXPC6DQ8sNcmOQ==
   dependencies:
     async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
@@ -10150,10 +10150,10 @@ tar@^4:
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
 
-telnet-client@^0.16.3:
-  version "0.16.3"
-  resolved "https://registry.yarnpkg.com/telnet-client/-/telnet-client-0.16.3.tgz#c1a25393774525154c99b4d34946e180761d63a9"
-  integrity sha512-3dZ+MHfzGCMy34FeLZT9VU8K/TFQ0LfenbCsaQVgBOCGyGXcMi1Ft8v0g1w4uieeBVRFp108uwPCEiP3c6w0Ig==
+telnet-client@^0.16.4:
+  version "0.16.4"
+  resolved "https://registry.yarnpkg.com/telnet-client/-/telnet-client-0.16.4.tgz#46c40bd6983a49cba3187433eadb083d3ce8b0a7"
+  integrity sha512-3oHc87ae2AdgsrE+J7FozWP0/ux2zr4xFJKKEietXOtsHYyh62fbHc3bv6qI8D0OP+6VNoC98kZuNDMoXAB7MQ==
   dependencies:
     bluebird "3.5.x"
 
@@ -10814,7 +10814,7 @@ webpack-dev-middleware@1.12.2, webpack-dev-middleware@^1.12.0:
     range-parser "^1.0.3"
     time-stamp "^2.0.0"
 
-webpack-dev-server@^2.11.3:
+webpack-dev-server@^2.11.5:
   version "2.11.5"
   resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-2.11.5.tgz#416fbdea0e04eebe44a626e791d5a2eb37fe8c48"
   integrity sha512-7TdOKKt7G3sWEhPKV0zP+nD0c4V9YKUJ3wDdBwQsZNo58oZIRoVIu66pg7PYkBW8A74msP9C2kLwmxGHndz/pw==

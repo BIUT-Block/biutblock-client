@@ -1,6 +1,6 @@
 <template>
   <section class="dig-body-title">
-    <h3>Montserrat</h3>
+    <h3>Mining Record</h3>
     <section class="dig-body-title-list">
       <section>
         <span></span>
@@ -12,7 +12,7 @@
         <span>Income of Mined：</span>
         <span>{{this.income}} SEC</span>
       </section>
-      <section class="dig-more" v-if="digTitleShow" @click="digMore">More</section>
+      <section class="dig-more" v-show="digTitle" @click="digMore">More</section>
     </section>
   </section>
 </template>
@@ -28,16 +28,16 @@ export default {
     income: String,
     selectedWallet: Object,
     selectedPrivateKey: String,
-    wallets: Object
+    wallets: Object,
+    digTitleShow: Boolean
   },
   data() {
     return {
-
     }
   },
   computed: {
-    digTitleShow: function(){
-      if (this.income === "" || this.income === "0" || Number(this.income) < 10) {
+    digTitle: function(){
+      if (this.income === "" || this.income === "0" || Number(this.income) < 10 && !this.digTitleShow) {
         return false
       } else {
         return  true
