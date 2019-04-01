@@ -36,7 +36,7 @@ export default {
   computed: {
     walletList: function () {
       let list = []
-      let selectedWallet = {}
+      let selectedWallet
       Object.keys(this.wallets).forEach( (privateKey) => {
       list.push({
         id: '01',
@@ -59,10 +59,12 @@ export default {
           }
         }
       })
-      if (list.length > 0) {
+      if (selectedWallet) {
         this.navIdx = selectedWallet.privateKey
-      } 
-      this.$emit("walletSelectionChanged", selectedWallet || [])
+      } else {
+        this.navIdx = list[0].privateKey
+      }
+      this.$emit("walletSelectionChanged", selectedWallet || list[0])
       return list
     }
   },
