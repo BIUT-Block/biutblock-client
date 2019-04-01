@@ -28,8 +28,7 @@ export default {
     income: String,
     selectedWallet: Object,
     selectedPrivateKey: String,
-    wallets: Object,
-    digTitleShow: Boolean
+    wallets: Object
   },
   data() {
     return {
@@ -37,7 +36,7 @@ export default {
   },
   computed: {
     digTitle: function(){
-      if (this.income === "" || this.income === "0" || Number(this.income) < 10 && !this.digTitleShow) {
+      if (this.income === "" || Number(this.income) < 10) {
         return false
       } else {
         return  true

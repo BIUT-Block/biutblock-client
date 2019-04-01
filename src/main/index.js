@@ -85,7 +85,7 @@ function createWindow () {
     transparent: false,
     frame: true,
     minHeight: 640,
-    minWidth: 960,
+    minWidth: 960
   })
   mainWindow.setResizable(true)
 

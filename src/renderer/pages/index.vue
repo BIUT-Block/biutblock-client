@@ -5,7 +5,7 @@
         <img src="../assets/images/logo.png" alt="">
         <span>SEC Wallet</span>
       </section>
-      <wallet-nav/>
+      <!-- <wallet-nav/> -->
     </nav>
     <section class="wallet-index-content">
       <aside>

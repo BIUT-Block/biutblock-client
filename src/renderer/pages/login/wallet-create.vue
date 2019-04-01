@@ -6,9 +6,9 @@
       <h2>{{ createTitle2 }}</h2>
       <span></span>
     </aside>
-    <section class="wallet-nav">
+    <!-- <section class="wallet-nav">
       <wallet-nav/>
-    </section>
+    </section> -->
     <img src="../../assets/images/closeImg.png" v-show="createClose" title="close" class="closeImg" @click="closeCreate"/>
     <!-- 创建钱包 createPages == 1 -->
     <section class="wallet-create" v-if="createPages == 1">

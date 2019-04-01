@@ -18,9 +18,9 @@
 
       <!-- 内容 -->
       <section class="dig-more-body" :class="loadMoren?'dig-body-padding-bottom':''">
-        <dig-title :digTitleShow="false" class="dig-more-body-header" :number="digNumber" :income="digIncome"/>
+        <dig-title class="dig-more-body-header" :number="digNumber" :income="digIncome"/>
         <dig-list :moreList="moreList"/>
-        <p v-show="loadMoren">Click to load more</p>
+        <p v-show="loadMore">Click to load more</p>
       </section>
     </section>
   </main>
@@ -39,14 +39,16 @@ export default {
   props: {},
   data () {
     return {
-      loadMoren: true, //加载更多按钮
+      loadMore: false, //加载更多按钮
       digNumber: '0',
       digIncome: '0',
       wallets: {},
       selectedPrivateKey: '',
       selectedWallet: {},
       moreList: [],
+      morListSkip: 7,
       updateListJob: ''
+
     }
   },
   computed: {
@@ -58,8 +60,7 @@ export default {
     if (this.wallets.hasOwnProperty(this.selectedPrivateKey)) {
       this.selectedWallet = this.wallets[this.selectedPrivateKey]
     }
-    this.getMiningList()
-    updateListJob = setInterval(this.getMiningList, 5000)
+    this._startUpdateHisotryJob()
   },
   mounted () {
 
@@ -70,6 +71,14 @@ export default {
     }
   },
   methods: {
+    onClickLoadMore () {
+      this.moreListSkip = this.moreListSkip + 10
+      if (updateListJob) {
+        clearInterval(updateListJob)
+      }
+      this._startUpdateHisotryJob()
+    },
+
     getMiningList () {
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
         this.digIncome = "0"
@@ -77,8 +86,18 @@ export default {
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Successful'
         })
+        let skip = 0
+        if (this.moreListSkip > miningHistory.length) {
+          skip = miningHistory.length
+        } else {
+          skip = this.moreListSkip
+        }
         miningHistory.forEach((element, index) => {
-          this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString() 
+          this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString()
+          if (index > skip) {
+            this.loadMore = false
+            return
+          }
           this.moreList.push({
             id: index,
             age: element.listTime,
@@ -88,6 +107,14 @@ export default {
           })
         })
       })
+    },
+
+    _startUpdateHisotryJob () {
+      if (updateListJob) {
+        clearInterval(updateListJob)
+      }
+      this.getMiningList()
+      updateListJob = setInterval(this.getMiningList, 5000)
     },
 
     //返回挖矿页面

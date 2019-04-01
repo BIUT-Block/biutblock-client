@@ -58,7 +58,7 @@
         <p class="noMore" v-show="noMoreData">No further data available ^_^</p>
       </section>
     </section>
-  <section class="moreList" v-show="moreShow" @click="moreTradingList">
+  <section class="moreList" v-show="moreShow" @click="onClickLoadMore">
     <img src="../../assets/images/moreList.png" alt="">
     <span>Click to load more</span>
   </section>
@@ -134,19 +134,21 @@ export default {
       translucentShow: false,
       maskPages: 0,
       maskShow: false,
-      tradingList: []
+      tradingList: [],
+      tradingListTotalLength: 0,
+      tradingListSkip: 5
     }
   },
   computed: {
     noTradingStyle () {
-      if (this.tradingList.length > 0){
+      if (this.tradingListTotalLength > 0){
         return {
           display: 'none'
         }
       }
     },
     moreShow () {
-      if (this.tradingList.length > 5) {
+      if (this.tradingListTotalLength > 5 && !this.noMoreData) {
         return true
       } else {
         return false
@@ -160,14 +162,17 @@ export default {
   mounted () {
 
   },
-  destroyed () {},
+  destroyed () {
+    if (jobID) {
+      clearInterval(jobID)
+    }
+  },
   methods: {
     //交易记录方法
-    moreTradingList () {
-      /**
-       * 点击更多默认多加载五条、如果已经加载全部数据就  this.noMoreData = true  
-       */
-      alert("加载更多")
+    onClickLoadMore () {
+      this.tradingListSkip = this.tradingListSkip + 5
+      clearInterval(jobID)
+      this._startUpateJob()
     },
 
     //遮罩层相关弹窗
@@ -281,13 +286,20 @@ export default {
       this.maskShow = false
     },
 
+    _resetSkipTotal () {
+      this.tradingListTotalLength = 0
+      this.tradingListSkip = 5
+      this.tradingList = []
+      this.noMoreData = false
+    },
+
     /** Event Method, triggerd if wallet selection changed*/
     onSelectWalletChanged (selectedWallet) {
       if (jobID) {
         clearInterval(jobID)
       }
       window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
-
+     this._resetSkipTotal()
       this.selectedWallet = selectedWallet
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
       
@@ -295,22 +307,42 @@ export default {
       //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
       this.oldWalletName = selectedWallet.name
       this.walletName = selectedWallet.name
-      this._getWalletBalance(selectedWallet.walletAddress)
-      this._getWalletTransactions(selectedWallet.walletAddress)
-      jobID = setInterval(()=>{
-        this._getWalletBalance(selectedWallet.walletAddress)
-        this._getWalletTransactions(selectedWallet.walletAddress)
-      }, 5000)
+      this._startUpateJob()
       //return
     },
+
+    _startUpateJob () {
+      if (jobID) {
+        clearInterval(jobID)
+      }
+      this._getWalletBalance(this.selectedWallet.walletAddress)
+      this._getWalletTransactions(this.selectedWallet.walletAddress)
+      jobID = setInterval(()=>{
+        this._getWalletBalance(this.selectedWallet.walletAddress)
+        this._getWalletTransactions(this.selectedWallet.walletAddress)
+      }, 5000)
+    },
+
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalance(walletAddress, (balance) => {
         this.walletBalance = balance
       })
     },
     _getWalletTransactions (walletAddress) {
+      let skip = 0
       this.$JsonRPCClient.getWalletTransactions(walletAddress, (transactions) => {
-        this.tradingList = transactions
+        this.tradingList = []
+        this.tradingListTotalLength = transactions.length
+        if (this.tradingListSkip > transactions.length && transactions.length > 0) {
+          this.noMoreData = true
+          skip = transactions.length
+        } else {
+          this.noMoreData = false
+          skip = this.tradingListSkip
+        }
+        for (let i=0; i < skip; i++) {
+          this.tradingList.push(transactions[i])
+        }
       })
     },
 

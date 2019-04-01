@@ -29,16 +29,19 @@ export default {
   },
   data() {
     return {
-      digListShow: true
     }
   },
   computed: {
-
+    digListShow () {
+      if (this.digLists.length > 0) {
+        return false
+      } else {
+        return true
+      }
+    }
   },
   created() {
-    if (this.digLists.length > 0) {
-      this.digListShow = false
-    }
+    
   },
   mounted() {
 

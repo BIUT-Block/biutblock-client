@@ -109,8 +109,8 @@ export default {
   data () {
     return {
       digButton: "Start Mining",
-      digNumber: '1000',
-      digIncome: '100',
+      digNumber: '0',
+      digIncome: '0',
       checkWallet: false,
       checkedWallet: true,
       wallets: [],
@@ -189,9 +189,7 @@ export default {
       if (this.miningIn) {
         this.noCursor = true
       }
-      this._getWalletMiningHistory()
-      this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
-      // method to get total mined and number of block
+      this._startUpdateHistoryJob()
     },
 
     //点击其他的地方关闭钱包选择
@@ -237,7 +235,7 @@ export default {
       this.selectedWallet = wallet
       this.selectedWalletName = wallet.walletName
       this.selectedPrivateKey = wallet.privateKey
-      this._getWalletMiningHistory()
+      this._startUpdateHistoryJob()
       this.checkWallet = false
       this.checkedWallet = true
       this.disabledButton = false
@@ -246,15 +244,21 @@ export default {
     onCloseMessage () {
       this.mineStatusError = false
     },
+
+    _startUpdateHistoryJob () {
+      clearInterval(this.updateListJob)
+      this._getWalletMiningHistory()
+      this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
+    },
     
     _getWalletMiningHistory () {
-      this.digIncome = "0"
-      this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
-        this.moreList = []
+      this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {  
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Successful'
         })
-        miningHistory.forEach((element, index) => {
+        this.moreList = []
+        this.digIncome = "0"
+        miningHistory.forEach((element, index) => {    
           this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString()
           this.moreList.push({
             id: index,

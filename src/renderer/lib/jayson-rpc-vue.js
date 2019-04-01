@@ -63,7 +63,7 @@ export default {
                 listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTo: response.result.resultInPool[j].TxTo,
-                listTime: WalletsHandler.formatDate(new Date(response.result.resultInChain[j].TimeStamp), new Date().getTimezoneOffset()),
+                listTime: WalletsHandler.formatDate(new Date(response.result.resultInPool[j].TimeStamp), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInPool[j].TxFee,
                 listState: 'Packed'

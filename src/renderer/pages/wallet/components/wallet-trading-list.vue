@@ -1,7 +1,7 @@
 <template>
   <ul>
     <!-- 默认加载五条数据，点击查看更多就加载更多数据 -->
-    <li @click="tradingDetails(item)" v-for="(item, index) in tradingList" v-if="index < 5">
+    <li @click="tradingDetails(item)" v-for="(item, index) in tradingList" v-if="index < tradingList.length">
       <section class="list-img">
         <img :src="item.listState | stateImg" alt="">
         <section>

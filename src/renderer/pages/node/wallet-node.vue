@@ -70,17 +70,9 @@ export default {
     }, 2500)
 
 
-    this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
-        this.nodeTimeText = WalletsHandler.formatDate(new Date(response.result.time * 1000), -120)
-        this.localTimeText = WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())
-        this.nodeText = response.result.ipv4
-    })
+    this._getNodeInfo()
     jobId = setInterval(() => {
-      this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
-        this.nodeTimeText = WalletsHandler.formatDate(new Date(response.result.time * 1000), -120)
-        this.localTimeText = WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())
-        this.nodeText = response.result.ipv4
-      })
+      this._getNodeInfo()
     }, 2500)
   },
   mounted () {
@@ -108,6 +100,13 @@ export default {
       })
     },
     
+    _getNodeInfo () {
+      this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
+        this.nodeTimeText = WalletsHandler.formatDate(new Date(response.result.time), -120)
+        this.localTimeText = WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())
+        this.nodeText = response.result.ipv4
+      })
+    }
   }
 }
 </script>
