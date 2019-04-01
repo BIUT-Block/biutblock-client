@@ -4,7 +4,7 @@
       <li v-for="(item, index) in walletList"
           :class="navIdx === item.privateKey ? 'checked-nav' : ''"
           @click="tabWallet(item, index)">
-        <span :class="[bgColorArr[index%4], navIdx == index ? 'border-hidden' : '']"></span>
+        <span :class="[bgColorArr[index%4], navIdx == item.privateKey ? 'border-hidden' : '']"></span>
         <section>
           <p>{{item.name}}</p>  
           <p>{{item.address}}</p>  

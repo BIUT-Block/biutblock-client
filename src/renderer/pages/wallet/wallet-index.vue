@@ -54,9 +54,11 @@
         <section class="wallet-content-body-list">
           <trading-list :tradingList="tradingList" :wallets="wallets" :selectedPrivateKey="selectedPrivateKey"/>
         </section>
+        <!-- 暂无更多数据 -->
+        <p class="noMore" v-show="noMoreData">No further data available ^_^</p>
       </section>
     </section>
-  <section class="moreList" v-show="moreShow">
+  <section class="moreList" v-show="moreShow" @click="moreTradingList">
     <img src="../../assets/images/moreList.png" alt="">
     <span>Click to load more</span>
   </section>
@@ -109,6 +111,7 @@ export default {
       walletAddress: '',
       inputReadonly: true,
       inputActive: false,
+      noMoreData: false, //暂无更多数据
       menuList: [
         {
           id: '01',
@@ -159,6 +162,14 @@ export default {
   },
   destroyed () {},
   methods: {
+    //交易记录方法
+    moreTradingList () {
+      /**
+       * 点击更多默认多加载五条、如果已经加载全部数据就  this.noMoreData = true  
+       */
+      alert("加载更多")
+    },
+
     //遮罩层相关弹窗
     lookMask (index) {
       // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
@@ -294,14 +305,14 @@ export default {
     /** Event Method, triggered if wallet removed, update the wallet list */
     onUpdateWalletList (wallets) {
       // Delete wallet successfully 删除成功 Delete wallet failure 删除失败
-      if (JSON.stringify(wallets) === '{}') {
-        this.$router.push({name: 'walletCreate'})
-        this.translucentShow = true
-        this.translucentText = "Delete wallet successfully"
-        setTimeout(() => {
+      this.translucentShow = true
+      this.translucentText = "Delete wallet successfully"
+      setTimeout(() => {
           this.translucentShow = false
           this.translucentText = ""
-        }, 3000)
+      }, 3000)
+      if (JSON.stringify(wallets) === '{}') {
+        this.$router.push({name: 'walletCreate'})
       } else {
         this.wallets = wallets
         //this.$route.query.wallets = this.wallets
@@ -314,6 +325,7 @@ export default {
       this._getWalletTransactions(walletAddress)
     }
   },
+
 }
 </script>
 
@@ -366,7 +378,10 @@ export default {
   .wallet-content-body .wallet-content-body-mull p {color: #999999;font-family: Lato-Bold;margin-top: 14px;}
 
   .moreList {position: fixed;bottom: 24px;right: 64px;left: 354px;background: #fff;height: 47px;
-    display: flex;align-items: center;justify-content: center;color: #576066;}
+    display: flex;align-items: center;justify-content: center;color: #576066;z-index: 9;}
   .moreList img {width: 11px;height: 7px;margin-right: 5px;}
   .wallet-padidng-bottom {padding-bottom: 47px;}
+
+
+  .noMore {text-align: center;color: #576066;padding: 15px 0;}
 </style>

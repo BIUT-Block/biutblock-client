@@ -14,7 +14,7 @@
     <section class="wallet-create" v-if="createPages == 1">
       <span class="wallet-button-important" @click="importCreate">Import Wallet</span>
       <wallet-title :title="walletNameText" :choose="true"/>
-      <wallet-input type="text" placeholder="Waller Name" maxlength="14" v-model="walletName"></wallet-input>
+      <wallet-input type="text" placeholder="Wallet Name" maxlength="14" v-model="walletName"></wallet-input>
       <wallet-title :title="walletPassText1" :choose="true"/>
       <wallet-input-pass placeholder="Password" maxlength="30" 
           v-model="walletPass1"
@@ -375,6 +375,9 @@ export default {
         this.radioIndex = 1
         this.agreedId = false
         this.radioImg = agreement
+        this.walletName = ''
+        this.walletPass1 = ''
+        this.walletPass2 = ''
       } else {  //其他就是创建钱包
         this.createPages = 1
         this.createClose = false
@@ -581,6 +584,7 @@ export default {
   .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
     margin-top: 10px;padding: 11px 18px;word-break: break-all;}
   .wallet-backup .private-key-contant img {margin-left: 20px;vertical-align: middle;}
+  .wallet-backup .private-key-contant img:hover {cursor: pointer;}
   .wallet-backup .wallet-button-backup {width:190px;}
   .wallet-backup .radio-content {padding: 25px 0 16px;display: flex;align-items: center;color: #252F33;}
   .wallet-backup .radio-content img {margin-right: 10px;width: 14px;height: 14px;}

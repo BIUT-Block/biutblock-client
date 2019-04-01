@@ -1,133 +1,140 @@
 <template>
   <!-- 遮罩层弹窗 -->
-  <section class="mask" v-show="maskShow">
-    <!-- <section class="mask"></section> -->
-    <section class="mask-container wallet-mask">
-      <img
-        src="../../../assets/images/closeMask.png"
-        alt=""
-        class="closeImg"
-        title="close"
-        @click="clostMask"
-      />
-      <!-- 转账 maskPages = 4 Sent -->
-      <section class="wallet-mask-sent" v-show="maskPages == 4">
-         <!-- 填写转账信息 --> 
-        <section v-show="sentPages == 1">
-          <h3>Sent</h3>
-          <p>FROM</p>
-          <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-          <p>TO</p>
-          <section class="wallet-mask-sent-to-address">
-            <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
-            <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
-          </section>
-          <wallet-tips :tips="addressError"/>
-          <p>AMOUNT</p>
-          <section class="wallet-mask-sent-amount">
-            <input type="text" v-model="sentAmount" :placeholder="allAmountPlace" maxlength="42"/>
-            <section>
-              <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
+  <main>
+      <section class="mask" v-show="maskShow">
+      <!-- <section class="mask"></section> -->
+      <section class="mask-container wallet-mask">
+        <img
+          src="../../../assets/images/closeMask.png"
+          alt=""
+          class="closeImg"
+          title="close"
+          @click="clostMask"
+        />
+        <!-- 转账 maskPages = 4 Sent -->
+        <section class="wallet-mask-sent" v-show="maskPages == 4">
+          <!-- 填写转账信息 --> 
+          <section v-show="sentPages == 1">
+            <h3>Sent</h3>
+            <p>FROM</p>
+            <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
+            <p>TO</p>
+            <section class="wallet-mask-sent-to-address">
+              <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
+              <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
+            </section>
+            <wallet-tips :tips="addressError"/>
+            <p>AMOUNT</p>
+            <section class="wallet-mask-sent-amount">
+              <input type="text" v-model="sentTradingAmount" :placeholder="allAmountPlace" maxlength="40"
+                @input="clearAmount" onpaste="return false"/>
               <section>
-                <span>SEC</span>
-                <span @click="sentAllAmount">ALL</span>
+                <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
+                <section>
+                  <span>SEC</span>
+                  <span @click="sentAllAmount">ALL</span>
+                </section>
               </section>
             </section>
+
+            <button type="button" @click="clostMask">Cancel</button>
+            <button type="button"
+                    :disabled="!sentActive"
+                    :class="sentActive ? 'passCorrect' : ''"
+                    @click="sentConfirm">Sent</button>
           </section>
 
-          <button type="button" @click="clostMask">Cancel</button>
-          <button type="button"
-                  :disabled="!sentActive"
-                  :class="sentActive ? 'passCorrect' : ''"
-                  @click="sentConfirm">Sent</button>
+          <!-- 确认转账 -->
+          <section v-show="sentPages == 2">
+            <h3>Confirm The Following information</h3>
+            <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
+            <p>FROM</p>
+            <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
+            <p>TO</p>
+            <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
+            <p>AMOUNT</p>
+            <span class="wallet-mask-sent-from-address">{{sentTradingAmount}}</span>
+            <button type="button" @click="backSent">Back</button>
+            <button type="button" class="passCorrect" @click="sent">Confirm</button>
+          </section>
+
         </section>
 
-        <!-- 确认转账 -->
-        <section v-show="sentPages == 2">
-          <h3>Confirm The Following information</h3>
-          <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
-          <p>FROM</p>
-          <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-          <p>TO</p>
-          <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
-          <p>AMOUNT</p>
-          <span class="wallet-mask-sent-from-address">{{sentAmount}}</span>
-          <button type="button" @click="backSent">Back</button>
-          <button type="button" class="passCorrect" @click="sent">Confirm</button>
+        <!-- 二维码 maskPages = 5 receive -->
+        <section class="wallet-mask-receive" v-show="maskPages == 5">
+          <h3>Receive</h3>
+          <p>Account</p>
+          <span>0x{{selectedWallet.walletAddress}}</span>
+          <p>Amount</p>
+          <section>
+            <input type="text" maxlength="40" v-model="receiveAmount" @input="clearNoNum" onpaste="return false"/>
+            <label>SEC</label>
+          </section>
+          <wallet-tips :tips="receiveError" />
+          <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
+          <span>Your address(QR Code)</span>
         </section>
 
-      </section>
-
-      <!-- 二维码 maskPages = 5 receive -->
-      <section class="wallet-mask-receive" v-show="maskPages == 5">
-        <h3>Receive</h3>
-        <p>Account</p>
-        <span>0x{{selectedWallet.walletAddress}}</span>
-        <p>Account</p>
-        <section>
-          <input type="number" v-model="receiveAmount" @blur="outOfReceiveInput"/>
-          <label>SEC</label>
+        <!-- 导出私钥 maskPages = 0 Export Private key -->
+        <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
+          <h3>Export Private key</h3>
+          <wallet-tips :tips="privateKey" />
+          <section id="privateKey">
+            {{selectedWallet.privateKey}}
+          </section>
+          <span class="priivate-key-button copyButton" @click="copyCnt" 
+              data-clipboard-target="#privateKey"
+              :class="copySuccess ? 'copySuccessBg' : ''">
+            {{ copyButtonText }}
+          </span>
         </section>
-        <wallet-tips :tips="receiveError" />
-        <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
-        <span>Your address(QR Code)</span>
-      </section>
 
-      <!-- 导出私钥 maskPages = 0 Export Private key -->
-      <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
-        <h3>Export Private key</h3>
-        <wallet-tips :tips="privateKey" />
-        <section id="privateKey">
-          {{selectedWallet.privateKey}}
+        <!-- 导出keyStore文件 maskPages = 1  Export Keystore -->
+        <section class="wallet-mask-keystroe" v-show="maskPages == 1">
+          <h3>Export Keystore</h3>
+          <wallet-input-pass
+            placeholder="Enter your new password"
+            maxlength="30"
+            v-model="walletNewPass"></wallet-input-pass>
+          <wallet-tips :tips="passFormat" class="tips" />
+          <span class="wallet-button" @click="clostMask">Cancel</span>
+          <span class="wallet-button" 
+                :disabled="!keystroeActive"
+                :class="keystroeActive ? 'passCorrect' : ''"
+                @click="importantKeystroe">
+              Confirm
+          </span>
         </section>
-        <span class="priivate-key-button copyButton" @click="copyCnt" data-clipboard-target="#privateKey">Copy</span>
-      </section>
 
-      <!-- 导出keyStore文件 maskPages = 1  Export Keystore -->
-      <section class="wallet-mask-keystroe" v-show="maskPages == 1">
-        <h3>Export Keystore</h3>
-        <wallet-input-pass
-          placeholder="Enter your new password"
-          maxlength="30"
-          v-model="walletNewPass"></wallet-input-pass>
-        <wallet-tips :tips="passFormat" class="tips" />
-        <span class="wallet-button" @click="clostMask">Cancel</span>
-        <span class="wallet-button" 
-              :disabled="!keystroeActive"
-              :class="keystroeActive ? 'passCorrect' : ''"
-              @click="importantKeystroe">
-            Confirm
-        </span>
-      </section>
+        <!-- 导出助记词Export maskPages = 2 Phrase -->
+        <section class="wallet-mask-phrase" v-show="maskPages == 2">
+          <h3>Export Phrase</h3>
+          <ul>
+            <li>{{selectedWallet.englishWords}}</li>
+          </ul>
+          <span class="wallet-button" @click="importantPhrase">Confirm</span>
+        </section>
 
-      <!-- 导出助记词Export maskPages = 2 Phrase -->
-      <section class="wallet-mask-phrase" v-show="maskPages == 2">
-        <h3>Export Phrase</h3>
-        <ul>
-          <li>{{selectedWallet.englishWords}}</li>
-        </ul>
-        <span class="wallet-button" @click="importantPhrase">Confirm</span>
-      </section>
+        <!-- 删除钱包 maskPages = 3 delete -->
+        <section class="wallet-mask-delete" v-show="maskPages == 3">
+          <p>
+            Confirm to delete your wallet? Please make sure you have backed up
+            your wallet.
+          </p>
+          <span class="wallet-button" @click="deleteWallet">Delete</span>
+        </section>
 
-      <!-- 删除钱包 maskPages = 3 delete -->
-      <section class="wallet-mask-delete" v-show="maskPages == 3">
-        <p>
-          Confirm to delete your wallet? Please make sure you have backed up
-          your wallet.
-        </p>
-        <span class="wallet-button" @click="deleteWallet">Delete</span>
-      </section>
-
-      <section class="wallet-mask-delete" v-show="maskPages == 6">
-        <p>
-          The wallet is bind to mining. You can not remove it.
-        </p>
-        <span class="wallet-button" @click="clostMask">Confirm</span>
+        <section class="wallet-mask-delete" v-show="maskPages == 6">
+          <p>
+            The wallet is bind to mining. You can not remove it.
+          </p>
+          <span class="wallet-button" @click="clostMask">Confirm</span>
+        </section>
       </section>
     </section>
     <!-- 透明弹窗 -->
     <wallet-translucent :text="translucentText" v-show="translucentShow"/>
-  </section>
+  </main>
 </template>
 
 <script>
@@ -154,7 +161,6 @@ export default {
   },
   data() {
     return {
-      qrcodeAmount: '',//二维码收款金额
       qrcodeWalletAddress: '',//二维码内容
       sessionAddress: 'You are sending assets to the following address, please confirm the operation',
       addressError: 'Addresses are generally 42-bit characters beginning with 0x',
@@ -166,7 +172,7 @@ export default {
       walletNewPass: '',
       
       sentAddress: '',//转账地址
-      sentAmount: '',//转账金额
+      sentTradingAmount: '',//转账金额
       sentPages: 1,//默认显示转账页面
       allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       allAmount: this.balance,//总金额
@@ -175,9 +181,9 @@ export default {
 
       copyButtonText: 'copy',
       copySuccess: false,
-      copyTime: 5,
-      receiveAmount: '',
-      amountPlaceHolder: `Maximum input of ${this.balance}`
+      copyTime: 3,
+      receiveAmount: '',//二维码收款金额
+      amountPlaceHolder: `Maximum input of ${this.balance}`,
     }
   },
   computed: {
@@ -194,22 +200,24 @@ export default {
 
     //转账按钮是否可点击
     sentActive () {
+      let addressRgs = /^(0x)(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+$/
       let walletAddress = '0x' + this.selectedWallet.walletAddress
       return this.sentAddress.length > 41 
-              && Number(this.sentAmount) > 0 
-              && this.sentAddress != walletAddress ? true : false
+              && Number(this.sentTradingAmount) > 0 
+              && this.sentAddress != walletAddress
+              && addressRgs.test(this.sentAddress) ? true : false
     },
 
     //转账金额清空按钮
     clearSentAmountImg () {
-      return this.sentAmount.length > 0 ? true : false
+      return this.sentTradingAmount.length > 0 ? true : false
     },
 
 
   },
   created() {
     //移动端扫描格式
-    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this.qrcodeAmount
+    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this.receiveAmount
   },
   mounted() {
 
@@ -217,21 +225,21 @@ export default {
   destroyed() { },
 
   methods: {
-    isNumber () {
-      if (!/^[0-9.]+$/i.test(this.sentAmount)) {
-        return -1
-      } else if (!/^(\d|[1-9]\d+)(\.\d+)?$/i.test(this.sentAmount) ) {
-        return -1
-      } else if (!/^[0-9]+(.[0-9]{1,8})?$/i.test(this.sentAmount)) {
-        return -1
-      }else if (parseFloat(this.sentAmount)>parseFloat(this.balance)) {
-        return 0
-      } else if (Number(this.sentAmount) <= 0) {
-        return -1
-      }else {
-        return 1;
-      }
-    },
+    //isNumber () {
+    //   if (!/^[0-9.]+$/i.test(this.sentAmount)) {
+    //     return -1
+    //   } else if (!/^(\d|[1-9]\d+)(\.\d+)?$/i.test(this.sentAmount) ) {
+    //     return -1
+    //   } else if (!/^[0-9]+(.[0-9]{1,8})?$/i.test(this.sentAmount)) {
+    //     return -1
+    //   }else if (parseFloat(this.sentAmount)>parseFloat(this.balance)) {
+    //     return 0
+    //   } else if (Number(this.sentAmount) <= 0) {
+    //     return -1
+    //   }else {
+    //     return 1;
+    //   }
+    // },
 
     isAddress () {
       if (!/^[a-z0-9]+$/.test(this.sentAddress) || this.sentAddress.length !== 42)  {
@@ -241,28 +249,28 @@ export default {
       }
     },
 
-    outOfReceiveInput () {
-      if (/^[0-9]+$/i.test(this.receiveAmount)) {
-        this.receiveError = ''
-        this.receiveAmount = this.receiveAmount + '.00000000'
-      } else if (/^[0-9]+\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
-        this.receiveError = ''
-        let beforepoint = this.receiveAmount.split('.')[1].length
-        for (let i = 0; i < 8 - beforepoint; i++) {
-          this.receiveAmount = this.receiveAmount + '0'
-        }
-      } else if (!/^[0-9]+$|^[0-9]+\.([0-9]{1,8})$/i.test(this.receiveAmount)) {
-        this.receiveError = 'Invalid input'
-      }
-    },  
+    // outOfReceiveInput () {
+    //   if (/^[0-9]+$/i.test(this.receiveAmount)) {
+    //     this.receiveError = ''
+    //     this.receiveAmount = this.receiveAmount + '.00000000'
+    //   } else if (/^[0-9]+\.([0-9]{1,7})$/i.test(this.receiveAmount)) {
+    //     this.receiveError = ''
+    //     let beforepoint = this.receiveAmount.split('.')[1].length
+    //     for (let i = 0; i < 8 - beforepoint; i++) {
+    //       this.receiveAmount = this.receiveAmount + '0'
+    //     }
+    //   } else if (!/^[0-9]+$|^[0-9]+\.([0-9]{1,8})$/i.test(this.receiveAmount)) {
+    //     this.receiveError = 'Invalid input'
+    //   }
+    // },  
 
     //关闭弹窗调用该组件
     clostMask () {
-      this.qrcodeAmount = ''
+      this.receiveAmount = ''
       this.sentAddress = ''
-      this.sentAmount = ''
-      this.sentAmount = ''
+      this.sentTradingAmount = ''
       this.walletNewPass = ''
+      this.sentPages = 1
       this.$emit("changeClose","")
     },
 
@@ -276,9 +284,9 @@ export default {
       this.sentPages = 1
       this._resetErrorText()
       this.sentAddress = ''
-      this.sentAmount = ''
+      this.sentTradingAmount = ''
       this.receiveAmount = ''
-      this.$emit("changeClose","")
+      //this.$emit("changeClose","")
     },
     
     _resetErrorText () {
@@ -301,13 +309,13 @@ export default {
         return
       }
 
-      if (this.isNumber() === -1) {
-        this.amountError = "Invalid input of amount."
-        return
-      } else if (this.isNumber() === 0) {
-        this.amountError = "You don't have enough balance."
-        return
-      }
+      // if (this.isNumber() === -1) {
+      //   this.amountError = "Invalid input of amount."
+      //   return
+      // } else if (this.isNumber() === 0) {
+      //   this.amountError = "You don't have enough balance."
+      //   return
+      // }
 
 
       if (this.sentAddress.substring(0, 2) === '0x' && this.sentAddress.length === 42) {
@@ -318,17 +326,20 @@ export default {
       let encryptTransferData = WalletHandler.encryptTransaction(this.selectedWallet.privateKey, {
         walletAddress: this.selectedWallet.walletAddress,
         sendToAddress: sendToAddress,
-        amount: this.sentAmount
+        amount: this.sentTradingAmount + ''
       })
       this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
       })
+
+      //z这里
+      this.clostMask()
       this.translucentShow = true
       this.translucentText = "Submitted successfully"
       setTimeout(() => {
         this.translucentShow = false
       }, 3000)
-      this.clostMask()
+      
     },
 
     //导出keystroe文件
@@ -350,6 +361,30 @@ export default {
       })
       this.clostMask ()
     },
+    
+    //二维码扫描只能输入金额
+    clearNoNum () {
+      this.receiveAmount =  this.receiveAmount.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符
+      this.receiveAmount =  this.receiveAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+      this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //只保留第一个. 清除多余的
+      this.receiveAmount =  this.receiveAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+      this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      if( this.receiveAmount.indexOf(".") < 0 &&  this.receiveAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+          this.receiveAmount= parseFloat( this.receiveAmount); 
+      }
+    },
+
+    //转账只能输入金额
+    clearAmount () {
+      this.sentTradingAmount =  this.sentTradingAmount.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符
+      this.sentTradingAmount =  this.sentTradingAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+      this.sentTradingAmount =  this.sentTradingAmount.replace(/^\.$/, ""); //只保留第一个. 清除多余的
+      this.sentTradingAmount =  this.sentTradingAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+      this.sentTradingAmount=  this.sentTradingAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      if( this.sentTradingAmount.indexOf(".") < 0 &&  this.sentTradingAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+          this.sentTradingAmount= parseFloat( this.sentTradingAmount); 
+      }
+    },
 
     //复制私钥
     copyCnt () {
@@ -359,9 +394,9 @@ export default {
           clipboard.destroy()
           let clock = window.setInterval(() => {
             var x = this.copyTime--
-            this.copyButtonText = "copy("+ x +")"
+            this.copyButtonText = "copy（"+ x +"）"
             if(this.copyTime < 0){ // = 0 就停止
-              this.copyTime = 5  //恢复默认值
+              this.copyTime = 3  //恢复默认值
               this.copySuccess = false
               this.copyButtonText = "Copy"
               window.clearInterval(clock) //清空计时器
@@ -392,13 +427,13 @@ export default {
     //清空转账金额
     clearSentAmount () {
       this._resetErrorText()
-      this.sentAmount = ""
+      this.sentTradingAmount = ""
     },
 
     //转出全部金额
     sentAllAmount () {
       this._resetErrorText()
-      this.sentAmount = this.balance
+      this.sentTradingAmount = this.balance
     }
   },
 }
@@ -470,8 +505,11 @@ export default {
   .wallet-mask .wallet-button {text-align: center;font-size: 14px;display: inline-block;border-radius:4px;}
 
   input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+
+.copySuccessBg {background: linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%)!important;
+  pointer-events: none;}
 </style>

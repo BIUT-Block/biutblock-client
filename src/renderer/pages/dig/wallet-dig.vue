@@ -26,16 +26,21 @@
               @click.native="beginDigMask"/>
         </section>
         <section class="dig-header-list">
-          <ol>
+          <p v-show="digStatus">·&nbsp;&nbsp;&nbsp;&nbsp;Enter the mining page, and wait for mining</p>
+          <ul>
             <li v-for="text in processTexts">{{text}}</li>
-          </ol>
+          </ul>
         </section>
       </section>
       <wallet-margin/>
       <!-- 挖矿内容 -->
       <section class="dig-body">
          <!-- 挖矿内容-头部 -->
-        <dig-title :number="chainHeight"  :selectedWallet="selectedWallet" :selectedPrivateKey="selectedPrivateKey" :wallets="this.$route.query.wallets" :income="digIncome"/>
+        <dig-title  :number="chainHeight"
+                    :digTitleShow="true"
+                    :selectedWallet="selectedWallet" 
+                    :selectedPrivateKey="selectedPrivateKey" 
+                    :wallets="this.$route.query.wallets" :income="digIncome"/>
         <!-- 挖矿内容-列表 -->
         <section>
           <dig-list :digLists="moreList"/>
@@ -97,6 +102,7 @@ export default {
       miningIn: false, //挖矿中改变按钮样式
       noCursor: false, //默认可以选择钱包
       disabledButton: false,//默认不可点击
+      digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
       isSynced: false,
       chainHeight: '0',
       networkMining: '0',
@@ -175,7 +181,9 @@ export default {
 
     //选择挖矿钱包
     downCheckWallet () {
-      if (this.digButton == "Start Mining") {
+      if (this.digButton == "Start Mining" && this.checkWallet) {
+        this.checkWallet = !this.checkWallet
+      } else if (this.digButton == "Start Mining") {
         this.checkWallet = true
       } else {
         this.checkWallet = false
@@ -319,6 +327,7 @@ export default {
           return
         }
         this.processTexts.push(`Begin to mine.`)
+        this.digStatus = false
         this.miningIn = true
         this.saveMingingStatus()
       })
@@ -351,12 +360,18 @@ export default {
   .dig-header .dig-header-check ul li {position: relative;}
   .dig-header .dig-header-check ul li ul {height: 158px;position: absolute;top: 0;left: 0;z-index: 8;
     overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;}
+
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  
   .dig-header .dig-header-check ul li ul li {height: 40px;padding-left:16px;}
   .dig-header .dig-header-check ul li ul li:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;background:rgba(237,242,241,1);}
   .dig-header .dig-header-list {flex: 1;height: 108px;background:rgba(247,247,247,1);border-radius: 4px;
     overflow: auto;color: #252F33;padding: 16px 14px;}
+  .dig-header .dig-header-list ul {list-style: disc;}
 
   .dig-body {padding: 22px 22px 0 32px;flex: 1;overflow: hidden;}
   
@@ -369,7 +384,7 @@ export default {
   .dig-mask-body {padding: 44px 20px 16px 24px;text-align: right;}
   .dig-mask-body p {text-align: left;margin-bottom: 58px;}
   .dig-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    height:32px;border: 0;border-radius: 4px; width: 100%;}
+    height:32px;border: 0;border-radius: 4px;}
   
   .noCursor {cursor: no-drop;}
 </style>
