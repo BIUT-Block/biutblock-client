@@ -17,10 +17,13 @@
       </section>
 
       <!-- 内容 -->
-      <section class="dig-more-body" :class="loadMoren?'dig-body-padding-bottom':''">
-        <dig-title class="dig-more-body-header" :number="digNumber" :income="digIncome"/>
+      <section class="dig-more-body" :class="loadMore?'dig-body-padding-bottom':''">
+        <dig-title class="dig-more-body-header" 
+          :number="digNumber" 
+          :income="digIncome"
+          :digTitleShow="false"/>
         <dig-list :moreList="moreList"/>
-        <p v-show="loadMore">Click to load more</p>
+        <p v-show="loadMore" @click="onClickLoadMore">Click to load more</p>
       </section>
     </section>
   </main>
@@ -48,7 +51,6 @@ export default {
       moreList: [],
       morListSkip: 7,
       updateListJob: ''
-
     }
   },
   computed: {

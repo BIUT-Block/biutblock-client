@@ -12,6 +12,7 @@
         <ul class="wallet-aside-list">
           <li v-for="(item, index) in navList"
               :title="item.title"
+              :class="idx == index ? 'active-nav' : ''"
               @click="istab(index, item.routeLink)">
               <img :src="idx == index?item.imgUrls:item.imgUrl" alt="">
           </li>
@@ -57,11 +58,11 @@
                 <img :src="networkIdx == 1 ? agreements : agreement" alt="" @click="isNetwork(1)">
                 <span>Test Network</span>
               </section>
-              <!-- 主网暂时不提供选择
-              <section>
-                <img :src="networkIdx == 2 ? agreements : agreement" alt="" @click="isNetwork(2)">
+              <!-- 主网暂时不提供选择 -->
+              <section style="cursor: no-drop;">
+                <img :src="networkIdx == 2 ? agreements : agreement" alt="" style="cursor: no-drop;">
                 <span>Main Network</span>
-              </section> -->
+              </section>
             </section>
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
@@ -229,7 +230,7 @@ export default {
   
   .wallet-index .wallet-index-content {display: flex;height: calc(100vh - 30px);}
   .wallet-index .wallet-index-content aside {width: 70px;text-align: center;}
-  .wallet-index .wallet-index-content aside .wallet-aside-list li {padding-top: 51px;}
+  .wallet-index .wallet-index-content aside .wallet-aside-list li {padding-top: 51px;position: relative;}
   .wallet-index .wallet-index-content aside .wallet-aside-list li:first-child {padding-top: 57px;}
   .wallet-index .wallet-index-content aside .wallet-index-version {position: fixed;bottom: 24px;width: 70px;color: #839299;}
   .wallet-index .wallet-index-content aside .wallet-index-version span {display: block;}
@@ -237,6 +238,9 @@ export default {
   .wallet-index .wallet-index-content aside .wallet-index-version span:last-child {font-family: Lato-Light;}
 
   .wallet-index .wallet-index-content .wallet-index-content-home {flex: 1;}
+  
+  .active-nav::after {border-bottom: 7px solid transparent;border-top: 7px solid transparent;
+    border-right: 7px solid #EDF2F1;content: "";position: absolute;width: 0;right: 0;bottom: 2px;}
 
   .setting-mask-header {display: flex;justify-content: space-between;align-items: center;height: 54px;
     border-bottom: 1px solid #E5E5E5;padding: 0 24px 0 32px;}

@@ -18,11 +18,10 @@
               <input type="text" 
                    maxlength="14"
                    ref="contentInput"
-                   v-model="walletName"
+                   v-model.trim="walletName"
                    v-show="!inputReadonly"
                    :readonly="inputReadonly"
-                   @blur="saveName"
-                   onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
+                   @blur="saveName"/>
               <!-- <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput"> -->
             </section>
             
@@ -55,7 +54,7 @@
           <trading-list :tradingList="tradingList" :wallets="wallets" :selectedPrivateKey="selectedPrivateKey"/>
         </section>
         <!-- 暂无更多数据 -->
-        <p class="noMore" v-show="noMoreData">No further data available ^_^</p>
+        <!-- <p class="noMore" v-show="noMoreData">No further data available ^_^</p> -->
       </section>
     </section>
   <section class="moreList" v-show="moreShow" @click="onClickLoadMore">
@@ -227,8 +226,7 @@ export default {
 
     //失去焦点保存名称
     saveName () {
-       let newKeyStore = {}
-      
+       let newKeyStore = {} 
        if (this.walletName.trim().length === 0) {
          this.translucentShow = true
          this.translucentText = "Wallet name cannot be empty or only with space"

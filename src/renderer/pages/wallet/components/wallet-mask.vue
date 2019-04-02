@@ -26,7 +26,7 @@
             <wallet-tips :tips="addressError"/>
             <p>AMOUNT</p>
             <section class="wallet-mask-sent-amount">
-              <input type="text" v-model="sentTradingAmount" :placeholder="allAmountPlace" maxlength="40"
+              <input type="text" v-model="sentTradingAmount" :placeholder="allAmountPlace" maxlength="20"
                 @input="clearAmount" onpaste="return false"/>
               <section>
                 <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
@@ -67,11 +67,12 @@
           <span>0x{{selectedWallet.walletAddress}}</span>
           <p>Amount</p>
           <section>
-            <input type="text" maxlength="40" v-model="receiveAmount" @input="clearNoNum" onpaste="return false"/>
+            <input type="text" maxlength="20"
+            v-model="receiveAmount" @input="clearNoNum" onpaste="return false"/>
             <label>SEC</label>
           </section>
           <wallet-tips :tips="receiveError" />
-          <qrcode :value="selectedWallet.walletAddress" :options="{ size: 93 }"></qrcode>
+          <qrcode :value="qrcodeWalletAddress" :options="{ size: 93 }"></qrcode>
           <span>Your address(QR Code)</span>
         </section>
 
@@ -100,7 +101,7 @@
           <span class="wallet-button" @click="clostMask">Cancel</span>
           <span class="wallet-button" 
                 :disabled="!keystroeActive"
-                :class="keystroeActive ? 'passCorrect' : ''"
+                :class="keystroeActive ? 'keystroeActive' : ''"
                 @click="importantKeystroe">
               Confirm
           </span>
@@ -205,6 +206,7 @@ export default {
       return this.sentAddress.length > 41 
               && Number(this.sentTradingAmount) > 0 
               && this.sentAddress != walletAddress
+              && Number(this.sentTradingAmount) < Number(this.allAmount)
               && addressRgs.test(this.sentAddress) ? true : false
     },
 
@@ -213,11 +215,14 @@ export default {
       return this.sentTradingAmount.length > 0 ? true : false
     },
 
-
+  },
+  watch:{
+    receiveAmount(newVal,oldVal){
+      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" +newVal
+    }
   },
   created() {
-    //移动端扫描格式
-    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this.receiveAmount
+    
   },
   mounted() {
 
@@ -225,6 +230,12 @@ export default {
   destroyed() { },
 
   methods: {
+    getCaption(obj) {
+        var index=obj.lastIndexOf(".");
+        obj=obj.substring(index+1,obj.length);
+        return obj;
+    },  
+
     isAddress () {
       if (!/^0x([a-z0-9]{40})$/.test(this.sentAddress))  {
         return false
@@ -246,6 +257,10 @@ export default {
     //确认转账页面
     sentConfirm () {
       this.sentPages = 2
+      let amount = this.getCaption(this.sentTradingAmount)
+      if (amount == "") {
+        this.sentTradingAmount = this.sentTradingAmount + "0"
+      }
     },
 
     //返回转账页面
@@ -292,7 +307,6 @@ export default {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
       })
 
-      //z这里
       this.clostMask()
       this.translucentShow = true
       this.translucentText = "Submitted successfully"
@@ -324,13 +338,14 @@ export default {
     
     //二维码扫描只能输入金额
     clearNoNum () {
+      console.log(this.receiveAmount)
       this.receiveAmount =  this.receiveAmount.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符
       this.receiveAmount =  this.receiveAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
       this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //只保留第一个. 清除多余的
       this.receiveAmount =  this.receiveAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
       if( this.receiveAmount.indexOf(".") < 0 &&  this.receiveAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
-          this.receiveAmount= parseFloat( this.receiveAmount); 
+          this.receiveAmount=  this.receiveAmount 
       }
     },
 
@@ -342,7 +357,7 @@ export default {
       this.sentTradingAmount =  this.sentTradingAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.sentTradingAmount=  this.sentTradingAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
       if( this.sentTradingAmount.indexOf(".") < 0 &&  this.sentTradingAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
-          this.sentTradingAmount= parseFloat( this.sentTradingAmount); 
+          this.sentTradingAmount= this.sentTradingAmount
       }
     },
 
@@ -429,7 +444,7 @@ export default {
   .wallet-mask-receive span:last-child {padding-top: 0;font-size: 12px;font-weight: 400;}
   .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;
     color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
-  .wallet-mask-receive section input {border: 0;}
+  .wallet-mask-receive section input {border: 0;flex: 1;}
   .wallet-mask-receive canvas {margin: 28px 0 7px;}
 
 
@@ -444,8 +459,7 @@ export default {
   .wallet-mask-keystroe h3 {padding-bottom: 24px!important;}
   .wallet-mask-keystroe .wallet-button {width:108px;height:32px;line-height: 32px;}
   .wallet-mask-keystroe .wallet-button {color: #388ED9;border:1px solid rgba(229,229,229,1);}
-  .wallet-mask-keystroe .wallet-button:last-child {color: #F7FBFA;
-    background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);}
+  .wallet-mask-keystroe .wallet-button:last-child {pointer-events: none;}
 
 
   .wallet-mask-phrase,.wallet-mask-keystroe {padding: 32px 32px 16px;text-align: right;}
@@ -472,4 +486,7 @@ export default {
 
 .copySuccessBg {background: linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%)!important;
   pointer-events: none;}
+
+.keystroeActive {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;
+  pointer-events: auto!important;color: #fff!important;}
 </style>

@@ -1,8 +1,8 @@
 <template>
   <main class="wallet-container">
     <!-- 钱包列表 -->
-    <section class="wallet-list">
-      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletTrade"/>
+     <section class="wallet-list">
+      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex"/>
     </section>
 
     <section class="wallet-content">
@@ -90,17 +90,17 @@ export default {
           },
           {
             id: '04',
-            title: 'Beneficiary',
+            title: 'From',
             cnt: this.party
           },
           {
             id: '05',
-            title: 'Sending party',
+            title: 'To',
             cnt: this.beneficiary
           },
           {
             id: '06',
-            title: 'Miner cost',
+            title: 'Value',
             cnt: this.cost
           },
       ]

@@ -4,8 +4,7 @@
           :maxlength="maxlength" 
           :value="value" 
           ref="input"
-          @input="$emit('input', $event.target.value)"
-          onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
+          @input="$emit('input', $event.target.value)"/>
 </template>
 
 <script>
