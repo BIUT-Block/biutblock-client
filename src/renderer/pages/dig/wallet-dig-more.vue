@@ -42,7 +42,7 @@ export default {
   props: {},
   data () {
     return {
-      loadMore: false, //加载更多按钮
+      loadMore: true, //加载更多按钮
       digNumber: '0',
       digIncome: '0',
       wallets: {},

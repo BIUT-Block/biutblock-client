@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     digTitle: function(){
-      if (this.income === "" || Number(this.income) < 10 && !this.digTitleShow) {
+      if (this.income === "" || Number(this.income) < 10) {
         return false
       } else {
         return  true

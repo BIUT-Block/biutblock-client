@@ -7,7 +7,7 @@
           <h3>Mining</h3>
           <p>Wallet Account</p>
           <ul>
-            <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" id="walletListImg">
+            <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" ref="walletListImg">
               <span>{{selectedWalletName}}</span>
               <img src="../../assets/images/moreDown.png" alt="">
             </li>
@@ -194,8 +194,8 @@ export default {
 
     //点击其他的地方关闭钱包选择
     closeWalletList (event) {
-      let menuList = document.getElementById('walletListImg')
-      if (!menuList.contains(event.target) && this.checkWallet) {
+      let menuList = this.$refs.walletListImg
+      if (menuList && !menuList.contains(event.target) && this.checkWallet) {
         this.checkWallet = false;
       }
     },
@@ -297,6 +297,10 @@ export default {
 
     _confirm () {
       if (this.digButton === "Start Mining") {
+        if (!WalletsHandler.checkNetworkStatus()) {
+          this.processTexts.push('No network connection.')
+          return
+        }
         this.digButton = "Stop Mining"
         this.moreList = []
         this.startMining()
@@ -322,10 +326,6 @@ export default {
     },
 
     startMining () {
-      if (!WalletsHandler.checkNetworkStatus()) {
-        this.processTexts.push('No network connection.')
-        return
-      }
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {

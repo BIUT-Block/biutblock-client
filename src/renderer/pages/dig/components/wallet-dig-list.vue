@@ -6,10 +6,10 @@
       <li style="width: 18%">BLOCKS</li>
       <li style="width: 40%">BLOCK HASH</li>
     </ul>
-    <ul v-for="(item, index) in digLists">
+    <ul v-for="(item, index) in digLists" v-if ="index < digLists.length - 1">
       <li style="width: 24%">{{ item.age }}</li>
-      <li style="width: 12%">{{ item.reward }}</li>
-      <li style="width: 14%">{{ item.blocknumber }}</li>
+      <li style="width: 18%">{{ item.reward }}</li>
+      <li style="width: 18%">{{ item.blocknumber }}</li>
       <li style="width: 40%">{{ item.blockhash.substring(0, 20) }}......{{item.blockhash.substring(44, item.blockhash.length)}}</li>
     </ul>
     <section class="dig-body">
