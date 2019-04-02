@@ -347,7 +347,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      WalletHandler.saveKeyStore(`SEC${this.keys.privateKey}`, keyDataJSON, this.walletPass1)
+      WalletHandler.saveKeyStore(`SEC${this.keys.userAddress}`, keyDataJSON, this.walletPass1)
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2

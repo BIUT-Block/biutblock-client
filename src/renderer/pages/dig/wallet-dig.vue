@@ -397,7 +397,7 @@ export default {
   .dig-header .dig-header-check ul li:first-child {display: flex;justify-content: space-between;
     align-items: center;}
   .dig-header .dig-header-check ul li {position: relative;}
-  .dig-header .dig-header-check ul li ul {height: 158px;position: absolute;top: 0;left: 0;z-index: 8;
+  .dig-header .dig-header-check ul li ul {height: 160px;position: absolute;top: 0;left: 0;z-index: 8;
     overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;}
 
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}

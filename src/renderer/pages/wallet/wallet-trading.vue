@@ -158,6 +158,7 @@ export default {
   .wallet-content-list ul li {display: flex;margin-bottom: 18px;}
   .wallet-content-list ul li:last-child {margin-bottom: 0;}
   .wallet-content-list ul li span:first-child {width: 155px;color: #576066;}
+  .wallet-content-list ul li span:last-child {flex: 1;word-break: break-all;}
 
   .wallet-content-footer {color: #0B7FE6;text-align: center;}
   .wallet-content-footer img {width: 18px;height: 18px;margin-right: 8px;vertical-align: middle;}
