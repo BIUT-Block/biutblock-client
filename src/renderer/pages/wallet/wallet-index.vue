@@ -322,15 +322,19 @@ export default {
     },
 
     _getWalletBalance (walletAddress) {
-      this.$JsonRPCClient.getWalletBalance(walletAddress, (balance) => {
-        
-        this.walletBalance = balance
+      this.$JsonRPCClient.getWalletBalance(walletAddress, (balance) => { 
+        this.walletBalance = this._checkValueFormat(balance)
       })
     },
 
-    /** intern methode to handle the  */
+    /** intern methode to handle the value format */
     _checkValueFormat (value) {
       let splitValue = value.split("e-")
+      if (splitValue.length > 1) {
+        return Number(value).toFixed(Number(splitValue[1])).toString()
+      } else {
+        return value
+      }
     },
 
     _getWalletTransactions (walletAddress) {
