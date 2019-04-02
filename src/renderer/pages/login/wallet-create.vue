@@ -463,11 +463,8 @@ export default {
             this.walletnNewPassErrorText = 'Wallet already exists or imported.'
             this.walletnNewPassError = true
           } else {
-            this.maskShow = true
-            this.navQuery = {
-              wallets: wallets,
-              selectedPrivateKey: selectedPrivateKey
-            }
+            window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
+            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         }) 
       } else {
@@ -477,9 +474,12 @@ export default {
             } else if (wallets === 'DuplicateKey') {
               this.phraseErrorText = true
               this.phraseErrorText = 'Wallet already exists or imported.'
-            } else {
-              window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+            } else {  
+              this.maskShow = true
+              this.navQuery = {
+                wallets: wallets,
+                selectedPrivateKey: selectedPrivateKey
+              }
             }
         })
       }

@@ -325,9 +325,16 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalance(walletAddress, (balance) => {
+        
         this.walletBalance = balance
       })
     },
+
+    /** intern methode to handle the  */
+    _checkValueFormat (value) {
+      let splitValue = value.split("e-")
+    },
+
     _getWalletTransactions (walletAddress) {
       let skip = 0
       this.$JsonRPCClient.getWalletTransactions(walletAddress, (transactions) => {
