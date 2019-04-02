@@ -286,9 +286,12 @@ let WalletHandler = {
     } else {
       timezone = `${offset / -60}`
     }
-    let time = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} 
-                ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} GMT${timezone}`
+    let time = `${date} GMT${timezone}`
     return time
+  },
+
+  checkNetworkStatus () {
+    return navigator.onLine
   }
 }
 

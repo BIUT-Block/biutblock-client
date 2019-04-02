@@ -88,7 +88,7 @@ export default {
         this.nodeList = []
         nodestable.forEach( (node, index) => {
           let date = moment(node.node.TimeStamp).tz(node.location.location.timeZone)
-          let formatTime = WalletsHandler.formatDate(new Date(date.toString()), -date._offset)
+          let formatTime = WalletsHandler.formatDate(date.format('YYYY/MM/DD HH:mm:ss'), -date._offset)
           this.nodeList.push({
             id: index,
             nodeIp: node.location.traits.ipAddress,
@@ -102,8 +102,10 @@ export default {
     
     _getNodeInfo () {
       this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
-        this.nodeTimeText = WalletsHandler.formatDate(new Date(response.result.time), -120)
-        this.localTimeText = WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())
+        let nodeDate = moment(response.result.time).tz("Europe/Berlin").format('YYYY/MM/DD HH:mm:ss')
+        let localDate = moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss')
+        this.nodeTimeText = WalletsHandler.formatDate(nodeDate, -120)
+        this.localTimeText = WalletsHandler.formatDate(localDate, new Date().getTimezoneOffset())
         this.nodeText = response.result.ipv4
       })
     }

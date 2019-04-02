@@ -1,6 +1,6 @@
 import jayson from 'jayson/lib/client'
 import WalletsHandler from './WalletsHandler'
-
+const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
     let externalServerAddress = '54.250.166.137'
@@ -63,7 +63,7 @@ export default {
                 listAddress: walletAddressTempInPool === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInPool}`,
                 listFrom: response.result.resultInPool[j].TxFrom,
                 listTo: response.result.resultInPool[j].TxTo,
-                listTime: WalletsHandler.formatDate(new Date(response.result.resultInPool[j].TimeStamp), new Date().getTimezoneOffset()),
+                listTime: WalletsHandler.formatDate(moment(response.result.resultInPool[j].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInPool[j].TxFee,
                 listState: 'Packed'
@@ -86,7 +86,7 @@ export default {
                 listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
                 listFrom: response.result.resultInChain[i].TxFrom,
                 listTo: response.result.resultInChain[i].TxTo,
-                listTime: WalletsHandler.formatDate(new Date(response.result.resultInChain[i].TimeStamp), new Date().getTimezoneOffset()),
+                listTime: WalletsHandler.formatDate(moment(response.result.resultInChain[i].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInChain[i].TxFee,
                 listState: 'Successful'

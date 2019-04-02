@@ -322,6 +322,10 @@ export default {
     },
 
     startMining () {
+      if (!WalletsHandler.checkNetworkStatus()) {
+        this.processTexts.push('No network connection.')
+        return
+      }
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {

@@ -349,8 +349,11 @@ export default {
           this.noMoreData = false
           skip = this.tradingListSkip
         }
-        for (let i=0; i < skip; i++) {
-          this.tradingList.push(transactions[i])
+
+        if (transactions.length > 0) {
+          for (let i=0; i < skip; i++) {
+            this.tradingList.push(transactions[i])
+          }
         }
       })
     },
