@@ -14,7 +14,7 @@
     <section class="wallet-create" v-if="createPages == 1">
       <span class="wallet-button-important" @click="importCreate">Import Wallet</span>
       <wallet-title :title="walletNameText" :choose="true"/>
-      <wallet-input type="text" placeholder="Wallet Name" maxlength="14" v-model="walletName"></wallet-input>
+      <wallet-input type="text" placeholder="Wallet Name" maxlength="14" v-model.trim="walletName"></wallet-input>
       <wallet-title :title="walletPassText1" :choose="true"/>
       <wallet-input-pass placeholder="Password" maxlength="30" 
           v-model="walletPass1"
@@ -72,7 +72,7 @@
 
       <!-- 私钥导入 -->
       <section class="wallet-import-private-key" v-show="tabIndex == 0">
-        <wallet-input placeholder="Wallet Name" maxlength="14" v-model="walletNameImport1"></wallet-input>
+        <wallet-input placeholder="Wallet Name" maxlength="14" v-model.trim="walletNameImport1"></wallet-input>
         <textarea placeholder="Eenter your private key here" 
             maxlength="64" 
             v-model="walletPrivateKey"
@@ -108,7 +108,7 @@
 
       <!-- 助记词导入 -->
       <section  class="wallet-import-phrase" v-show="tabIndex == 2">
-        <wallet-input placeholder="Wallet Name" maxlength="14" v-model="walletNameImport2"></wallet-input>
+        <wallet-input placeholder="Wallet Name" maxlength="14" v-model.trim="walletNameImport2"></wallet-input>
         <textarea placeholder="Enter your Phrase here width space-separated" v-model="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
         <wallet-button  class="wallet-button-backup" 
@@ -242,7 +242,7 @@ export default {
         this.passFormat2Show = false
       }
       let pass = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
-      return this.walletName.length > 0 
+      return this.walletName.trim().length > 0 
              && this.walletPass1.length > 7
              && pass.test(this.walletPass1)
              && this.walletPass2 == this.walletPass1 ? true : false
@@ -255,13 +255,13 @@ export default {
 
     //导入钱包私钥按钮是否激活
     privateActive () {
-      return this.walletPrivateKey.length > 63 ? true : false
+      return this.walletPrivateKey.trim().length > 63 ? true : false
     },
 
     //导入钱包keystore按钮是否激活
     keystoreActive () {
       let pass = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
-      return this.walletNewPass.length > 7
+      return this.walletNewPass.trim().length > 7
              && pass.test(this.walletNewPass) ? true : false
     },
 
@@ -440,7 +440,7 @@ export default {
       let walletIdx = this.tabIndex // walletIdx 0 私钥导入 1 keystroe 2 助记词导入
 
       if (walletIdx == 0) {
-        if (this.walletNameImport1 === '' || this.walletNameImport1.trim().length === ' ') {
+        if (this.walletNameImport1 === '' || this.walletNameImport1.trim().length === ' ' || this.walletNameImport2 === '' || this.walletNameImport2.trim().length === ' ') {
           this._importNameError(0)
           return
         } 
@@ -538,10 +538,10 @@ export default {
 
     //切换导入钱包的方式
     isTab (index) {
-      this.walletNameImport1 = ''
-      this.walletNameImport2 = ''
-      this.walletPrivateKey = ''
-      this.walletPhrase = ''
+      // this.walletNameImport1 = ''
+      // this.walletNameImport2 = ''
+      // this.walletPrivateKey = ''
+      // this.walletPhrase = ''
       this.tabIndex = index
     }
   }
