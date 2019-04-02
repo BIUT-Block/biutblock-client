@@ -175,7 +175,7 @@ export default {
       sentAddress: '',//转账地址
       sentTradingAmount: '',//转账金额
       sentPages: 1,//默认显示转账页面
-      allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
+      //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       allAmount: this.balance,//总金额
       translucentShow: false, //弹窗
       translucentText: 'Copy success',
@@ -199,14 +199,18 @@ export default {
       return this.walletNewPass.length > 7 && pass.test(this.walletNewPass) ? true : false
     },
 
+    allAmountPlace () {
+      return "Maximum input of " + this.balance
+    },
+
     //转账按钮是否可点击
     sentActive () {
       let addressRgs = /^(0x)(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+$/
       let walletAddress = '0x' + this.selectedWallet.walletAddress
       return this.sentAddress.length > 41 
               && Number(this.sentTradingAmount) > 0 
-              && this.sentAddress != walletAddress
-              && Number(this.sentTradingAmount) < Number(this.allAmount)
+              && this.sentAddress !== walletAddress
+              && Number(this.sentTradingAmount) < Number(this.balance)
               && addressRgs.test(this.sentAddress) ? true : false
     },
 
