@@ -395,7 +395,7 @@ export default {
 
     /** Event Method, triggered if wallet balance updated */
     onUpdateWalletBalance (balance, walletAddress) {
-      this.walletBalance = balance
+      this.walletBalance = this._checkValueFormat(balance)
       this._getWalletTransactions(walletAddress)
     }
   },
