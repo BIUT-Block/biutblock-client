@@ -3,7 +3,7 @@ import WalletsHandler from './WalletsHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '54.250.166.137'
+    let externalServerAddress = '18.197.120.79' //54.250.166.137
     let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
@@ -89,7 +89,7 @@ export default {
                 listTime: WalletsHandler.formatDate(moment(response.result.resultInChain[i].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listMinerCost: response.result.resultInChain[i].TxFee,
-                listState: 'Successful'
+                listState: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
               })
             }
           }
@@ -126,6 +126,19 @@ export default {
         this.client.request('sec_getChainHeight', [], (err, response) => {
           if (err) return
           fnGetBlockHeight(response.result.ChainHeight)
+        })
+      },
+      getLastBlock: function (height, fnGetLastBlock) {
+        this.client.request('sec_getBlockByHeight', [height], (err, response) => {
+          if (err) return
+          fnGetLastBlock(height, response.result.blockInfo)
+        })
+      },
+      getHeightAndLastBlock: function (fnGetBlock) {
+        this.getBlockHeight((height) => {
+          this.getLastBlock(height, (height, block) => {
+            fnGetBlock(height, block)
+          })
         })
       }
     }

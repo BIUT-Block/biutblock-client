@@ -10,7 +10,7 @@
     </li>
     <li>
       <span class="dig-round"></span>
-      <span>5 seconds ago</span>
+      <span>{{timeOfLastBlock}}</span>
     </li>
     <li>
       <span>Mined by：</span>
@@ -25,14 +25,24 @@ export default {
   components: {
 
   },
-  props: {walletAddress: String, totalBlockHeight: String, totalMining: String},
+  props: {walletAddress: String, totalBlockHeight: String, totalMining: String, timeDiff: String},
   data() {
     return {
 
     }
   },
   computed: {
-
+    timeOfLastBlock () {
+      if (Math.ceil(Number(this.timeDiff) / 1000) < 60) {
+        return `${Math.ceil(Number(this.timeDiff) / 1000)} seconds ago`
+      } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 60 && Math.ceil(Number(this.timeDiff) / 1000) < 3600) {
+        return `${Math.ceil(Number(this.timeDiff) / (60*1000))} minutes ago`
+      } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 3600 && Math.ceil(Number(this.timeDiff) / 1000) < 86400) {
+        return `${Math.ceil(Number(this.timeDiff) / (3600*1000))} hours ago`
+      } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 86400) {
+        return `${Math.ceil(Number(this.timeDiff) / (86400*1000))} days ago`
+      }
+    }
   },
   created() {
 

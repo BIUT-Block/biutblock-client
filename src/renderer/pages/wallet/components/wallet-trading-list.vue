@@ -58,8 +58,8 @@ export default {
       const statusMap = {
         Packed: "packed",
         Successful: "successful",
-        Failed: "mined",
-        Mining: "failed",
+        Failed: "failed",
+        Mining: "mining",
       };
       return statusMap[status];
     },
@@ -68,7 +68,7 @@ export default {
         Packed: tradingPacked,
         Successful: tradingSuccess,
         Failed: tradingFailed,
-        Mined: tradingMining,
+        Mining: tradingMining,
       };
       return statusMap[status];
     },

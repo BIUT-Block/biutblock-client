@@ -29,8 +29,7 @@ import WalletsHandler from '../../lib/WalletsHandler';
 import { clearInterval } from 'timers';
 const moment = require('moment-timezone')
 const ipify = require('ipify')
-let jobId
-let nodeJob
+
 export default {
   name: 'walletNode',
   components: {
@@ -50,7 +49,9 @@ export default {
       nodeText: "-", //连接的节点
       nodeTime: "Node Time",
       nodeTimeText: "-", //节点时间
-      nodeList: []
+      nodeList: [],
+      updateNodeListJob: '',
+      updateConnectedNodeJob: ''
     }
   },
   computed: {
@@ -65,13 +66,13 @@ export default {
     
     this._getNodeLists()
 
-    nodeJob = setInterval(() => {
+    this.updateNodeListJob = setInterval(() => {
       this._getNodeLists()
     }, 2500)
 
 
     this._getNodeInfo()
-    jobId = setInterval(() => {
+    this.updateConnectedNodeJob = setInterval(() => {
       this._getNodeInfo()
     }, 2500)
   },
@@ -79,8 +80,8 @@ export default {
 
   },
   destroyed () {
-    clearInterval(jobId)
-    clearInterval(nodeJob)
+    clearInterval(this.updateNodeListJob)
+    clearInterval(this.updateConnectedNodeJob)
   },
   methods: {
     _getNodeLists () {
@@ -102,9 +103,10 @@ export default {
     
     _getNodeInfo () {
       this.$JsonRPCClient.getNodeInfo({timeServer: this.ntcServer}, (response) => {
-        let nodeDate = moment(response.result.time).tz("Europe/Berlin").format('YYYY/MM/DD HH:mm:ss')
+        console.log(response)
+        let nodeDate = moment(response.result.time).tz(response.result.timeZone)
         let localDate = moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss')
-        this.nodeTimeText = WalletsHandler.formatDate(nodeDate, -120)
+        this.nodeTimeText = WalletsHandler.formatDate(nodeDate.format('YYYY/MM/DD HH:mm:ss'), -nodeDate._offset)
         this.localTimeText = WalletsHandler.formatDate(localDate, new Date().getTimezoneOffset())
         this.nodeText = response.result.ipv4
       })

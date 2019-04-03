@@ -35,7 +35,7 @@
       <!-- 挖矿内容 -->
       <section class="dig-body">
          <!-- 挖矿内容-头部 -->
-        <dig-title  :number="chainHeight"
+        <dig-title  :number="chainHeight * 2"
                     :digTitleShow="true"
                     :selectedWallet="selectedWallet" 
                     :selectedPrivateKey="selectedPrivateKey" 
@@ -48,7 +48,7 @@
       <wallet-margin/>
       <!-- 挖矿底部 -->
       <section class="dig-footer">
-        <dig-footer :walletAddress="selectedWallet.walletAddress" :totalBlockHeight="chainHeight" :totalMining="networkMining"/>
+        <dig-footer :walletAddress="minedByAddress" :totalBlockHeight="chainHeight" :timeDiff="timeDiff" :totalMining="networkMining"/>
       </section>
     </section>
     <!-- 遮罩层 -->
@@ -123,6 +123,8 @@ export default {
       digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
       isSynced: false,
       chainHeight: '0',
+      minedByAddress: '',
+      timeDiff: new Date().getTime().toString(),
       networkMining: '0',
       updateListJob: '',
       getBlockHeightJob: '',
@@ -147,16 +149,23 @@ export default {
     }
     this.selectedWallet = wallets[this.selectedPrivateKey]
     this.initMiningStatus()
-    this.$JsonRPCClient.getBlockHeight((chainHeight) => {
-      this.chainHeight = chainHeight.toString()
-      this.networkMining = (Number(chainHeight)*2).toString()
-    })
+
+    this._getLatestBlockInfo()
+
     this.getBlockHeightJob = setInterval(()=>{
-        this.$JsonRPCClient.getBlockHeight((chainHeight) => {
-        this.chainHeight = chainHeight.toString()
-        this.networkMining = (Number(chainHeight)*2).toString()
-      })
+      this._getLatestBlockInfo()
     }, 2500)
+
+    // this.$JsonRPCClient.getBlockHeight((chainHeight) => {
+    //   this.chainHeight = chainHeight.toString()
+    //   this.networkMining = (Number(chainHeight)*2).toString()
+    // })
+    // this.getBlockHeightJob = setInterval(()=>{
+    //     this.$JsonRPCClient.getBlockHeight((chainHeight) => {
+    //     this.chainHeight = chainHeight.toString()
+    //     this.networkMining = (Number(chainHeight)*2).toString()
+    //   })
+    // }, 2500)
   },
   mounted () {
 
@@ -254,7 +263,7 @@ export default {
     _getWalletMiningHistory () {
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {  
         let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined' && hist.listState === 'Successful'
+          return hist.listAddress === 'Mined' && hist.listState === 'Mining'
         })
         this.moreList = []
         this.digIncome = "0"
@@ -271,14 +280,22 @@ export default {
       })
     },
 
+    _getLatestBlockInfo () {
+      this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {
+        this.chainHeight = height.toString()
+        this.networkMining = (Number(this.chainHeight)*2).toString()
+
+        this.minedByAddress = block[0].Beneficiary
+        this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
+      })
+    },
+
     //开启挖矿弹窗显示
     beginDigMask () {
       this.maskShow = true
       if (this.digButton == "Start Mining") {
-        //开始挖矿
         this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
       } else {
-        //停止挖矿状态
         this.maskText = "Confirm to Stop Mining?"
       }
     },

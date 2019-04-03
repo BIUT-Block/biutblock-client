@@ -101,7 +101,7 @@ export default {
         this.digIncome = "0"
         this.moreList = []
         let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined' && hist.listState === 'Successful'
+          return hist.listAddress === 'Mined' && hist.listState === 'Mining'
         })
         let skip = 0
         if (this.moreListSkip > miningHistory.length) {
@@ -110,11 +110,7 @@ export default {
           skip = this.moreListSkip
         }
         miningHistory.forEach((element, index) => {
-          
-          // console.log("---"+ this.digIncome)
-          this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString()
-          // console.log("总的"+ element.listMoney)
-          // console.log(this.digIncome)
+          this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString()
           console.log(index)
           console.log(skip)
           if (index > skip) {
@@ -129,6 +125,7 @@ export default {
             blockhash: element.blockHash
           })
         })
+        this.digNumber = Number(this.digIncome) / 2 
       })
     },
 

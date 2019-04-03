@@ -127,9 +127,10 @@ export default {
         this.stateImg = tradingPacked
         this.textStyle = 'packed'
         break
-      case 'mined':
+      case 'Mining':
         this.stateImg = tradingMining
         this.textStyle = 'mining'
+        this.transactionLink = `http://scan.secblock.io/search?search=${this.transactionNumber}`
         break
       default:
         break
