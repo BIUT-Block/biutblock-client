@@ -330,13 +330,15 @@ export default {
 
     //导出keystroe文件
     importantKeystroe () {
-      WalletHandler.saveKeyStore(this.selectedWallet.name, this.walletData, this.walletNewPass)
+      let keyDataJSON = {}
+      keyDataJSON[this.selectedWallet.walletAddress] = this.walletData
+      WalletHandler.saveKeyStore(`SEC${this.selectedWallet.walletAddress}`, keyDataJSON, this.walletNewPass)
       this.clostMask()
     },
 
     //导出助记词
     importantPhrase () {
-      WalletHandler.savePhrase(this.selectedWallet.name, this.selectedWallet.englishWords)
+      WalletHandler.savePhrase(`SEC${this.selectedWallet.walletAddress}`, this.selectedWallet.englishWords)
       this.clostMask()
     },
 
