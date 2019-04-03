@@ -1,21 +1,24 @@
 <template>
   <section>
-    <section class="more-list">
-      <ul class="clearfix">
+    <section class="list-header">
+      <ul>
         <li style="width: 4%"> &nbsp; </li>
-        <li style="width: 20%">AGE</li>
-        <li style="width: 19%">REWARD</li>
-        <li style="width: 19%">BLOCKS</li>
+        <li style="width: 22%">AGE</li>
+        <li style="width: 18%">REWARD</li>
+        <li style="width: 18%">BLOCKS</li>
         <li style="width: 38%">BLOCK HASH</li>
       </ul>
-      <ul class="clearfix" v-for="(item, index) in moreList" v-if="index < 7" :key="index">
-        <li style="width: 4%">{{index + 1}}</li>
-        <li style="width: 20%">{{item.age}}</li>
-        <li style="width: 19%">{{item.reward}}</li>
-        <li style="width: 19%">{{item.blocknumber}}</li>
-        <li style="width: 38%">{{item.blockhash}}</li>
+    </section>
+    <section class="more-list">
+      <ul v-for="(item, index) in moreList" v-if="index < 7" :key="index">
+          <li style="width: 4%">{{index + 1}}</li>
+          <li style="width: 22%">{{item.age}}</li>
+          <li style="width: 18%">{{item.reward}}</li>
+          <li style="width: 18%">{{item.blocknumber}}</li>
+          <li style="width: 38%">{{item.blockhash}}</li>
       </ul>
     </section>
+    
   </section>
 </template>
 
@@ -37,9 +40,7 @@ export default {
     
   },
   created() {
-    if (this.moreList.length > 7) {
-      this.loadMore = true
-    }
+    
   },
   mounted() {
 
@@ -52,11 +53,14 @@ export default {
 </script>
 
 <style scoped>
-  section .more-list {overflow: auto;}
-  section .more-list ul {display: block;}
-  section .more-list ul:first-child li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid rgba(229,229,229,1);}
-  section .more-list ul li {float: left;height: 44px;display: flex;align-items: center;color: #252F33;
-    border-bottom:1px solid rgba(229,229,229,1);}
-  
-  
+  section .more-list {overflow: auto;flex: 1;min-height: 315px;padding: 0 32px;}
+  section  ul {display: block;}
+  section  .list-header {padding: 0 32px;}
+  section  .list-header li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid rgba(229,229,229,1);}
+  section  ul li {float: left;height: 44px;display: flex;align-items: center;color: #252F33;
+    border-bottom:1px solid rgba(229,229,229,1);word-break: break-all;}
+
+ .more-list::-webkit-scrollbar { width: 2px; height: 2px;}
+ .more-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+ .more-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
 </style>

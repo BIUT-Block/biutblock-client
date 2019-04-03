@@ -7,7 +7,7 @@
         <section class="dig-more-header-title">
           <section>
             <p>Wallet Name</p>
-            <p>Wallet {{selectedWallet.walletName}}</p>
+            <p>{{selectedWallet.walletName}}</p>
           </section>
           <section>
             <p>Wallet Account</p>
@@ -18,11 +18,27 @@
 
       <!-- 内容 -->
       <section class="dig-more-body" :class="loadMore?'dig-body-padding-bottom':''">
-        <dig-title class="dig-more-body-header" 
-          :number="digNumber" 
-          :income="digIncome"
-          :digTitleShow="false"/>
-        <dig-list :moreList="moreList"/>
+          
+          <section class="dig-body-title">
+            <h3>Mining Record</h3>
+            <section class="dig-body-title-list">
+              <section>
+                <span></span>
+                <span>Number Of Mined：</span>
+                <span>{{this.digNumber}}</span>
+              </section>
+              <section>
+                <span></span>
+                <span>Income of Mined：</span>
+                <span>{{this.digIncome}} SEC</span>
+              </section>
+            </section>
+          </section>
+
+        <section class="dig-more-lists">
+          <dig-list :moreList="moreList"/>
+        </section>
+
         <p v-show="loadMore" @click="onClickLoadMore">Click to load more</p>
       </section>
     </section>
@@ -30,19 +46,17 @@
 </template>
 
 <script>
-import digTitle from './components/wallet-dig-title'
 import digList from './components/wallet-dig-more-list'
 let updateListJob
 export default {
   name: '',
   components: {
-    digTitle,
     digList
   },
   props: {},
   data () {
     return {
-      loadMore: true, //加载更多按钮
+      loadMore: false, //加载更多按钮
       digNumber: '0',
       digIncome: '0',
       wallets: {},
@@ -62,6 +76,7 @@ export default {
     if (this.wallets.hasOwnProperty(this.selectedPrivateKey)) {
       this.selectedWallet = this.wallets[this.selectedPrivateKey]
     }
+    //console.log(this.wallets.length)
     this._startUpdateHisotryJob()
   },
   mounted () {
@@ -95,7 +110,13 @@ export default {
           skip = this.moreListSkip
         }
         miningHistory.forEach((element, index) => {
+          
+          // console.log("---"+ this.digIncome)
           this.digIncome = (Number(this.digIncome) + Number(element.listMoney)).toString()
+          // console.log("总的"+ element.listMoney)
+          // console.log(this.digIncome)
+          console.log(index)
+          console.log(skip)
           if (index > skip) {
             this.loadMore = false
             return
@@ -142,11 +163,11 @@ export default {
   .dig-more-header .dig-more-header-title section:last-child {padding-left: 203px;}
 
 
-  .dig-more-body {background: #fff;padding: 67px 32px 0;border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;overflow: auto;flex: 1;position: relative;}
-  .dig-more-body::-webkit-scrollbar { width: 2px; height: 2px;}
-  .dig-more-body::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .dig-more-body::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .dig-more-body {background: #fff;padding-top: 36px;border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;flex: 1;}
+
+  .dig-more-lists {flex: 1;}
+  
   
   .dig-more-body-header {position: fixed;top: 157px;left: 126px;right: 56px;background: #fff;
     padding: 36px 0 13px;}
@@ -154,4 +175,17 @@ export default {
     position: fixed;bottom: 24px;left: 94px;right: 24px;background: #fff;border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;}
   .dig-body-padding-bottom {padding-bottom: 40px;}
+
+
+  .dig-body-title {margin: 0 32px;} 
+  .dig-body-title,.dig-body-title .dig-body-title-list {display: flex;justify-content: space-between;align-items: center;}
+  .dig-body-title h3 {margin: 0;font-size: 14px;color: #839299;font-family: Montserrat-SemiBold;font-weight: 600;}
+  .dig-body-title .dig-body-title-list section {color: #839299;font-family: Montserrat-Light;}
+  .dig-body-title .dig-body-title-list section span:first-child {display: inline-block;width:6px;height:6px;
+    background:rgba(245,166,35,1);border-radius:50%;margin-right: 10px;}
+  .dig-body-title .dig-body-title-list section span:last-child {color: #252F33;font-family: Lato-Medium;}
+  .dig-body-title .dig-body-title-list section:nth-of-type(even) span:first-child {background:#388ED9;margin-left: 40px;}
+  .dig-body-title .dig-body-title-list .dig-more {width:48px;height:24px;background:rgba(255,255,255,1);
+    box-shadow:0px 0px 2px rgba(0,0,0,0.16);border-radius:2px;text-align: center;line-height: 24px;
+    color: #29D893;font-weight: 400;margin-left: 50px;}
 </style>

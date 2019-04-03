@@ -415,6 +415,14 @@ export default {
   .dig-header .dig-header-list {flex: 1;height: 108px;background:rgba(247,247,247,1);border-radius: 4px;
     overflow: auto;color: #252F33;padding: 16px 14px;}
   .dig-header .dig-header-list ul {list-style: disc;}
+  .dig-header .dig-header-list ul li {padding-top: 5px;line-height: 1.5;}
+  .dig-header .dig-header-list ul li:first-child {padding-top: 0;}
+  
+
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar,.dig-header .dig-header-list::-webkit-scrollbar { width: 2px; height: 2px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb,.dig-header .dig-header-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track,.dig-header .dig-header-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  
 
   .dig-body {padding: 22px 22px 0 32px;flex: 1;overflow: hidden;}
   

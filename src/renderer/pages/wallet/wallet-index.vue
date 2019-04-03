@@ -4,11 +4,13 @@
     <section class="wallet-list">
       <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex" @walletSelectionChanged = "onSelectWalletChanged" />
     </section>
+
     <!-- 钱包相关信息 -->
     <section class="wallet-content">
       <section class="wallet-content-header">
         
         <section class="wallet-content-header-left">
+          
           <section>
             <img src="../../assets/images/menu.png" alt="" @click="tabMenuList" id='menuListImg'>
             <section class="wallet-content-header-left-update"
@@ -30,11 +32,13 @@
                 @click="lookMask(index)">{{item.text}}</li>
             </ul>
           </section>
+
           <h2>{{walletBalance}} <span>SEC Token</span></h2>
           <section>
             <span id="address">0x{{selectedWallet.walletAddress}}</span>
             <img src="../../assets/images/copy.png" alt="" @click="copyCnt" data-clipboard-target="#address" class="copyButton">
           </section>
+          
         </section>
 
         <section class="wallet-content-header-right">
@@ -42,25 +46,32 @@
           <wallet-button :text="transferButon" :imgUrl="transferImg" @click.native="lookMask(4)"/>
         </section>
       </section>
-      <section class="wallet-content-body" :class="moreShow?'wallet-padidng-bottom':''">
+
+      <section class="wallet-content-body" :class="moreShow ? '' : 'wallet-padidng-bottom'">
         <p class="wallet-content-body-title">Transaction Record</p>
-        <!-- 没有数据列表 walletContent == 1 -->
-        <section class="wallet-content-body-mull" :style="noTradingStyle">
-          <img src="../../assets/images/wallet-null.png" alt="">
-          <p>No transaction data</p>
+
+        <section class="wallet-container">
+          <!-- 没有数据列表 walletContent == 1 -->
+          <section class="wallet-content-body-mull" :style="noTradingStyle">
+            <img src="../../assets/images/wallet-null.png" alt="">
+            <p>No transaction data</p>
+          </section>
+          <!-- 有数据列表 walletContent == 1 -->
+          <section class="wallet-content-body-list" :style="noTradingStyles">
+            <trading-list :tradingList="tradingList" :wallets="wallets" :selectedPrivateKey="selectedPrivateKey"/>
+          </section>
         </section>
-        <!-- 有数据列表 walletContent == 1 -->
-        <section class="wallet-content-body-list">
-          <trading-list :tradingList="tradingList" :wallets="wallets" :selectedPrivateKey="selectedPrivateKey"/>
-        </section>
+        
         <!-- 暂无更多数据 -->
         <!-- <p class="noMore" v-show="noMoreData">No further data available ^_^</p> -->
+        <section class="moreList" v-show="moreShow" @click="onClickLoadMore">
+          <img src="../../assets/images/moreList.png" alt="">
+          <span>Click to load more</span>
+        </section>
       </section>
+
     </section>
-  <section class="moreList" v-show="moreShow" @click="onClickLoadMore">
-    <img src="../../assets/images/moreList.png" alt="">
-    <span>Click to load more</span>
-  </section>
+ 
   <!-- 半透明弹窗 -->
   <wallet-translucent :text="translucentText" v-show="translucentShow"/>
   <!-- 遮罩层弹窗 -->
@@ -141,6 +152,13 @@ export default {
   computed: {
     noTradingStyle () {
       if (this.tradingListTotalLength > 0){
+        return {
+          display: 'none'
+        }
+      }
+    },
+    noTradingStyles () {
+      if (this.tradingListTotalLength == 0){
         return {
           display: 'none'
         }
@@ -419,25 +437,27 @@ export default {
   .wallet-content-header-right section:first-child {margin-bottom: 6px;}
 
   
-  .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);border-radius:4px;overflow: auto;
-    flex: 1;padding-top: 54px;}
-  .wallet-content-body::-webkit-scrollbar { width: 2px; height: 2px;}
-  .wallet-content-body::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .wallet-content-body::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);border-radius:4px;
+    flex: 1;display: flex;flex-direction: column;}
+
+  .wallet-container {flex: 1;overflow: auto;}
+
+  .wallet-content-body-list {width: 100%;}
+  .wallet-container::-webkit-scrollbar { width: 2px; height: 2px;}
+  .wallet-container::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .wallet-container::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
 
   .wallet-content-body .wallet-content-body-title {padding: 23px 0 14px;color: #839299;background: #fff;
-    border-bottom: 1px solid #E5E5E5;font-size: 13px;font-family: Montserrat-Regular;position: fixed;
-    top: 196px;right: 64px;left: 354px;}
-  .wallet-content-body .wallet-content-body-mull {display: flex;align-items: center;justify-content: center;
-    min-height: 300px;flex-direction: column;}
+    border-bottom: 1px solid #E5E5E5;font-size: 13px;font-family: Montserrat-Regular;margin: 0 32px;}
+
+  .wallet-content-body .wallet-content-body-mull {text-align: center;margin-top: 138px;width: 100%;}
   .wallet-content-body .wallet-content-body-mull img {width: 71px;height: 71px;}
   .wallet-content-body .wallet-content-body-mull p {color: #999999;font-family: Lato-Bold;margin-top: 14px;}
 
-  .moreList {position: fixed;bottom: 24px;right: 64px;left: 354px;background: #fff;height: 47px;
+  .moreList {background: #fff;height: 47px;
     display: flex;align-items: center;justify-content: center;color: #576066;z-index: 9;}
   .moreList img {width: 11px;height: 7px;margin-right: 5px;}
-  .wallet-padidng-bottom {padding-bottom: 47px;}
 
-
+  .wallet-padidng-bottom {padding-bottom: 16px;}
   .noMore {text-align: center;color: #576066;padding: 15px 0;}
 </style>

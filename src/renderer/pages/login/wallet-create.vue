@@ -19,12 +19,14 @@
       <wallet-input-pass placeholder="Password" maxlength="30" 
           v-model="walletPass1"
           @loseFocus="loseFocus"
-          @getFocus="getFocus"></wallet-input-pass>
+          @getFocus="getFocus"
+          @input="inputContent1"></wallet-input-pass>
       <wallet-tips :tips="passFormat"  v-show="passFormatShow"/>
       <wallet-title :title="walletPassText2" :choose="true"/>
       <wallet-input-pass placeholder="Confirm Password" maxlength="30" 
           v-model="walletPass2"
-          @loseFocus="loseFocus2"></wallet-input-pass>
+          @loseFocus="loseFocus2"
+          @input="inputContent2"></wallet-input-pass>
       <wallet-tips :tips="passFormat2"  v-show="passFormat2Show"/>
       <wallet-button  type="button" 
                       class="wallet-button-create" 
@@ -96,7 +98,9 @@
          
          <section v-show="showPass">
             <wallet-title :title="walletnNewPassText" :choose="false"/>
-            <wallet-input-pass placeholder="Password" maxlength="30" v-model="walletNewPass"></wallet-input-pass>
+            <wallet-input-pass placeholder="Password" maxlength="30" 
+              v-model="walletNewPass"
+              @input="inputContent3"></wallet-input-pass>
             <wallet-tips :tips="walletnNewPassErrorText" v-show="walletnNewPassError"/>
          </section>
          <wallet-button  class="wallet-button-backup" 
@@ -122,7 +126,7 @@
     </section>
     <!-- 钱包版本号 -->
     <span class="wallet-version"> {{ versionNumber }}</span>
-    <!-- 遮罩层 -->
+    <!-- 遮罩层
     <section class="mask" v-show="maskShow">
       <section class="mask-container phrase-mask">
         <img
@@ -137,7 +141,7 @@
           <button type="button"  @click="_navToNext">Confirm</button>
         </section>
       </section>
-    </section>
+    </section> -->
   </main>
 </template>
 
@@ -311,6 +315,27 @@ export default {
       this.passFormatShow = true
     },
 
+    //不能输入中文
+    inputContent1 () {
+      this.$nextTick(()=> {
+        this.walletPass1 = this.walletPass1.replace(/[\u4E00-\u9FA5]/g,'')
+      })
+    },
+
+    //不能输入中文
+    inputContent2 () {
+      this.$nextTick(()=> {
+        this.walletPass2 = this.walletPass2.replace(/[\u4E00-\u9FA5]/g,'')
+      })
+    },
+
+    //不能输入中文
+    inputContent3 () {
+      this.$nextTick(()=> {
+        this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'')
+      })
+    },
+
     //确认密码失去焦点
     loseFocus2 () {
       this.passFormat2Show = true
@@ -379,6 +404,7 @@ export default {
         this.walletName = ''
         this.walletPass1 = ''
         this.walletPass2 = ''
+        this.privateKeyError = false
       } else {  //其他就是创建钱包
         this.createPages = 1
         this.createClose = false
@@ -399,6 +425,7 @@ export default {
         this.walletName = ''
         this.walletPass1 = ''
         this.walletPass2 = ''
+        this.privateKeyError = false
       }
     },
 
@@ -440,7 +467,7 @@ export default {
       let walletIdx = this.tabIndex // walletIdx 0 私钥导入 1 keystroe 2 助记词导入
 
       if (walletIdx == 0) {
-        if (this.walletNameImport1 === '' || this.walletNameImport1.trim().length === ' ' || this.walletNameImport2 === '' || this.walletNameImport2.trim().length === ' ') {
+        if (this.walletNameImport1 === '' || this.walletNameImport1.trim().length === ' ') {
           this._importNameError(0)
           return
         } 
@@ -457,8 +484,10 @@ export default {
         })
       } else if (walletIdx == 1) {
         WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, this.walletNewPass, (wallets, selectedPrivateKey) => {
+          console.log(wallets)
           if (wallets === 'error') {
             this.walletnNewPassError = true
+            this.walletnNewPassErrorText = 'Password error, unable to unlock wallet'
           } else if (wallets === 'DuplicateKey'){
             this.walletnNewPassErrorText = 'Wallet already exists or imported.'
             this.walletnNewPassError = true
@@ -468,28 +497,36 @@ export default {
           }
         }) 
       } else {
+        if (this.walletNameImport2 === '' || this.walletNameImport2.trim().length === ' ') {
+          this._importNameError(2)
+          return
+        } 
         WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
+            console.log(wallets)
             if (wallets === 'error') {
-              this.phraseErrorText = true
+              this.phraseError = true
+              this.phraseErrorText = "Phrase error"
             } else if (wallets === 'DuplicateKey') {
-              this.phraseErrorText = true
+              this.phraseError = true
               this.phraseErrorText = 'Wallet already exists or imported.'
             } else {  
-              this.maskShow = true
+              //this.maskShow = true
               this.navQuery = {
                 wallets: wallets,
                 selectedPrivateKey: selectedPrivateKey
               }
+              window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
+              this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
             }
         })
       }
     },
 
-    _navToNext () {
-      this.maskShow = false
-      window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
-      this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
-    },
+    // _navToNext () {
+    //   this.maskShow = false
+    //   window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
+    //   this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
+    // },
 
     _importNameError (index) {
       switch (index) {
@@ -578,7 +615,7 @@ export default {
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
   .wallet-backup .private-key-title {padding-top: 17px;}
   .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
-    margin-top: 10px;padding: 11px 18px;word-break: break-all;}
+    margin-top: 10px;padding: 11px 18px;word-break: break-all;line-height: 1.4;}
   .wallet-backup .private-key-contant img {margin-left: 20px;vertical-align: middle;}
   .wallet-backup .private-key-contant img:hover {cursor: pointer;}
   .wallet-backup .wallet-button-backup {width:190px;}
@@ -613,6 +650,7 @@ export default {
   .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;padding-left: 16px;
     color: #42535B;font-size: 14px;margin-bottom: 20px;text-align: center;height: 36px;line-height: 36px;
     position: relative;}
+  .wallet-import-keystore button {margin-top: 28px;}
   .wallet-import-keystore div input[type='file'] {position: absolute;top: 0;left: 0;right: 0;bottom: 0;
     height: 36px;z-index: 2;width: 100%;opacity: 0;}
 

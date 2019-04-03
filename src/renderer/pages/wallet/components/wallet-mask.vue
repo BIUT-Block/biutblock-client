@@ -96,7 +96,8 @@
           <wallet-input-pass
             placeholder="Enter your new password"
             maxlength="30"
-            v-model="walletNewPass"></wallet-input-pass>
+            v-model="walletNewPass"
+            @input="inputContent"></wallet-input-pass>
           <wallet-tips :tips="passFormat" class="tips" />
           <span class="wallet-button" @click="clostMask">Cancel</span>
           <span class="wallet-button" 
@@ -167,7 +168,7 @@ export default {
       addressError: 'Addresses are generally 42-bit characters beginning with 0x',
       amountError: '',
       receiveError: '',
-      passFormat: 'your password must be at least 9 characters.Password should not start or end with space',
+      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters',
       privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
       walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
       walletNewPass: '',
@@ -210,7 +211,7 @@ export default {
       return this.sentAddress.length > 41 
               && Number(this.sentTradingAmount) > 0 
               && this.sentAddress !== walletAddress
-              && Number(this.sentTradingAmount) < Number(this.balance)
+              && Number(this.sentTradingAmount) <= Number(this.balance)
               && addressRgs.test(this.sentAddress) ? true : false
     },
 
@@ -239,6 +240,13 @@ export default {
         obj=obj.substring(index+1,obj.length);
         return obj;
     },  
+
+    //不能输入中文
+    inputContent () {
+      this.$nextTick(()=> {
+        this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'')
+      })
+    },
 
     isAddress () {
       if (!/^0x([a-z0-9]{40})$/.test(this.sentAddress))  {
@@ -461,9 +469,10 @@ export default {
 
   .wallet-mask-keystroe .tips {text-align: left;}
   .wallet-mask-keystroe h3 {padding-bottom: 24px!important;}
-  .wallet-mask-keystroe .wallet-button {width:108px;height:32px;line-height: 32px;}
+  .wallet-mask-keystroe .wallet-button {width:108px;height:32px;line-height: 32px;margin-top: 24px;}
   .wallet-mask-keystroe .wallet-button {color: #388ED9;border:1px solid rgba(229,229,229,1);}
-  .wallet-mask-keystroe .wallet-button:last-child {pointer-events: none;}
+  .wallet-mask-keystroe .wallet-button:last-child {pointer-events: none;margin-left: 10px;color: #fff;
+    background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
 
 
   .wallet-mask-phrase,.wallet-mask-keystroe {padding: 32px 32px 16px;text-align: right;}

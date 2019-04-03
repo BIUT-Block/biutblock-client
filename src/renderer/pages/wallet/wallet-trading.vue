@@ -25,8 +25,7 @@
           <li v-for="item in tradingList" :key="item.id">
             <span>{{item.title}}</span>
             <span>{{item.cnt}}</span>
-          </li>
-          
+          </li>          
         </ul>
       </section>
 
@@ -100,7 +99,7 @@ export default {
           },
           {
             id: '06',
-            title: 'Value',
+            title: 'Cost',
             cnt: this.cost
           },
       ]
@@ -127,6 +126,10 @@ export default {
       case 'Packed':
         this.stateImg = tradingPacked
         this.textStyle = 'packed'
+        break
+      case 'mined':
+        this.stateImg = tradingMining
+        this.textStyle = 'mining'
         break
       default:
         break

@@ -28,8 +28,7 @@ export default {
     income: String,
     selectedWallet: Object,
     selectedPrivateKey: String,
-    wallets: Object,
-    digTitleShow: Boolean
+    wallets: Object
   },
   data() {
     return {

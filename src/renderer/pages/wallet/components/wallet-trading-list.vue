@@ -58,18 +58,17 @@ export default {
       const statusMap = {
         Packed: "packed",
         Successful: "successful",
-        Failed: "mining",
+        Failed: "mined",
         Mining: "failed",
       };
       return statusMap[status];
     },
     stateImg(status) {
-      console.log(status)
       const statusMap = {
         Packed: tradingPacked,
         Successful: tradingSuccess,
         Failed: tradingFailed,
-        Mining: tradingMining,
+        Mined: tradingMining,
       };
       return statusMap[status];
     },
