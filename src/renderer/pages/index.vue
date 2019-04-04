@@ -95,6 +95,7 @@ import agreements from '../assets/images/agreements.png'
 import walletNav from '../components/wallet-nav'
 const pkg = require('../../../package.json')
 import WalletsHandler from '../lib/WalletsHandler.js'
+import {setInterval, setTimeout} from 'timers'
 export default {
   name: '',
   components: {

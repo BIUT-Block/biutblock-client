@@ -26,7 +26,7 @@ import nodeTitle from './components/wallet-node-title'
 import nodeList from './components/wallet-node-list'
 import walletMargin from '../../components/wallet-margin'
 import WalletsHandler from '../../lib/WalletsHandler';
-import { clearInterval } from 'timers';
+import { setInterval, clearInterval } from 'timers';
 const moment = require('moment-timezone')
 const ipify = require('ipify')
 

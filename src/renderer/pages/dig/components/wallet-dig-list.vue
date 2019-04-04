@@ -6,7 +6,7 @@
       <li style="width: 18%;">BLOCKS</li>
       <li style="width: 40%;">BLOCK HASH</li>
     </ul>
-    <ul v-for="(item, index) in digLists" v-if ="index < digLists.length - 1">
+    <ul v-for="(item, index) in digLists" v-if ="index < digLists.length">
       <li style="width: 24%;">{{ item.age }}</li>
       <li style="width: 18%;color: #F5A623;">{{ item.reward }}</li>
       <li style="width: 18%;">{{ item.blocknumber }}</li>

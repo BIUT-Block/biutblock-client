@@ -95,7 +95,8 @@ import walletButton from '../../components/wallet-button'
 import digList from './components/wallet-dig-list'
 import walletMargin from '../../components/wallet-margin'
 import WalletsHandler from '../../lib/WalletsHandler'
-import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers';
+import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers'
+const moment = require('moment-timezone')
 export default {
   name: 'walletDig',
   components: {
@@ -130,10 +131,12 @@ export default {
       getBlockHeightJob: '',
       processTexts: ['Enter the mining page, and wait for mining.'],
       moreList: [],
+      
       maskShow: false,
       maskText: '',
       mineStatusText: 'Please stop mining before changing wallet',
-      mineStatusError: false
+      mineStatusError: false,
+      bAlreadyShowed: false
     }
   },
   computed: {
@@ -281,12 +284,21 @@ export default {
     },
 
     _getLatestBlockInfo () {
-      this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {
+      this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
         this.chainHeight = height.toString()
         this.networkMining = (Number(this.chainHeight)*2).toString()
-
         this.minedByAddress = block[0].Beneficiary
         this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
+        if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
+          if (this.processTexts.length > 1) { // should not be showed if the page is initial
+            let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
+            this.processTexts.push('Continue mining...')
+            this.bAlreadyShowed = true // to avoid duplicate showed text in job
+          } else {
+            this.bAlreadyShowed = false
+          }
+        }
       })
     },
 
@@ -351,7 +363,7 @@ export default {
         this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
           console.log(err)
           if (response) {
-            this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(new Date(), new Date().getTimezoneOffset())}`)
+            this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
             this.processTexts.push(`Complete syncing blocks`)
             this.isSynced = true
             setTimeout(()=>{
