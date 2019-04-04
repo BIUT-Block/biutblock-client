@@ -3,6 +3,8 @@ const CryptoJS = require('crypto-js')
 const fs = require('fs')
 let FileSaver = require('file-saver')
 
+const SECFileKey = 'SECKey'
+
 let WalletHandler = {
   getWalletKeys: function () {
     let keys = SECUtil.generateSecKeys()
@@ -35,10 +37,11 @@ let WalletHandler = {
     let dirPath = require('os').homedir() + '/.secwallet'
     let filePath = dirPath + '/wallets.data'
     if (fs.existsSync(dirPath)) {
-      fs.readFile(filePath, (err, data) => {
+      fs.readFile(filePath, 'utf-8', (err, data) => {
         if (err) return
-        if (data !== '{}') {
-          let wallets = JSON.parse(data)
+        let decodeText = CryptoJS.AES.decrypt(data, SECFileKey).toString(CryptoJS.enc.Utf8)
+        if (decodeText !== '{}') {
+          let wallets = JSON.parse(decodeText)
           fnAfterReadFinish(wallets)
         }
       })
@@ -89,7 +92,8 @@ let WalletHandler = {
       fs.readFile(filePath, 'utf-8', this._appendWalletIntoFile.bind(this, filePath, wallet, fnAfterSave))
     } else {
       let keyFileData = JSON.stringify(keyFileDataJS)
-      fs.writeFile(dirPath + '/wallets.data', keyFileData, (err) => {
+      let cipherText = CryptoJS.AES.encrypt(keyFileData, SECFileKey).toString()
+      fs.writeFile(dirPath + '/wallets.data', cipherText, (err) => {
         if (err) {
           return
         }
@@ -102,7 +106,8 @@ let WalletHandler = {
     if (err) {
       return
     }
-    let keyDataJSON = JSON.parse(data)
+    let decodeText = CryptoJS.AES.decrypt(data, SECFileKey).toString(CryptoJS.enc.Utf8)
+    let keyDataJSON = JSON.parse(decodeText)
     if (keyDataJSON.hasOwnProperty(wallet.privateKey)) {
       fnAfterSave('DuplicateKey')
     } else {
@@ -114,7 +119,8 @@ let WalletHandler = {
         englishWords: wallet.englishWords
       }
       let keyFileData = JSON.stringify(keyDataJSON)
-      fs.writeFile(filePath, keyFileData, (err) => {
+      let cipherText = CryptoJS.AES.encrypt(keyFileData, SECFileKey).toString()
+      fs.writeFile(filePath, cipherText, (err) => {
         if (err) {
           return
         }
@@ -125,9 +131,12 @@ let WalletHandler = {
 
   _modifyWalletFile: function (filePath, wallet, fnAfterSave, err, data) {
     if (err) return
-    let keyDataJSON = JSON.parse(data)
+    let decodeText = CryptoJS.AES.decrypt(data, SECFileKey).toString(CryptoJS.enc.Utf8)
+    let keyDataJSON = JSON.parse(decodeText)
     keyDataJSON[wallet.privateKey] = wallet
-    fs.writeFile(filePath, JSON.stringify(keyDataJSON), (err) => {
+    let keyDataText = JSON.stringify(keyDataJSON)
+    let ciperText = CryptoJS.AES.encrypt(keyDataText).toString()
+    fs.writeFile(filePath, ciperText, (err) => {
       if (err) return
       fnAfterSave()
     })
@@ -138,9 +147,11 @@ let WalletHandler = {
     let filePath = dirPath + '/wallets.data'
     fs.readFile(filePath, 'utf-8', (err, data) => {
       if (err) return
-      let allData = JSON.parse(data)
+      let decodeText = CryptoJS.AES.decrypt(data, SECFileKey).toString(CryptoJS.enc.Utf8)
+      let allData = JSON.parse(decodeText)
       delete allData[walletData.privateKey]
-      fs.writeFile(filePath, JSON.stringify(allData), (err) => {
+      let cipherText = CryptoJS.AES.encrypt(JSON.stringify(allData), SECFileKey).toString()
+      fs.writeFile(filePath, cipherText, (err) => {
         if (err) return
         fnAfterRemove(allData)
       })
