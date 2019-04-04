@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style scoped>
-  .list-node {overflow: auto;flex: 1;height: calc(100vh - 350px);padding-right: 32px;}
+  .list-node {overflow: auto;flex: 1;height: calc(100vh - 300px);padding-right: 32px;}
   .list-node::-webkit-scrollbar { width: 2px; height: 2px;}
   .list-node::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
   .list-node::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}

@@ -18,10 +18,11 @@
 </template>
 
 <script>
-import tradingPacked from '../../../assets/images/tradingPackeds.png'
-import tradingSuccess from '../../../assets/images/tradingSuccesss.png'
-import tradingFailed from '../../../assets/images/tradingFaileds.png'
-import tradingMining from '../../../assets/images/tradingMinings.png'
+import tradingPacked from '../../../assets/images/tradingPackeds.png'  //转账中
+import tradingSuccess from '../../../assets/images/tradingSuccesss.png' //转账成功
+import tradingFailed from '../../../assets/images/tradingFaileds.png'  //转账失败
+import tradingMining from '../../../assets/images/tradingMinings.png'  //挖矿
+import collection from '../../../assets/images/collectionImg.png'  //收款成功
 
 export default {
   name: '',
@@ -77,7 +78,7 @@ export default {
 </script>
 
 <style scoped>
-  ul li {display: flex;justify-content: space-between;height: 62px;align-items: center;margin: 0 32px;
+  ul li {display: flex;justify-content: space-between;height: 65px;align-items: center;margin: 0 32px;
     border-bottom: 1px solid #E6E6E6;font-size: 13px;color: #252F33;}
   ul li .list-img {display: flex;}
   ul li .list-img section p:last-child {color: #576066;font-size: 11px;}

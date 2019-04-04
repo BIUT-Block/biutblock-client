@@ -146,7 +146,7 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 78px);display: flex;
+  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
     align-content: stretch;display:-webkit-flex;}
   .dig-more-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
     border-radius:4px;flex: 1;}

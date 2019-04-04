@@ -100,8 +100,8 @@ export default {
 </script>
 
 <style scoped>
-  main {display: flex;flex-direction: column;align-items: center;position: relative;height: calc(100vh - 30px);}
-  ul {margin-top: 24px;overflow: auto;height: calc(100vh - 158px);width: 100%;}
+  main {display: flex;flex-direction: column;align-items: center;position: relative;height: 100vh;}
+  ul {margin-top: 24px;overflow: auto;height: calc(100vh - 128px);width: 100%;}
   ul::-webkit-scrollbar { width: 2px; height: 2px;}
   ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
   ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}

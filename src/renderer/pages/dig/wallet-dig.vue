@@ -400,7 +400,7 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 78px);display: flex;
+  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
     align-content: stretch;display:-webkit-flex;}
   .dig-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
   border-radius:4px;flex: 1;background: #fff;}
@@ -441,7 +441,7 @@ export default {
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track,.dig-header .dig-header-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
   
 
-  .dig-body {padding: 22px 22px 0 32px;flex: 1;overflow: hidden;}
+  .dig-body {padding: 22px 22px 0 32px;flex: 1;}
   
   .dig-footer {padding: 0 22px 0 32px;color: #839299;height: 45px;
     border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}

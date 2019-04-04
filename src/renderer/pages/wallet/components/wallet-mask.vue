@@ -26,8 +26,12 @@
             <wallet-tips :tips="addressError"/>
             <p>AMOUNT</p>
             <section class="wallet-mask-sent-amount">
-              <input type="text" v-model="sentTradingAmount" :placeholder="allAmountPlace" maxlength="20"
-                @input="clearAmount" onpaste="return false"/>
+              <input type="numer" 
+                maxlength="20"
+                :placeholder="allAmountPlace" 
+                v-model="sentTradingAmount" 
+                @input="clearAmount"
+                onpaste="return false"/>
               <section>
                 <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
                 <section>
@@ -46,7 +50,7 @@
 
           <!-- 确认转账 -->
           <section v-show="sentPages == 2">
-            <h3>Confirm The Following information</h3>
+            <h3>{{ confirmTitle }}</h3>
             <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
             <p>FROM</p>
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
@@ -54,8 +58,16 @@
             <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
             <p>AMOUNT</p>
             <span class="wallet-mask-sent-from-address">{{sentTradingAmount}}</span>
-            <button type="button" @click="backSent">Back</button>
-            <button type="button" class="passCorrect" @click="sent">Confirm</button>
+
+            <section v-show="!networkError">
+              <button type="button" @click="backSent">Back</button>
+              <button type="button" class="passCorrect" @click="sent">Confirm</button>
+            </section>
+
+            <section class="network-error" v-show="networkError">
+              <wallet-tips :tips="networkErrorText" v-show="networkError"/>
+              <button type="button" @click="sent">Resubmit</button>
+            </section>
           </section>
 
         </section>
@@ -67,8 +79,11 @@
           <span>0x{{selectedWallet.walletAddress}}</span>
           <p>Amount</p>
           <section>
-            <input type="text" maxlength="20"
-            v-model="receiveAmount" @input="clearNoNum" onpaste="return false"/>
+            <input type="numer" 
+              maxlength="20"
+              v-model="receiveAmount" 
+              @input="clearNoNum" 
+              onpaste="return false"/>
             <label>SEC</label>
           </section>
           <wallet-tips :tips="receiveError" />
@@ -175,9 +190,13 @@ export default {
       
       sentAddress: '',//转账地址
       sentTradingAmount: '',//转账金额
-      sentPages: 1,//默认显示转账页面
+      sentPages: 2,//默认显示转账页面
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       allAmount: this.balance,//总金额
+      confirmTitle: 'Confirm The Following information', //没网络的时候 Submission Failed
+      networkError: false, //没有网络的时候 设置 成true
+      networkErrorText: 'No network connection',
+
       translucentShow: false, //弹窗
       translucentText: 'Copy success',
 
@@ -352,27 +371,28 @@ export default {
     
     //二维码扫描只能输入金额
     clearNoNum () {
-      console.log(this.receiveAmount)
-      this.receiveAmount =  this.receiveAmount.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符
+      this.receiveAmount =  this.receiveAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
       this.receiveAmount =  this.receiveAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-      this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //只保留第一个. 清除多余的
+      this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //不能.开头
+      this.receiveAmount =  this.receiveAmount.replace(/^0$/, ""); //不能0开头
       this.receiveAmount =  this.receiveAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
-      if( this.receiveAmount.indexOf(".") < 0 &&  this.receiveAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
-          this.receiveAmount=  this.receiveAmount 
-      }
+      // if( this.receiveAmount.indexOf(".") < 0 &&  this.receiveAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+      //     this.receiveAmount=  this.receiveAmount 
+      // }
     },
 
     //转账只能输入金额
     clearAmount () {
-      this.sentTradingAmount =  this.sentTradingAmount.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符
+      this.sentTradingAmount =  this.sentTradingAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
       this.sentTradingAmount =  this.sentTradingAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-      this.sentTradingAmount =  this.sentTradingAmount.replace(/^\.$/, ""); //只保留第一个. 清除多余的
+      this.sentTradingAmount =  this.sentTradingAmount.replace(/^\.$/, ""); //不能.开头
+      this.sentTradingAmount =  this.sentTradingAmount.replace(/^0$/, ""); //不能0开头
       this.sentTradingAmount =  this.sentTradingAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.sentTradingAmount=  this.sentTradingAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
-      if( this.sentTradingAmount.indexOf(".") < 0 &&  this.sentTradingAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
-          this.sentTradingAmount= this.sentTradingAmount
-      }
+      // if( this.sentTradingAmount.indexOf(".") < 0 &&  this.sentTradingAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
+      //     this.sentTradingAmount=  this.receiveAmount 
+      // }
     },
 
     //复制私钥
@@ -504,4 +524,8 @@ export default {
 
 .keystroeActive {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;
   pointer-events: auto!important;color: #fff!important;}
+
+.network-error span {margin-top: 30px;}
+.network-error button {display: block;width: 100%;margin-top: 20px;
+  background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
 </style>

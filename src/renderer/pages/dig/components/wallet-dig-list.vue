@@ -1,16 +1,16 @@
 <template>
   <section>
     <ul class="dig-list">
-      <li style="width: 24%">AGE</li>
-      <li style="width: 18%">REWARD</li>
-      <li style="width: 18%">BLOCKS</li>
-      <li style="width: 40%">BLOCK HASH</li>
+      <li style="width: 24%;">AGE</li>
+      <li style="width: 18%;">REWARD</li>
+      <li style="width: 18%;">BLOCKS</li>
+      <li style="width: 40%;">BLOCK HASH</li>
     </ul>
     <ul v-for="(item, index) in digLists" v-if ="index < digLists.length - 1">
-      <li style="width: 24%">{{ item.age }}</li>
-      <li style="width: 18%">{{ item.reward }}</li>
-      <li style="width: 18%">{{ item.blocknumber }}</li>
-      <li style="width: 40%">{{ item.blockhash.substring(0, 20) }}......{{item.blockhash.substring(44, item.blockhash.length)}}</li>
+      <li style="width: 24%;">{{ item.age }}</li>
+      <li style="width: 18%;color: #F5A623;">{{ item.reward }}</li>
+      <li style="width: 18%;">{{ item.blocknumber }}</li>
+      <li style="width: 40%;color: #388ED9;">{{ item.blockhash.substring(0, 20) }}......{{item.blockhash.substring(44, item.blockhash.length)}}</li>
     </ul>
     <section class="dig-body">
      <h4 v-show="digListShow">No mining records yet</h4>
@@ -54,10 +54,10 @@ export default {
 </script>
 
 <style scoped>
-  section {height: 267px;}
+  section {height: 285px;overflow: hidden;}
   section ul {display: flex;}
   section .dig-list {padding-top: 13px;}
-  section ul li {height: 42px;color: #252F33;display: flex;align-items: center;
+  section ul li {height: 45px;color: #252F33;display: flex;align-items: center;
     border-bottom:1px solid rgba(229,229,229,1);}
   section ul:last-child li {border: 0;}
   section .dig-list li {font-family: Lato-Bold;color: #839299;

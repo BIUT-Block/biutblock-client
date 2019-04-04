@@ -405,6 +405,7 @@ export default {
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
+        this.phraseError = false
       } else {  //其他就是创建钱包
         this.createPages = 1
         this.createClose = false
@@ -426,6 +427,7 @@ export default {
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
+        this.phraseError = false
       }
     },
 

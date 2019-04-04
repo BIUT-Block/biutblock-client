@@ -454,7 +454,7 @@ export default {
   .wallet-content-body .wallet-content-body-mull img {width: 71px;height: 71px;}
   .wallet-content-body .wallet-content-body-mull p {color: #999999;font-family: Lato-Bold;margin-top: 14px;}
 
-  .moreList {background: #fff;height: 47px;
+  .moreList {background: #fff;height: 55px;
     display: flex;align-items: center;justify-content: center;color: #576066;z-index: 9;}
   .moreList img {width: 11px;height: 7px;margin-right: 5px;}
 

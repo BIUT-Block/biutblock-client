@@ -79,12 +79,12 @@ function createWindow () {
   request.end()
 
   mainWindow = new BrowserWindow({
-    height: 640,
+    height: 610,
     useContentSize: true,
     width: 960,
     transparent: false,
     frame: true,
-    minHeight: 640,
+    minHeight: 610,
     minWidth: 960
   })
   mainWindow.setResizable(true)
@@ -120,9 +120,9 @@ function createWindow () {
         label: 'Test Network'
       }]
     }]
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+    Menu.setApplicationMenu(null)
   } else {
-    // Menu.setApplicationMenu(null)
+    Menu.setApplicationMenu(null)
   }
   try {
     mainWindow.loadURL(winURL)

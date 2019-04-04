@@ -1,12 +1,12 @@
 <template>
   <main class="wallet-index">
-    <nav>
+    <!-- <nav>
       <section>
         <img src="../assets/images/logo.png" alt="">
         <span>SEC Wallet</span>
       </section>
-      <!-- <wallet-nav/> -->
-    </nav>
+      <wallet-nav/>
+    </nav> -->
     <section class="wallet-index-content">
       <aside>
         <ul class="wallet-aside-list">
