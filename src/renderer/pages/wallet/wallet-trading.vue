@@ -54,17 +54,17 @@ export default {
 
   data () {
     return {
-      transactionNumber: '0x75f04e06b80b4b249a878000714e038fcc746ac54f',
+      transactionNumber: '',
       block: '01',
-      time: '2018/11/08  21:03 UTC',
-      beneficiary: '0x75f04e06b80b4b249a878000714e038fcc746ac548',
-      party: '0x75f04e06b80b4b249a878000714e038fcc746ac548',
-      cost: '8.89729807 sec',
+      time: '',
+      beneficiary: '',
+      party: '',
+      cost: '',
       amount: '',
       status: '',
       wallets: {},
       selectedPrivateKey: '',
-      textStyle: 'packed',
+      textStyle: '',
       stateImg: tradingPacked, //根据状态切换图片及颜色
       transactionLink: ''
       
@@ -120,7 +120,11 @@ export default {
     this.status = trade.listState
     switch(trade.listState) {
       case 'Successful':
-        this.stateImg = tradingSuccess
+        if (trade.listMoney.indexOf('+') > -1) {
+          this.stateImg = collectionImg
+        } else if (trade.listMoney.indexOf('-') > -1) {
+          this.stateImg = tradingSuccess
+        } 
         this.textStyle = 'successful'
         this.transactionLink = `http://scan.secblock.io/search?search=${this.transactionNumber}`
         break

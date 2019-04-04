@@ -3,7 +3,7 @@
     <!-- 默认加载五条数据，点击查看更多就加载更多数据 -->
     <li @click="tradingDetails(item)" v-for="(item, index) in tradingList" v-if="index < tradingList.length && tradingList.length > 0">
       <section v-if="item" class="list-img">
-        <img :src="item.listState | stateImg" alt="">
+        <img :src="item.listState | stateImg(item.listMoney)" alt="">
         <section>
           <p>{{item.listAddress}}</p>
           <p>{{item.listTime}}</p>
@@ -43,7 +43,7 @@ export default {
 
   },
   created () {
-    console.log()
+
   },
   mounted () {
 
@@ -64,14 +64,30 @@ export default {
       };
       return statusMap[status];
     },
-    stateImg(status) {
-      const statusMap = {
-        Packed: tradingPacked,
-        Successful: tradingSuccess,
-        Failed: tradingFailed,
-        Mining: tradingMining,
-      };
-      return statusMap[status];
+    stateImg(status, value) {
+      switch(status) {
+      case 'Successful':
+        if (value.indexOf('+') > -1) {
+          return collection
+        } else if (value.indexOf('-') > -1) {
+          return tradingSuccess
+        } 
+        break
+      case 'Packed':
+        return tradingPacked
+      case 'Mining':
+        return tradingMining
+        break
+      default:
+        break
+      }
+      // const statusMap = {
+      //   Packed: tradingPacked,
+      //   Successful: tradingSuccess,
+      //   Failed: tradingFailed,
+      //   Mining: tradingMining,
+      // };
+      // return statusMap[status];
     },
   }
 }
