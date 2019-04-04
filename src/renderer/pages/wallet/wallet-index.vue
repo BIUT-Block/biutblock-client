@@ -360,7 +360,7 @@ export default {
       this.$JsonRPCClient.getWalletTransactions(walletAddress, (transactions) => {
         this.tradingList = []
         this.tradingListTotalLength = transactions.length
-        if (this.tradingListSkip > transactions.length && transactions.length > 0) {
+        if (this.tradingListSkip >= transactions.length && transactions.length > 0) {
           this.noMoreData = true
           skip = transactions.length
         } else {

@@ -104,7 +104,7 @@ export default {
           return hist.listAddress === 'Mined' && hist.listState === 'Mining'
         })
         let skip = 0
-        if (this.moreListSkip > miningHistory.length) {
+        if (this.moreListSkip >= miningHistory.length) {
           skip = miningHistory.length
         } else {
           skip = this.moreListSkip
