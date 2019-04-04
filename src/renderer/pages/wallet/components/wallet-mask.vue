@@ -66,7 +66,7 @@
 
             <section class="network-error" v-show="networkError">
               <wallet-tips :tips="networkErrorText" v-show="networkError"/>
-              <button type="button" @click="sent">Resubmit</button>
+              <button type="button" @click="backSent">Resubmit</button>
             </section>
           </section>
 
@@ -190,7 +190,7 @@ export default {
       
       sentAddress: '',//转账地址
       sentTradingAmount: '',//转账金额
-      sentPages: 2,//默认显示转账页面
+      sentPages: 1,//默认显示转账页面
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       allAmount: this.balance,//总金额
       confirmTitle: 'Confirm The Following information', //没网络的时候 Submission Failed
@@ -288,6 +288,12 @@ export default {
     //确认转账页面
     sentConfirm () {
       this.sentPages = 2
+      if (!navigator.onLine) {
+        this.confirmTitle = 'Submission Failed'
+        this.networkError = true
+        return 
+      }
+      
       let amount = this.getCaption(this.sentTradingAmount)
       if (amount == "") {
         this.sentTradingAmount = this.sentTradingAmount + "0"
@@ -306,8 +312,10 @@ export default {
     
     _resetErrorText () {
       this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+      this.confirmTitle = 'Confirm The Following information'
       this.amountError = ''
       this.receiveError = ''
+      this.networkError = false
     },
 
     //转账
