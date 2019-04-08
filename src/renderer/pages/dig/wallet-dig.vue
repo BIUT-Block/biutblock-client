@@ -290,7 +290,7 @@ export default {
         this.minedByAddress = block[0].Beneficiary
         this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
         if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
-          if (this.processTexts.length > 1) { // should not be showed if the page is initial
+          if (this.processTexts.length > 6) { // should not be showed if the page is initial
             let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
             this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
             this.processTexts.push('Continue mining...')
