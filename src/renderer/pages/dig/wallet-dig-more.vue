@@ -63,7 +63,7 @@ export default {
       selectedPrivateKey: '',
       selectedWallet: {},
       moreList: [],
-      morListSkip: 7,
+      moreListSkip: 7,
       updateListJob: ''
     }
   },
@@ -106,6 +106,7 @@ export default {
         let skip = 0
         if (this.moreListSkip >= miningHistory.length) {
           skip = miningHistory.length
+          this.loadMore = false
         } else {
           skip = this.moreListSkip
         }
@@ -113,8 +114,8 @@ export default {
           this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString()
           console.log(index)
           console.log(skip)
-          if (index > skip) {
-            this.loadMore = false
+          if (index > skip - 1) {
+            this.loadMore = true
             return
           }
           this.moreList.push({
@@ -171,7 +172,7 @@ export default {
   .dig-more-body p {height: 40px;text-align: center;line-height: 40px;color: #839299;font-weight: 400;
     position: fixed;bottom: 24px;left: 94px;right: 24px;background: #fff;border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;}
-  .dig-body-padding-bottom {padding-bottom: 40px;}
+  .dig-body-padding-bottom {padding-bottom: 0px;}
 
 
   .dig-body-title {margin: 0 32px;padding-bottom: 13px;} 

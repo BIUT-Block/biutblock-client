@@ -3,7 +3,7 @@ import WalletsHandler from './WalletsHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '54.250.166.137' //'54.250.166.137' //'18.197.120.79'
+    let externalServerAddress = '54.250.166.137' //'54.250.166.137'  //'18.197.120.79' Test node
     let externalServerPort = '3002'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
@@ -131,7 +131,9 @@ export default {
       getLastBlock: function (height, fnGetLastBlock) {
         this.client.request('sec_getBlockByHeight', [height], (err, response) => {
           if (err) return
-          fnGetLastBlock(height, response.result.blockInfo)
+          if (response.result.blockInfo) {
+            fnGetLastBlock(height, response.result.blockInfo)
+          }
         })
       },
       getHeightAndLastBlock: function (fnGetBlock) {
