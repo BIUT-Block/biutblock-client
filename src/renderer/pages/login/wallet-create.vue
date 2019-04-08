@@ -77,7 +77,7 @@
         <wallet-input placeholder="Wallet Name" maxlength="14" v-model.trim="walletNameImport1"></wallet-input>
         <textarea placeholder="Eenter your private key here" 
             maxlength="64" 
-            v-model="walletPrivateKey"
+            v-model.trim="walletPrivateKey"
             onkeyup="this.value=this.value.replace(/\s+/g,'')">
         </textarea>
         <wallet-tips :tips="privateKeyErrorText" v-show="privateKeyError"/>
@@ -99,7 +99,7 @@
          <section v-show="showPass">
             <wallet-title :title="walletnNewPassText" :choose="false"/>
             <wallet-input-pass placeholder="Password" maxlength="30" 
-              v-model="walletNewPass"
+              v-model.trim="walletNewPass"
               @input="inputContent3"></wallet-input-pass>
             <wallet-tips :tips="walletnNewPassErrorText" v-show="walletnNewPassError"/>
          </section>
@@ -113,7 +113,7 @@
       <!-- 助记词导入 -->
       <section  class="wallet-import-phrase" v-show="tabIndex == 2">
         <wallet-input placeholder="Wallet Name" maxlength="14" v-model.trim="walletNameImport2"></wallet-input>
-        <textarea placeholder="Enter your Phrase here width space-separated" v-model="walletPhrase"></textarea>
+        <textarea placeholder="Enter your Phrase here width space-separated" v-model.trim="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
         <wallet-button  class="wallet-button-backup" 
                       :text="walletImportButton"
@@ -249,7 +249,7 @@ export default {
       return this.walletName.trim().length > 0 
              && this.walletPass1.length > 7
              && pass.test(this.walletPass1)
-             && this.walletPass2 == this.walletPass1 ? true : false
+             && (this.walletPass2).replace(/\s+/g, "") == (this.walletPass1).replace(/\s+/g, "") ? true : false
     },
     
     //备份助记词按钮是否激活
@@ -339,7 +339,7 @@ export default {
     //确认密码失去焦点
     loseFocus2 () {
       this.passFormat2Show = true
-      if (this.walletPass1 == this.walletPass2) {
+      if ((this.walletPass1).replace(/\s+/g, "") == (this.walletPass2).replace(/\s+/g, "")) {
         this.passFormat2Show = false
       }
     },
@@ -372,7 +372,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      WalletHandler.saveKeyStore(`SEC${this.keys.userAddress}`, keyDataJSON, this.walletPass1)
+      WalletHandler.saveKeyStore(`SEC${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
@@ -485,7 +485,7 @@ export default {
           }
         })
       } else if (walletIdx == 1) {
-        WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, this.walletNewPass, (wallets, selectedPrivateKey) => {
+        WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
           console.log(wallets)
           if (wallets === 'error') {
             this.walletnNewPassError = true
@@ -599,17 +599,17 @@ export default {
     margin-top: 16px;margin-left: 64px;}
   
   main .wallet-version {position: absolute;right: 28px;bottom: 24px;color: #839299;}
-  main .closeImg {width: 24px;height: 24px;position: absolute;top: 50px;right: 20px;}
+  main .closeImg {width: 24px;height: 24px;position: absolute;top: 20px;right: 20px;}
   main .wallet-nav {position: absolute;top: 0;right: 0;height: 30px;left: 351px;
     border-bottom: 1px solid #E5E5E5;text-align: right;}
   
   /* 创建钱包 */
-  .wallet-create {padding: 142px 68px 0;flex: 1;width: 450px;}
+  .wallet-create {padding: 112px 68px 0;flex: 1;width: 450px;}
   .wallet-create p {padding-top: 32px;}
   .wallet-create .wallet-button-create {width:190px;margin-top: 36px;}
   .wallet-create .wallet-button-important {display: inline-block;padding: 8px 12px;
     color: #0B7FE6;font-weight: 400;border:1px solid rgba(229,229,229,1);border-radius:4px;
-    position: absolute;right: 68px;top: 78px;}
+    position: absolute;right: 68px;top: 48px;}
 
   /* 备份助记词 */
   .wallet-backup {padding: 124px 68px 0;flex: 1;}

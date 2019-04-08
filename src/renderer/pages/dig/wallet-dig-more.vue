@@ -174,7 +174,7 @@ export default {
   .dig-body-padding-bottom {padding-bottom: 40px;}
 
 
-  .dig-body-title {margin: 0 32px;} 
+  .dig-body-title {margin: 0 32px;padding-bottom: 13px;} 
   .dig-body-title,.dig-body-title .dig-body-title-list {display: flex;justify-content: space-between;align-items: center;}
   .dig-body-title h3 {margin: 0;font-size: 14px;color: #839299;font-family: Montserrat-SemiBold;font-weight: 600;}
   .dig-body-title .dig-body-title-list section {color: #839299;font-family: Montserrat-Light;}

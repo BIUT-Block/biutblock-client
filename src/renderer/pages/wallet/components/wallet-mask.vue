@@ -359,7 +359,7 @@ export default {
     importantKeystroe () {
       let keyDataJSON = {}
       keyDataJSON[this.selectedWallet.walletAddress] = this.walletData
-      WalletHandler.saveKeyStore(`SEC${this.selectedWallet.walletAddress}`, keyDataJSON, this.walletNewPass)
+      WalletHandler.saveKeyStore(`SEC${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
       this.clostMask()
     },
 
