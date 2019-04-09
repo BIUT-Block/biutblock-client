@@ -293,10 +293,13 @@ export default {
         this.networkError = true
         return 
       }
-      
-      let amount = this.getCaption(this.sentTradingAmount)
+      //x.
+      let amount = this.getCaption(this.sentTradingAmount).replace(/\b(0+)/gi,"")
+      console.log(amount)
       if (amount == "") {
         this.sentTradingAmount = this.sentTradingAmount + "0"
+      } else {
+        this.sentTradingAmount = amount
       }
     },
 
@@ -304,9 +307,9 @@ export default {
     backSent () {
       this.sentPages = 1
       this._resetErrorText()
-      this.sentAddress = ''
-      this.sentTradingAmount = ''
-      this.receiveAmount = ''
+      //$this.sentAddress = ''
+      //this.sentTradingAmount = ''
+      //this.receiveAmount = ''
       //this.$emit("changeClose","")
     },
     
@@ -382,7 +385,7 @@ export default {
       this.receiveAmount =  this.receiveAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
       this.receiveAmount =  this.receiveAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
       this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //不能.开头
-      this.receiveAmount =  this.receiveAmount.replace(/^0$/, ""); //不能0开头
+      //this.receiveAmount =  this.receiveAmount.replace(/^0$/, ""); //不能0开头
       this.receiveAmount =  this.receiveAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
       // if( this.receiveAmount.indexOf(".") < 0 &&  this.receiveAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
@@ -395,7 +398,7 @@ export default {
       this.sentTradingAmount =  this.sentTradingAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
       this.sentTradingAmount =  this.sentTradingAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
       this.sentTradingAmount =  this.sentTradingAmount.replace(/^\.$/, ""); //不能.开头
-      this.sentTradingAmount =  this.sentTradingAmount.replace(/^0$/, ""); //不能0开头
+      //this.sentTradingAmount =  this.sentTradingAmount.replace(/^0$/, ""); //不能0开头
       this.sentTradingAmount =  this.sentTradingAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.sentTradingAmount=  this.sentTradingAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
       // if( this.sentTradingAmount.indexOf(".") < 0 &&  this.sentTradingAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 

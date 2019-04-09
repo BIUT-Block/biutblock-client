@@ -533,15 +533,15 @@ export default {
     _importNameError (index) {
       switch (index) {
         case 0:
-          this.privateKeyErrorText = 'No empty wallet name'
+          this.privateKeyErrorText = 'Please input wallet name'
           this.privateKeyError = true
           break
         case 1:
-          this.walletnNewPassErrorText = 'No empty wallet name'
+          this.walletnNewPassErrorText = 'Please input wallet name'
           this.walletnNewPassError = true
           break
         case 2:
-          this.phraseErrorText = 'No empty wallet name'
+          this.phraseErrorText = 'Please input wallet name'
           this.phraseError = true
           break
       }
@@ -623,6 +623,7 @@ export default {
   .wallet-backup .wallet-button-backup {width:190px;}
   .wallet-backup .radio-content {padding: 25px 0 16px;display: flex;align-items: center;color: #252F33;}
   .wallet-backup .radio-content img {margin-right: 10px;width: 14px;height: 14px;}
+  .wallet-backup .radio-content span {color: #00D86D;}
 
   /* 导入钱包 */
   .wallet-import {padding: 148px 90px 0 104px;flex: 1;}
