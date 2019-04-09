@@ -39,7 +39,7 @@
           <dig-list :moreList="moreList"/>
         </section>
 
-        <p v-show="loadMore" @click="onClickLoadMore">Click to load more</p>
+        <p v-show="loadMore" class="load-more" @click="onClickLoadMore">Click to load more</p>
       </section>
     </section>
   </main>
@@ -173,6 +173,8 @@ export default {
     position: fixed;bottom: 24px;left: 94px;right: 24px;background: #fff;border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;}
   .dig-body-padding-bottom {padding-bottom: 0px;}
+
+  .load-more:hover {cursor: pointer;}
 
 
   .dig-body-title {margin: 0 32px;padding-bottom: 13px;} 

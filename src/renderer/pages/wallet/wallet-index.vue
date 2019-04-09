@@ -50,7 +50,7 @@
       <section class="wallet-content-body" :class="moreShow ? '' : 'wallet-padidng-bottom'">
         <p class="wallet-content-body-title">Transaction Record</p>
 
-        <section class="wallet-container">
+        <section class="wallet-container-list">
           <!-- 没有数据列表 walletContent == 1 -->
           <section class="wallet-content-body-mull" :style="noTradingStyle">
             <img src="../../assets/images/wallet-null.png" alt="">
@@ -440,12 +440,12 @@ export default {
   .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);border-radius:4px;
     flex: 1;display: flex;flex-direction: column;}
 
-  .wallet-container {flex: 1;overflow: auto;}
+  .wallet-container-list {overflow: auto;height: 330px;}
 
   .wallet-content-body-list {width: 100%;}
-  .wallet-container::-webkit-scrollbar { width: 2px; height: 2px;}
-  .wallet-container::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .wallet-container::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .wallet-container-list::-webkit-scrollbar { width: 2px; height: 2px;}
+  .wallet-container-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .wallet-container-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
 
   .wallet-content-body .wallet-content-body-title {padding: 23px 0 14px;color: #839299;background: #fff;
     border-bottom: 1px solid #E5E5E5;font-size: 13px;font-family: Montserrat-Regular;margin: 0 32px;}
