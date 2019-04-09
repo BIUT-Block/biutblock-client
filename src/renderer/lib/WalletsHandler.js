@@ -135,7 +135,7 @@ let WalletHandler = {
     let keyDataJSON = JSON.parse(decodeText)
     keyDataJSON[wallet.privateKey] = wallet
     let keyDataText = JSON.stringify(keyDataJSON)
-    let ciperText = CryptoJS.AES.encrypt(keyDataText).toString()
+    let ciperText = CryptoJS.AES.encrypt(keyDataText, SECFileKey).toString()
     fs.writeFile(filePath, ciperText, (err) => {
       if (err) return
       fnAfterSave()
