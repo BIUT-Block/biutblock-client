@@ -53,11 +53,11 @@ export default {
 </script>
 
 <style scoped>
-  section .more-list {overflow: auto;flex: 1;height: 322px;padding: 0 32px;}
+  section .more-list {overflow: auto;flex: 1;height: 302px;padding: 0 32px;}
   section .more-list ul {overflow: auto}
   section .list-header {padding: 0 32px;}
   section .list-header li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid rgba(229,229,229,1);}
-  section ul li {float: left;height: 45px;display: flex;align-items: center;color: #252F33;
+  section ul li {float: left;height: 42px;display: flex;align-items: center;color: #252F33;
     border-bottom:1px solid rgba(229,229,229,1);word-break: break-all;}
 
  .more-list::-webkit-scrollbar { width: 2px; height: 2px;}

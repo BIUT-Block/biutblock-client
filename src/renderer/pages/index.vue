@@ -229,7 +229,7 @@ export default {
   .wallet-index nav section {display: flex;align-items: center;color: #42535B;}
   .wallet-index nav section img {margin-right: 10px;}
   
-  .wallet-index .wallet-index-content {display: flex;height: calc(100vh - 30px);}
+  .wallet-index .wallet-index-content {display: flex;height: calc(100vh - 30px);box-shadow:0px 1px 3px rgba(37,47,51,0.16) inset;}
   .wallet-index .wallet-index-content aside {width: 70px;text-align: center;}
   .wallet-index .wallet-index-content aside .wallet-aside-list li {padding-top: 51px;position: relative;}
   .wallet-index .wallet-index-content aside .wallet-aside-list li:first-child {padding-top: 57px;}

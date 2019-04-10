@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-  ul li {display: flex;justify-content: space-between;height: 65px;align-items: center;margin: 0 32px;
+  ul li {display: flex;justify-content: space-between;height: 62px;align-items: center;margin: 0 32px;
     border-bottom: 1px solid #E6E6E6;font-size: 13px;color: #252F33;}
   ul li .list-img {display: flex;}
   ul li .list-img section p:last-child {color: #576066;font-size: 11px;}

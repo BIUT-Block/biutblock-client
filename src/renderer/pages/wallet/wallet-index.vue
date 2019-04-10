@@ -117,7 +117,7 @@ export default {
       menuShow: false,
       walletName: 'wallet Name',
       oldWalletName: 'wallet Name',
-      walletBalance: '1000',
+      walletBalance: '0',
       walletAddress: '',
       inputReadonly: true,
       inputActive: false,
@@ -440,7 +440,7 @@ export default {
   .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);border-radius:4px;
     flex: 1;display: flex;flex-direction: column;}
 
-  .wallet-container-list {overflow: auto;height: 330px;}
+  .wallet-container-list {overflow: auto;height: 335px;box-sizing: border-box;}
 
   .wallet-content-body-list {width: 100%;}
   .wallet-container-list::-webkit-scrollbar { width: 2px; height: 2px;}

@@ -242,7 +242,7 @@ export default {
   },
   watch:{
     receiveAmount(newVal,oldVal){
-      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" +newVal
+      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + parseFloat(newVal)
     }
   },
   created() {
@@ -293,14 +293,15 @@ export default {
         this.networkError = true
         return 
       }
+      this.sentTradingAmount = parseFloat(this.sentTradingAmount)
       //x.
-      let amount = this.getCaption(this.sentTradingAmount).replace(/\b(0+)/gi,"")
-      console.log(amount)
-      if (amount == "") {
-        this.sentTradingAmount = this.sentTradingAmount + "0"
-      } else {
-        this.sentTradingAmount = amount
-      }
+      // let amount = this.getCaption(this.sentTradingAmount).replace(/\b(0+)/gi,"")
+      // console.log(amount)
+      // if (amount == "") {
+      //   this.sentTradingAmount = this.sentTradingAmount + "0"
+      // } else {
+      //   this.sentTradingAmount = amount
+      // }
     },
 
     //返回转账页面
@@ -323,6 +324,12 @@ export default {
 
     //转账
     sent () {
+      if (!navigator.onLine) {
+        this.confirmTitle = 'Submission Failed'
+        this.networkError = true
+        return 
+      }
+      
       let sendToAddress = ''
 
       if (!this.isAddress()) {
@@ -384,7 +391,7 @@ export default {
     clearNoNum () {
       this.receiveAmount =  this.receiveAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
       this.receiveAmount =  this.receiveAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-      this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //不能.开头
+      //this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //不能.开头
       //this.receiveAmount =  this.receiveAmount.replace(/^0$/, ""); //不能0开头
       this.receiveAmount =  this.receiveAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
@@ -397,7 +404,7 @@ export default {
     clearAmount () {
       this.sentTradingAmount =  this.sentTradingAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
       this.sentTradingAmount =  this.sentTradingAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-      this.sentTradingAmount =  this.sentTradingAmount.replace(/^\.$/, ""); //不能.开头
+      //this.sentTradingAmount =  this.sentTradingAmount.replace(/^\.$/, ""); //不能.开头
       //this.sentTradingAmount =  this.sentTradingAmount.replace(/^0$/, ""); //不能0开头
       this.sentTradingAmount =  this.sentTradingAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.sentTradingAmount=  this.sentTradingAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
