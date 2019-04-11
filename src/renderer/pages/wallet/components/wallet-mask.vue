@@ -37,10 +37,11 @@
                 <section>
                   <span>SEC</span>
                   <span @click="sentAllAmount">ALL</span>
-                </section>
+                </section>             
               </section>
+              
             </section>
-
+            <wallet-tips :tips="amountError"/>
             <button type="button" @click="clostMask">Cancel</button>
             <button type="button"
                     :disabled="!sentActive"
@@ -405,7 +406,12 @@ export default {
       //this.receiveAmount =  this.receiveAmount.replace(/^\.$/, ""); //不能.开头
       //this.receiveAmount =  this.receiveAmount.replace(/^0$/, ""); //不能0开头
       this.receiveAmount =  this.receiveAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
-      this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      this.receiveAmount=  this.receiveAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数
+      if (!/^(\d{1,10})(\.\d{1,8})?$/.test(this.receiveAmount) && this.receiveAmount !== '') {
+        this.receiveError = 'Invalid Input'
+      } else {
+        this.receiveError = ''
+      }
       // if( this.receiveAmount.indexOf(".") < 0 &&  this.receiveAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
       //     this.receiveAmount=  this.receiveAmount 
       // }
@@ -419,6 +425,11 @@ export default {
       //this.sentTradingAmount =  this.sentTradingAmount.replace(/^0$/, ""); //不能0开头
       this.sentTradingAmount =  this.sentTradingAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
       this.sentTradingAmount=  this.sentTradingAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      if (!/^(\d{1,10})(\.\d{1,8})?$/.test(this.sentTradingAmount) && this.sentTradingAmount !== '') {
+        this.amountError = 'Invalid Input'
+      } else {
+        this.amountError = ''
+      }
       // if( this.sentTradingAmount.indexOf(".") < 0 &&  this.sentTradingAmount !=""){ //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额 
       //     this.sentTradingAmount=  this.receiveAmount 
       // }
