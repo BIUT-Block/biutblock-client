@@ -27,7 +27,7 @@
             <p>AMOUNT</p>
             <section class="wallet-mask-sent-amount">
               <input type="numer" 
-                maxlength="20"
+                maxlength="10"
                 :placeholder="allAmountPlace" 
                 v-model="sentTradingAmount" 
                 @input="clearAmount"
@@ -80,7 +80,7 @@
           <p>Amount</p>
           <section>
             <input type="numer" 
-              maxlength="20"
+              maxlength="10"
               v-model="receiveAmount" 
               @input="clearNoNum" 
               onpaste="return false"/>
@@ -242,7 +242,7 @@ export default {
   },
   watch:{
     receiveAmount(newVal,oldVal){
-      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + parseFloat(newVal)
+      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this._checkValueFormat(parseFloat(newVal))
     }
   },
   created() {
@@ -294,6 +294,7 @@ export default {
         return 
       }
       this.sentTradingAmount = parseFloat(this.sentTradingAmount)
+	    this.sentTradingAmount = this._checkValueFormat(this.sentTradingAmount)
       //x.
       // let amount = this.getCaption(this.sentTradingAmount).replace(/\b(0+)/gi,"")
       // console.log(amount)
@@ -302,6 +303,16 @@ export default {
       // } else {
       //   this.sentTradingAmount = amount
       // }
+    },
+	
+	  _checkValueFormat (value) {
+      let val = String(value)
+      let splitValue = val.split("e-")
+      if (splitValue.length > 1) {
+        return Number(val).toFixed(Number(splitValue[1])).toString()
+      } else {
+        return val
+      }
     },
 
     //返回转账页面
