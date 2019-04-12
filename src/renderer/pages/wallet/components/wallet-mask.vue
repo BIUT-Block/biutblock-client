@@ -27,7 +27,7 @@
             <p>AMOUNT</p>
             <section class="wallet-mask-sent-amount">
               <input type="numer" 
-                maxlength="10"
+                maxlength="17"
                 :placeholder="allAmountPlace" 
                 v-model="sentTradingAmount" 
                 @input="clearAmount"
@@ -80,7 +80,7 @@
           <p>Amount</p>
           <section>
             <input type="numer" 
-              maxlength="10"
+              maxlength="17"
               v-model="receiveAmount" 
               @input="clearNoNum" 
               onpaste="return false"/>
