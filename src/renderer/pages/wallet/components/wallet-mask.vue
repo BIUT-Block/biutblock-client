@@ -243,11 +243,15 @@ export default {
   },
   watch:{
     receiveAmount(newVal,oldVal){
-      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this._checkValueFormat(parseFloat(newVal))
+      if (newVal.length > 0) {
+        this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + newVal.replace(/^0+/,"")
+      } else {
+        this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + 0
+      }
     }
   },
   created() {
-    
+    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + 0
   },
   mounted() {
 
