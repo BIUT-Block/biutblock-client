@@ -10,7 +10,7 @@
         </section>
       </section>
       <section class="list-amount" :class="item.listState | stateColor">
-        <p>{{item.listMoney}} SEC</p>
+        <p>{{item.listMoney}} {{item.listUnit}}</p>
         <p>{{item.listState}}</p>
       </section>
     </li>
@@ -95,7 +95,7 @@ export default {
 
 <style scoped>
   ul li {display: flex;justify-content: space-between;height: 62px;align-items: center;margin: 0 32px;
-    border-bottom: 1px solid #E6E6E6;font-size: 13px;color: #252F33;}
+    border-bottom: 1px solid #E6E6E6;font-size: 13px;color: #252F33;box-sizing: border-box;}
   ul li .list-img {display: flex;}
   ul li .list-img section p:last-child {color: #576066;font-size: 11px;}
   ul li .list-img img {width: 40px;height: 33px;margin-right: 13px;}

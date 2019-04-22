@@ -24,33 +24,63 @@
               <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
             </section>
             <wallet-tips :tips="addressError"/>
+
             <p>AMOUNT</p>
             <section class="wallet-mask-sent-amount">
               <input type="numer" 
                 maxlength="19"
-                :placeholder="allAmountPlace" 
+                placeholder="Amount" 
                 v-model="sentTradingAmount" 
                 @input="clearAmount"
                 onpaste="return false"/>
               <section>
                 <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
                 <section>
-                  <span>SEC</span>
-                  <span @click="sentAllAmount">ALL</span>
-                </section>             
+                  <span @click="openTradingList">{{tradingText}} <img src="../../../assets/images/amountDown.png" /></span>
+                  <ul class="trading-list" v-show="tradingShow">
+                    <li v-for="(item, index) in itemList" 
+                        :key="index"
+                        :class="tradingIdx == index ? 'list-active' : ''"
+                        @click="tabTrading(index, item.cnt)">
+                      <span>{{item.cnt}}</span>
+                      <img :src="tradingIdx == index ? ''+ imgUrl +'' : ''" v-show="tradingIdx == index" alt="">
+                    </li>
+                  </ul>
+                </section>     
               </section>
-              
             </section>
-            <wallet-tips :tips="amountError"/>
-            <button type="button" @click="clostMask">Cancel</button>
-            <button type="button"
-                    :disabled="!sentActive"
-                    :class="sentActive ? 'passCorrect' : ''"
-                    @click="sentConfirm">Sent</button>
+            
+            <section class="all-amount-list">
+              <span>Balance：</span>
+              <span>{{tradingIdx === 0 ? allAmount : allfeeVal}} {{tradingText}}</span>
+              <span @click="sentAllAmount">All</span>
+            </section>
+            <wallet-tips :tips="moneyShowText" v-if="moneyShow"/>
+
+          <p class="trading-title">FEE</p>
+          <section class="transfer-slider">
+            <el-slider v-model="feeVal"
+              :show-tooltip="false"
+              :step="stepFee"
+              :max="maxFee"></el-slider>
+            <section>
+              <span>Slow</span>
+              <span>{{feeVal}} SEN</span>
+              <span>Fast</span>
+            </section>
+          </section>
+          
+          <wallet-tips :tips="feeErrorText" v-if="feeValError"/>
+
+          <button type="button" @click="clostMask">Cancel</button>
+          <button type="button"
+              :disabled="!sentActive"
+              :class="sentActive ? 'passCorrect' : ''"
+              @click="sentConfirm">Sent</button>
           </section>
 
           <!-- 确认转账 -->
-          <section v-show="sentPages == 2">
+          <section v-show="sentPages == 2" class="wallet-mask-sent-confirm">
             <h3>{{ confirmTitle }}</h3>
             <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
             <p>FROM</p>
@@ -58,7 +88,9 @@
             <p>TO</p>
             <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
             <p>AMOUNT</p>
-            <span class="wallet-mask-sent-from-address">{{sentTradingAmount}}</span>
+            <span class="wallet-mask-sent-from-address">{{sentTradingAmount}} {{ tradingText }}</span>
+            <p>FEE</p>
+            <span class="wallet-mask-sent-from-address">{{feeVal}} SEN</span>
 
             <section v-show="!networkError">
               <button type="button" @click="backSent">Back</button>
@@ -85,7 +117,18 @@
               v-model="receiveAmount" 
               @input="clearNoNum" 
               onpaste="return false"/>
-            <label>SEC</label>
+            <label @click="openQrcodeList">{{qrcodeText}} <img src="../../../assets/images/amountDown.png" /></label>
+
+            <ul class="qrcode-list" v-show="qrcodeShow">
+              <li v-for="(item, index) in itemList" 
+                  :key="index"
+                  :class="qrcodeIdx == index ? 'list-active' : ''"
+                  @click="tabQrcode(index, item.cnt)">
+                <span>{{item.cnt}}</span>
+                <img :src="qrcodeIdx == index ? ''+ imgUrl +'' : ''" alt="">
+              </li>
+            </ul>
+
           </section>
           <wallet-tips :tips="receiveError" />
           <qrcode :value="qrcodeWalletAddress" :options="{ size: 93 }"></qrcode>
@@ -162,6 +205,8 @@ import walletTranslucent from '../../../components/wallet-translucent'
 import Qrcode from '@xkeshi/vue-qrcode'
 import Clipboard from 'clipboard'
 import WalletHandler from '../../../lib/WalletsHandler';
+
+import amountChecked from '../../../assets/images/amountChecked.png'
 export default {
   name: 'walletMask',
   components: {
@@ -175,7 +220,8 @@ export default {
     maskShow: Boolean,
     selectedWallet: Object,
     walletData: Object,
-    balance: String
+    balance: String,
+    balanceSEN: String
   },
   data() {
     return {
@@ -193,7 +239,9 @@ export default {
       sentTradingAmount: '',//转账金额
       sentPages: 1,//默认显示转账页面
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
-      allAmount: this.balance,//总金额
+      //allAmount: this.balance,//总金额 SEC
+      moneyShow: false,//金额错误
+      moneyShowText: 'The amount is invalid',//金额错误
       confirmTitle: 'Confirm The Following information', //没网络的时候 Submission Failed
       networkError: false, //没有网络的时候 设置 成true
       networkErrorText: 'No network connection',
@@ -206,6 +254,31 @@ export default {
       copyTime: 3,
       receiveAmount: '',//二维码收款金额
       amountPlaceHolder: `Maximum input of ${this.balance}`,
+
+      qrcodeIdx: 0, //二维码切换 币种显示 下标
+      qrcodeText: 'SEC', //二维码切换 币种显示
+      qrcodeShow: false,//二维码切换 列表
+      tradingIdx: 0, //交易
+      tradingText: 'SEC',
+      tradingShow: false,
+      imgUrl: amountChecked, //选中的图片
+      itemList: [
+        {
+          id: '01',
+          cnt: 'SEC'
+        },
+        {
+          id: '02',
+          cnt: 'SEN'
+        }
+      ],
+
+      feeVal: 0.01, //初始值
+    //  allfeeVal: Number(this.balanceSEN), //所有的SEN
+    //  maxFee: Number(this.balanceSEN), //最大值
+      stepFee: 0.001, //步长
+      feeErrorText: 'Fee cannot be greater than all Fee',
+      feeValError: false
     }
   },
   computed: {
@@ -226,13 +299,64 @@ export default {
 
     //转账按钮是否可点击
     sentActive () {
-      let addressRgs = /^(0x)(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+$/
+      let addressReg = /^(0x)(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+$/
+      let address = this.sentAddress
+      let amount = this.sentTradingAmount
       let walletAddress = '0x' + this.selectedWallet.walletAddress
-      return this.sentAddress.length > 41 
-              && Number(this.sentTradingAmount) > 0 
-              && this.sentAddress !== walletAddress
-              && Number(this.sentTradingAmount) <= Number(this.balance)
-              && addressRgs.test(this.sentAddress) ? true : false
+      let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额 
+
+      if (this.feeVal > this.allfeeVal) {
+        this.feeErrorText = 'Fee cannot be greater than all Fee'
+        this.feeValError = true
+      } else if (this.feeVal === 0) {
+        this.feeErrorText = 'Fee Cannot be zero'
+        this.feeValError = true
+      } else {
+        this.feeValError = false
+      }
+
+      if (address.length > 0 && !(addressReg.test(address)) && address.length < 42) {
+        this.addressError = 'This is not a valid address'
+        return false
+      } else if (addressReg.test(address) && address.length == 42 && address == walletAddress) {
+        this.addressError = 'The same address cannot be transferred'
+        return false
+      } else {
+        
+        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+        //转账SEC
+        if (this.tradingIdx == 0) {
+          if (amount.length > 0 && Number(amount) > Number(this.balance)) {
+            this.moneyShow = true
+            return false
+          } else {
+            this.moneyShow = false
+            return address.length == 42
+              && amount > 0
+              && address != walletAddress
+              && Number(amount) <= Number(this.balance)
+              && addressReg.test(address)
+              && 0 < this.feeVal
+              && this.feeVal < this.allfeeVal ? true : false
+          }
+        } else {
+          //转账SEN
+          if (amount.length > 0 && amount > allNumber) {
+            this.moneyShow = true
+            return false
+          } else {
+            this.moneyShow = false
+            return address.length == 42
+                && amount > 0
+                && address != walletAddress
+                && Number(amount) <= Number(allNumber)
+                && addressReg.test(address)
+                && 0 < this.feeVal ? true : false
+          }
+        }
+      }
+
+      return true
     },
 
     //转账金额清空按钮
@@ -240,14 +364,29 @@ export default {
       return this.sentTradingAmount.length > 0 ? true : false
     },
 
+    allAmount() {
+      return this.balance
+    },
+    allfeeVal() {
+      return Number(this.balanceSEN)
+    },
+    maxFee() {
+      return Number(this.balanceSEN)
+    }
+
   },
+
   watch:{
     receiveAmount(newVal,oldVal){
-      this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + this._checkValueFormat(parseFloat(newVal))
+      if (newVal.length > 0) {
+        this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + newVal.replace(/^0+/,"")
+      } else {
+        this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + 0
+      }
     }
   },
   created() {
-    
+    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + 0
   },
   mounted() {
 
@@ -362,11 +501,24 @@ export default {
       let encryptTransferData = WalletHandler.encryptTransaction(this.selectedWallet.privateKey, {
         walletAddress: this.selectedWallet.walletAddress,
         sendToAddress: sendToAddress,
-        amount: this.sentTradingAmount + ''
+        amount: this.sentTradingAmount + '',
+        txFee: this.feeVal.toString()
       })
-      this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
+
+      if (this.tradingText === 'SEC') {
+        this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
-      })
+        }, (balance) => {
+          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
+        })
+      } else {
+        this.$JsonRPCClient.sendTransactionsSEN(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
+          this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
+        }, (balance) => {
+        this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
+        })
+      }
+      
 
       this.clostMask()
       this.translucentShow = true
@@ -480,9 +632,35 @@ export default {
 
     //转出全部金额
     sentAllAmount () {
-      this._resetErrorText()
-      this.sentTradingAmount = this.balance
-    }
+      //this._resetErrorText()
+      
+      if (this.tradingIdx === 0) {
+        this.sentTradingAmount = this.balance
+      } else {
+        this.sentTradingAmount = (this.allfeeVal - this.feeVal).toFixed(3)
+      }
+    },
+
+    //二维码切换 币种显示
+    tabQrcode (index, cnt) {
+      this.qrcodeIdx = index
+      this.qrcodeText = cnt
+      this.qrcodeShow = false
+    },
+
+    openQrcodeList() {
+      this.qrcodeShow = !this.qrcodeShow
+    },
+
+    tabTrading (index, cnt) {
+      this.tradingIdx = index
+      this.tradingText = cnt
+      this.tradingShow = false
+    },
+
+    openTradingList() {
+      this.tradingShow = !this.tradingShow
+    },
   },
 }
 </script>
@@ -491,35 +669,62 @@ export default {
   .wallet-mask {position: relative;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
-  .wallet-mask-sent {padding: 36px 32px;color: #252F33;font-size: 14px;font-weight: 500;}
+  .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;height: 516px;padding: 28px 32px 0;}
   .wallet-mask-sent img {width: 16px;height: 16px;}
-  .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 10px;
+  .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
     font-family: Montserrat-SemiBold;}
-  .wallet-mask-sent p {font-family: Lato-Bold;font-size: 16px;color: #839299;padding-top: 32px;}
+  .wallet-mask-sent p {font-family: Lato-Bold;font-size: 16px;color: #839299;padding-top: 24px;}
+
+  .wallet-mask-sent .wallet-mask-sent-confirm p {padding-top: 20px;}
+  .wallet-mask-sent .wallet-mask-sent-confirm h3 {padding-bottom: 22px;}
   .wallet-mask-sent-from-address {display: block;padding-top: 12px;font-family: Lato-Medium;}
   .wallet-mask-sent-to-address,.wallet-mask-sent-amount {display: flex;align-items: center;height: 36px;border-bottom:1px solid rgba(229,229,229,1);}
   .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;}
   .wallet-mask-sent-amount section {display: flex;align-items: center;}
   .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;}
-  .wallet-mask-sent-amount section span:last-child {color: #29D893;margin-left: 10px;}
-  .wallet-mask-sent-amount section span:last-child:hover {cursor: pointer;}
+  .wallet-mask-sent-amount section span:hover {cursor: pointer;}
+  .wallet-mask-sent-amount section span img {vertical-align: middle;margin-left: 4px;}
   
-  .wallet-mask-sent button {margin-top: 36px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
+  .wallet-mask-sent-amount {position: relative;}
+  .wallet-mask-sent-amount section .trading-list {position: absolute;right: 0;top: 37px;z-index: 9;border-radius: 4px;
+    box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
+  .wallet-mask-sent-amount section .trading-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
+  .wallet-mask-sent-amount section .trading-list li span {color: #576066;}
+  .wallet-mask-sent-amount section .trading-list li:hover {cursor: pointer;}
+  
+  .wallet-mask-sent button {margin-top: 40px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
     border: 0;background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
   .wallet-mask-sent button:last-child {margin-left: 8px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
   
-  
+  .wallet-mask-sent .trading-title {color: #839299;font-size: 16px;padding: 24px 0 10px;}
+  .transfer-slider section {display: flex;justify-content: space-between;align-items: center;font-size: 14px;}
+  .transfer-slider section span:first-child,.transfer-slider section span:last-child {color: #839299;}
+  .transfer-slider >>> .el-slider__runway {height: 2px;margin: 10px 0;}
+  .transfer-slider >>> .el-slider__bar {background-color: #00D86D;height: 2px;}
+  .transfer-slider >>> .el-slider__button {border-color: #00D86D;}
+  .transfer-slider >>> .el-slider__button-wrapper {width: 24px;height: 24px;}
+
+  .all-amount-list {color: #839299;font-size: 14px;padding-top: 8px;}
+  .all-amount-list span:last-child {color: #29D893;margin-left: 10px;}
+  .all-amount-list span:last-child:hover {cursor: pointer;}
+
   .wallet-mask-receive {padding: 36px 32px 28px;}
   .wallet-mask-receive h3 {color: #252F33;font-size: 28px;margin: 0;padding-bottom: 28px;font-family: Montserrat-SemiBold;}
   .wallet-mask-receive p {color: #839299;font-size: 14px;margin: 0;padding-top: 24px;}
   .wallet-mask-receive span {color: #252F33;font-size: 14px;padding-top: 10px;display: block;
     font-weight: 500;font-family: Lato-Medium;}
   .wallet-mask-receive span:last-child {padding-top: 0;font-size: 12px;font-weight: 400;}
-  .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;
+  .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;
     color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
   .wallet-mask-receive section input {border: 0;flex: 1;}
   .wallet-mask-receive canvas {margin: 28px 0 7px;}
-
+  .wallet-mask-receive section label img {vertical-align: middle;margin-left: 4px;}
+  .wallet-mask-receive section label:hover {cursor: pointer;}
+  .wallet-mask-receive .qrcode-list {position: absolute;top: 28px;right: 0;z-index: 9;border-radius: 4px;
+    box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
+  .wallet-mask-receive .qrcode-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
+  .wallet-mask-receive .qrcode-list li span {color: #576066;}
+  .wallet-mask-receive .qrcode-list li:hover {cursor: pointer;}
 
   .wallet-mask-priivate-key {padding: 32px 32px 28px;}
   .wallet-mask-priivate-key h3 {padding-bottom: 42px;}
@@ -564,7 +769,9 @@ export default {
 .keystroeActive {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;
   pointer-events: auto!important;color: #fff!important;}
 
-.network-error span {margin-top: 30px;}
+.network-error span {padding-top: 36px;}
 .network-error button {display: block;width: 100%;margin-top: 20px;
   background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
+
+.list-active span {color: #29D893!important;}
 </style>

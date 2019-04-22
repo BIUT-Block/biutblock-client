@@ -6,24 +6,31 @@
         <section class="dig-header-check">
           <h3>Mining</h3>
           <p>Wallet Account</p>
-          <ul>
-            <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" ref="walletListImg">
-              <span>{{selectedWalletName}}</span>
-              <img src="../../assets/images/moreDown.png" alt="">
-            </li>
-            <li v-show="checkWallet">
-              <ul>
-                <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">{{ wallet.walletName }}</li>
-              </ul>
-            </li>
-          </ul>
-          <wallet-button type="button" 
-              :text="digButton"
-              :disabled="disabledButton"
-              :class="[miningIn ? 'miningIn' : '', 
-                checkedWallet ? 'passCorrect' : '', 
-                disabledButton ? 'noCursor' : '']"
-              @click.native="beginDigMask"/>
+          <section class="button-list">
+            <ul>
+              <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" ref="walletListImg">
+                <span>{{selectedWalletName}}</span>
+                <img src="../../assets/images/moreDown.png" alt="">
+              </li>
+              <li v-show="checkWallet">
+                <ul>
+                  <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">{{ wallet.walletName }}</li>
+                </ul>
+              </li>
+            </ul>
+            <wallet-button type="button" 
+                :text="digButton"
+                :disabled="disabledButton"
+                :class="[miningIn ? 'miningIn' : '', 
+                  checkedWallet ? 'passCorrect' : '', 
+                  disabledButton ? 'noCursor' : '']"
+                @click.native="beginDigMask"/>
+          </section>
+          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} SEC</span></h4>
+          <section class="dig-tips">
+            <label>Description:</label> After the node is mined, the SEC Token is automatically acquired. 
+            The higher the balance, the greater probability to get SEN.
+          </section>
         </section>
         <section class="dig-header-list">
           <ul>
@@ -136,7 +143,8 @@ export default {
       maskText: '',
       mineStatusText: 'Please stop mining before changing wallet',
       mineStatusError: false,
-      bAlreadyShowed: false
+      bAlreadyShowed: false,
+      digBalance: 100000 //挖矿余额
     }
   },
   computed: {
@@ -154,21 +162,11 @@ export default {
     this.initMiningStatus()
 
     this._getLatestBlockInfo()
+    
 
     this.getBlockHeightJob = setInterval(()=>{
       this._getLatestBlockInfo()
     }, 2500)
-
-    // this.$JsonRPCClient.getBlockHeight((chainHeight) => {
-    //   this.chainHeight = chainHeight.toString()
-    //   this.networkMining = (Number(chainHeight)*2).toString()
-    // })
-    // this.getBlockHeightJob = setInterval(()=>{
-    //     this.$JsonRPCClient.getBlockHeight((chainHeight) => {
-    //     this.chainHeight = chainHeight.toString()
-    //     this.networkMining = (Number(chainHeight)*2).toString()
-    //   })
-    // }, 2500)
   },
   mounted () {
 
@@ -264,7 +262,7 @@ export default {
     },
     
     _getWalletMiningHistory () {
-      this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {  
+      this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Mining'
         })
@@ -275,7 +273,7 @@ export default {
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${element.listMoney} SEC`,
+            reward: `${element.listMoney} SEN`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })
@@ -284,6 +282,9 @@ export default {
     },
 
     _getLatestBlockInfo () {
+      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, (balance) => {
+        this.digBalance = balance
+      })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
         this.chainHeight = height.toString()
         this.networkMining = (Number(this.chainHeight)*2).toString()
@@ -360,7 +361,7 @@ export default {
       if (!this.isSynced) {
         this.processTexts.push(`Start mining (connecting nodes...).`)
         this.processTexts.push(`Node connection successful, synchronizing node...`)
-        this.$JsonRPCClient.client.request('sec_startNetworkEvent', [], (err, response) => {
+        this.$JsonRPCClient.clientSEN.request('sec_startNetworkEvent', [], (err, response) => {
           console.log(err)
           if (response) {
             this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
@@ -378,7 +379,7 @@ export default {
 
     stopMining () {
       this.$JsonRPCClient.switchToLocalHost()
-      this.$JsonRPCClient.client.request('sec_setPOW', ['0'], (err, response) => {
+      this.$JsonRPCClient.clientSEN.request('sec_setPOW', ['0'], (err, response) => {
         if (err) return
         this.miningIn = false
         this.processTexts.push(`0x${this.selectedWallet.walletAddress} stop mining`)
@@ -389,11 +390,11 @@ export default {
     },
 
     _beginMiningWithWallet () {
-      this.$JsonRPCClient.client.request('sec_setAddress', [this.selectedWallet.walletAddress], (err, response) => {
+      this.$JsonRPCClient.clientSEN.request('sec_setAddress', [this.selectedWallet.walletAddress], (err, response) => {
         console.log(err)
         if (err) return
       })
-      this.$JsonRPCClient.client.request('sec_setPOW', ['1'], (err, response) => {
+      this.$JsonRPCClient.clientSEN.request('sec_setPOW', ['1'], (err, response) => {
         console.log(err)
         if (err) {
           this.miningIn = false
@@ -416,43 +417,48 @@ export default {
     align-content: stretch;display:-webkit-flex;}
   .dig-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
   border-radius:4px;flex: 1;background: #fff;}
-  .dig-header {height: 140px;border-top-left-radius: 4px;
-    border-top-right-radius: 4px;padding: 20px 22px 24px 32px;display: flex;align-items: center;
+  .dig-header {border-top-left-radius: 4px;
+    border-top-right-radius: 4px;padding: 0 22px 8px 32px;display: flex;align-items: center;
     justify-content: space-between;}
   .dig-header .dig-header-check {width: 308px;}
-  .dig-header .dig-header-check button {width: 182px;height: 32px;margin-top: 14px;}
+  .dig-header .dig-header-check button {width: 98px;height: 32px;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
-    color:rgba(37,47,51,1);}
+    color:rgba(37,47,51,1);padding-top: 22px;}
+  .dig-header .dig-header-check h4 {margin: 0;padding: 6px 0 13px;color:#576066;font-size: 12px;font-weight: normal;}
+  .dig-header .dig-header-check h4 span {font-family: Lato-Medium;}
   .dig-header .dig-header-check p {font-family: Montserrat-Light;color: #839299;margin-top: 22px;}
-  .dig-header .dig-header-check ul {height: 33px;line-height: 33px;width: 182px;color:#252F33;
-    border-bottom:1px solid rgba(229,229,229,1);font-size: 14px;}
+  .dig-header .dig-header-check ul {height: 33px;line-height: 33px;width: 162px;color:#252F33;
+    background:rgba(247,247,247,1);font-size: 14px;border-radius:4px;padding: 0 10px;}
   .dig-header .dig-header-check ul img {width: 16px;height: 16px;}
   .dig-header .dig-header-check ul li:first-child {display: flex;justify-content: space-between;
     align-items: center;}
+  .dig-header .dig-header-check ul li:first-child:hover {cursor: pointer;}
   .dig-header .dig-header-check ul li {position: relative;}
-  .dig-header .dig-header-check ul li ul {height: 160px;position: absolute;top: 0;left: 0;z-index: 8;
-    overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;}
+  .dig-header .dig-header-check ul li ul {height: 160px;position: absolute;top: 0;left: -10px;z-index: 8;width: 182px;
+    overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;padding: 0;}
 
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
-  
+
   .dig-header .dig-header-check ul li ul li {height: 40px;padding-left:16px;}
   .dig-header .dig-header-check ul li ul li:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;background:rgba(237,242,241,1);}
-  .dig-header .dig-header-list {flex: 1;height: 108px;background:rgba(247,247,247,1);border-radius: 4px;
+  
+  .dig-header .dig-header-check .button-list {display: flex;align-items: center;justify-content: space-between;
+    padding-right: 18px;}
+  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;line-height: 1.5;color:#576066;}
+  .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
+  
+  .dig-header .dig-header-list {flex: 1;height: 132px;background:rgba(247,247,247,1);border-radius: 4px;
     overflow: auto;color: #252F33;padding: 16px 14px;}
   .dig-header .dig-header-list ul {list-style: disc;}
   .dig-header .dig-header-list ul li {padding-top: 5px;line-height: 1.5;}
   .dig-header .dig-header-list ul li:first-child {padding-top: 0;}
   
 
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar,.dig-header .dig-header-list::-webkit-scrollbar { width: 2px; height: 2px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb,.dig-header .dig-header-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track,.dig-header .dig-header-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
   
-
   .dig-body {padding: 22px 22px 0 32px;flex: 1;}
   
   .dig-footer {padding: 0 22px 0 32px;color: #839299;height: 45px;

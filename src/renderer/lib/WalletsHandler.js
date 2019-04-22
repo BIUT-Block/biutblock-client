@@ -48,6 +48,14 @@ let WalletHandler = {
     }
   },
 
+  deleteAllWalletsFromFile: function () {
+    let dirPath = require('os').homedir() + '/.secwallet'
+    let filePath = dirPath + '/wallets.data'
+    fs.writeFile(filePath, '', () => {
+      console.log('Remove all data')
+    })
+  },
+
   saveKeyStore: function (walletName, walletData, pwd) {
     let ciperData = this.ecryptWalletKeys(JSON.stringify(walletData), pwd)
     let blob = new Blob([ciperData], {
@@ -106,8 +114,12 @@ let WalletHandler = {
     if (err) {
       return
     }
-    let decodeText = CryptoJS.AES.decrypt(data, SECFileKey).toString(CryptoJS.enc.Utf8)
-    let keyDataJSON = JSON.parse(decodeText)
+    let keyDataJSON = {}
+    if (data.length > 0) {
+      let decodeText = CryptoJS.AES.decrypt(data, SECFileKey).toString(CryptoJS.enc.Utf8)
+      keyDataJSON = JSON.parse(decodeText)
+    }
+
     if (keyDataJSON.hasOwnProperty(wallet.privateKey)) {
       fnAfterSave('DuplicateKey')
     } else {
@@ -264,6 +276,7 @@ let WalletHandler = {
       from: transfer.walletAddress,
       to: transfer.sendToAddress,
       value: transfer.amount,
+      txFee: transfer.txFee,
       gasLimit: '0',
       gas: '0',
       gasPrice: '0',

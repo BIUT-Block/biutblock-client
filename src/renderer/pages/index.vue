@@ -184,7 +184,7 @@ export default {
           this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: Object.keys(wallets)[0] }})
         }
       
-        if (index == 3) {
+        if (index === 3) {
           let asideIdx = sessionStorage.getItem("asideIdx")
           sessionStorage.setItem("asideIdx", asideIdx)
           this.maskShow = true

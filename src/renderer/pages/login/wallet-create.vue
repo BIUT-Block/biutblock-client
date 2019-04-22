@@ -158,7 +158,7 @@ import agreements from '../../assets/images/agreements.png'
 import walletTranslucent from '../../components/wallet-translucent'
 import Clipboard from 'clipboard'
 import walletsHandler from '../../lib/WalletsHandler'
-import WalletHandler from '../../lib/WalletsHandler'
+
 const fs = require('fs')
 const pkg = require('../../../../package.json')
 
@@ -282,22 +282,22 @@ export default {
       this.createClose = false
     }
     this.versionNumber = pkg.version
-    if (createId !== 1) {
-      let dirPath = require('os').homedir() + '/.secwallet'
-      let filePath = dirPath + '/wallets.data'
-      let wallets = {}
-      walletsHandler.getAllWalletsFromFile((wallets) => {
-        if (JSON.stringify(wallets) !== '{}') {
-            this.$router.push({
-              name: 'walletIndex',
-              query: {
-                wallets: wallets,
-                selectedPrivateKey: Object.keys(wallets)[0]
-              }
-          })
-        } 
-      })
-    }
+    // if (createId !== 1) {
+    //   let dirPath = require('os').homedir() + '/.secwallet'
+    //   let filePath = dirPath + '/wallets.data'
+    //   let wallets = {}
+    //   walletsHandler.getAllWalletsFromFile((wallets) => {
+    //     if (JSON.stringify(wallets) !== '{}') {
+    //         this.$router.push({
+    //           name: 'walletIndex',
+    //           query: {
+    //             wallets: wallets,
+    //             selectedPrivateKey: Object.keys(wallets)[0]
+    //           }
+    //       })
+    //     } 
+    //   })
+    // }
   },
   mounted () {
 
@@ -372,7 +372,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      WalletHandler.saveKeyStore(`SEC${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
+      walletsHandler.saveKeyStore(`SEC${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
@@ -452,7 +452,7 @@ export default {
 
     //备份助记词成功进入钱包主页
     backupWallet () {
-      WalletHandler.backUpWalletIntoFile({
+      walletsHandler.backUpWalletIntoFile({
         walletName: this.walletName,
         privateKey: this.keys.privateKey,
         publicKey: this.keys.publicKey,
@@ -485,7 +485,7 @@ export default {
           }
         })
       } else if (walletIdx == 1) {
-        WalletHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
+        walletsHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
           console.log(wallets)
           if (wallets === 'error') {
             this.walletnNewPassError = true
@@ -503,7 +503,7 @@ export default {
           this._importNameError(2)
           return
         } 
-        WalletHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
+        walletsHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
             console.log(wallets)
             if (wallets === 'error') {
               this.phraseError = true

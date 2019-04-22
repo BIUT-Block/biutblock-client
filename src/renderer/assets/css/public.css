@@ -22,7 +22,7 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-
 .wallet-container .wallet-content {flex: 1;display: flex;flex-direction: column;}
 
 .wallet-create .wallet-button-important:hover,.wallet-import ul li:hover,button:hover,.setting-mask-header img:hover,
-.wallet-import .go-create span:hover,.wallet-content-header-right section:hover,main .closeImg:hover,
+.wallet-import .go-create span:hover,main .closeImg:hover,
 .wallet-content-header-left section img:hover,.dig-body-title .dig-body-title-list section:last-child:hover,
 .wallet-index .wallet-index-content aside .wallet-aside-list li:hover,.dig-more-header img:hover,
 .setting-mask-body-left ul li:hover,.setting-mask-body-right-network section img:hover,.wallet-mask-priivate-key .priivate-key-button:hover,

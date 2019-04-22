@@ -10,6 +10,7 @@ import {
 } from 'electron-updater'
 
 import updateChecker from './updateChecker.js'
+import walletsHandler from '../renderer/lib/WalletsHandler'
 
 const SECNODE = require('@sec-block/secjs-node')
 /**
@@ -48,7 +49,13 @@ function createWindow () {
   console.log(path + '/data/')
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
-  let SECCore = new SECNODE.Core({ DBPath: path + '/data/', cacheDBPath: path + '/data/powCache', ID: [] })
+  let SECCore = new SECNODE.Core({
+    DBPath: path + '/data/',
+    SecDBPath: path + 'Sec',
+    SenDBPath: path + 'Sen',
+    cacheDBPath: path + '/data/powCache',
+    ID: []
+  })
   let SECRPC = new SECNODE.RPC(SECCore)
   SECRPC.runRPCServer()
 
@@ -59,7 +66,7 @@ function createWindow () {
     response.on('data', remotegenesisHash => {
       remotegenesisHash = remotegenesisHash.toString()
       console.log(`remote GenesisHash: ${remotegenesisHash}`)
-      SECCore.APIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+      SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
         if (err) {
           return console.log('Blockchain Database is empty')
         }
@@ -67,7 +74,21 @@ function createWindow () {
         if (genesisBlock[0].Hash === remotegenesisHash) {
           return console.log('GenesisHash check passed')
         } else {
-          SECCore.APIs.clearDB((err) => {
+          SECCore.secAPIs.clearDB((err) => {
+            if (err) return console.error(err)
+            console.log('GenesisHash not passed, remove local database')
+          })
+        }
+      })
+      SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+        if (err) {
+          return console.log('Blockchain Database is empty')
+        }
+        console.log(`Local GenesisHash: ${genesisBlock[0].Hash}`)
+        if (genesisBlock[0].Hash === remotegenesisHash) {
+          return console.log('GenesisHash check passed')
+        } else {
+          SECCore.senAPIs.clearDB((err) => {
             if (err) return console.error(err)
             console.log('GenesisHash not passed, remove local database')
           })
@@ -89,6 +110,10 @@ function createWindow () {
   })
   mainWindow.setResizable(true)
 
+  /** catch the clos event of main window */
+  mainWindow.on('close', () => {
+    walletsHandler.deleteAllWalletsFromFile()
+  })
   if (process.platform === 'darwin') {
     const template = [{
       label: 'Application',
@@ -120,9 +145,9 @@ function createWindow () {
         label: 'Test Network'
       }]
     }]
-    Menu.setApplicationMenu(null)
+    //Menu.setApplicationMenu(null)
   } else {
-    Menu.setApplicationMenu(null)
+    //Menu.setApplicationMenu(null)
   }
   try {
     mainWindow.loadURL(winURL)
@@ -152,7 +177,11 @@ app.on('activate', () => {
 })
 
 ipcMain.on('min', () => mainWindow.minimize())
-ipcMain.on('close', () => mainWindow.close())
+ipcMain.on('close', () => {
+  console.log('Click Close')
+  walletsHandler.deleteAllWalletsFromFile()
+  mainWindow.close()
+})
 ipcMain.on('max', () => {
   if (mainWindow.isMaximized()) {
     mainWindow.unmaximize()

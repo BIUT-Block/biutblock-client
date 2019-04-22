@@ -30,7 +30,7 @@
               <section>
                 <span></span>
                 <span>Income of Mined：</span>
-                <span>{{this.digIncome}} SEC</span>
+                <span>{{this.digIncome}} SEN</span>
               </section>
             </section>
           </section>

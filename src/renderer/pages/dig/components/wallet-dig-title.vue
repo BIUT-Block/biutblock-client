@@ -10,7 +10,7 @@
       <section>
         <span></span>
         <span>Income of Mined：</span>
-        <span>{{this.income}} SEC</span>
+        <span>{{this.income}} SEN</span>
       </section>
       <section class="dig-more" v-show="digTitle" @click="digMore">More</section>
     </section>

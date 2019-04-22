@@ -15,7 +15,7 @@
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3 :class="textStyle">{{amount}}</h3>
+        <h3 :class="textStyle">{{amount}} {{moneyType}}</h3>
         <p :class="textStyle">{{status}}</p>
       </section>
 
@@ -29,8 +29,8 @@
         </ul>
       </section>
 
-      <!-- 查看交易详情 -->
-      <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
+      <!-- 查看交易详情  :class="{'hideLink':status==='Packed'}"-->
+      <section class="wallet-content-footer">
         <img src="../../assets/images/tradingLogo.png" alt="">
         <a :href="transactionLink" target="_blank">See more details at SEC BLOCKCHAIN</a>
       </section>
@@ -66,8 +66,9 @@ export default {
       selectedPrivateKey: '',
       textStyle: '',
       stateImg: tradingPacked, //根据状态切换图片及颜色
-      transactionLink: ''
-      
+      transactionLink: '',
+      fee: '', //转账手续费
+      moneyType: ''
     }
   },
   computed: {
@@ -100,14 +101,20 @@ export default {
           },
           {
             id: '06',
-            title: 'Cost',
-            cnt: this.cost
+            title: 'Value',
+            cnt: this.amount + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
           },
+          {
+            id: '07',
+            title: 'Fee',
+            cnt: this.fee + ' SEN'
+          }
       ]
     }
   },
   created () {
     let trade = this.$route.query.trade
+    console.log(trade)
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = this.$route.query.selectedPrivateKey
     this.transactionNumber = `0x${trade.id}`
@@ -118,6 +125,8 @@ export default {
     this.amount = trade.listMoney
     this.cost = trade.listMinerCost
     this.status = trade.listState
+    this.fee = trade.listMinerCost
+    this.moneyType=trade.listUnit
     switch(trade.listState) {
       case 'Successful':
         if (trade.listMoney.indexOf('+') > -1) {
@@ -162,7 +171,7 @@ export default {
   .wallet-content-img {text-align: center;color: #29D893;padding: 50px 0 56px;}
   .wallet-content-img h3 {font-weight: bold;font-size: 18px;margin: 6px 0 0;}
 
-  .wallet-content-list {color: #252F33;font-size:14px;font-weight: 400;padding-bottom: 87px;
+  .wallet-content-list {color: #252F33;font-size:14px;font-weight: 400;padding-bottom: 49px;
     padding-left: 36px;}
   .wallet-content-list ul li {display: flex;margin-bottom: 18px;}
   .wallet-content-list ul li:last-child {margin-bottom: 0;}

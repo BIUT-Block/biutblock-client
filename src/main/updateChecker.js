@@ -47,8 +47,12 @@ const compareVersion2Update = (current, latest) => {
   let flag = false
 
   for (let i = 0; i < 3; i++) {
-    if (currentVersion[i] < latestVersion[i]) {
+    if (Number(currentVersion[i]) < Number(latestVersion[i])) {
       flag = true
+    } else if (Number(currentVersion[i]) === Number(latestVersion[i])) {
+      continue
+    } else {
+      break
     }
   }
 

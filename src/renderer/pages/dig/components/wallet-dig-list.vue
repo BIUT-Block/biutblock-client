@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="container">
     <ul class="dig-list">
       <li style="width: 24%;">AGE</li>
       <li style="width: 18%;">REWARD</li>
@@ -29,6 +29,15 @@ export default {
   },
   data() {
     return {
+      // digList: [
+      //   {
+      //     id: '0',
+      //     age: '0',
+      //     reward: '0',
+      //     blocknumber: '0',
+      //     blockhash: '00'
+      //   }
+      // ]
     }
   },
   computed: {
@@ -38,7 +47,11 @@ export default {
       } else {
         return true
       }
-    }
+    },
+
+    // digLists () {
+    //   return Array(10).fill(this.digList[0])
+    // }
   },
   created() {
     
@@ -54,15 +67,15 @@ export default {
 </script>
 
 <style scoped>
-  section {height: 285px;overflow: hidden;}
-  section ul {display: flex;}
-  section .dig-list {padding-top: 13px;}
-  section ul li {height: 45px;color: #252F33;display: flex;align-items: center;
+  .container {height: 260px;overflow: hidden;box-sizing: border-box;}
+  .container ul {display: flex;}
+  .container .dig-list {padding-top: 16px;}
+  .container ul li {height: 41px;color: #252F33;display: flex;align-items: center;box-sizing: border-box;
     border-bottom:1px solid rgba(229,229,229,1);}
-  section ul:last-child li {border: 0;}
-  section .dig-list li {font-family: Lato-Bold;color: #839299;
+  .container ul:last-child li {border: 0;}
+  .container .dig-list li {font-family: Lato-Bold;color: #839299;box-sizing: border-box;
     border-bottom:2px solid rgba(229,229,229,1)!important;}
   
-  .dig-body {flex: 1;align-items: center;justify-content: center;display: flex;}
+  .dig-body {flex: 1;align-items: center;justify-content: center;display: flex;height: 220px;}
   h4 {margin: 0;font-size: 14px;color: #839299;font-weight: normal;}
 </style>
