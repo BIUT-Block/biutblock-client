@@ -103,7 +103,6 @@
               <button type="button" @click="backSent">Resubmit</button>
             </section>
           </section>
-
         </section>
 
         <!-- 二维码 maskPages = 5 receive -->
@@ -276,7 +275,7 @@ export default {
       ],
 
       feeVal: 0.01, //初始值
-      minFee: 0.01,//最小值
+      minFee: 0.001,//最小值
     //  allfeeVal: Number(this.balanceSEN), //所有的SEN
     //  maxFee: Number(this.balanceSEN), //最大值
       stepFee: 0.001, //步长
@@ -379,7 +378,7 @@ export default {
       return Number(this.balanceSEN)
     },
     maxFee() {
-      return Number(this.balanceSEN)
+      return Number("0.1")
     }
 
   },
