@@ -69,4 +69,5 @@ export default {
     border-bottom: 1px solid #E6E6E6;}
   section input {font-size: 14px;color: #252F33;height: 30px;flex: 1;border:none;font-family: Lato-Medium;}
   section img {width: 17px;height: 17px;}
+  section img:hover {cursor: pointer;}
 </style>

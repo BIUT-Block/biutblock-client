@@ -122,7 +122,7 @@ export default {
         },
         {
           id: "03",
-          title: "dig",
+          title: "mining",
           imgUrl: dig,
           imgUrls: digs,
           routeLink: '/walletDig'

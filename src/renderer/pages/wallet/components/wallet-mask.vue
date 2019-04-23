@@ -1,7 +1,7 @@
 <template>
   <!-- 遮罩层弹窗 -->
   <main>
-      <section class="mask" v-show="maskShow">
+      <section class="mask" v-show="maskShow" @click="closeAmountList">
       <!-- <section class="mask"></section> -->
       <section class="mask-container wallet-mask">
         <img
@@ -23,7 +23,7 @@
               <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
               <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
             </section>
-            <wallet-tips :tips="addressError"/>
+            <wallet-tips :tips="addressError" v-show="addresErrorShow"/>
 
             <p>AMOUNT</p>
             <section class="wallet-mask-sent-amount">
@@ -36,7 +36,7 @@
               <section>
                 <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
                 <section>
-                  <span @click="openTradingList">{{tradingText}} <img src="../../../assets/images/amountDown.png" /></span>
+                  <span @click="openTradingList" id="amountListImg1">{{tradingText}} <img src="../../../assets/images/amountDown.png"/></span>
                   <ul class="trading-list" v-show="tradingShow">
                     <li v-for="(item, index) in itemList" 
                         :key="index"
@@ -118,7 +118,7 @@
               v-model="receiveAmount" 
               @input="clearNoNum" 
               onpaste="return false"/>
-            <label @click="openQrcodeList">{{qrcodeText}} <img src="../../../assets/images/amountDown.png" /></label>
+            <label @click="openQrcodeList" id="amountListImg2">{{qrcodeText}} <img src="../../../assets/images/amountDown.png" /></label>
 
             <ul class="qrcode-list" v-show="qrcodeShow">
               <li v-for="(item, index) in itemList" 
@@ -246,6 +246,7 @@ export default {
       confirmTitle: 'Confirm The Following information', //没网络的时候 Submission Failed
       networkError: false, //没有网络的时候 设置 成true
       networkErrorText: 'No network connection',
+      addresErrorShow: false,//地址错误
 
       translucentShow: false, //弹窗
       translucentText: 'Copy success',
@@ -302,10 +303,10 @@ export default {
     //转账按钮是否可点击
     sentActive () {
       let addressReg = /^(0x)(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+$/
-      let address = this.sentAddress
-      let amount = this.sentTradingAmount
+      let address = this.sentAddress.replace(/\s+/g, "")
+      let amount = this.sentTradingAmount.replace(/\s+/g, "")
       let walletAddress = '0x' + this.selectedWallet.walletAddress
-      let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额 
+      let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
         this.feeErrorText = 'Fee cannot be greater than all Fee'
@@ -317,15 +318,20 @@ export default {
         this.feeValError = false
       }
 
-      if (address.length > 0 && !(addressReg.test(address)) && address.length < 42) {
+      if (address.length > 0 && address.length < 42) {
+        this.addresErrorShow = true
+        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+        return false
+      } else if (!(addressReg.test(address)) && address.length == 42) {
+        this.addresErrorShow = true
         this.addressError = 'This is not a valid address'
         return false
-      } else if (addressReg.test(address) && address.length == 42 && address == walletAddress) {
+      } else if (addressReg.test(address) && address == walletAddress) {
+        this.addresErrorShow = true
         this.addressError = 'The same address cannot be transferred'
         return false
       } else {
-        
-        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+        this.addresErrorShow = false
         //转账SEC
         if (this.tradingIdx == 0) {
           if (amount.length > 0 && Number(amount) > Number(this.balance)) {
@@ -424,6 +430,8 @@ export default {
       this.sentTradingAmount = ''
       this.walletNewPass = ''
       this.sentPages = 1
+      this.tradingText = 'SEN'
+      this.qrcodeText = 'SEC'
       this.$emit("changeClose","")
     },
 
@@ -648,6 +656,19 @@ export default {
       this.qrcodeIdx = index
       this.qrcodeText = cnt
       this.qrcodeShow = false
+    },
+
+    //点击其他地方关闭sec、sen选择
+    closeAmountList (event) {
+      let amountList1 = document.getElementById('amountListImg1')
+      let amountList2 = document.getElementById('amountListImg2')
+      if (this.tradingShow && !amountList1.contains(event.target) || this.qrcodeShow && !amountList2.contains(event.target)) {
+        if (this.tradingShow) {
+          this.tradingShow = false
+        } else {
+           this.qrcodeShow = false
+        }
+      }
     },
 
     openQrcodeList() {

@@ -2,7 +2,7 @@
   <main class="wallet-container">
     <!-- 钱包列表 -->
      <section class="wallet-list">
-      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex"/>
+      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex" />
     </section>
 
     <section class="wallet-content">
@@ -163,6 +163,7 @@ export default {
 </script>
 
 <style scoped>
+  .wallet-list >>> ul {pointer-events: none;}
   .wallet-content {margin: 24px 32px;box-shadow:0px 0px 6px rgba(37,47,51,0.16);padding: 16px 36px 20px 20px;}
   .wallet-content-return {display: flex;align-items: center;color: #839299;font-size: 14px}
   .wallet-content-return img {width: 24px;height: 24px;margin-right: 8px;}
