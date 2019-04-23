@@ -2,7 +2,7 @@
   <main class="wallet-container">
     <!-- 钱包列表 -->
      <section class="wallet-list">
-      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex"/>
+      <left-nav :wallets="wallets" :selectedPrivateKey="selectedPrivateKey" createdId="walletIndex" />
     </section>
 
     <section class="wallet-content">
@@ -29,8 +29,8 @@
         </ul>
       </section>
 
-      <!-- 查看交易详情  :class="{'hideLink':status==='Packed'}"-->
-      <section class="wallet-content-footer">
+      <!-- 查看交易详情 -->
+      <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img src="../../assets/images/tradingLogo.png" alt="">
         <a :href="transactionLink" target="_blank">See more details at SEC BLOCKCHAIN</a>
       </section>
@@ -114,7 +114,6 @@ export default {
   },
   created () {
     let trade = this.$route.query.trade
-    console.log(trade)
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = this.$route.query.selectedPrivateKey
     this.transactionNumber = `0x${trade.id}`
@@ -164,6 +163,7 @@ export default {
 </script>
 
 <style scoped>
+  .wallet-list >>> ul {pointer-events: none;}
   .wallet-content {margin: 24px 32px;box-shadow:0px 0px 6px rgba(37,47,51,0.16);padding: 16px 36px 20px 20px;}
   .wallet-content-return {display: flex;align-items: center;color: #839299;font-size: 14px}
   .wallet-content-return img {width: 24px;height: 24px;margin-right: 8px;}

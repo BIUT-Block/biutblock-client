@@ -26,6 +26,7 @@
                    v-model.trim="walletName"
                    v-show="!inputReadonly"
                    :readonly="inputReadonly"
+                   onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"
                    @blur="saveName"/>
               <!-- <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput"> -->
             </section>

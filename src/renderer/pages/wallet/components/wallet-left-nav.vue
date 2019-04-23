@@ -115,7 +115,7 @@ export default {
   ul li section p {color: #839299;}
   ul li:hover,.create-button:hover {cursor: pointer;}
   .checked-nav {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    box-shadow:0px 0px 10px rgba(41,216,147,0.5);flex: 1;}
+    box-shadow:0px 0px 10px rgba(41,216,147,0.5);flex: 1;pointer-events: none;}
   ul .checked-nav section {margin-left: 23px;}
   ul .checked-nav section p,ul .checked-nav section p:first-child {color: #fff;}
   .border-hidden {display: none;} 

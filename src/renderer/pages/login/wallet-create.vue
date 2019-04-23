@@ -13,8 +13,15 @@
     <!-- 创建钱包 createPages == 1 -->
     <section class="wallet-create" v-if="createPages == 1">
       <span class="wallet-button-important" @click="importCreate">Import Wallet</span>
+      
       <wallet-title :title="walletNameText" :choose="true"/>
-      <wallet-input type="text" placeholder="Wallet Name" maxlength="14" v-model.trim="walletName"></wallet-input>
+      <wallet-input 
+        type="text" 
+        placeholder="Wallet Name" 
+        maxlength="14" 
+        v-model.trim="walletName"
+        onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"></wallet-input>
+      
       <wallet-title :title="walletPassText1" :choose="true"/>
       <wallet-input-pass placeholder="Password" maxlength="30" 
           v-model="walletPass1"
@@ -22,12 +29,15 @@
           @getFocus="getFocus"
           @input="inputContent1"></wallet-input-pass>
       <wallet-tips :tips="passFormat"  v-show="passFormatShow"/>
+      
       <wallet-title :title="walletPassText2" :choose="true"/>
-      <wallet-input-pass placeholder="Confirm Password" maxlength="30" 
+      <wallet-input-pass 
+          placeholder="Confirm Password" 
+          maxlength="30" 
           v-model="walletPass2"
-          @loseFocus="loseFocus2"
           @input="inputContent2"></wallet-input-pass>
       <wallet-tips :tips="passFormat2"  v-show="passFormat2Show"/>
+
       <wallet-button  type="button" 
                       class="wallet-button-create" 
                       :text="walletButtonText"
@@ -74,7 +84,11 @@
 
       <!-- 私钥导入 -->
       <section class="wallet-import-private-key" v-show="tabIndex == 0">
-        <wallet-input placeholder="Wallet Name" maxlength="14" v-model.trim="walletNameImport1"></wallet-input>
+        <wallet-input 
+          placeholder="Wallet Name" 
+          maxlength="14" 
+          v-model.trim="walletNameImport1"
+          onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"></wallet-input>
         <textarea placeholder="Eenter your private key here" 
             maxlength="64" 
             v-model.trim="walletPrivateKey"
@@ -112,7 +126,11 @@
 
       <!-- 助记词导入 -->
       <section  class="wallet-import-phrase" v-show="tabIndex == 2">
-        <wallet-input placeholder="Wallet Name" maxlength="14" v-model.trim="walletNameImport2"></wallet-input>
+        <wallet-input 
+          placeholder="Wallet Name" 
+          maxlength="14" 
+          v-model.trim="walletNameImport2"
+          onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"></wallet-input>
         <textarea placeholder="Enter your Phrase here width space-separated" v-model.trim="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
         <wallet-button  class="wallet-button-backup" 
@@ -242,14 +260,18 @@ export default {
   computed: {
     //创建钱包按钮是否激活
     createActive () {
-      if (this.walletPass2 == this.walletPass1) {
+      let passReg = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
+      let pass1 = this.walletPass1.replace(/\s+/g, "")
+      let pass2 = this.walletPass2.replace(/\s+/g, "")
+      if (passReg.test(pass1) && pass1 != pass2 && pass2.length > 0) {
+        this.passFormat2Show = true
+      } else {
         this.passFormat2Show = false
       }
-      let pass = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
       return this.walletName.trim().length > 0 
-             && this.walletPass1.length > 7
-             && pass.test(this.walletPass1)
-             && (this.walletPass2).replace(/\s+/g, "") == (this.walletPass1).replace(/\s+/g, "") ? true : false
+             && pass1.length > 7
+             && passReg.test(pass1)
+             && pass2 == pass1 ? true : false
     },
     
     //备份助记词按钮是否激活
@@ -334,14 +356,6 @@ export default {
       this.$nextTick(()=> {
         this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'')
       })
-    },
-
-    //确认密码失去焦点
-    loseFocus2 () {
-      this.passFormat2Show = true
-      if ((this.walletPass1).replace(/\s+/g, "") == (this.walletPass2).replace(/\s+/g, "")) {
-        this.passFormat2Show = false
-      }
     },
 
     //导入钱包
