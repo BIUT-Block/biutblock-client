@@ -29,8 +29,8 @@
         </ul>
       </section>
 
-      <!-- 查看交易详情  :class="{'hideLink':status==='Packed'}"-->
-      <section class="wallet-content-footer">
+      <!-- 查看交易详情 -->
+      <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img src="../../assets/images/tradingLogo.png" alt="">
         <a :href="transactionLink" target="_blank">See more details at SEC BLOCKCHAIN</a>
       </section>
@@ -114,7 +114,6 @@ export default {
   },
   created () {
     let trade = this.$route.query.trade
-    console.log(trade)
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = this.$route.query.selectedPrivateKey
     this.transactionNumber = `0x${trade.id}`

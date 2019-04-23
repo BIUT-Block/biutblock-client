@@ -62,7 +62,8 @@
             <el-slider v-model="feeVal"
               :show-tooltip="false"
               :step="stepFee"
-              :max="maxFee"></el-slider>
+              :max="maxFee"
+              :min="minFee"></el-slider>
             <section>
               <span>Slow</span>
               <span>{{feeVal}} SEN</span>
@@ -274,6 +275,7 @@ export default {
       ],
 
       feeVal: 0.01, //初始值
+      minFee: 0.01,//最小值
     //  allfeeVal: Number(this.balanceSEN), //所有的SEN
     //  maxFee: Number(this.balanceSEN), //最大值
       stepFee: 0.001, //步长
