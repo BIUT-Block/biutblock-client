@@ -45,14 +45,14 @@ function createWindow () {
   }
 
   // ------------------------  SETUP DATABASE PATH  -----------------------
-  let path = app.getPath('appData')
+  let path = app.getPath('appData') + '/secblock-client'
   console.log(path + '/data/')
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
   let SECCore = new SECNODE.Core({
     DBPath: path + '/data/',
-    SecDBPath: path + 'Sec',
-    SenDBPath: path + 'Sen',
+    SecDBPath: path + '/data/Sec',
+    SenDBPath: path + '/data/Sen',
     cacheDBPath: path + '/data/powCache',
     ID: []
   })
