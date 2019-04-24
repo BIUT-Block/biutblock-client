@@ -3,7 +3,7 @@ import WalletsHandler from './WalletsHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '35.158.171.46' //'54.250.166.137'  //'18.197.120.79' Test node
+    let externalServerAddress = '54.250.166.137' //'54.250.166.137'  //'18.197.120.79' Test node
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
     let localhostAddress = '127.0.0.1'
