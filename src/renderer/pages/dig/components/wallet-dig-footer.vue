@@ -14,7 +14,9 @@
     </li>
     <li>
       <span>Mined by：</span>
-      <span>{{ navigatorAddress ? '0x' : '-' }} {{walletAddress.replace(/(.{6}).+(.{8})/,'$1...$2')}} </span>
+      <span>
+        {{ textText }}
+      </span>
     </li>
   </ul>
 </template>
@@ -28,13 +30,20 @@ export default {
   props: {walletAddress: String, totalBlockHeight: String, totalMining: String, timeDiff: String},
   data() {
     return {
-      navigatorAddress: true
+
     }
   },
   computed: {
+    textText () {
+      if (this.walletAddress == "") {
+        return '-'
+      } else {
+        return '0x' + this.walletAddress.replace(/(.{6}).+(.{8})/,'$1...$2')
+      }
+    },
+
     timeOfLastBlock () {
       if (!navigator.onLine) {
-        this.navigatorAddress = false
         return '-'
       }
       if (Math.ceil(Number(this.timeDiff) / 1000) < 60) {
@@ -52,7 +61,11 @@ export default {
 
   },
   mounted() {
-
+    if (!navigator.onLine) {
+      this.navigatorAddress = false
+    } else {
+      this.navigatorAddress = true
+    }
   },
   destroyed() { },
   methods: {

@@ -241,7 +241,7 @@ export default {
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       //allAmount: this.balance,//总金额 SEC
       moneyShow: false,//金额错误
-      moneyShowText: 'The amount is invalid',//金额错误
+      moneyShowText: 'Transfer amount must be less than balance',//金额错误
       confirmTitle: 'Confirm The Following information', //没网络的时候 Submission Failed
       networkError: false, //没有网络的时候 设置 成true
       networkErrorText: 'No network connection',
@@ -348,7 +348,7 @@ export default {
           }
         } else {
           //转账SEN
-          if (amount.length > 0 && amount > allNumber) {
+          if (amount.length > 0 &&  Number(amount) >  Number(allNumber)) {
             this.moneyShow = true
             return false
           } else {
@@ -429,8 +429,10 @@ export default {
       this.sentTradingAmount = ''
       this.walletNewPass = ''
       this.sentPages = 1
-      this.tradingText = 'SEN'
+      this.tradingText = 'SEC'
       this.qrcodeText = 'SEC'
+      this.qrcodeIdx = 0
+      this.tradingIdx = 0
       this.$emit("changeClose","")
     },
 

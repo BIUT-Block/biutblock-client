@@ -18,10 +18,9 @@
 </template>
 
 <script>
-import tradingPacked from '../../../assets/images/tradingPackeds.png'  //转账中
-import tradingSuccess from '../../../assets/images/tradingSuccesss.png' //转账成功
-import tradingFailed from '../../../assets/images/tradingFaileds.png'  //转账失败
-import tradingMining from '../../../assets/images/tradingMinings.png'  //挖矿
+import tradingPacked from '../../../assets/images/tradingPacked.png'  //转账中
+import tradingSuccess from '../../../assets/images/tradingSuccess.png' //转账成功
+import tradingMining from '../../../assets/images/tradingMining.png'  //挖矿
 import collection from '../../../assets/images/collectionImg.png'  //收款成功
 
 export default {

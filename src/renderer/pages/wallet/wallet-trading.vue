@@ -42,7 +42,6 @@
 import leftNav from './components/wallet-left-nav'
 import tradingPacked from '../../assets/images/tradingPackeds.png'  //转账中
 import tradingSuccess from '../../assets/images/tradingSuccesss.png' //转账成功
-import tradingFailed from '../../assets/images/tradingFaileds.png' //转账失败
 import tradingMining from '../../assets/images/tradingMinings.png' //挖矿
 import collectionImg from '../../assets/images/collectionImgs.png' //收款成功
 export default {

@@ -144,7 +144,7 @@ export default {
       mineStatusText: 'Please stop mining before changing wallet',
       mineStatusError: false,
       bAlreadyShowed: false,
-      digBalance: 100000 //挖矿余额
+      digBalance: 0 //挖矿余额
     }
   },
   computed: {
