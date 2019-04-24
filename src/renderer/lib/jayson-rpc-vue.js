@@ -53,9 +53,15 @@ export default {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
               if (response.result.resultInPool[j].TxTo === walletAddress) {
                 continue
+              } else if (response.result.resultInPool[j].TxTo === '0000000000000000000000000000000000000000') {
+                moneyValue = '- ' + response.result.resultInPool[j].Value
+                walletAddressTempInPool = 'Gas'
+              } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000') {
+                moneyValue = '- ' + response.result.resultInPool[j].Value
+                walletAddressTempInPool = 'Mined'
               } else {
                 moneyValue = '- ' + response.result.resultInPool[j].Value
-                walletAddressTempInPool = response.result.resultInPool[j].TxTo
+                walletAddressTempInPool = `0x${response.result.resultInPool[j].TxTo}`
               }
               walletList.push({
                 id: response.result.resultInPool[j].TxHash,
@@ -77,22 +83,28 @@ export default {
               if (response.result.resultInChain[i].TxTo === walletAddress) {
                 moneyValue = '+ ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxFrom
+              } else if (response.result.resultInChain[i].TxTo === '0000000000000000000000000000000000000000') {
+                moneyValue = '- ' + response.result.resultInChain[i].Value
+                walletAddressTempInChain = 'Gas'
+              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000') {
+                moneyValue = '- ' + response.result.resultInChain[i].Value
+                walletAddressTempInChain = 'Mined'
               } else {
                 moneyValue = '- ' + response.result.resultInChain[i].Value
-                walletAddressTempInChain = response.result.resultInChain[i].TxTo
+                walletAddressTempInChain = `0x${response.result.resultInChain[i].TxTo}`
               }
               walletList.push({
                 id: response.result.resultInChain[i].TxHash,
                 blockNumber: response.result.resultInChain[i].BlockNumber,
                 blockHash: `0x${response.result.resultInChain[i].BlockHash}`,
-                listAddress: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mined' : `0x${walletAddressTempInChain}`,
+                listAddress: walletAddressTempInChain,
                 listFrom: response.result.resultInChain[i].TxFrom,
                 listTo: response.result.resultInChain[i].TxTo,
                 listTime: WalletsHandler.formatDate(moment(response.result.resultInChain[i].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listUnit: tokenUnit,
                 listMinerCost: response.result.resultInChain[i].TxFee,
-                listState: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
+                listState: response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
               })
             }
           }
@@ -166,11 +178,11 @@ export default {
                 } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000') {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Mined'
-                }else {
+                } else {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = `0x${response.result.resultInPool[j].TxTo}`
                 }
-                
+   
                 walletList.push({
                   id: response.result.resultInPool[j].TxHash,
                   blockNumber: 'Not in Block yet',
@@ -197,7 +209,7 @@ export default {
                 } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000') {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Mined'
-                }else {
+                } else {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = `0x${response.result.resultInChain[i].TxTo}`
                 }
