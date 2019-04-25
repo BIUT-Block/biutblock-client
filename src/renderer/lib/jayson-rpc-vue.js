@@ -51,14 +51,16 @@ export default {
           if (err) return
           if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
-              if (response.result.resultInPool[j].TxTo === walletAddress) {
+              if (response.result.resultInPool[j].TxTo === walletAddress && response.result.resultInPool[j].Value !== '0' && response.result.resultInPool[j].TxFrom !== '0000000000000000000000000000000000000000') {
                 continue
               } else if (response.result.resultInPool[j].TxTo === '0000000000000000000000000000000000000000') {
                 moneyValue = '- ' + response.result.resultInPool[j].Value
                 walletAddressTempInPool = 'Gas'
-              } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000') {
+              } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value !== '0') {
                 moneyValue = '- ' + response.result.resultInPool[j].Value
                 walletAddressTempInPool = 'Mined'
+              } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value === '0') {
+                continue
               } else {
                 moneyValue = '- ' + response.result.resultInPool[j].Value
                 walletAddressTempInPool = `0x${response.result.resultInPool[j].TxTo}`
@@ -80,15 +82,17 @@ export default {
           }
           if (response.result.resultInChain) {
             for (let i = 0; i < response.result.resultInChain.length; i++) {
-              if (response.result.resultInChain[i].TxTo === walletAddress) {
+              if (response.result.resultInChain[i].TxTo === walletAddress && response.result.resultInChain[i].Value !== '0' && response.result.resultInChain[i].TxFrom !== '0000000000000000000000000000000000000000') {
                 moneyValue = '+ ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = response.result.resultInChain[i].TxFrom
               } else if (response.result.resultInChain[i].TxTo === '0000000000000000000000000000000000000000') {
                 moneyValue = '- ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = 'Gas'
-              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000') {
+              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
                 moneyValue = '- ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = 'Mined'
+              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
+                continue
               } else {
                 moneyValue = '- ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = `0x${response.result.resultInChain[i].TxTo}`
@@ -170,14 +174,16 @@ export default {
             if (err) return
             if (response.result.resultInPool) {
               for (let j = 0; j < response.result.resultInPool.length; j++) {
-                if (response.result.resultInPool[j].TxTo === walletAddress) {
+                if (response.result.resultInPool[j].TxTo === walletAddress && response.result.resultInPool[j].Value !== '0' && response.result.resultInPool[j].TxFrom !== '0000000000000000000000000000000000000000') {
                   continue
                 } else if (response.result.resultInPool[j].TxTo === '0000000000000000000000000000000000000000') {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Gas'
-                } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000') {
+                } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value !== '0') {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Mined'
+                } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value === '0') {
+                  continue
                 } else {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = `0x${response.result.resultInPool[j].TxTo}`
@@ -200,15 +206,17 @@ export default {
             }
             if (response.result.resultInChain) {
               for (let i = 0; i < response.result.resultInChain.length; i++) {
-                if (response.result.resultInChain[i].TxTo === walletAddress) {
+                if (response.result.resultInChain[i].TxTo === walletAddress && response.result.resultInChain[i].Value !== '0' && response.result.resultInChain[i].TxFrom !== '0000000000000000000000000000000000000000') {
                   moneyValue = '+ ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = response.result.resultInChain[i].TxFrom
                 } else if (response.result.resultInChain[i].TxTo === '0000000000000000000000000000000000000000') {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Gas'
-                } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000') {
+                } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Mined'
+                } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
+                  continue
                 } else {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = `0x${response.result.resultInChain[i].TxTo}`

@@ -13,6 +13,7 @@ import updateChecker from './updateChecker.js'
 import walletsHandler from '../renderer/lib/WalletsHandler'
 
 const SECNODE = require('@sec-block/secjs-node')
+const packageJSON = require('../../package.json')
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -45,7 +46,7 @@ function createWindow () {
   }
 
   // ------------------------  SETUP DATABASE PATH  -----------------------
-  let path = app.getPath('appData') + '/secblock-client'
+  let path = app.getPath('appData') + packageJSON.name
   console.log(path + '/data/')
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
