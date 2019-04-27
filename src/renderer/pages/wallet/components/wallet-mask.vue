@@ -433,6 +433,7 @@ export default {
       this.qrcodeText = 'SEC'
       this.qrcodeIdx = 0
       this.tradingIdx = 0
+      this.feeVal=0.01
       this.$emit("changeClose","")
     },
 
