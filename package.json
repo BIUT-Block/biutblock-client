@@ -63,9 +63,9 @@
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-blockchain": "^1.0.156",
+    "@sec-block/secjs-blockchain": "^1.0.157",
     "@sec-block/secjs-datahandler": "^1.1.50",
-    "@sec-block/secjs-node": "^1.2.37",
+    "@sec-block/secjs-node": "^1.2.39",
     "@sec-block/secjs-util": "^1.1.22",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "axios": "^0.16.1",
@@ -75,7 +75,7 @@
     "dom-to-image": "^2.6.0",
     "electron-prompt": "^1.3.0",
     "electron-updater": "^3.1.2",
-    "element-ui": "^2.7.2",
+    "element-ui": "^2.8.2",
     "file-saver": "^2.0.1",
     "ipify": "^2.0.0",
     "jayson": "^2.1.2",
@@ -139,7 +139,7 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.11.5",
-    "webpack-hot-middleware": "^2.23.1",
+    "webpack-hot-middleware": "^2.24.4",
     "webpack-merge": "^4.2.1"
   }
 }
