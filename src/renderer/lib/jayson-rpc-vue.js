@@ -57,7 +57,7 @@ export default {
                 moneyValue = '- ' + response.result.resultInPool[j].Value
                 walletAddressTempInPool = 'Gas'
               } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value !== '0') {
-                moneyValue = '- ' + response.result.resultInPool[j].Value
+                moneyValue = '+ ' + response.result.resultInPool[j].Value
                 walletAddressTempInPool = 'Mined'
               } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value === '0') {
                 continue
@@ -89,7 +89,7 @@ export default {
                 moneyValue = '- ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = 'Gas'
               } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
-                moneyValue = '- ' + response.result.resultInChain[i].Value
+                moneyValue = '+ ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = 'Mined'
               } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
                 continue
@@ -180,7 +180,7 @@ export default {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Gas'
                 } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value !== '0') {
-                  moneyValue = '- ' + response.result.resultInPool[j].Value
+                  moneyValue = '+ ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Mined'
                 } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value === '0') {
                   continue
@@ -213,7 +213,7 @@ export default {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Gas'
                 } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
-                  moneyValue = '- ' + response.result.resultInChain[i].Value
+                  moneyValue = '+ ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Mined'
                 } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
                   continue
