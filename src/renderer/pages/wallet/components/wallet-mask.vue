@@ -65,9 +65,9 @@
               :max="maxFee"
               :min="minFee"></el-slider>
             <section>
-              <span>Slow</span>
+              <span :class="slowTips ? 'slow-color': ''">Slow</span>
               <span>{{feeVal}} SEN</span>
-              <span>Fast</span>
+              <span :class="fastTips ? 'fast-color' : ''">Fast</span>
             </section>
           </section>
           
@@ -274,12 +274,14 @@ export default {
         }
       ],
 
-      feeVal: 0.01, //初始值
-      minFee: 0.001,//最小值
+      feeVal: 0.02, //初始值
+      minFee: 0.01,//最小值
     //  allfeeVal: Number(this.balanceSEN), //所有的SEN
     //  maxFee: Number(this.balanceSEN), //最大值
-      stepFee: 0.001, //步长
-      feeErrorText: 'Fee cannot be greater than all Fee',
+      stepFee: 0.00818182, //步长
+      slowTips: false, //小于默认值 color 改变
+      fastTips: false, //大于默认值 color 改变
+      feeErrorText: 'Fee cannot be greater than SEN balance',
       feeValError: false
     }
   },
@@ -308,7 +310,7 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than all Fee'
+        this.feeErrorText = 'Fee cannot be greater than SEN balance'
         this.feeValError = true
       } else if (this.feeVal === 0) {
         this.feeErrorText = 'Fee Cannot be zero'
@@ -384,16 +386,49 @@ export default {
   },
 
   watch:{
+    //监听输入金额的变化
     receiveAmount(newVal,oldVal){
-      if (newVal.length > 0) {
-        this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + newVal.replace(/^0+/,"")
-      } else {
-        this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + 0
+      let parm = {
+        address: this.selectedWallet.walletAddress,
+        value: Number(newVal.replace(/^0+/,"")),
+        type: this.qrcodeIdx
       }
+      this.qrcodeWalletAddress = JSON.stringify(parm)
+    },
+
+    //监听滚动条变化
+    feeVal (newFee, oldFee) {
+      if (Number(newFee) > 0.02636364) {
+        this.fastTips = true
+        this.slowTips = false
+      } else if (Number(newFee) < 0.02636364) {
+        this.slowTips = true
+        this.fastTips = false
+      } else {
+        this.fastTips = false
+        this.slowTips = false
+      }
+    },
+
+    //监听SEN的变化
+    qrcodeIdx (newIdx, oldIdx) {
+      let parm = {
+        address: this.selectedWallet.walletAddress,
+        value: Number(this.receiveAmount.replace(/^0+/,"")),
+        type: newIdx
+      }
+      this.qrcodeWalletAddress = JSON.stringify(parm)
     }
   },
   created() {
-    this.qrcodeWalletAddress = this.selectedWallet.walletAddress + "###" + 0
+    //二维码初始字符串
+    let parm = {
+        "address": this.selectedWallet.walletAddress,
+        "value": Number(this.receiveAmount.replace(/^0+/,"")),
+        "type": this.qrcodeIdx
+    }
+    this.qrcodeWalletAddress = JSON.stringify(parm)
+
   },
   mounted() {
 
@@ -401,6 +436,10 @@ export default {
   destroyed() { },
 
   methods: {
+    formatTooltip(val) {
+      return val / 11
+    },
+
     getCaption(obj) {
         var index=obj.lastIndexOf(".");
         obj=obj.substring(index+1,obj.length);
@@ -433,7 +472,7 @@ export default {
       this.qrcodeText = 'SEC'
       this.qrcodeIdx = 0
       this.tradingIdx = 0
-      this.feeVal=0.01
+      this.feeVal=0.02
       this.$emit("changeClose","")
     },
 
@@ -727,7 +766,7 @@ export default {
   .transfer-slider >>> .el-slider__runway {height: 2px;margin: 10px 0;}
   .transfer-slider >>> .el-slider__bar {background-color: #00D86D;height: 2px;}
   .transfer-slider >>> .el-slider__button {border-color: #00D86D;}
-  .transfer-slider >>> .el-slider__button-wrapper {width: 24px;height: 24px;}
+  .transfer-slider >>> .el-slider__button-wrapper {width: 24px;height: 24px;top: -12px;}
 
   .all-amount-list {color: #839299;font-size: 14px;padding-top: 8px;}
   .all-amount-list span:last-child {color: #29D893;margin-left: 10px;}
@@ -799,4 +838,7 @@ export default {
   background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
 
 .list-active span {color: #29D893!important;}
+
+.slow-color {color: #0B7FE6!important;}
+.fast-color {color: #F5A623!important;}
 </style>
