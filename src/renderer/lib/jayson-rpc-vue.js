@@ -89,7 +89,7 @@ export default {
                 moneyValue = '- ' + response.result.resultInChain[i].Value
                 walletAddressTempInChain = 'Gas'
               } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
-                moneyValue = '+ ' + response.result.resultInChain[i].Value
+                moneyValue = '+ ' + (response.result.resultInChain[i].Value.length > 10 && response.result.resultInChain[i].Value.indexOf('.') > 0) ? Number(response.result.resultInChain[i].Value).toFixed(8) : response.result.resultInChain[i].Value
                 walletAddressTempInChain = 'Mined'
               } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
                 continue
@@ -180,7 +180,7 @@ export default {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Gas'
                 } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value !== '0') {
-                  moneyValue = '+ ' + response.result.resultInPool[j].Value
+                  moneyValue = '+ ' + (response.result.resultInPool[j].Value.length > 10 && response.result.resultInPool[j].Value.indexOf('.') > 0) ? Number(response.result.resultInPool[j].Value).toFixed(8) : response.result.resultInPool[j].Value
                   walletAddressTempInPool = 'Mined'
                 } else if (response.result.resultInPool[j].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInPool[j].Value === '0') {
                   continue
@@ -188,7 +188,7 @@ export default {
                   moneyValue = '- ' + response.result.resultInPool[j].Value
                   walletAddressTempInPool = `0x${response.result.resultInPool[j].TxTo}`
                 }
-   
+
                 walletList.push({
                   id: response.result.resultInPool[j].TxHash,
                   blockNumber: 'Not in Block yet',
@@ -213,7 +213,7 @@ export default {
                   moneyValue = '- ' + response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Gas'
                 } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
-                  moneyValue = '+ ' + response.result.resultInChain[i].Value
+                  moneyValue = '+ ' + (response.result.resultInChain[i].Value.length > 10 && response.result.resultInChain[i].Value.indexOf('.') > 0) ? Number(response.result.resultInChain[i].Value).toFixed(8) : response.result.resultInChain[i].Value
                   walletAddressTempInChain = 'Mined'
                 } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
                   continue

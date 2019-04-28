@@ -268,12 +268,13 @@ export default {
         })
         this.moreList = []
         this.digIncome = "0"
-        miningHistory.forEach((element, index) => {    
-          this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString()
+        miningHistory.forEach((element, index) => {
+          let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? Number(element.listMoney).toFixed(8) : element.listMoney
+          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${element.listMoney} SEN`,
+            reward: `${moneyValue} SEN`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })

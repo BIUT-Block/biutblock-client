@@ -111,7 +111,8 @@ export default {
           skip = this.moreListSkip
         }
         miningHistory.forEach((element, index) => {
-          this.digIncome = (Number(this.digIncome) + Number(element.listMoney.substring(2, element.listMoney.length))).toString()
+          let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? Number(element.listMoney).toFixed(8) : element.listMoney
+          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
           console.log(index)
           console.log(skip)
           if (index > skip - 1) {
@@ -121,7 +122,7 @@ export default {
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${element.listMoney} SEC`,
+            reward: `${moneyValue} SEC`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })

@@ -29,6 +29,8 @@ import WalletsHandler from '../../lib/WalletsHandler';
 import { setInterval, clearInterval } from 'timers';
 const moment = require('moment-timezone')
 const ipify = require('ipify')
+const fetch = require('node-fetch')
+const secAPI = 'http://scan.secblock.io/'
 
 export default {
   name: 'walletNode',
@@ -85,7 +87,7 @@ export default {
   },
   methods: {
     _getNodeLists () {
-      this.$JsonRPCClient.getNodesTable((nodestable)=>{
+      fetch(`${secAPI}nodeinfoapi`).then(response => response.json()).then((nodestable) => {
         this.nodeList = []
         nodestable.forEach( (node, index) => {
           let date = moment(node.node.TimeStamp).tz(node.location.location.timeZone)
