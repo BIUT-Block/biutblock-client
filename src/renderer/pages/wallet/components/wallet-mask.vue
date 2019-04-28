@@ -281,7 +281,7 @@ export default {
       stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
-      feeErrorText: 'Fee cannot be greater than all Fee',
+      feeErrorText: 'Fee cannot be greater than SEN balance',
       feeValError: false
     }
   },
@@ -310,7 +310,7 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than all Fee'
+        this.feeErrorText = 'Fee cannot be greater than SEN balance'
         this.feeValError = true
       } else if (this.feeVal === 0) {
         this.feeErrorText = 'Fee Cannot be zero'
