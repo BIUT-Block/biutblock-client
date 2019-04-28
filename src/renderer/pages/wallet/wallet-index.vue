@@ -75,13 +75,13 @@
         <p class="wallet-content-body-title">Transaction Record</p>
 
         <section class="wallet-container-list">
-          <!-- 没有数据列表 walletContent == 1  :style="noTradingStyle" -->
-          <section class="wallet-content-body-mull" hidden>
+          <!-- 没有数据列表 walletContent == 1  -->
+          <section class="wallet-content-body-mull" :style="noTradingStyle">
             <img src="../../assets/images/wallet-null.png" alt="">
             <p>No transaction data</p>
           </section>
-          <!-- 有数据列表 walletContent == 1  :style="noTradingStyles"-->
-          <section class="wallet-content-body-list">
+          <!-- 有数据列表 walletContent == 1 -->
+          <section class="wallet-content-body-list" :style="noTradingStyles">
             <trading-list :tradingList="tradingList" :wallets="wallets" :selectedPrivateKey="selectedPrivateKey"/>
           </section>
         </section>
