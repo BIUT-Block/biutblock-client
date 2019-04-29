@@ -4,6 +4,7 @@ const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
     let externalServerAddress = '54.250.166.137' //'54.250.166.137'  //'18.197.120.79' Test node
+    let externalServerAddressTest = '18.197.120.79'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
     let localhostAddress = '127.0.0.1'
@@ -19,8 +20,16 @@ export default {
         this.clientSEN = jayson.http(`http://${localhostAddress}:${localhostPortSEN}`)
       },
       switchToExternalServer: function () {
-        this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-        this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+        let isTestEnv = window.localStorage.getItem('secTest')
+        if (isTestEnv) {
+          process.env.secTest = true
+          this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
+          this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
+        } else {
+          process.env.secTest = false
+          this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+          this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+        }
       },
 
       _getBalance: function (client, walletAddress, fnUpdateBalance) {
@@ -317,8 +326,15 @@ export default {
       }
     }
 
-    jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-    jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+    if (!window.localStorage.getItem('secTest')) {
+      process.env.secTest = true
+      jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
+      jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
+    } else {
+      process.env.secTest = false
+      jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+      jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+    }
 
     Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
       value: jsonRPC

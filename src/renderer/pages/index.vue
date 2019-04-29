@@ -55,12 +55,12 @@
             <section class="setting-mask-body-right-network" v-show="maskPages == 1">
               <p>Currently connected network</p>
               <section>
-                <img :src="networkIdx == 1 ? agreements : agreement" alt="" @click="isNetwork(1)">
+                <img :src="networkIdx === 1 ? agreements : agreement" alt="" @click="isNetwork(1)">
                 <span>Test Network</span>
               </section>
               <!-- 主网暂时不提供选择 -->
-              <section style="cursor: no-drop;">
-                <img :src="networkIdx == 2 ? agreements : agreement" alt="" style="cursor: no-drop;">
+              <section>
+                <img :src="networkIdx === 2 ? agreements : agreement" alt="" @click="isNetwork(2)">
                 <span>Main Network</span>
               </section>
             </section>
@@ -96,6 +96,7 @@ import walletNav from '../components/wallet-nav'
 const pkg = require('../../../package.json')
 import WalletsHandler from '../lib/WalletsHandler.js'
 import {setInterval, setTimeout} from 'timers'
+const {ipcRenderer} = require('electron')
 export default {
   name: '',
   components: {
@@ -167,6 +168,11 @@ export default {
     this.versionNumber = pkg.version
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
+    if (window.localStorage.getItem('secTest')) {
+      this.networkIdx = 2
+    } else {
+      this.networkIdx = 1
+    }
   },
   mounted () {
 
@@ -204,11 +210,15 @@ export default {
     isNetwork (index) {
       this.networkIdx = index
       this.cloasMask ()
+
       if (index == 1) {
-        this.networkContent = "Test Net"
+        this.networkContent = "Test Network"
+        window.localStorage.setItem('secTest', true)
       } else {
         this.networkContent = "Main Network"
+        window.localStorage.setItem('secTest', false)
       }
+      ipcRenderer.send('relaunch')
     },
 
     //关闭遮罩层
