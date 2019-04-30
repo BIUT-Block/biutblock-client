@@ -57,8 +57,8 @@
         <!-- 金额展示 -->
         <section class="wallet-header-money-list">
           <section class="money-content">
-            <span> SEC Balance </span>
-            <p>{{walletBalance}} SEC</p>
+            <span> BIUT Balance </span>
+            <p>{{walletBalance}} BIUT</p>
             <img src="../../assets/images/indexAmountBg.png" alt=""/>
           </section>
           <section class="money-content">

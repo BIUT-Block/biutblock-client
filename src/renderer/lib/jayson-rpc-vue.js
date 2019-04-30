@@ -149,7 +149,7 @@ export default {
                 listTo: response.result.resultInPool[j].TxTo,
                 listTime: WalletsHandler.formatDate(moment(response.result.resultInPool[j].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
-                listUnit: 'SEC',
+                listUnit: 'BIUT',
                 listMinerCost: response.result.resultInPool[j].TxFee,
                 listState: 'Packed'
               })
@@ -173,7 +173,7 @@ export default {
                 listTo: response.result.resultInChain[i].TxTo,
                 listTime: WalletsHandler.formatDate(moment(response.result.resultInChain[i].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
-                listUnit: 'SEC',
+                listUnit: 'BIUT',
                 listMinerCost: response.result.resultInChain[i].TxFee,
                 listState: walletAddressTempInChain === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
               })
@@ -207,7 +207,7 @@ export default {
                   listTo: response.result.resultInPool[j].TxTo,
                   listTime: WalletsHandler.formatDate(moment(response.result.resultInPool[j].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                   listMoney: moneyValue,
-                  listUnit: 'SEN',
+                  listUnit: 'BIUT',
                   listMinerCost: response.result.resultInPool[j].TxFee,
                   listState: 'Packed'
                 })
@@ -239,7 +239,7 @@ export default {
                   listTo: response.result.resultInChain[i].TxTo,
                   listTime: WalletsHandler.formatDate(moment(response.result.resultInChain[i].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                   listMoney: moneyValue,
-                  listUnit: 'SEN',
+                  listUnit: 'BIU',
                   listMinerCost: response.result.resultInChain[i].TxFee,
                   listState: response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
                 })
@@ -251,10 +251,10 @@ export default {
       },
 
       getWalletTransactions: function (walletAddress, fnFillWalletList) {
-        this._getTransactions(this.client, 'SEC', walletAddress, fnFillWalletList)
+        this._getTransactions(this.client, 'BIUT', walletAddress, fnFillWalletList)
       },
       getWalletTransactionsSEN: function (walletAddress, fnFillWalletList) {
-        this._getTransactions(this.clientSEN, 'SEN', walletAddress, fnFillWalletList)
+        this._getTransactions(this.clientSEN, 'BIU', walletAddress, fnFillWalletList)
       },
       getWalletTransactionsBothChains: function (walletAddress, fnFillWalletList) {
         // this.getWalletTransactions(walletAddress, fnFillWalletListSEC)
@@ -315,6 +315,12 @@ export default {
           if (response.result.blockInfo) {
             fnGetLastBlock(height, response.result.blockInfo)
           }
+        })
+      },
+      getWalletTotalReward: function (fnAfterGetReward) {
+        this.clientSEN.request('sec_getTotalReward', [], (err, response) => {
+          if (err) return
+          fnAfterGetReward(response.result.info)
         })
       },
       getHeightAndLastBlock: function (fnGetBlock) {

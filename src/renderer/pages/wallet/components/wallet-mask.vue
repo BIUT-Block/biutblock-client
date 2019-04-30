@@ -257,20 +257,20 @@ export default {
       amountPlaceHolder: `Maximum input of ${this.balance}`,
 
       qrcodeIdx: 0, //二维码切换 币种显示 下标
-      qrcodeText: 'SEC', //二维码切换 币种显示
+      qrcodeText: 'BIUT', //二维码切换 币种显示
       qrcodeShow: false,//二维码切换 列表
       tradingIdx: 0, //交易
-      tradingText: 'SEC',
+      tradingText: 'BIUT',
       tradingShow: false,
       imgUrl: amountChecked, //选中的图片
       itemList: [
         {
           id: '01',
-          cnt: 'SEC'
+          cnt: 'BIUT'
         },
         {
           id: '02',
-          cnt: 'SEN'
+          cnt: 'BIU'
         }
       ],
 
@@ -333,7 +333,7 @@ export default {
         return false
       } else {
         this.addresErrorShow = false
-        //转账SEC
+        //转账 BIUT
         if (this.tradingIdx == 0) {
           if (amount.length > 0 && Number(amount) > Number(this.balance)) {
             this.moneyShow = true
@@ -349,7 +349,7 @@ export default {
               && this.feeVal < this.allfeeVal ? true : false
           }
         } else {
-          //转账SEN
+          //转账 BIU
           if (amount.length > 0 &&  Number(amount) >  Number(allNumber)) {
             this.moneyShow = true
             return false
@@ -468,8 +468,8 @@ export default {
       this.sentTradingAmount = ''
       this.walletNewPass = ''
       this.sentPages = 1
-      this.tradingText = 'SEC'
-      this.qrcodeText = 'SEC'
+      this.tradingText = 'BIUT'
+      this.qrcodeText = 'BIUT'
       this.qrcodeIdx = 0
       this.tradingIdx = 0
       this.feeVal=0.02
@@ -556,7 +556,7 @@ export default {
         txFee: this.feeVal.toString()
       })
 
-      if (this.tradingText === 'SEC') {
+      if (this.tradingText === 'BIUT') {
         this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
         }, (balance) => {

@@ -26,10 +26,10 @@
                   disabledButton ? 'noCursor' : '']"
                 @click.native="beginDigMask"/>
           </section>
-          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} SEC</span></h4>
+          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} BIUT</span></h4>
           <section class="dig-tips">
-            <label>Description:</label> After the node is mined, the SEC Token is automatically acquired. 
-            The higher the balance, the greater probability to get SEN.
+            <label>Description:</label> After the node is mined, the BIUT Token is automatically acquired. 
+            The higher the balance, the greater probability to get BIU.
           </section>
         </section>
         <section class="dig-header-list">
@@ -162,10 +162,11 @@ export default {
     this.initMiningStatus()
 
     this._getLatestBlockInfo()
-    
+    this._getTotalReward()
 
     this.getBlockHeightJob = setInterval(()=>{
       this._getLatestBlockInfo()
+      this._getTotalReward()
     }, 2500)
   },
   mounted () {
@@ -274,7 +275,7 @@ export default {
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${moneyValue} SEN`,
+            reward: `${moneyValue} BIU`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })
@@ -288,7 +289,7 @@ export default {
       })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
         this.chainHeight = height.toString()
-        this.networkMining = (Number(this.chainHeight)*2).toString()
+      //  this.networkMining = (Number(this.chainHeight)*2).toString()
         this.minedByAddress = block[0].Beneficiary
         this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
         if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
@@ -301,6 +302,12 @@ export default {
             this.bAlreadyShowed = false
           }
         }
+      })
+    },
+
+    _getTotalReward () {
+      this.$JsonRPCClient.getTotalReward((reward) => {
+        this.networkMining = reward
       })
     },
 

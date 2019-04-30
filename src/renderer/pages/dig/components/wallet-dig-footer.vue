@@ -2,7 +2,7 @@
   <ul>
     <li>
       <span>Whole Network Mining：</span>
-      <span>{{totalMining}} SEN</span>
+      <span>{{totalMining}} BIU</span>
     </li>
     <li>
       <span>Blocks：</span>

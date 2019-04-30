@@ -32,7 +32,7 @@
       <!-- 查看交易详情 -->
       <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img src="../../assets/images/tradingLogo.png" alt="">
-        <a :href="transactionLink" target="_blank">See more details at SEC BLOCKCHAIN</a>
+        <a :href="transactionLink" target="_blank">See more details at BIU BLOCKCHAIN</a>
       </section>
     </section>
   </main>
@@ -106,7 +106,7 @@ export default {
           {
             id: '07',
             title: 'Fee',
-            cnt: this.fee + ' SEN'
+            cnt: this.fee + ' BIU'
           }
       ]
     }
