@@ -168,10 +168,12 @@ export default {
     this.versionNumber = pkg.version
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
-    if (window.localStorage.getItem('secTest')) {
-      this.networkIdx = 2
-    } else {
+    if (window.localStorage.getItem('secTest') === 'true') {
       this.networkIdx = 1
+      this.networkContent = 'Test Net'
+    } else {
+      this.networkIdx = 2
+      this.networkContent = 'Main Net'
     }
   },
   mounted () {
@@ -212,10 +214,10 @@ export default {
       this.cloasMask ()
 
       if (index == 1) {
-        this.networkContent = "Test Network"
+        this.networkContent = "Test Net"
         window.localStorage.setItem('secTest', true)
       } else {
-        this.networkContent = "Main Network"
+        this.networkContent = "Main Net"
         window.localStorage.setItem('secTest', false)
       }
       ipcRenderer.send('relaunch')

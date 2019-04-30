@@ -21,7 +21,7 @@ export default {
       },
       switchToExternalServer: function () {
         let isTestEnv = window.localStorage.getItem('secTest')
-        if (isTestEnv) {
+        if (isTestEnv === "true") {
           process.env.secTest = true
           this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
@@ -326,7 +326,7 @@ export default {
       }
     }
 
-    if (!window.localStorage.getItem('secTest')) {
+    if (window.localStorage.getItem('secTest') === "true") {
       process.env.secTest = true
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
       jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
