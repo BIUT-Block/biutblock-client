@@ -57,7 +57,7 @@ export default {
   data () {
     return {
       loadMore: false, //加载更多按钮
-      digNumber: '0',
+      digNumber: 0,
       digIncome: '0',
       wallets: {},
       selectedPrivateKey: '',
@@ -99,6 +99,7 @@ export default {
     getMiningList () {
       this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
         this.digIncome = "0"
+        this.digNumber = 0
         this.moreList = []
         let miningHistory = history.filter((hist) => {
           return hist.listAddress === 'Mined' && hist.listState === 'Mining'
@@ -113,6 +114,7 @@ export default {
         miningHistory.forEach((element, index) => {
           let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? Number(element.listMoney).toFixed(8) : element.listMoney
           this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+          this.digNumber = this.digNumber + 1
           console.log(index)
           console.log(skip)
           if (index > skip - 1) {
@@ -127,7 +129,6 @@ export default {
             blockhash: element.blockHash
           })
         })
-        this.digNumber = Number(this.digIncome) / 2 
       })
     },
 

@@ -66,7 +66,7 @@
               :min="minFee"></el-slider>
             <section>
               <span :class="slowTips ? 'slow-color': ''">Slow</span>
-              <span>{{feeVal}} SEN</span>
+              <span>{{feeVal}} BIU</span>
               <span :class="fastTips ? 'fast-color' : ''">Fast</span>
             </section>
           </section>
@@ -91,7 +91,7 @@
             <p>AMOUNT</p>
             <span class="wallet-mask-sent-from-address">{{sentTradingAmount}} {{ tradingText }}</span>
             <p>FEE</p>
-            <span class="wallet-mask-sent-from-address">{{feeVal}} SEN</span>
+            <span class="wallet-mask-sent-from-address">{{feeVal}} BIU</span>
 
             <section v-show="!networkError">
               <button type="button" @click="backSent">Back</button>
@@ -281,7 +281,7 @@ export default {
       stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
-      feeErrorText: 'Fee cannot be greater than SEN balance',
+      feeErrorText: 'Fee cannot be greater than BIU balance',
       feeValError: false
     }
   },
@@ -310,7 +310,7 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than SEN balance'
+        this.feeErrorText = 'Fee cannot be greater than BIU balance'
         this.feeValError = true
       } else if (this.feeVal === 0) {
         this.feeErrorText = 'Fee Cannot be zero'

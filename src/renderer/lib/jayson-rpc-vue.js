@@ -21,7 +21,7 @@ export default {
       },
       switchToExternalServer: function () {
         let isTestEnv = window.localStorage.getItem('secTest')
-        if (isTestEnv) {
+        if (isTestEnv === "true") {
           process.env.secTest = true
           this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
@@ -207,7 +207,7 @@ export default {
                   listTo: response.result.resultInPool[j].TxTo,
                   listTime: WalletsHandler.formatDate(moment(response.result.resultInPool[j].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                   listMoney: moneyValue,
-                  listUnit: 'BIUT',
+                  listUnit: 'BIU',
                   listMinerCost: response.result.resultInPool[j].TxFee,
                   listState: 'Packed'
                 })
@@ -332,7 +332,7 @@ export default {
       }
     }
 
-    if (!window.localStorage.getItem('secTest')) {
+    if (window.localStorage.getItem('secTest') === 'true') {
       process.env.secTest = true
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
       jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)

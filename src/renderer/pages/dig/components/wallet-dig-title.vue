@@ -5,7 +5,7 @@
       <section>
         <span></span>
         <span>Number Of Mined：</span>
-        <span>{{this.income / 2}}</span>
+        <span>{{this.number}}</span>
       </section>
       <section>
         <span></span>

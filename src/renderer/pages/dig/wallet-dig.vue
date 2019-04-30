@@ -42,7 +42,7 @@
       <!-- 挖矿内容 -->
       <section class="dig-body">
          <!-- 挖矿内容-头部 -->
-        <dig-title  :number="chainHeight * 2"
+        <dig-title  :number="digNumber"
                     :digTitleShow="true"
                     :selectedWallet="selectedWallet" 
                     :selectedPrivateKey="selectedPrivateKey" 
@@ -117,7 +117,7 @@ export default {
   data () {
     return {
       digButton: "Start Mining",
-      digNumber: '0',
+      digNumber: 0,
       digIncome: '0',
       checkWallet: false,
       checkedWallet: true,
@@ -269,9 +269,11 @@ export default {
         })
         this.moreList = []
         this.digIncome = "0"
+        this.digNumber = 0
         miningHistory.forEach((element, index) => {
           let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? Number(element.listMoney).toFixed(8) : element.listMoney
           this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+          this.digNumber = this.digNumber + 1
           this.moreList.push({
             id: index,
             age: element.listTime,
@@ -306,8 +308,12 @@ export default {
     },
 
     _getTotalReward () {
-      this.$JsonRPCClient.getTotalReward((reward) => {
-        this.networkMining = reward
+      this.$JsonRPCClient.getWalletTotalReward((reward) => {
+        if (String(reward).indexOf('.') > -1 && String(reward).length > 0) {
+          this.networkMining = reward.toFixed(8)
+        } else {
+          this.networkMining = reward
+        }
       })
     },
 

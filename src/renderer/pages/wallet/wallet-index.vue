@@ -62,8 +62,8 @@
             <img src="../../assets/images/indexAmountBg.png" alt=""/>
           </section>
           <section class="money-content">
-            <span> SEN Balance </span>
-            <p>{{walletBalanceSEN}} SEN</p>
+            <span> BIU Balance </span>
+            <p>{{walletBalanceSEN}} BIU</p>
             <img src="../../assets/images/indexAmountBg.png" alt=""/>
           </section>
         </section>
