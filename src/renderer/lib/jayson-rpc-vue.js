@@ -329,6 +329,13 @@ export default {
             fnGetBlock(height, block)
           })
         })
+      },
+      isTestNetwork: function () {
+        if (window.localStorage.getItem('secTest') === 'true') {
+          return true
+        } else {
+          return false
+        }
       }
     }
 

@@ -125,6 +125,11 @@ export default {
     this.status = trade.listState
     this.fee = trade.listMinerCost
     this.moneyType=trade.listUnit
+
+    let address = 'http://scan.secblock.io/search?search='
+    if (this.$JsonRPCClient.isTestNetwork()) {
+      address = 'http://18.197.120.79:3001/search?search='
+    }
     switch(trade.listState) {
       case 'Successful':
         if (trade.listMoney.indexOf('+') > -1) {
@@ -133,7 +138,7 @@ export default {
           this.stateImg = tradingSuccess
         } 
         this.textStyle = 'successful'
-        this.transactionLink = `http://scan.secblock.io/search?search=${this.transactionNumber}`
+        this.transactionLink = `${address}${this.transactionNumber}`
         break
       case 'Packed':
         this.stateImg = tradingPacked
@@ -142,7 +147,7 @@ export default {
       case 'Mining':
         this.stateImg = tradingMining
         this.textStyle = 'mining'
-        this.transactionLink = `http://scan.secblock.io/search?search=${this.transactionNumber}`
+        this.transactionLink = `${address}${this.transactionNumber}`
         break
       default:
         break
