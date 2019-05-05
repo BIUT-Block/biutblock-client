@@ -1,7 +1,7 @@
 <template>
   <main>
     <aside>
-      <img src="../../assets/images/loginLogo.png" alt="" title="SEC"/>
+      <img src="../../assets/images/loginLogo.png" alt="" title="BIUT"/>
       <h2 class="titleTop">{{ createTitle1 }}</h2>
       <h2>{{ createTitle2 }}</h2>
       <span></span>
@@ -143,7 +143,7 @@
      <p class="go-create">No wallet?   <span @click="closeCreate">Create Wallet</span></p> 
     </section>
     <!-- 钱包版本号 -->
-    <span class="wallet-version"> {{ versionNumber }}</span>
+    <span class="wallet-version"> V {{ versionNumber }}</span>
     <!-- 遮罩层
     <section class="mask" v-show="maskShow">
       <section class="mask-container phrase-mask">
@@ -386,7 +386,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      walletsHandler.saveKeyStore(`SEC${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
+      walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
