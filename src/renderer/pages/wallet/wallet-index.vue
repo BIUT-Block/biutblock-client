@@ -38,7 +38,7 @@
           </section>
 
           <!-- 私钥 转账 --->
-          <!-- <h2>{{walletBalance}} <span>SEC Token</span></h2> -->
+          <!-- <h2>{{walletBalance}} <span>BIUT Token</span></h2> -->
           <section class="wallet-header-list">
             <section>
               <span id="address">0x{{selectedWallet.walletAddress}}</span>
@@ -59,12 +59,12 @@
           <section class="money-content">
             <span> BIUT Balance </span>
             <p>{{walletBalance}} BIUT</p>
-            <img src="../../assets/images/indexAmountBg.png" alt=""/>
+            <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
           <section class="money-content">
             <span> BIU Balance </span>
             <p>{{walletBalanceSEN}} BIU</p>
-            <img src="../../assets/images/indexAmountBg.png" alt=""/>
+            <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
         </section>
 
@@ -234,9 +234,9 @@ export default {
          * 
          * toast提示语 'SEN isn't enough to sent'
         */
-        if (Number(this.walletBalanceSEN) < 0.001) {
+        if (Number(this.walletBalanceSEN) < 0.01) {
           this.translucentShow = true
-          this.translucentText = "SEN isn't enough to sent"
+          this.translucentText = "BIU isn't enough to sent"
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)

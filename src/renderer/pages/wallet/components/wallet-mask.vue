@@ -584,13 +584,13 @@ export default {
     importantKeystroe () {
       let keyDataJSON = {}
       keyDataJSON[this.selectedWallet.walletAddress] = this.walletData
-      WalletHandler.saveKeyStore(`SEC${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
+      WalletHandler.saveKeyStore(`BIUT${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
       this.clostMask()
     },
 
     //导出助记词
     importantPhrase () {
-      WalletHandler.savePhrase(`SEC${this.selectedWallet.walletAddress}`, this.selectedWallet.englishWords)
+      WalletHandler.savePhrase(`BIUT${this.selectedWallet.walletAddress}`, this.selectedWallet.englishWords)
       this.clostMask()
     },
 

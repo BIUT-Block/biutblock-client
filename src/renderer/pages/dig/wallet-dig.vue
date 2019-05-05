@@ -458,7 +458,7 @@ export default {
   .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;background:rgba(237,242,241,1);}
   
   .dig-header .dig-header-check .button-list {display: flex;align-items: center;justify-content: space-between;
-    padding-right: 18px;}
+    padding-right: 18px;margin-top: 8px;}
   .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;line-height: 1.5;color:#576066;}
   .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
   

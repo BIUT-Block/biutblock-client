@@ -125,7 +125,7 @@ export default {
     this.status = trade.listState
     this.fee = trade.listMinerCost
     this.moneyType=trade.listUnit
-
+    
     let address = 'http://scan.secblock.io/search?search='
     if (this.$JsonRPCClient.isTestNetwork()) {
       address = 'http://18.197.120.79:3001/search?search='

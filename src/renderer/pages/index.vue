@@ -3,7 +3,7 @@
     <!-- <nav>
       <section>
         <img src="../assets/images/logo.png" alt="">
-        <span>SEC Wallet</span>
+        <span>BIUT Wallet</span>
       </section>
       <wallet-nav/>
     </nav> -->
@@ -19,7 +19,7 @@
         </ul>
         <section class="wallet-index-version">
           <span>{{networkContent}}</span>
-          <span>V{{versionNumber}}</span>
+          <span>V {{versionNumber}}</span>
         </section>
       </aside>
       <main class="wallet-index-content-home">
@@ -67,7 +67,7 @@
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
               <p>Version Information</p>
-              <span>SEC Wallet {{versionNumber}}</span>
+              <span>BIUT Wallet V {{versionNumber}}</span>
             </section>
           </section>
         </section>
@@ -212,7 +212,7 @@ export default {
     isNetwork (index) {
       this.networkIdx = index
       this.cloasMask ()
-
+      
       if (index == 1) {
         this.networkContent = "Test Net"
         window.localStorage.setItem('secTest', true)
