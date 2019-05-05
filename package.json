@@ -63,9 +63,9 @@
   },
   "dependencies": {
     "@mdi/font": "^2.7.94",
-    "@sec-block/secjs-blockchain": "^1.0.163",
+    "@sec-block/secjs-blockchain": "^1.0.164",
     "@sec-block/secjs-datahandler": "^1.1.52",
-    "@sec-block/secjs-node": "^1.2.57",
+    "@sec-block/secjs-node": "^1.2.58",
     "@sec-block/secjs-util": "^1.1.22",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "axios": "^0.16.1",
