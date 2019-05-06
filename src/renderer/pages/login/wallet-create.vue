@@ -605,7 +605,7 @@ export default {
   main {display: flex;height: 100vh;position: relative;}
   main aside {background: url('../../assets/images/loginBackground.png') no-repeat center;
     background-size: 100% 100%;width: 372px;}
-  main aside img {margin: 32px 0 0 24px;width: 64px;height: 25px;}
+  main aside img {margin: 32px 0 0 24px;}
   main aside h2 {color: #fff;font-size: 32px;margin: 0;padding-left: 64px;
     font-family: 'Montserrat-SemiBold';}
   main aside .titleTop {margin-top: 155px;}

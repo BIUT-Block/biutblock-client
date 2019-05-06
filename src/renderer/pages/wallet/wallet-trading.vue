@@ -31,8 +31,8 @@
 
       <!-- 查看交易详情 -->
       <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
-        <img src="../../assets/images/tradingLogo.png" alt="">
-        <a :href="transactionLink" target="_blank">See more details at BIU BLOCKCHAIN</a>
+        <img :src=" moneyType == 'BIUT' ? tradingLogo1 : tradingLogo2 " alt="">
+        <a :href="transactionLink" target="_blank">See more details at {{moneyType}} BLOCKCHAIN</a>
       </section>
     </section>
   </main>
@@ -44,6 +44,9 @@ import tradingPacked from '../../assets/images/tradingPackeds.png'  //转账中
 import tradingSuccess from '../../assets/images/tradingSuccesss.png' //转账成功
 import tradingMining from '../../assets/images/tradingMinings.png' //挖矿
 import collectionImg from '../../assets/images/collectionImgs.png' //收款成功
+
+import tradingLogo1 from '../../assets/images/tradingLogo.png' //BIUT 的logo
+import tradingLogo2 from '../../assets/images/tradingLogo1.png' //BIU 的logo
 export default {
   name: 'walletTrading',
   components: {
@@ -53,6 +56,8 @@ export default {
 
   data () {
     return {
+      tradingLogo1,
+      tradingLogo2,
       transactionNumber: '',
       block: '01',
       time: '',
@@ -191,4 +196,5 @@ export default {
   .failed {color: #EE1C39;}
 
   .hideLink {display: none;}
+  a {text-decoration: none;}
 </style>

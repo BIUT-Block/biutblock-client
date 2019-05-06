@@ -809,8 +809,8 @@ export default {
   .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-priivate-key  h3 
     {font-size: 18px;font-family: Montserrat-SemiBold;color: #576066;margin: 0;padding-bottom: 12px;text-align: left;}
   .wallet-mask-phrase ul {display: flex;flex-wrap: wrap;}
-  .wallet-mask-phrase ul li {padding: 8px 6px;background:rgba(242,242,242,1);border-radius: 4px;
-    color: #42535B;font-size: 14px;margin-top: 12px;}
+  .wallet-mask-phrase ul li {padding: 8px 6px;background:rgba(242,242,242,1);border-radius: 4px;text-align: left;
+    color: #42535B;font-size: 14px;margin-top: 12px;line-height: 1.5;}
   .wallet-mask-phrase span {width:120px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
     height:36px;line-height: 36px;color: #fff;font-size: 16px!important;margin-top: 24px;}
 
