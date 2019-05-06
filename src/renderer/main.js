@@ -29,6 +29,15 @@ Vue.prototype.navMax = function () {
 Vue.prototype.navClose = function () {
   ipc.send('close')
 }
+
+Vue.prototype.getPointNum = function (num,n) {
+  let str = String(num);
+  let index = str.indexOf(".");
+  let str1 = str.substring(0,index+n+1);
+  str1 = Number(str1);
+  return str1
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

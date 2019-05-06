@@ -271,7 +271,7 @@ export default {
         this.digIncome = "0"
         this.digNumber = 0
         miningHistory.forEach((element, index) => {
-          let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? Number(element.listMoney).toFixed(8) : element.listMoney
+          let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
           this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
           this.digNumber = this.digNumber + 1
           this.moreList.push({

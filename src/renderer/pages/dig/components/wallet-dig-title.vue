@@ -5,12 +5,12 @@
       <section>
         <span></span>
         <span>Number Of Mined：</span>
-        <span>{{this.number}}</span>
+        <span>{{ getPointNum (this.number, 8) }}</span>
       </section>
       <section>
         <span></span>
         <span>Income of Mined：</span>
-        <span>{{this.income}} BIU</span>
+        <span>{{ getPointNum (this.income, 8) }}  BIU</span>
       </section>
       <section class="dig-more" v-show="digTitle" @click="digMore">More</section>
     </section>
