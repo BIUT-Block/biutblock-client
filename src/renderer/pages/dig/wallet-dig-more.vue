@@ -97,7 +97,7 @@ export default {
     },
 
     getMiningList () {
-      this.$JsonRPCClient.getWalletTransactions(this.selectedWallet.walletAddress, (history) => {
+      this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {
         this.digIncome = "0"
         this.digNumber = 0
         this.moreList = []
