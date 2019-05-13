@@ -1,4 +1,4 @@
-const SECUtil = require('@sec-block/secjs-util')
+const SECUtil = require('@biut-block/biutjs-util')
 const CryptoJS = require('crypto-js')
 const fs = require('fs')
 let FileSaver = require('file-saver')

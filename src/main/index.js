@@ -12,7 +12,7 @@ import {
 import updateChecker from './updateChecker.js'
 import walletsHandler from '../renderer/lib/WalletsHandler'
 
-const SECNODE = require('@sec-block/secjs-node')
+const SECNODE = require('@biut-block/biutjs-node')
 const packageJSON = require('../../package.json')
 /**
  * Set `__static` path to static files in production
