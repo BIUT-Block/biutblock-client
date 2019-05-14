@@ -27,6 +27,7 @@
       </main>
     </section>
     
+    <!-- 设置弹窗 -->
     <section v-show="maskShow" class="mask">
       <section class="mask-container setting-mask">
         <section class="setting-mask-header">
@@ -73,6 +74,24 @@
         </section>
       </section>
     </section>
+
+    <!-- 切换主网测试 网络弹窗提示 -->
+    <section class="mask" v-show="maskIndexShow">
+      <section class="mask-container index-mask">
+        <section>
+          <img src="../assets/images/closeMask.png" alt="" title="close" @click="maskIndexShow = false">
+        </section>
+        <p>
+          You will switch to the {{ tabNetworkContent }}, this operation will restart the client and update the wallet data, 
+          please confirm that the wallet information has been saved!
+        </p>
+        <section>
+          <span @click="maskIndexShow = false">Cancel</span>
+          <span class="passCorrect" @click="confirmNetwork">Confirm</span>
+        </section>
+      </section>
+    </section>
+
   </main>
 </template>
 
@@ -100,7 +119,7 @@ const {ipcRenderer} = require('electron')
 export default {
   name: '',
   components: {
-    walletNav
+    walletNav,
   },
   props: {},
   data () {
@@ -155,10 +174,13 @@ export default {
       maskPages: 0, //setting
       settingIdex: 0,
       networkIdx: 1,
+      newNetworkIdx: 0,//默认新的网络下标为0
       networkContent: 'Test Net',
+      tabNetworkContent: '',
       agreement,
       agreements,
-      maskShow: false //关闭遮罩层
+      maskShow: false, //关闭遮罩层
+      maskIndexShow: false
     }
   },
   computed: {
@@ -210,9 +232,20 @@ export default {
 
     //切换网络切换
     isNetwork (index) {
-      this.networkIdx = index
       this.cloasMask ()
-      
+      this.maskIndexShow = true
+      this.newNetworkIdx = index //从新创建一个下标判断
+      if (index == 1) {
+        this.tabNetworkContent = "Test Net"
+      } else {
+        this.tabNetworkContent = "Main Net"
+      }
+    },
+
+    //确认切换网络
+    confirmNetwork () {
+      let index = this.newNetworkIdx
+      this.networkIdx = index //赋值给旧的网络切换下标
       if (index == 1) {
         this.networkContent = "Test Net"
         window.localStorage.setItem('secTest', true)
@@ -230,6 +263,7 @@ export default {
         this.idx = sessionStorage.getItem("asideIdx")
       })
     }
+
   },
 }
 </script>
@@ -281,4 +315,13 @@ export default {
   .setting-mask-body-left ul li {display: block;margin-top: 36px;}
   .setting-mask-body-left ul li:first-child {margin-top: 0;}
   .setting-mask-body-left ul .check-li {color: #29D893;border-right: 4px solid #29D893;margin-right: -2px;}
+
+  .index-mask {display: flex;flex-direction: column;padding: 20px 20px 16px 24px;}
+  .index-mask img {width: 12px;height: 12px;}
+  .index-mask p {line-height: 1.5;padding: 20px 0 18px;color: #576066;font-size: 14px;}
+  .index-mask section {display: flex;justify-content: flex-end;}
+  .index-mask section span {display: inline-block;width: 108px;height: 32px;text-align: center;line-height: 32px;
+    font-size: 14px;color: #388ED9;box-sizing: border-box;border: 1px solid #E5E5E5;border-radius: 4px;}
+  .index-mask section span:last-child {margin-left: 12px;border: 0;color: #fff;}
+  .index-mask section span:hover,.index-mask img  {cursor: pointer;}
 </style>
