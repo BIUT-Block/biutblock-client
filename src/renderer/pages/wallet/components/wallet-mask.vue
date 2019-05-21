@@ -275,10 +275,10 @@ export default {
       ],
 
       feeVal: 0.02, //初始值
-      minFee: 0.01,//最小值
+      minFee: 0.0001,//最小值
     //  allfeeVal: Number(this.balanceSEN), //所有的SEN
     //  maxFee: Number(this.balanceSEN), //最大值
-      stepFee: 0.00818182, //步长
+      stepFee: 0.00908182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
       feeErrorText: 'Fee cannot be greater than BIU balance',
