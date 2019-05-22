@@ -316,7 +316,7 @@ export default {
         if (String(reward).indexOf('.') > -1 && String(reward).length > 0) {
           this.networkMining = reward.toFixed(8)
         } else {
-          this.networkMining = reward
+          this.networkMining = reward.toString()
         }
       })
     },
