@@ -340,10 +340,12 @@ export default {
     }
 
     if (window.localStorage.getItem('secTest') === 'true') {
+      console.log('Start jayson client with test network')
       process.env.secTest = true
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
       jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
     } else {
+      console.log('Start jayson client with main network')
       process.env.secTest = false
       jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
       jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)

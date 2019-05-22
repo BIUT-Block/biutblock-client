@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     digTitle: function(){
-      if (this.Number === 0 || this.Number < 6) {
+      if (this.number === 0 || this.number < 6) {
         return false
       } else {
         return  true

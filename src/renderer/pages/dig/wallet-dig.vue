@@ -374,6 +374,7 @@ export default {
     },
 
     startMining () {
+      clearInterval(this.getBlockHeightJob)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {
@@ -396,6 +397,7 @@ export default {
     },
 
     stopMining () {
+      clearInterval(this.getBlockHeightJob)
       this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.clientSEN.request('sec_setPOW', ['0'], (err, response) => {
         if (err) return
@@ -405,6 +407,10 @@ export default {
       })
       clearInterval(this.updateListJob)
       this.$JsonRPCClient.switchToExternalServer()
+      this.getBlockHeightJob = setInterval(()=>{
+        this._getLatestBlockInfo()
+        this._getTotalReward()
+      }, 2500)
     },
 
     _beginMiningWithWallet () {
@@ -423,6 +429,10 @@ export default {
         this.saveMingingStatus()
       })
       this.$JsonRPCClient.switchToExternalServer()
+      this.getBlockHeightJob = setInterval(()=>{
+        this._getLatestBlockInfo()
+        this._getTotalReward()
+      }, 2500)
       //this._getWalletMiningHistory()
       //this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
     }
