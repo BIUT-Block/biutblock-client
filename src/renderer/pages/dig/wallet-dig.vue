@@ -269,7 +269,7 @@ export default {
     _getWalletMiningHistory () {
       this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
         let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined' && hist.listState === 'Mining'
+          return hist.listAddress === 'Mined' && hist.listState === 'Mining' && hist.listInputData.indexOf('Mining reward') > -1
         })
         this.moreList = []
         this.digIncome = "0"

@@ -102,7 +102,7 @@ export default {
         this.digNumber = 0
         this.moreList = []
         let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined' && hist.listState === 'Mining'
+          return hist.listAddress === 'Mined' && hist.listState === 'Mining' && hist.listInputData.indexOf('Mining reward') > -1
         })
         let skip = 0
         if (this.moreListSkip >= miningHistory.length) {

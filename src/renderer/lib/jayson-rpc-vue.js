@@ -84,6 +84,7 @@ export default {
                 listTime: WalletsHandler.formatDate(moment(response.result.resultInPool[j].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                 listMoney: moneyValue,
                 listUnit: tokenUnit,
+                listInputData: '',
                 listMinerCost: response.result.resultInPool[j].TxFee,
                 listState: 'Packed'
               })
@@ -117,6 +118,7 @@ export default {
                 listMoney: moneyValue,
                 listUnit: tokenUnit,
                 listMinerCost: response.result.resultInChain[i].TxFee,
+                listInputData: response.result.resultInChain[i].InputData,
                 listState: response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
               })
             }
@@ -208,6 +210,7 @@ export default {
                   listTime: WalletsHandler.formatDate(moment(response.result.resultInPool[j].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
                   listMoney: moneyValue,
                   listUnit: 'BIU',
+                  listInputData: '',
                   listMinerCost: response.result.resultInPool[j].TxFee,
                   listState: 'Packed'
                 })
@@ -241,6 +244,7 @@ export default {
                   listMoney: moneyValue,
                   listUnit: 'BIU',
                   listMinerCost: response.result.resultInChain[i].TxFee,
+                  listInputData: response.result.resultInChain[i].InputData,
                   listState: response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
                 })
               }
