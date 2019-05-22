@@ -185,11 +185,15 @@ export default {
       let processTexts = window.sessionStorage.getItem('processTexts')
       if (miningStatus) {
         miningStatus = JSON.parse(miningStatus)
-        this.selectedWallet = miningStatus.wallet
-        this.selectedWalletName = miningStatus.wallet.walletName
-        this.miningIn = miningStatus.miningIn
-        this._setButton()
-        this.isSynced = miningStatus.isSynced
+        if (miningStatus.miningIn) {
+          this.selectedWallet = miningStatus.wallet
+          this.selectedWalletName = miningStatus.wallet.walletName
+          this.miningIn = miningStatus.miningIn
+          this._setButton()
+          this.isSynced = miningStatus.isSynced
+        } else {
+          this.selectedWalletName = this.selectedWallet.walletName
+        }
       } else {
         //this.selectedWallet = this.wallets[0]
         this.selectedWalletName = this.selectedWallet.walletName
