@@ -1,13 +1,13 @@
 {
-  "name": "secblock-client",
-  "version": "2.0.21",
+  "name": "biut-client",
+  "version": "2.0.22",
   "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SEC-Block/secblock-client"
+    "url": "https://github.com/BIUT-Block/biutblock-client.git"
   },
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -28,8 +28,8 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "SEC_Client",
-    "appId": "sec.secjs-client",
+    "productName": "BIUT_Client",
+    "appId": "biutblock.biut-client",
     "directories": {
       "output": "build"
     },
@@ -62,9 +62,9 @@
     }
   },
   "dependencies": {
-    "@biut-block/biutjs-blockchain": "^1.0.5",
+    "@biut-block/biutjs-blockchain": "^1.0.6",
     "@biut-block/biutjs-datahandler": "^1.0.4",
-    "@biut-block/biutjs-node": "^1.0.13",
+    "@biut-block/biutjs-node": "^1.0.14",
     "@biut-block/biutjs-util": "^1.0.0",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
