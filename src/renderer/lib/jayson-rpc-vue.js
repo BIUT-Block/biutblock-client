@@ -21,12 +21,12 @@ export default {
       },
       switchToExternalServer: function () {
         let isTestEnv = window.localStorage.getItem('secTest')
-        if (isTestEnv === "true") {
-          process.env.secTest = true
+        if (isTestEnv === 'true') {
+          process.env.netType = 'develop'
           this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
         } else {
-          process.env.secTest = false
+          process.env.secTest = 'test'
           this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
         }
@@ -345,12 +345,12 @@ export default {
 
     if (window.localStorage.getItem('secTest') === 'true') {
       console.log('Start jayson client with test network')
-      process.env.secTest = true
+      process.env.netType = 'develop'
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
       jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
     } else {
       console.log('Start jayson client with main network')
-      process.env.secTest = false
+      process.env.netType = 'test'
       jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
       jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
     }
