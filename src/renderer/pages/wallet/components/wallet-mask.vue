@@ -274,11 +274,11 @@ export default {
         }
       ],
 
-      feeVal: 0.0002, //初始值
-      minFee: 0.0001,//最小值
+      feeVal: 0.02, //初始值
+      minFee: 0.01,//最小值
     //  allfeeVal: Number(this.balanceSEN), //所有的SEN
     //  maxFee: Number(this.balanceSEN), //最大值
-      stepFee: 0.00009091, //步长
+      stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
       feeErrorText: 'Fee cannot be greater than BIU balance',
@@ -380,7 +380,7 @@ export default {
       return Number(this.balanceSEN)
     },
     maxFee() {
-      return Number("0.001")
+      return Number("0.1")
     }
 
   },
@@ -398,10 +398,10 @@ export default {
 
     //监听滚动条变化
     feeVal (newFee, oldFee) {
-      if (Number(newFee) > 0.00028182) {
+      if (Number(newFee) > 0.02636364) {
         this.fastTips = true
         this.slowTips = false
-      } else if (Number(newFee) < 0.00028182) {
+      } else if (Number(newFee) < 0.02636364) {
         this.slowTips = true
         this.fastTips = false
       } else {

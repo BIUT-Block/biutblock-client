@@ -91,7 +91,9 @@
       </section>
     </section>
 
-            
+    <section class="dig-mask-tips" v-show = "translucentShow">
+      {{ translucentText }}
+    </section>      
   </main>
 </template>
 
@@ -111,7 +113,7 @@ export default {
     walletButton,
     digTitle,
     digList,
-    walletMargin
+    walletMargin,
   },
   props: {},
   data () {
@@ -144,7 +146,9 @@ export default {
       mineStatusText: 'Please stop mining before changing wallet',
       mineStatusError: false,
       bAlreadyShowed: false,
-      digBalance: 0 //挖矿余额
+      digBalance: 0, //挖矿余额
+      translucentShow: false,
+      translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.'
     }
   },
   computed: {
@@ -323,11 +327,19 @@ export default {
 
     //开启挖矿弹窗显示
     beginDigMask () {
-      this.maskShow = true
-      if (this.digButton == "Start Mining") {
-        this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+      let balance = this.digBalance
+      if (balance < 10) {
+        this.translucentShow = true
+        setTimeout(() => {
+          this.translucentShow = false
+        }, 3000)
       } else {
-        this.maskText = "Confirm to Stop Mining?"
+        this.maskShow = true
+        if (this.digButton == "Start Mining") {
+          this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+        } else {
+          this.maskText = "Confirm to Stop Mining?"
+        }
       }
     },
 
@@ -482,6 +494,9 @@ export default {
   .dig-header .dig-header-list ul li {padding-top: 5px;line-height: 1.5;}
   .dig-header .dig-header-list ul li:first-child {padding-top: 0;}
   
+   .dig-mask-tips {position: fixed;top: 50%;left: 50%;margin: -32px 0 0 -200px;width: 400px;
+    padding: 24px;background:rgba(66,83,91,.92);color: #F7FBFA;font-size: 14px;
+    border-radius: 4px;}
 
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
