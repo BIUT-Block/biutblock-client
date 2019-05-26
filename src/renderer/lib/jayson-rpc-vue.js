@@ -26,7 +26,7 @@ export default {
           this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
         } else {
-          process.env.secTest = 'test'
+          process.env.netTest = 'test'
           this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
         }

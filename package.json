@@ -1,6 +1,6 @@
 {
   "name": "biut-client",
-  "version": "2.0.24",
+  "version": "2.0.25",
   "author": "MongoX Technology GmbH",
   "description": "SEC Wallet Client",
   "license": "MIT",
@@ -62,9 +62,9 @@
     }
   },
   "dependencies": {
-    "@biut-block/biutjs-blockchain": "^1.0.6",
+    "@biut-block/biutjs-blockchain": "^1.0.7",
     "@biut-block/biutjs-datahandler": "^1.0.4",
-    "@biut-block/biutjs-node": "^1.0.14",
+    "@biut-block/biutjs-node": "^1.0.15",
     "@biut-block/biutjs-util": "^1.0.0",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
@@ -115,7 +115,7 @@
     "electron-builder": "^19.56.2",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
-    "electron-rebuild": "^1.8.4",
+    "electron-rebuild": "^1.8.5",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.30.1",
