@@ -1,10 +1,11 @@
 <template>
-  <input  :type="type" 
-          :placeholder="placeholder" 
-          :maxlength="maxlength" 
-          :value="value" 
-          ref="input"
-          @input="$emit('input', $event.target.value)"/>
+  <input 
+    :type="type" 
+    :placeholder="placeholder" 
+    :maxlength="maxlength" 
+    :value="value" 
+    ref="input"
+    @input="$emit('input', $event.target.value)"/>
 </template>
 
 <script>
@@ -20,7 +21,7 @@ export default {
     }
   },
   computed: {
-
+    
   },
   created () {
 
@@ -30,7 +31,7 @@ export default {
   },
   destroyed () {},
   methods: {
-
+    
   },
 }
 </script>

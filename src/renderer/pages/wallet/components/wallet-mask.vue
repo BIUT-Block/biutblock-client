@@ -20,7 +20,11 @@
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
             <p>TO</p>
             <section class="wallet-mask-sent-to-address">
-              <input type="text" placeholder="Receive Address" v-model="sentAddress" maxlength="42"/>
+              <input type="text" 
+                placeholder="Receive Address" 
+                v-model="sentAddress" 
+                maxlength="42"
+                @input="inputAddress" />
               <img src="../../../assets/images/clearAddress.png" v-show="clearSentAddressImg" alt="" @click="clearSentAddress"/>
             </section>
             <wallet-tips :tips="addressError" v-show="addresErrorShow"/>
@@ -226,11 +230,11 @@ export default {
   data() {
     return {
       qrcodeWalletAddress: '',//二维码内容
-      sessionAddress: 'You are sending assets to the following address, please confirm the operation',
-      addressError: 'Addresses are generally 42-bit characters beginning with 0x',
+      sessionAddress: 'You are sending assets to the following address, please confirm the operation.',
+      addressError: 'Addresses are generally 42-bit characters beginning with 0x.',
       amountError: '',
       receiveError: '',
-      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters',
+      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
       privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
       walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
       walletNewPass: '',
@@ -241,10 +245,10 @@ export default {
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       //allAmount: this.balance,//总金额 SEC
       moneyShow: false,//金额错误
-      moneyShowText: 'Transfer amount must be less than balance',//金额错误
-      confirmTitle: 'Confirm The Following information', //没网络的时候 Submission Failed
+      moneyShowText: 'Transfer amount must be less than balance.',//金额错误
+      confirmTitle: 'Confirm The Following information.', //没网络的时候 Submission Failed
       networkError: false, //没有网络的时候 设置 成true
-      networkErrorText: 'No network connection',
+      networkErrorText: 'No network connection.',
       addresErrorShow: false,//地址错误
 
       translucentShow: false, //弹窗
@@ -281,7 +285,7 @@ export default {
       stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
-      feeErrorText: 'Fee cannot be greater than BIU balance',
+      feeErrorText: 'Fee cannot be greater than BIU balance.',
       feeValError: false
     }
   },
@@ -310,10 +314,10 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than BIU balance'
+        this.feeErrorText = 'Fee cannot be greater than BIU balance.'
         this.feeValError = true
       } else if (this.feeVal === 0) {
-        this.feeErrorText = 'Fee Cannot be zero'
+        this.feeErrorText = 'Fee Cannot be zero.'
         this.feeValError = true
       } else {
         this.feeValError = false
@@ -321,15 +325,15 @@ export default {
 
       if (address.length > 0 && address.length < 42) {
         this.addresErrorShow = true
-        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
+        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
         return false
       } else if (!(addressReg.test(address)) && address.length == 42) {
         this.addresErrorShow = true
-        this.addressError = 'This is not a valid address'
+        this.addressError = 'This is not a valid address.'
         return false
       } else if (addressReg.test(address) && address == walletAddress) {
         this.addresErrorShow = true
-        this.addressError = 'The same address cannot be transferred'
+        this.addressError = 'The same address cannot be transferred.'
         return false
       } else {
         this.addresErrorShow = false
@@ -346,7 +350,7 @@ export default {
               && Number(amount) <= Number(this.balance)
               && addressReg.test(address)
               && 0 < this.feeVal
-              && this.feeVal < this.allfeeVal ? true : false
+              && Number(this.feeVal) <= Number(this.allfeeVal) ? true : false
           }
         } else {
           //转账 BIU
@@ -382,15 +386,21 @@ export default {
     maxFee() {
       return Number("0.1")
     }
-
   },
 
   watch:{
     //监听输入金额的变化
     receiveAmount(newVal,oldVal){
+      let amount = newVal
+      if (newVal.indexOf(".") == 1) {
+        amount = newVal
+      } else {
+        amount = newVal.replace(/^0+/,"")
+      }
+      let amount1 = this._checkValueFormat(amount)
       let parm = {
         address: this.selectedWallet.walletAddress,
-        value: Number(newVal.replace(/^0+/,"")),
+        value: amount1,
         type: this.qrcodeIdx
       }
       this.qrcodeWalletAddress = JSON.stringify(parm)
@@ -436,15 +446,18 @@ export default {
   destroyed() { },
 
   methods: {
-    formatTooltip(val) {
-      return val / 11
+    //转账地址不能输入空格
+    inputAddress () {
+      this.$nextTick(()=> {
+        this.sentAddress = this.sentAddress.replace(/\s+/g,'')
+      })
     },
 
-    getCaption(obj) {
-        var index=obj.lastIndexOf(".");
-        obj=obj.substring(index+1,obj.length);
-        return obj;
-    },  
+    // getCaption(obj) {
+    //     var index=obj.lastIndexOf(".");
+    //     obj=obj.substring(index+1,obj.length);
+    //     return obj;
+    // },  
 
     //不能输入中文
     inputContent () {
@@ -453,6 +466,7 @@ export default {
       })
     },
 
+    //判断地址是否输入正确
     isAddress () {
       if (!/^0x([a-z0-9]{40})$/.test(this.sentAddress))  {
         return false
@@ -517,8 +531,8 @@ export default {
     },
     
     _resetErrorText () {
-      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x'
-      this.confirmTitle = 'Confirm The Following information'
+      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
+      this.confirmTitle = 'Confirm The Following information.'
       this.amountError = ''
       this.receiveError = ''
       this.networkError = false
@@ -527,7 +541,7 @@ export default {
     //转账
     sent () {
       if (!navigator.onLine) {
-        this.confirmTitle = 'Submission Failed'
+        this.confirmTitle = 'Submission Failed.'
         this.networkError = true
         return 
       }

@@ -23,10 +23,11 @@
               <input type="text" 
                    maxlength="14"
                    ref="contentInput"
-                   v-model.trim="walletName"
+                   v-model="walletName"
                    v-show="!inputReadonly"
                    :readonly="inputReadonly"
                    onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"
+                   @input="inputUpdateName"
                    @blur="saveName"/>
               <!-- <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput"> -->
             </section>
@@ -273,6 +274,13 @@ export default {
     //切换操作菜单是否显示
     tabMenuList () {
       this.menuShow = !this.menuShow
+    },
+
+    //钱包名称不能输入空格开头
+    inputUpdateName () {
+      this.$nextTick(()=> {
+        this.walletName = this.walletName.replace(/(^\s*)/g, '')
+      })
     },
 
     //修改钱包名称

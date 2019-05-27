@@ -18,9 +18,9 @@
       <wallet-input 
         type="text" 
         placeholder="Wallet Name" 
-        maxlength="14" 
-        v-model.trim="walletName"
-        onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"></wallet-input>
+        maxlength="14"
+        v-model="walletName"
+        @input="inputName"></wallet-input>
       
       <wallet-title :title="walletPassText1" :choose="true"/>
       <wallet-input-pass placeholder="Password" maxlength="30" 
@@ -87,12 +87,12 @@
         <wallet-input 
           placeholder="Wallet Name" 
           maxlength="14" 
-          v-model.trim="walletNameImport1"
-          onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"></wallet-input>
+          v-model="walletNameImport1"
+          @input="inputName1"></wallet-input>
         <textarea placeholder="Eenter your private key here" 
             maxlength="64" 
-            v-model.trim="walletPrivateKey"
-            onkeyup="this.value=this.value.replace(/\s+/g,'')">
+            v-model="walletPrivateKey"
+            @input="inputPrivateKey">
         </textarea>
         <wallet-tips :tips="privateKeyErrorText" v-show="privateKeyError"/>
         <wallet-button  class="wallet-button-backup" 
@@ -113,7 +113,7 @@
          <section v-show="showPass">
             <wallet-title :title="walletnNewPassText" :choose="false"/>
             <wallet-input-pass placeholder="Password" maxlength="30" 
-              v-model.trim="walletNewPass"
+              v-model="walletNewPass"
               @input="inputContent3"></wallet-input-pass>
             <wallet-tips :tips="walletnNewPassErrorText" v-show="walletnNewPassError"/>
          </section>
@@ -129,9 +129,10 @@
         <wallet-input 
           placeholder="Wallet Name" 
           maxlength="14" 
-          v-model.trim="walletNameImport2"
-          onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"></wallet-input>
-        <textarea placeholder="Enter your Phrase here width space-separated" v-model.trim="walletPhrase"></textarea>
+          v-model="walletNameImport2"
+          @input="inputName2"></wallet-input>
+        <textarea placeholder="Enter your Phrase here width space-separated"
+          v-model.trim="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
         <wallet-button  class="wallet-button-backup" 
                       :text="walletImportButton"
@@ -206,9 +207,9 @@ export default {
       walletPass1: '',//密码
       walletPass2: '',//确认密码
       walletButtonText: 'Create Wallet',
-      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters',
+      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
       passFormatShow: false,//密码格式提示
-      passFormat2: 'Two passwords are inconsistent',//两次密码输入不一致
+      passFormat2: 'Two passwords are inconsistent.',//两次密码输入不一致
       passFormat2Show: false,//密码格式提示
       backupText1: 'PHRASE',
       backupText2: 'PRIVATE KEY',
@@ -241,10 +242,10 @@ export default {
       walletPhrase: '',//助记词
       selectedKeystorePath: '',
       walletImportButton: 'Login',
-      privateKeyErrorText: 'Private Error',//私钥错误提示语
+      privateKeyErrorText: 'Private Error.',//私钥错误提示语
       privateKeyError: false,//私钥错误提示是否显示
-      walletnNewPassText: 'Your wallet is encrypted.Good! Please enter the password',//
-      walletnNewPassErrorText: 'Password Error, unlock failed',//密码错误提示语
+      walletnNewPassText: 'Your wallet is encrypted.Good! Please enter the password.',//
+      walletnNewPassErrorText: 'Password Error, unlock failed.',//密码错误提示语
       showPass: false,//选择keystroe之后出现密码输入的框
       KeyStoreVal: 'Select Keystore',
       walletnNewPassError: false,//密码错误提示语是否显示
@@ -337,10 +338,39 @@ export default {
       this.passFormatShow = true
     },
 
+    //创建钱包名称不能空格开头
+    inputName () {
+      this.$nextTick(()=> {
+        this.walletName = this.walletName.replace(/(^\s*)/g, '')
+      })
+    },
+
+    //私钥钱包名称不能输入空格开头
+    inputName1 () {
+      this.$nextTick(()=> {
+        this.walletNameImport1 = this.walletNameImport1.replace(/(^\s*)/g, '')
+      })
+    },
+
+    //私钥不能输入空格
+    inputPrivateKey () {
+      this.$nextTick(()=> {
+        this.walletPrivateKey = this.walletPrivateKey.replace(/\s+/g,'')
+      })
+    },
+
+    //keystroe名称不能输入空格开头
+    inputName2 () {
+      this.$nextTick(()=> {
+        this.walletNameImport2 = this.walletNameImport2.replace(/(^\s*)/g, '')
+      })
+    },
+
     //不能输入中文
     inputContent1 () {
       this.$nextTick(()=> {
         this.walletPass1 = this.walletPass1.replace(/[\u4E00-\u9FA5]/g,'')
+        this.walletPass1 = this.walletPass1.replace(/\s+/g,'')
       })
     },
 
@@ -348,6 +378,7 @@ export default {
     inputContent2 () {
       this.$nextTick(()=> {
         this.walletPass2 = this.walletPass2.replace(/[\u4E00-\u9FA5]/g,'')
+        this.walletPass2 = this.walletPass2.replace(/\s+/g,'')
       })
     },
 
@@ -355,6 +386,7 @@ export default {
     inputContent3 () {
       this.$nextTick(()=> {
         this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'')
+        this.walletNewPass = this.walletNewPass.replace(/\s+/g,'')
       })
     },
 
@@ -521,7 +553,7 @@ export default {
             console.log(wallets)
             if (wallets === 'error') {
               this.phraseError = true
-              this.phraseErrorText = "Phrase error"
+              this.phraseErrorText = "Phrase error."
             } else if (wallets === 'DuplicateKey') {
               this.phraseError = true
               this.phraseErrorText = 'Wallet already exists or imported.'
@@ -547,15 +579,15 @@ export default {
     _importNameError (index) {
       switch (index) {
         case 0:
-          this.privateKeyErrorText = 'Please input wallet name'
+          this.privateKeyErrorText = 'Please input wallet name.'
           this.privateKeyError = true
           break
         case 1:
-          this.walletnNewPassErrorText = 'Please input wallet name'
+          this.walletnNewPassErrorText = 'Please input wallet name.'
           this.walletnNewPassError = true
           break
         case 2:
-          this.phraseErrorText = 'Please input wallet name'
+          this.phraseErrorText = 'Please input wallet name.'
           this.phraseError = true
           break
       }
@@ -597,7 +629,7 @@ export default {
       // this.walletPhrase = ''
       this.tabIndex = index
     }
-  }
+  },
 }
 </script>
 

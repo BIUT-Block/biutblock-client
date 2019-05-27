@@ -148,6 +148,7 @@ export default {
       bAlreadyShowed: false,
       digBalance: 0, //挖矿余额
       translucentShow: false,
+      navigatorPost: false,// 监听网络请求
       translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.'
     }
   },
@@ -174,7 +175,7 @@ export default {
     }, 2500)
   },
   mounted () {
-
+    
   },
   destroyed () {
     window.sessionStorage.setItem('processTexts', JSON.stringify(this.processTexts))
@@ -296,6 +297,13 @@ export default {
     _getLatestBlockInfo () {
       this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, (balance) => {
         this.digBalance = balance
+        if (balance < 10) {
+          this.digButton = "Start Mining"
+          this.stopMining()
+          this.maskShow = false
+          this.checkedWallet = true
+          this.noCursor = false
+        }
       })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
         this.chainHeight = height.toString()
@@ -448,6 +456,9 @@ export default {
       //this._getWalletMiningHistory()
       //this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
     }
+  },
+  watch: {
+    
   },
 }
 </script>
