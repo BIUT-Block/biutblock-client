@@ -12,7 +12,6 @@ import {
 import updateChecker from './updateChecker.js'
 import walletsHandler from '../renderer/lib/WalletsHandler'
 
-const SECNODE = require('@biut-block/biutjs-node')
 const packageJSON = require('../../package.json')
 const fs = require('fs')
 
@@ -70,6 +69,7 @@ function createWindow () {
   }
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
+  const SECNODE = require('@biut-block/biutjs-node')
   let SECCore = new SECNODE.Core({
     DBPath: path + '/data/',
     SecDBPath: path + '/data/Sec',
