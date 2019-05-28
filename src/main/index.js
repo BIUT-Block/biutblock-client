@@ -61,7 +61,7 @@ function createWindow () {
   }
 
   // ------------------------  SETUP DATABASE PATH  -----------------------
-  let path = app.getPath('appData') + packageJSON.name
+  let path = app.getPath('appData') + '/' + packageJSON.name
 
   console.log(path + '/data/')
 
