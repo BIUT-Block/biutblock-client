@@ -3,8 +3,8 @@ import WalletsHandler from './WalletsHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '3.113.31.121'
-    let externalServerAddressTest = '54.250.166.137'
+    let externalServerAddress = 'scan.biut.io'
+    let externalServerAddressTest = 'test.biut.io'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
     let localhostAddress = '127.0.0.1'
