@@ -80,8 +80,10 @@ function createWindow () {
   const { net } = require('electron')
   let request
   if (netType === 'main') {
+    process.env.netType = 'main'
     request = net.request('http://scan.secblock.io/genesisBlockHash')
   } else {
+    process.env.netType = 'test'
     request = net.request('http://test.secblock.io/genesisBlockHash')
   }
 

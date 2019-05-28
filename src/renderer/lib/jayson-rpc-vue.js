@@ -3,8 +3,8 @@ import WalletsHandler from './WalletsHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '54.250.166.137' //'54.250.166.137'  //'18.197.120.79' Test node
-    let externalServerAddressTest = '18.197.120.79'
+    let externalServerAddress = '3.113.31.121'
+    let externalServerAddressTest = '54.250.166.137'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
     let localhostAddress = '127.0.0.1'
@@ -22,11 +22,11 @@ export default {
       switchToExternalServer: function () {
         let isTestEnv = window.localStorage.getItem('secTest')
         if (isTestEnv === 'true') {
-          process.env.netType = 'develop'
+          process.env.netType = 'test'
           this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
         } else {
-          process.env.netTest = 'test'
+          process.env.netType = 'main'
           this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
         }
