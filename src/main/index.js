@@ -14,6 +14,9 @@ import walletsHandler from '../renderer/lib/WalletsHandler'
 
 const SECNODE = require('@biut-block/biutjs-node')
 const packageJSON = require('../../package.json')
+const fs = require('fs')
+
+let settingPath = app.getPath('appData') + '/BIUT_Wallet_setting.json'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -24,8 +27,16 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let netType = "main"
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 // const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000'
+
+if (fs.existsSync(settingPath)) {
+  fs.readFile(settingPath, 'utf-8', function(err, data) {
+    let setting = JSON.parse(data)
+    netType = setting.netType
+  })
+}
 
 let shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
   // Someone tried to run a second instance, we should focus our window.
@@ -48,6 +59,7 @@ function createWindow () {
 
   // ------------------------  SETUP DATABASE PATH  -----------------------
   let path = app.getPath('appData') + packageJSON.name
+
   console.log(path + '/data/')
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
@@ -63,7 +75,13 @@ function createWindow () {
 
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
   const { net } = require('electron')
-  const request = net.request('http://scan.secblock.io/genesisBlockHash')
+  let request
+  if (netType === "main") {
+    request = net.request('http://scan.secblock.io/genesisBlockHash')
+  } else {
+    request = net.request('http://test.secblock.io/genesisBlockHash')
+  }
+  
   request.on('response', response => {
     response.on('data', remotegenesisHash => {
       remotegenesisHash = remotegenesisHash.toString()
