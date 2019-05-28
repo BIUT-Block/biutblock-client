@@ -27,12 +27,15 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-let netType = "main"
+let netType = 'main'
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 // const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000'
 
 if (fs.existsSync(settingPath)) {
-  fs.readFile(settingPath, 'utf-8', function(err, data) {
+  fs.readFile(settingPath, 'utf-8', function (err, data) {
+    if (err) {
+      console.log(err)
+    }
     let setting = JSON.parse(data)
     netType = setting.netType
   })
@@ -76,12 +79,12 @@ function createWindow () {
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
   const { net } = require('electron')
   let request
-  if (netType === "main") {
+  if (netType === 'main') {
     request = net.request('http://scan.secblock.io/genesisBlockHash')
   } else {
     request = net.request('http://test.secblock.io/genesisBlockHash')
   }
-  
+
   request.on('response', response => {
     response.on('data', remotegenesisHash => {
       remotegenesisHash = remotegenesisHash.toString()

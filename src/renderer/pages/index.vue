@@ -252,13 +252,13 @@ export default {
       if (index === 1) {
         this.networkContent = "Test Net"
         window.localStorage.setItem('secTest', true)
-        fs.writeFileSync(settingPath, 'utf-8', JSON.stringify({
+        fs.writeFileSync(settingPath, JSON.stringify({
           netType: "test"
         }))
       } else {
         this.networkContent = "Main Net"
         window.localStorage.setItem('secTest', false)
-        fs.writeFileSync(settingPath, 'utf-8', JSON.stringify({
+        fs.writeFileSync(settingPath, JSON.stringify({
           netType: "main"
         }))
       }
