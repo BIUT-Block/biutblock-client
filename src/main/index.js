@@ -26,7 +26,6 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-let netType = 'main'
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 // const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000'
 
@@ -49,10 +48,26 @@ function createWindow () {
     return
   }
 
-  // ------------------------  SETUP DATABASE PATH  -----------------------
+  // ------------------------  SETUP DATABASE PATH && Envs -----------------------
   let path = app.getPath('appData') + '/' + packageJSON.name
-
+  let netType = 'main'
+  let settingPath = path + '/BIUT_Wallet_setting.json'
+  if (fs.existsSync(settingPath)) {
+    let settingContent = fs.readFileSync(settingPath, 'utf-8')
+    netType = JSON.parse(settingContent).netType
+  }
   console.log(path + '/data/')
+  const { net } = require('electron')
+  let request
+  if (netType === 'main') {
+    console.log('node connect with http://scan.secblock.io/genesisBlockHash')
+    process.env.netType = 'main'
+    request = net.request('http://scan.secblock.io/genesisBlockHash')
+  } else {
+    console.log('node connect with http://test.secblock.io/genesisBlockHash')
+    process.env.netType = 'test'
+    request = net.request('http://test.secblock.io/genesisBlockHash')
+  }
 
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
   let SECCore = new SECNODE.Core({
@@ -66,23 +81,6 @@ function createWindow () {
   SECRPC.runRPCServer()
 
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
-  const { net } = require('electron')
-  let request
-  let settingPath = path + '/BIUT_Wallet_setting.json'
-  if (fs.existsSync(settingPath)) {
-    let settingContent = fs.readFileSync(settingPath, 'utf-8')
-    netType = JSON.parse(settingContent).netType
-  }
-  if (netType === 'main') {
-    console.log('node connect with http://scan.secblock.io/genesisBlockHash')
-    process.env.netType = 'main'
-    request = net.request('http://scan.secblock.io/genesisBlockHash')
-  } else {
-    console.log('node connect with http://test.secblock.io/genesisBlockHash')
-    process.env.netType = 'test'
-    request = net.request('http://test.secblock.io/genesisBlockHash')
-  }
-
   request.on('response', response => {
     response.on('data', remotegenesisHash => {
       remotegenesisHash = remotegenesisHash.toString()
