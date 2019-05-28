@@ -16,7 +16,6 @@ const SECNODE = require('@biut-block/biutjs-node')
 const packageJSON = require('../../package.json')
 const fs = require('fs')
 
-let settingPath = app.getPath('appData') + '/BIUT_Wallet_setting.json'
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -30,16 +29,6 @@ let mainWindow
 let netType = 'main'
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 // const appPort = process.env.NODE_ENV === 'development' ? '9080' : '3000'
-
-if (fs.existsSync(settingPath)) {
-  fs.readFile(settingPath, 'utf-8', function (err, data) {
-    if (err) {
-      console.log(err)
-    }
-    let setting = JSON.parse(data)
-    netType = setting.netType
-  })
-}
 
 let shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory) {
   // Someone tried to run a second instance, we should focus our window.
@@ -79,6 +68,16 @@ function createWindow () {
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
   const { net } = require('electron')
   let request
+  let settingPath = path + '/BIUT_Wallet_setting.json'
+  if (fs.existsSync(settingPath)) {
+    fs.readFile(settingPath, 'utf-8', function (err, data) {
+      if (err) {
+        console.log(err)
+      }
+      let setting = JSON.parse(data)
+      netType = setting.netType
+    })
+  }
   if (netType === 'main') {
     process.env.netType = 'main'
     request = net.request('http://scan.secblock.io/genesisBlockHash')

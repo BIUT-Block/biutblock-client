@@ -166,11 +166,19 @@ export default {
     this.selectedWallet = wallets[this.selectedPrivateKey]
     this.initMiningStatus()
 
-    this._getLatestBlockInfo()
+    this._getLatestBlockInfo((balance) => {
+      if (balance < 10) {
+          this.digButton = "Start Mining"
+          this.maskShow = false
+          this.checkedWallet = true
+          this.noCursor = false
+      }
+    })
     this._getTotalReward()
 
     this.getBlockHeightJob = setInterval(()=>{
-      this._getLatestBlockInfo()
+      this._getLatestBlockInfo((balance) => {
+      })
       this._getTotalReward()
     }, 2500)
   },
@@ -294,16 +302,10 @@ export default {
       })
     },
 
-    _getLatestBlockInfo () {
+    _getLatestBlockInfo (fnCheckMining) {
       this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, (balance) => {
         this.digBalance = balance
-        if (balance < 10) {
-          this.digButton = "Start Mining"
-          this.stopMining()
-          this.maskShow = false
-          this.checkedWallet = true
-          this.noCursor = false
-        }
+        fnCheckMining(balance)
       })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
         this.chainHeight = height.toString()
@@ -428,7 +430,8 @@ export default {
       clearInterval(this.updateListJob)
       this.$JsonRPCClient.switchToExternalServer()
       this.getBlockHeightJob = setInterval(()=>{
-        this._getLatestBlockInfo()
+        this._getLatestBlockInfo((balance) => {
+        })
         this._getTotalReward()
       }, 2500)
     },
@@ -450,7 +453,8 @@ export default {
       })
       this.$JsonRPCClient.switchToExternalServer()
       this.getBlockHeightJob = setInterval(()=>{
-        this._getLatestBlockInfo()
+        this._getLatestBlockInfo((balance) => {
+        })
         this._getTotalReward()
       }, 2500)
       //this._getWalletMiningHistory()
