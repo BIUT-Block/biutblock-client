@@ -117,6 +117,7 @@ import WalletsHandler from '../lib/WalletsHandler.js'
 import {setInterval, setTimeout} from 'timers'
 
 const {ipcRenderer, remote} = require('electron')
+const packageJSON = require('../../../package.json')
 const fs = require('fs')
 export default {
   name: '',
@@ -247,7 +248,7 @@ export default {
     //确认切换网络
     confirmNetwork () {
       let index = this.newNetworkIdx
-      let settingPath = remote.app.getPath('appData') + '/BIUT_Wallet_setting.json'
+      let settingPath = remote.app.getPath('appData') + '/' + packageJSON.name + '/BIUT_Wallet_setting.json'
       this.networkIdx = index //赋值给旧的网络切换下标
       if (index === 1) {
         this.networkContent = "Test Net"

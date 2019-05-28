@@ -70,18 +70,15 @@ function createWindow () {
   let request
   let settingPath = path + '/BIUT_Wallet_setting.json'
   if (fs.existsSync(settingPath)) {
-    fs.readFile(settingPath, 'utf-8', function (err, data) {
-      if (err) {
-        console.log(err)
-      }
-      let setting = JSON.parse(data)
-      netType = setting.netType
-    })
+    let settingContent = fs.readFileSync(settingPath, 'utf-8')
+    netType = JSON.parse(settingContent).netType
   }
   if (netType === 'main') {
+    console.log('node connect with http://scan.secblock.io/genesisBlockHash')
     process.env.netType = 'main'
     request = net.request('http://scan.secblock.io/genesisBlockHash')
   } else {
+    console.log('node connect with http://test.secblock.io/genesisBlockHash')
     process.env.netType = 'test'
     request = net.request('http://test.secblock.io/genesisBlockHash')
   }
