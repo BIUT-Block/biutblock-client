@@ -1,8 +1,8 @@
 {
   "name": "PC-Miner",
-  "version": "2.0.28",
+  "version": "2.0.29",
   "author": "MongoX Technology GmbH",
-  "description": "SEC Wallet Client",
+  "description": "BIUT PC Miner",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
@@ -28,8 +28,8 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "BIUT_Client",
-    "appId": "biutblock.biut-client",
+    "productName": "PC-Miner",
+    "appId": "biutblock.PC-Miner",
     "directories": {
       "output": "build"
     },
