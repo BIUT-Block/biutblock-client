@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     _getNodeLists () {
-      if (window.localStorage.getItem('secTest') && window.localStorage.getItem('secTest') === 'true') {
+      if (process.env.netType && process.env.netType === 'Test') {
         secAPI = 'http://test.secblock.io/'
       } else {
         secAPI = 'http://scan.secblock.io/'

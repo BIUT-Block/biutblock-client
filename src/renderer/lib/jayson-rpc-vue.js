@@ -343,7 +343,7 @@ export default {
       }
     }
 
-    if (window.localStorage.getItem('secTest') === 'true') {
+    if (process.env.netType === 'Test') {
       console.log('Start jayson client with test network')
       process.env.netType = 'test'
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
