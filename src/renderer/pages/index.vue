@@ -68,7 +68,7 @@
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
               <p>Version Information</p>
-              <span>BIUT Wallet V {{versionNumber}}</span>
+              <span>PC Miner V {{versionNumber}}</span>
             </section>
           </section>
         </section>
