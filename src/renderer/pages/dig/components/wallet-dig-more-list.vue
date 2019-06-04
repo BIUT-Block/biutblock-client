@@ -2,20 +2,20 @@
   <section>
     <section class="list-header">
       <ul>
-        <li style="width: 4%;"> &nbsp; </li>
+        <li style="width: 6%;"> &nbsp; </li>
         <li style="width: 24%;">AGE</li>
         <li style="width: 17%;">REWARD</li>
         <li style="width: 17%;">BLOCKS</li>
-        <li style="width: 38%;">BLOCK HASH</li>
+        <li style="width: 36%;">BLOCK HASH</li>
       </ul>
     </section>
     <section class="more-list">
       <ul v-for="(item, index) in moreList" v-if="index < moreList.length" :key="index">
-          <li style="width: 4%;">{{index + 1}}</li>
+          <li style="width: 6%;">{{index + 1}}</li>
           <li style="width: 24%;">{{item.age}}</li>
           <li style="width: 17%;">{{item.reward}}</li>
           <li style="width: 17%;">{{item.blocknumber}}</li>
-          <li style="width: 38%;">{{item.blockhash}}</li>
+          <li style="width: 36%;">{{item.blockhash}}</li>
       </ul>
     </section>
     

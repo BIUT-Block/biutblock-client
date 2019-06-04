@@ -168,10 +168,12 @@ export default {
 
     this._getLatestBlockInfo((balance) => {
       if (balance < 10) {
-          this.digButton = "Start Mining"
-          this.maskShow = false
-          this.checkedWallet = true
-          this.noCursor = false
+        this.stopMining()
+        this.digButton = "Start Mining"
+        this.maskShow = false
+        this.checkedWallet = true
+        this.noCursor = false
+        this.miningIn = false
       }
     })
     this._getTotalReward()
@@ -500,7 +502,7 @@ export default {
   
   .dig-header .dig-header-check .button-list {display: flex;align-items: center;justify-content: space-between;
     padding-right: 18px;margin-top: 8px;}
-  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;line-height: 1.5;color:#576066;}
+  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;color:#576066;}
   .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
   
   .dig-header .dig-header-list {flex: 1;height: 132px;background:rgba(247,247,247,1);border-radius: 4px;

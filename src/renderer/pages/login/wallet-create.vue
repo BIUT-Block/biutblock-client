@@ -659,7 +659,7 @@ export default {
 
   /* 备份助记词 */
   .wallet-backup {padding: 124px 68px 0;flex: 1;}
-  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-all;color: #EE1C39;}
+  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;}
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
   .wallet-backup .private-key-title {padding-top: 17px;}
   .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
