@@ -70,13 +70,13 @@ export default {
 
     this.updateNodeListJob = setInterval(() => {
       this._getNodeLists()
-    }, 2500)
+    }, 5*60*1000)
 
 
     this._getNodeInfo()
     this.updateConnectedNodeJob = setInterval(() => {
       this._getNodeInfo()
-    }, 2500)
+    }, 5*60*1000)
   },
   mounted () {
 
