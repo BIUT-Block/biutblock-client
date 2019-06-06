@@ -52,9 +52,13 @@ export default {
         return `${Math.ceil(Number(this.timeDiff) / (60*1000))} minutes ago`
       } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 3600 && Math.ceil(Number(this.timeDiff) / 1000) < 86400) {
         return `${Math.ceil(Number(this.timeDiff) / (3600*1000))} hours ago`
-      } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 86400) {
-        return `${Math.ceil(Number(this.timeDiff) / (86400*1000))} days ago`
+      } else {
+        return '-'
       }
+      //  else if (Math.ceil(Number(this.timeDiff) / 1000) >= 86400) {
+      //   console.log("4-" + `${Math.ceil(Number(this.timeDiff) / (86400*1000))} days ago`)
+      //   return `${Math.ceil(Number(this.timeDiff) / (86400*1000))} days ago`
+      // }
     }
   },
   created() {
