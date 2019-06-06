@@ -131,9 +131,9 @@ export default {
     this.fee = trade.listMinerCost
     this.moneyType=trade.listUnit
     
-    let address = 'http://scan.secblock.io/search?search='
+    let address = 'http://scan.biut.io/sen/search?search='
     if (this.$JsonRPCClient.isTestNetwork()) {
-      address = 'http://18.197.120.79:3001/search?search='
+      address = 'http://test.biut.io/search?search='
     }
     switch(trade.listState) {
       case 'Successful':
