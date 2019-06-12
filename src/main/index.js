@@ -57,17 +57,19 @@ function createWindow () {
   }
   console.log(path + '/data/')
   const { net } = require('electron')
-  let request
+  let requestBIUT
+  let requestBIU
   if (netType === 'main') {
-    console.log('node connect with http://scan.secblock.io/genesisBlockHash')
+    console.log('node connect with http://scan.biut.io/genesisBlockHash')
     process.env.netType = 'main'
-    request = net.request('http://scan.secblock.io/genesisBlockHash')
+    requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
+    requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
   } else {
-    console.log('node connect with http://test.secblock.io/genesisBlockHash')
+    console.log('node connect with http://test.biut.io/genesisBlockHash')
     process.env.netType = 'test'
-    request = net.request('http://test.secblock.io/genesisBlockHash')
+    requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
+    requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
   }
-
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
   const SECNODE = require('@biut-block/biutjs-node')
   let SECCore = new SECNODE.Core({
@@ -82,42 +84,51 @@ function createWindow () {
   SECRPC.runRPCServer()
 
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
-  request.on('response', response => {
+  requestBIUT.on('response', response => {
     response.on('data', remotegenesisHash => {
       remotegenesisHash = remotegenesisHash.toString()
-      console.log(`remote GenesisHash: ${remotegenesisHash}`)
+      console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
       SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
         if (err) {
-          return console.log('Blockchain Database is empty')
+          return console.log('BIUT Blockchain Database is empty')
         }
-        console.log(`Local GenesisHash: ${genesisBlock[0].Hash}`)
+        console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
         if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('GenesisHash check passed')
+          return console.log('BIUT GenesisHash check passed')
         } else {
           SECCore.secAPIs.clearDB((err) => {
             if (err) return console.error(err)
-            console.log('GenesisHash not passed, remove local database')
-          })
-        }
-      })
-      SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
-        if (err) {
-          return console.log('Blockchain Database is empty')
-        }
-        console.log(`Local GenesisHash: ${genesisBlock[0].Hash}`)
-        if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('GenesisHash check passed')
-        } else {
-          SECCore.senAPIs.clearDB((err) => {
-            if (err) return console.error(err)
-            console.log('GenesisHash not passed, remove local database')
+            console.log('BIUT GenesisHash not passed, remove local database')
           })
         }
       })
     })
     response.on('end', () => { })
   })
-  request.end()
+  requestBIUT.end()
+
+  requestBIU.on('response', response => {
+    response.on('data', remotegenesisHash => {
+      remotegenesisHash = remotegenesisHash.toString()
+      console.log(`remote BIU GenesisHash: ${remotegenesisHash}`)
+      SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+        if (err) {
+          return console.log('BIU Blockchain Database is empty')
+        }
+        console.log(`Local BIU GenesisHash: ${genesisBlock[0].Hash}`)
+        if (genesisBlock[0].Hash === remotegenesisHash) {
+          return console.log('BIU GenesisHash check passed')
+        } else {
+          SECCore.senAPIs.clearDB((err) => {
+            if (err) return console.error(err)
+            console.log('BIU GenesisHash not passed, remove local database')
+          })
+        }
+      })
+    })
+    response.on('end', () => { })
+  })
+  requestBIU.end()
 
   mainWindow = new BrowserWindow({
     height: 610,
