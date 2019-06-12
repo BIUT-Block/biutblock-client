@@ -62,7 +62,7 @@
     }
   },
   "dependencies": {
-    "@biut-block/biutjs-blockchain": "^1.0.17",
+    "@biut-block/biutjs-blockchain": "^1.0.20",
     "@biut-block/biutjs-datahandler": "^1.0.7",
     "@biut-block/biutjs-node": "^1.0.43",
     "@biut-block/biutjs-util": "^1.0.0",
