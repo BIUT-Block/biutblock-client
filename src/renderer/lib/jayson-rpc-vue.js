@@ -342,6 +342,7 @@ export default {
         }
       }
     }
+    
 
     if (window.localStorage.getItem('secTest') === 'true') {
       console.log('Start jayson client with test network')
