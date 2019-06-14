@@ -63,8 +63,8 @@
   },
   "dependencies": {
     "@biut-block/biutjs-blockchain": "^1.0.21",
-    "@biut-block/biutjs-datahandler": "^1.0.9",
-    "@biut-block/biutjs-node": "^1.0.52",
+    "@biut-block/biutjs-datahandler": "^1.0.10",
+    "@biut-block/biutjs-node": "^1.0.53",
     "@biut-block/biutjs-util": "^1.0.0",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
