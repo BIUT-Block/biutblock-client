@@ -78,6 +78,7 @@ function createWindow () {
     SenDBPath: path + '/data/Sen',
     cacheDBPath: path + '/data/powCache',
     loggerPath: path + '/biutlogs',
+    NDPPrivKeyFilePath: path + '/ndpprivatekey',
     ID: []
   })
   let SECRPC = new SECNODE.RPC(SECCore)
