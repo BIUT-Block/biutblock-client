@@ -1,5 +1,6 @@
 import jayson from 'jayson/lib/client'
 import WalletsHandler from './WalletsHandler'
+import BufferHandler from './BufferHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
