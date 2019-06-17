@@ -335,17 +335,32 @@ export default {
           })
         })
       },
+      getSyncStatus: function (fnSECSyncStatus, fnSENSyncStatus) {
+        this._getSECSyncStatus(fnSECSyncStatus)
+        this._getSENSyncStatus(fnSENSyncStatus)
+      },
+      _getSECSyncStatus: function (fnSECSyncStatus) {
+        this.client.request('sec_getSyncInfo', [], (err, response) => {
+          if (err) return
+          fnSECSyncStatus(response)
+        })
+      },
+      _getSENSyncStatus: function (fnSENSyncStatus) {
+        this.clientSEN.request('sec_getSyncInfo', [], (err, response) => {
+          if (err) return
+          fnSENSyncStatus(response)
+        })
+      },
       isTestNetwork: function () {
-        if (window.localStorage.getItem('secTest') === 'true') {
+        if (process.env.netType === 'test') {
           return true
         } else {
           return false
         }
       }
     }
-    
 
-    if (window.localStorage.getItem('secTest') === 'true') {
+    if (process.env.netType === 'test') {
       console.log('Start jayson client with test network')
       process.env.netType = 'test'
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)

@@ -138,6 +138,7 @@ export default {
       networkMining: '0',
       updateListJob: '',
       getBlockHeightJob: '',
+      getSyncStatusJob: '',
       processTexts: ['Enter the mining page, and wait for mining.'],
       moreList: [],
       
@@ -149,7 +150,8 @@ export default {
       digBalance: 0, //挖矿余额
       translucentShow: false,
       navigatorPost: false,// 监听网络请求
-      translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.'
+      translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
+      
     }
   },
   computed: {
@@ -275,10 +277,27 @@ export default {
       this.mineStatusError = false
     },
 
+    _restartAllJobs () {
+      this._startUpdateHistoryJob()
+      this._startUpdateLastBlockInfoJob()
+      
+    },
+
     _startUpdateHistoryJob () {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
-      this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
+      this.updateListJob = setInterval(() => {
+        this._getWalletMiningHistory()
+      }, 5000)
+    },
+    _startUpdateLastBlockInfoJob () {
+      clearInterval(this.getBlockHeightJob)
+      this._getWalletMiningHistory()
+      this._getTotalReward()
+      this.getBlockHeightJob = setInterval(() => {
+        this._getWalletMiningHistory()
+        this._getTotalReward()
+      }, 5000)
     },
     
     _getWalletMiningHistory () {
@@ -398,7 +417,6 @@ export default {
     },
 
     startMining () {
-      clearInterval(this.getBlockHeightJob)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {
@@ -406,13 +424,36 @@ export default {
         this.processTexts.push(`Node connection successful, synchronizing node...`)
         this.$JsonRPCClient.clientSEN.request('sec_startNetworkEvent', [], (err, response) => {
           console.log(err)
-          if (response) {
-            this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
-            this.processTexts.push(`Complete syncing blocks`)
-            this.isSynced = true
-            setTimeout(()=>{
-              this._beginMiningWithWallet()
-            }, 6000) 
+          if (response) {       
+            // stop all updating job
+            clearInterval(this.getBlockHeightJob)
+            if (this.updateListJob !== '') {
+              clearInterval(this.updateListJob)
+            }
+            //begin to get sync status
+            setTimeout(() => {
+              this.getSyncStatusJob = setInterval(() => {
+                this.$JsonRPCClient.getSyncStatus((responseSEC) => {
+                  if (!responseSEC.result.message.isSyncing) {
+                    this.secSyncFinish = true
+                  }
+                }, (responseSEN) => {
+                  if (!responseSEN.result.message.isSyncing) {
+                    this.senSyncFinish = true
+                  }
+                })
+                if (this.secSyncFinish && this.senSyncFinish) {
+                  this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
+                  this.processTexts.push(`Complete syncing blocks`)
+                  this.isSynced = true
+                  this.$JsonRPCClient.switchToLocalHost()
+                  this.saveMingingStatus()
+                  this._restartAllJobs()
+                  clearInterval(this.getSyncStatusJob)
+                }
+              }, 10000)
+            }, 5*60*1000)
+            this._beginMiningWithWallet()
           }
         })
         return
@@ -430,12 +471,8 @@ export default {
         this.saveMingingStatus()
       })
       clearInterval(this.updateListJob)
-      this.$JsonRPCClient.switchToExternalServer()
-      this.getBlockHeightJob = setInterval(()=>{
-        this._getLatestBlockInfo((balance) => {
-        })
-        this._getTotalReward()
-      }, 2500)
+      //this.$JsonRPCClient.switchToExternalServer()
+      this._startUpdateLastBlockInfoJob()
     },
 
     _beginMiningWithWallet () {
@@ -454,11 +491,7 @@ export default {
         this.saveMingingStatus()
       })
       this.$JsonRPCClient.switchToExternalServer()
-      this.getBlockHeightJob = setInterval(()=>{
-        this._getLatestBlockInfo((balance) => {
-        })
-        this._getTotalReward()
-      }, 2500)
+      this._startUpdateLastBlockInfoJob()
       //this._getWalletMiningHistory()
       //this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
     }
