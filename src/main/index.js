@@ -1,7 +1,7 @@
 import {
   app,
   BrowserWindow,
-  // ipcMain,
+  ipcMain,
   // dialog,
   Menu
 } from 'electron'
@@ -10,12 +10,16 @@ import {
 } from 'electron-updater'
 
 import updateChecker from './updateChecker.js'
+import walletsHandler from '../renderer/lib/WalletsHandler'
 
-const SECNODE = require('@sec-block/secjs-node')
+const packageJSON = require('../../package.json')
+const fs = require('fs')
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
+
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
@@ -43,50 +47,105 @@ function createWindow () {
     return
   }
 
-  // ------------------------  SETUP DATABASE PATH  -----------------------
-  let path = app.getPath('userData')
+  // ------------------------  SETUP DATABASE PATH && Envs -----------------------
+  let path = app.getPath('appData') + '/' + packageJSON.name
+  let netType = 'main'
+  let settingPath = path + '/BIUT_Wallet_setting.json'
+  if (fs.existsSync(settingPath)) {
+    let settingContent = fs.readFileSync(settingPath, 'utf-8')
+    netType = JSON.parse(settingContent).netType
+  }
   console.log(path + '/data/')
-
+  const { net } = require('electron')
+  let requestBIUT
+  let requestBIU
+  if (netType === 'main') {
+    console.log('node connect with http://scan.biut.io/genesisBlockHash')
+    process.env.netType = 'main'
+    requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
+    requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
+  } else {
+    console.log('node connect with http://test.biut.io/genesisBlockHash')
+    process.env.netType = 'test'
+    requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
+    requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
+  }
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
-  let SECCore = new SECNODE.Core({ DBPath: path + '/data/', cacheDBPath: path + '/data/powCache' })
+  const SECNODE = require('@biut-block/biutjs-node')
+  let SECCore = new SECNODE.Core({
+    DBPath: path + '/data/',
+    SecDBPath: path + '/data/Sec',
+    SenDBPath: path + '/data/Sen',
+    cacheDBPath: path + '/data/powCache',
+    loggerPath: path + '/biutlogs',
+    NDPPrivKeyFilePath: path + '/ndpprivatekey',
+    ID: []
+  })
   let SECRPC = new SECNODE.RPC(SECCore)
   SECRPC.runRPCServer()
 
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
-  const { net } = require('electron')
-  const request = net.request('http://scan.secblock.io/genesisBlockHash')
-  request.on('response', response => {
+  requestBIUT.on('response', response => {
     response.on('data', remotegenesisHash => {
       remotegenesisHash = remotegenesisHash.toString()
-      console.log(`remote GenesisHash: ${remotegenesisHash}`)
-      SECCore.APIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+      console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
+      SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
         if (err) {
-          return console.log('Blockchain Database is empty')
+          return console.log('BIUT Blockchain Database is empty')
         }
-        console.log(`Local GenesisHash: ${genesisBlock[0].Hash}`)
+        console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
         if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('GenesisHash check passed')
+          return console.log('BIUT GenesisHash check passed')
         } else {
-          SECCore.APIs.clearDB((err) => {
+          SECCore.secAPIs.clearDB((err) => {
             if (err) return console.error(err)
-            console.log('GenesisHash not passed, remove local database')
+            console.log('BIUT GenesisHash not passed, remove local database')
           })
         }
       })
     })
     response.on('end', () => { })
   })
-  request.end()
+  requestBIUT.end()
+
+  requestBIU.on('response', response => {
+    response.on('data', remotegenesisHash => {
+      remotegenesisHash = remotegenesisHash.toString()
+      console.log(`remote BIU GenesisHash: ${remotegenesisHash}`)
+      SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+        if (err) {
+          return console.log('BIU Blockchain Database is empty')
+        }
+        console.log(`Local BIU GenesisHash: ${genesisBlock[0].Hash}`)
+        if (genesisBlock[0].Hash === remotegenesisHash) {
+          return console.log('BIU GenesisHash check passed')
+        } else {
+          SECCore.senAPIs.clearDB((err) => {
+            if (err) return console.error(err)
+            console.log('BIU GenesisHash not passed, remove local database')
+          })
+        }
+      })
+    })
+    response.on('end', () => { })
+  })
+  requestBIU.end()
 
   mainWindow = new BrowserWindow({
-    height: 580,
+    height: 610,
     useContentSize: true,
     width: 960,
     transparent: false,
-    frame: true
+    frame: true,
+    minHeight: 610,
+    minWidth: 960
   })
   mainWindow.setResizable(true)
 
+  /** catch the clos event of main window */
+  mainWindow.on('close', () => {
+    walletsHandler.deleteAllWalletsFromFile()
+  })
   if (process.platform === 'darwin') {
     const template = [{
       label: 'Application',
@@ -118,9 +177,9 @@ function createWindow () {
         label: 'Test Network'
       }]
     }]
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+    //Menu.setApplicationMenu(null)
   } else {
-    // Menu.setApplicationMenu(null)
+    //Menu.setApplicationMenu(null)
   }
   try {
     mainWindow.loadURL(winURL)
@@ -147,6 +206,25 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on('min', () => mainWindow.minimize())
+ipcMain.on('close', () => {
+  console.log('Click Close')
+  walletsHandler.deleteAllWalletsFromFile()
+  mainWindow.close()
+})
+ipcMain.on('max', () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize()
+  } else {
+    mainWindow.maximize()
+  }
+})
+
+ipcMain.on('relaunch', () => {
+  app.relaunch()
+  app.quit()
 })
 
 // ipcMain.on('min', () => mainWindow.minimize())

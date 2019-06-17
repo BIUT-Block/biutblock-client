@@ -22,9 +22,7 @@ const checkVersion = async (app) => {
           type: 'info',
           title: 'New Version',
           buttons: ['Yes', 'No'],
-          message: `Found new version ${latest}. Please update.`,
-          checkboxLabel: 'Do not show again',
-          checkboxChecked: false
+          message: `Found new version ${latest}. Please update.`
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
             shell.openExternal(downloadUrl)
@@ -49,8 +47,12 @@ const compareVersion2Update = (current, latest) => {
   let flag = false
 
   for (let i = 0; i < 3; i++) {
-    if (currentVersion[i] < latestVersion[i]) {
+    if (Number(currentVersion[i]) < Number(latestVersion[i])) {
       flag = true
+    } else if (Number(currentVersion[i]) === Number(latestVersion[i])) {
+      continue
+    } else {
+      break
     }
   }
 

@@ -5,23 +5,39 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en'
-
 import 'normalize.css'
-import './assets/css/border.css'
 import './assets/css/public.css'
+import './assets/common/font.css'
 
-import JWT from './lib/jwt-auth'
+import { Slider } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
+Vue.use(Slider)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
-Vue.use(ElementUI, { locale })
+const {ipcRenderer: ipc} = require('electron')
 
-Vue.use(JWT)
+Vue.prototype.navMin = function () {
+  ipc.send('min')
+}
+Vue.prototype.navMax = function () {
+  ipc.send('max')
+}
+Vue.prototype.navClose = function () {
+  ipc.send('close')
+}
+
+Vue.prototype.getPointNum = function (num,n) {
+  let str = String(num);
+  let index = str.indexOf(".");
+  let str1 = str.substring(0,index+n+1);
+  str1 = Number(str1);
+  return str1
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
