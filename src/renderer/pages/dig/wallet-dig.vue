@@ -434,25 +434,22 @@ export default {
             setTimeout(() => {
               this.getSyncStatusJob = setInterval(() => {
                 this.$JsonRPCClient.getSyncStatus((responseSEC) => {
-                  if (!responseSEC.result.message.isSyncing) {
-                    this.secSyncFinish = true
-                  }
-                }, (responseSEN) => {
-                  if (!responseSEN.result.message.isSyncing) {
-                    this.senSyncFinish = true
+                  let lastSyncStatus = window.sessionStorage.getItem('lastSyncStatus')
+                  let currentSyncStatus = responseSEC.result.message.isSyncing
+                  if (lastSyncStatus === currentSyncStatus) {
+                    this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
+                    this.processTexts.push(`Complete syncing blocks`)
+                    this.isSynced = true
+                    this.$JsonRPCClient.switchToLocalHost()
+                    this.saveMingingStatus()
+                    this._restartAllJobs()
+                    clearInterval(this.getSyncStatusJob)
+                  } else {
+                    window.sessionStorage.setItem('lastSyncStatus', currentSyncStatus)
                   }
                 })
-                if (this.secSyncFinish && this.senSyncFinish) {
-                  this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
-                  this.processTexts.push(`Complete syncing blocks`)
-                  this.isSynced = true
-                  this.$JsonRPCClient.switchToLocalHost()
-                  this.saveMingingStatus()
-                  this._restartAllJobs()
-                  clearInterval(this.getSyncStatusJob)
-                }
-              }, 10000)
-            }, 5*60*1000)
+              }, 2*60*1000)
+            }, 1*60*1000)
             this._beginMiningWithWallet()
           }
         })

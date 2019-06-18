@@ -335,18 +335,18 @@ export default {
           })
         })
       },
-      getSyncStatus: function (fnSECSyncStatus, fnSENSyncStatus) {
+      getSyncStatus: function (fnSECSyncStatus) {
         this._getSECSyncStatus(fnSECSyncStatus)
-        this._getSENSyncStatus(fnSENSyncStatus)
+        // this._getSENSyncStatus(fnSENSyncStatus)
       },
       _getSECSyncStatus: function (fnSECSyncStatus) {
-        this.client.request('sec_getSyncInfo', [], (err, response) => {
+        jayson.http(`http://${localhostAddress}:${localhostPort}`).request('sec_getSyncInfo', [], (err, response) => {
           if (err) return
           fnSECSyncStatus(response)
         })
       },
       _getSENSyncStatus: function (fnSENSyncStatus) {
-        this.clientSEN.request('sec_getSyncInfo', [], (err, response) => {
+        jayson.http(`http://${localhostAddress}:${localhostPortSEN}`).request('sec_getSyncInfo', [], (err, response) => {
           if (err) return
           fnSENSyncStatus(response)
         })
