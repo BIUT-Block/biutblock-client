@@ -64,7 +64,7 @@
   "dependencies": {
     "@biut-block/biutjs-blockchain": "^1.0.24",
     "@biut-block/biutjs-datahandler": "^1.0.11",
-    "@biut-block/biutjs-node": "^1.0.60",
+    "@biut-block/biutjs-node": "^1.0.61",
     "@biut-block/biutjs-util": "^1.0.0",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
