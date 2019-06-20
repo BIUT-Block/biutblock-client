@@ -432,23 +432,29 @@ export default {
             }
             //begin to get sync status
             setTimeout(() => {
+              let _statusSameTimes = 0 
               this.getSyncStatusJob = setInterval(() => {
                 this.$JsonRPCClient.getSyncStatus((responseSEC) => {
                   let lastSyncStatus = window.sessionStorage.getItem('lastSyncStatus')
                   let currentSyncStatus = responseSEC.result.message.isSyncing
                   if (lastSyncStatus === currentSyncStatus) {
-                    this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
-                    this.processTexts.push(`Complete syncing blocks`)
-                    this.isSynced = true
-                    this.$JsonRPCClient.switchToLocalHost()
-                    this.saveMingingStatus()
-                    this._restartAllJobs()
-                    clearInterval(this.getSyncStatusJob)
+                    _statusSameTimes = _statusSameTimes + 1
+                    // 两次检查同步状态相同。
+                    if (_statusSameTimes === 2) {
+                      this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
+                      this.processTexts.push(`Complete syncing blocks`)
+                      this.isSynced = true
+                      this.$JsonRPCClient.switchToLocalHost()
+                      this.saveMingingStatus()
+                      this._restartAllJobs()
+                      clearInterval(this.getSyncStatusJob)
+                    }
                   } else {
+                    _statusSameTimes = 0
                     window.sessionStorage.setItem('lastSyncStatus', currentSyncStatus)
                   }
                 })
-              }, 2*60*1000)
+              }, 30*1000)
             }, 1*60*1000)
             this._beginMiningWithWallet()
           }
