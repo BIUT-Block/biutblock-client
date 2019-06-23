@@ -38,6 +38,6 @@ export default {
 
 <style scoped>
   .button {height:64px;border-radius:4px;display: flex;align-items: center;justify-content: center;
-    background: #fff;}
-  .button p {padding-left: 10px;color: #576066;}
+    background:rgba(50,58,110,1);}
+  .button p {padding-left: 10px;color: #9097C7;}
 </style>

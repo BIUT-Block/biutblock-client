@@ -58,14 +58,14 @@
         <!-- 金额展示 -->
         <section class="wallet-header-money-list">
           <section class="money-content">
-            <span> BIUT Balance </span>
-            <p>{{walletBalance}} BIUT</p>
-            <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
+            <span> DEFI Balance </span>
+            <p>{{walletBalance}} DEFI</p>
+            <img src="../../assets/images/indexAmountBg1.png" alt=""/>
           </section>
           <section class="money-content">
-            <span> BIU Balance </span>
-            <p>{{walletBalanceSEN}} BIU</p>
-            <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
+            <span> TEC Balance  </span>
+            <p>{{walletBalanceSEN}} TEC</p>
+            <img src="../../assets/images/indexAmountBg1.png" alt=""/>
           </section>
         </section>
 
@@ -237,7 +237,7 @@ export default {
         */
         if (Number(this.walletBalanceSEN) < 0.01) {
           this.translucentShow = true
-          this.translucentText = "BIU isn't enough to sent"
+          this.translucentText = "TEC isn't enough to sent"
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
@@ -460,75 +460,77 @@ export default {
 </script>
 
 <style scoped>
-  .wallet-content {padding: 36px 32px 0;}
+  .wallet-content {padding: 36px 32px 0;background: linear-gradient(162deg,rgba(51,58,108,1) 0%,rgba(34,39,78,1) 100%);}
   .wallet-content-header {display: flex;justify-content: space-between;flex-direction: column;}
   .wallet-content-header-left section:first-child {display: flex;align-items: center;color: #576066;} 
   .wallet-content-header-left section:first-child img {width: 16px;height: 12px;margin-right: 12px;}
   .wallet-content-header-left section:first-child {position: relative;}
-  .wallet-content-header-left section:first-child ul {width:146px;background:rgba(66,83,91,1);
+  .wallet-content-header-left section:first-child ul {width:146px;background:rgba(64,75,140,1);
     box-shadow:0px 10px 10px rgba(66,83,91,0.2);position: absolute;top: 24px;left:-7px;z-index: 9;
-    border-radius: 4px;color: #AFC3CC;font-size: 14px;}
+    border-radius: 4px;color: #BDC4F7;font-size: 14px;}
   .wallet-content-header-left section:first-child ul li {height: 37px;line-height: 37px;padding-left: 12px;
-    border-bottom: 1px solid #536973;}
+    border-bottom: 1px solid #374078;}
   .wallet-content-header-left section:first-child ul li:first-child {border-top-left-radius: 4px;
     border-top-right-radius: 4px;position: relative;}
   .wallet-content-header-left section:first-child ul li:last-child {border:0;border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;}
-  .wallet-content-header-left section:first-child ul li:hover {cursor: pointer;background: #536973;}
+  .wallet-content-header-left section:first-child ul li:hover {cursor: pointer;background: #6A75CA;}
   
   /* 修改名称 */
-  .wallet-content-header-left-update {display: flex;align-items: center;height:24px;
-    border: 1px solid #fff;width: 124px;border-radius: 4px;} 
-  .wallet-content-header-left-update input {border: 0;height:20px;color: #576066;width: 106px;}
+  .wallet-content-header-left-update {display: flex;align-items: center;height:32px;
+    border-radius: 4px;width: 172px;} 
+  .wallet-content-header-left-update input {border: 0;height:30px;color: #fff;width: 172px;font-size: 14px;
+    background:rgba(64,75,140,1);border-radius: 4px;}
   .wallet-content-header-left-update img {width: 10px!important;height: 10px!important;margin-right: 8px!important;}
   .input-active {border-color:rgba(229,229,229,1);}
-  .wallet-content-header-left-update span {display: inline-block;height: 24px;line-height: 24px;font-family: Montserrat-SemiBold;
-    font-size: 16px;}
-  .wallet-content-header-left-update span:hover {background: #F2F2F2;cursor: pointer;}
+  .wallet-content-header-left-update span {display: inline-block;height: 32px;line-height: 32px;font-family: Montserrat-SemiBold;
+    font-size: 16px;color: #fff;flex: 1;padding-left: 6px;border-radius: 4px;}
+  .wallet-content-header-left-update span:hover {background: #404B8C;cursor: pointer;}
 
   /* 按钮列表 */
   .wallet-header-list {display: flex;justify-content: space-between;padding: 8px 0 24px;}
   .wallet-header-list section:first-child img {width: 14px;height: 14px;margin-left: 12px;}
+   .wallet-header-list section:first-child span {color: #BDC4F7;font-size: 13px;}
   .wallet-button-list {display: flex;}
   .wallet-button-list section {width: 96px;height: 36px;line-height: 36px;border-radius: 4px;
-    border:1px solid rgba(229,229,229,1);font-size: 14px;}
+    background:rgba(64,75,140,1);font-size: 14px;}
   .wallet-button-list section:hover {cursor: pointer;}
-  .wallet-button-list section >>> p {color: #252F33!important;}
+  .wallet-button-list section >>> p {color: #BDC4F7!important;}
   .wallet-button-list section:last-child {margin-left: 6px;}
 
   /* 金额列表 */
   .wallet-header-money-list {display: flex;align-items: center;justify-content: space-between;width: 100%;}
   .wallet-header-money-list .money-content {height: 112px;flex: 1;border-radius:4px;color: #fff;position: relative;
-    background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);padding-left: 16px;
-    box-shadow:0px 3px 6px rgba(37,47,51,0.16);}
+    padding-left: 16px;box-shadow:0px 3px 6px rgba(37,47,51,0.16);
+    background:linear-gradient(314deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%);}
   .wallet-header-money-list .money-content:last-child {margin-left: 10px;
-    background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);
+    background:linear-gradient(134deg,rgba(109,132,245,1) 0%,rgba(89,86,223,1) 100%);
     box-shadow:0px 3px 6px rgba(37,47,51,0.16);}
   .wallet-header-money-list .money-content span {display: block;font-size: 12px;padding: 12px 0 8px;}
   .wallet-header-money-list .money-content p {font-size: 24px;font-weight: normal;}
-  .wallet-header-money-list .money-content img {width: 128px;height: 112px;position: absolute;right: 0;top: 0;}
+  .wallet-header-money-list .money-content img {position: absolute;right: 0;top: 0;}
 
-  .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);margin-top: 24px;
+  .wallet-content-body {background:linear-gradient(135deg,rgba(59,70,119,1) 0%,rgba(38,43,87,1) 100%);margin-top: 24px;
     flex: 1;display: flex;flex-direction: column;border-top-left-radius:4px;border-top-right-radius:4px;}
 
   .wallet-container-list {overflow: auto;box-sizing: border-box;height: 248px;}
 
   .wallet-content-body-list {width: 100%;}
   .wallet-container-list::-webkit-scrollbar { width: 2px; height: 2px;}
-  .wallet-container-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .wallet-container-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .wallet-container-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #F66767;background: #F66767;border-radius: 1px;}
+  .wallet-container-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.1);border-radius: 0; background: rgba(0,0,0,.1);}
 
-  .wallet-content-body .wallet-content-body-title {padding: 18px 0 12px;color: #839299;background: #fff;
+  .wallet-content-body .wallet-content-body-title {padding: 18px 0 12px;color: #fff;
     font-size: 13px;font-family: Montserrat-Regular;margin: 0 32px;}
 
   .wallet-content-body .wallet-content-body-mull {text-align: center;width: 100%;margin-top: 97px;}
   .wallet-content-body .wallet-content-body-mull img {width: 71px;height: 71px;}
-  .wallet-content-body .wallet-content-body-mull p {color: #999999;font-family: Lato-Bold;margin-top: 14px;}
+  .wallet-content-body .wallet-content-body-mull p {color: #9097C7;font-family: Lato-Bold;margin-top: 14px;}
 
-  .moreList {background: #fff;height: 50px;
-    display: flex;align-items: center;justify-content: center;color: #576066;z-index: 9;}
+  .moreList {height: 50px;
+    display: flex;align-items: center;justify-content: center;color: #9097C7;z-index: 9;}
   .moreList img {width: 11px;height: 7px;margin-right: 5px;}
 
   .wallet-padidng-bottom {padding-bottom: 16px;}
-  .noMore {text-align: center;color: #576066;padding: 15px 0;}
+  .noMore {text-align: center;color: #9097C7;padding: 15px 0;}
 </style>

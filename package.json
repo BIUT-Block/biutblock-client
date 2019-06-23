@@ -1,8 +1,8 @@
 {
-  "name": "PC-Miner",
-  "version": "2.0.47",
+  "name": "PC-Miner-DEFI",
+  "version": "1.0.0",
   "author": "MongoX Technology GmbH",
-  "description": "BIUT PC Miner",
+  "description": "DEFI PC Miner",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
@@ -28,8 +28,8 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "PC-Miner",
-    "appId": "biutblock.PC-Miner",
+    "productName": "PC-Miner-DEFI",
+    "appId": "biutblock.PC-Miner-DEFI",
     "directories": {
       "output": "build"
     },

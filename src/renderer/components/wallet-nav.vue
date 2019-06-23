@@ -1,5 +1,5 @@
 <template>
-  <ul>
+  <!-- <ul>
     <li>
       <img src="../assets/images/min.png" alt="" 
            title="minximize"
@@ -15,12 +15,12 @@
            title="close"
            @click="isNav(2)">
     </li>
-  </ul>
+  </ul> -->
 </template>
 
 <script>
-import navMaxImg from '../assets/images/max.png'
-import navMaxImgs from '../assets/images/maxs.png'
+// import navMaxImg from '../assets/images/max.png'
+// import navMaxImgs from '../assets/images/maxs.png'
 export default {
   name: '',
   components: {
@@ -30,7 +30,7 @@ export default {
   data () {
     return {
       idx: 1,
-      navMaxImg: navMaxImg
+      //navMaxImg: navMaxImg
     }
   },
   computed: {
@@ -45,21 +45,21 @@ export default {
   destroyed () {},
   methods: {
     //导航条方法
-    isNav (index) {
-      if (index == 0) {
-        this.navMin()
-      } else if (index == 1) {
-        this.navMax()
-        this.idx = !this.idx
-        if (this.idx == 1) {
-          this.navMaxImg = navMaxImgs
-        } else {
-          this.navMaxImg = navMaxImg
-        }
-      } else {
-        this.navClose()
-      }
-    }
+    // isNav (index) {
+    //   if (index == 0) {
+    //     this.navMin()
+    //   } else if (index == 1) {
+    //     this.navMax()
+    //     this.idx = !this.idx
+    //     if (this.idx == 1) {
+    //       this.navMaxImg = navMaxImgs
+    //     } else {
+    //       this.navMaxImg = navMaxImg
+    //     }
+    //   } else {
+    //     this.navClose()
+    //   }
+    // }
   },
 }
 </script>

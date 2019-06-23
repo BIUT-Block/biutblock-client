@@ -30,7 +30,7 @@
               <section>
                 <span></span>
                 <span>Income of Mined：</span>
-                <span>{{this.digIncome}} BIU</span>
+                <span>{{this.digIncome}} TEC</span>
               </section>
             </section>
           </section>
@@ -124,7 +124,7 @@ export default {
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${moneyValue} BIUT`,
+            reward: `${moneyValue} DEFI`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })
@@ -149,21 +149,21 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
-    align-content: stretch;display:-webkit-flex;}
-  .dig-more-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
-    border-radius:4px;flex: 1;}
+  main {padding: 24px;background:linear-gradient(162deg,rgba(51,58,108,1) 0%,rgba(34,39,78,1) 100%);
+    height: calc(100vh - 48px);display: flex;align-content: stretch;display:-webkit-flex;}
+  .dig-more-container {display: flex;flex-direction: column;border-radius:4px;flex: 1;
+    background:linear-gradient(138deg,rgba(59,70,119,1) 0%,rgba(38,43,87,1) 100%);}
 
-  .dig-more-header {height: 102px;border-bottom:1px solid rgba(229,229,229,1);background: #fff;
+  .dig-more-header {height: 102px;border-bottom:1px solid rgba(0,0,0,.2);
     border-top-left-radius: 4px;border-top-right-radius: 4px;}
   .dig-more-header img {width: 24px;height: 24px;margin: 7px 0 14px 12px;}
-  .dig-more-header .dig-more-header-title {display: flex;padding-left: 32px;color: #839299;}
-  .dig-more-header .dig-more-header-title section p:last-child {color: #252F33;font-weight: 500;
+  .dig-more-header .dig-more-header-title {display: flex;padding-left: 32px;color: #9097C7;}
+  .dig-more-header .dig-more-header-title section p:last-child {color: #F2F5FF;font-weight: 500;
     font-size: 14px;padding-top: 6px;font-family: Lato-Medium;}
   .dig-more-header .dig-more-header-title section:last-child {padding-left: 203px;}
 
 
-  .dig-more-body {background: #fff;padding-top: 36px;border-bottom-right-radius: 4px;
+  .dig-more-body {padding-top: 36px;border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;flex: 1;}
 
   .dig-more-lists {flex: 1;}
@@ -171,8 +171,8 @@ export default {
   
   .dig-more-body-header {position: fixed;top: 157px;left: 126px;right: 56px;background: #fff;
     padding: 36px 0 13px;}
-  .dig-more-body p {height: 40px;text-align: center;line-height: 40px;color: #839299;font-weight: 400;
-    position: fixed;bottom: 24px;left: 94px;right: 24px;background: #fff;border-bottom-left-radius: 4px;
+  .dig-more-body p {height: 40px;text-align: center;line-height: 40px;color: #9097C7;font-weight: 400;
+    position: fixed;bottom: 24px;left: 94px;right: 24px;border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;}
   .dig-body-padding-bottom {padding-bottom: 0px;}
 
@@ -181,13 +181,10 @@ export default {
 
   .dig-body-title {margin: 0 32px;padding-bottom: 13px;} 
   .dig-body-title,.dig-body-title .dig-body-title-list {display: flex;justify-content: space-between;align-items: center;}
-  .dig-body-title h3 {margin: 0;font-size: 14px;color: #839299;font-family: Montserrat-SemiBold;font-weight: 600;}
-  .dig-body-title .dig-body-title-list section {color: #839299;font-family: Montserrat-Light;}
+  .dig-body-title h3 {margin: 0;font-size: 14px;color: #F2F5FF;font-family: Montserrat-SemiBold;font-weight: 600;}
+  .dig-body-title .dig-body-title-list section {color: #9097C7;font-family: Montserrat-Light;}
   .dig-body-title .dig-body-title-list section span:first-child {display: inline-block;width:6px;height:6px;
     background:rgba(245,166,35,1);border-radius:50%;margin-right: 10px;}
-  .dig-body-title .dig-body-title-list section span:last-child {color: #252F33;font-family: Lato-Medium;}
+  .dig-body-title .dig-body-title-list section span:last-child {color: #F2F5FF;font-family: Lato-Medium;}
   .dig-body-title .dig-body-title-list section:nth-of-type(even) span:first-child {background:#388ED9;margin-left: 40px;}
-  .dig-body-title .dig-body-title-list .dig-more {width:48px;height:24px;background:rgba(255,255,255,1);
-    box-shadow:0px 0px 2px rgba(0,0,0,0.16);border-radius:2px;text-align: center;line-height: 24px;
-    color: #29D893;font-weight: 400;margin-left: 50px;}
 </style>

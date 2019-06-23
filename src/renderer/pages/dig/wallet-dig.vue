@@ -14,7 +14,10 @@
               </li>
               <li v-show="checkWallet">
                 <ul>
-                  <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">{{ wallet.walletName }}</li>
+                  <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">
+                    <span :class="wallet.walletAddress == selectedWalletAddress ? 'walletCheckColor' : ''">{{ wallet.walletName }}</span>
+                    <img src="../../assets/images/walletCheck.png" alt="" v-show="wallet.walletAddress == selectedWalletAddress"/>
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -22,14 +25,14 @@
                 :text="digButton"
                 :disabled="disabledButton"
                 :class="[miningIn ? 'miningIn' : '', 
-                  checkedWallet ? 'passCorrect' : '', 
+                  checkedWallet ? 'activeWallet' : '', 
                   disabledButton ? 'noCursor' : '']"
                 @click.native="beginDigMask"/>
           </section>
-          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} BIUT</span></h4>
+          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} DEFI</span></h4>
           <section class="dig-tips">
-            <label>Description:</label> After the node is mined, the BIUT Token is automatically acquired. 
-            The higher the balance, the greater probability to get BIU.
+            <label>Description:</label> After the node is mined, the DEFI Token is automatically acquired. 
+            The higher the balance, the greater probability to get TEC.
           </section>
         </section>
         <section class="dig-header-list">
@@ -127,6 +130,7 @@ export default {
       selectedPrivateKey: '',
       selectedWallet: '',
       selectedWalletName: '',
+      selectedWalletAddress: '', 
       miningIn: false, //挖矿中改变按钮样式
       noCursor: false, //默认可以选择钱包
       disabledButton: false,//默认不可点击
@@ -149,7 +153,7 @@ export default {
       digBalance: 0, //挖矿余额
       translucentShow: false,
       navigatorPost: false,// 监听网络请求
-      translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.'
+      translucentText: 'Only if the range of mine digging mortgage is changed to DEFI mortgage of 10-100000 can the mining function be started.'
     }
   },
   computed: {
@@ -185,7 +189,7 @@ export default {
     }, 2500)
   },
   mounted () {
-    
+
   },
   destroyed () {
     window.sessionStorage.setItem('processTexts', JSON.stringify(this.processTexts))
@@ -203,15 +207,18 @@ export default {
         if (miningStatus.miningIn) {
           this.selectedWallet = miningStatus.wallet
           this.selectedWalletName = miningStatus.wallet.walletName
+          this.selectedWalletAddress = miningStatus.wallet.walletAddress
           this.miningIn = miningStatus.miningIn
           this._setButton()
           this.isSynced = miningStatus.isSynced
         } else {
           this.selectedWalletName = this.selectedWallet.walletName
+          this.selectedWalletAddress = this.selectedWallet.walletAddress
         }
       } else {
         //this.selectedWallet = this.wallets[0]
         this.selectedWalletName = this.selectedWallet.walletName
+        this.selectedWalletAddress = this.selectedWallet.walletAddress
       }
       if (processTexts) {
         this.processTexts = JSON.parse(processTexts)
@@ -264,6 +271,7 @@ export default {
       window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
       this.selectedWallet = wallet
       this.selectedWalletName = wallet.walletName
+      this.selectedWalletAddress = wallet.walletAddress
       this.selectedPrivateKey = wallet.privateKey
       this._startUpdateHistoryJob()
       this.checkWallet = false
@@ -296,7 +304,7 @@ export default {
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${moneyValue} BIU`,
+            reward: `${moneyValue} TEC`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })
@@ -340,7 +348,7 @@ export default {
     //开启挖矿弹窗显示
     beginDigMask () {
       let balance = this.digBalance
-      if (balance < 10) {
+      if (balance < 10 && this.digButton == "Start Mining") {
         this.translucentShow = true
         setTimeout(() => {
           this.translucentShow = false
@@ -357,13 +365,14 @@ export default {
 
     //开启挖矿
     beginDig () {
-      if (this.digButton === "Start Mining") {    
+      let balance = this.digBalance
+      if (this.digButton === "Start Mining") {
         this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-        this.maskShow = true    
-      } else {        
+        this.maskShow = true
+      } else {
         this.digButton = "Stop Mining"
         this.maskText = "Confirm to Stop Mining?"
-        this.maskShow = true
+        this.maskShow = true  
       }
     },
 
@@ -470,43 +479,51 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
+  main {padding: 24px;background:linear-gradient(162deg,rgba(51,58,108,1) 0%,rgba(34,39,78,1) 100%);height: calc(100vh - 48px);display: flex;
     align-content: stretch;display:-webkit-flex;}
-  .dig-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
-  border-radius:4px;flex: 1;background: #fff;}
+  .dig-container {display: flex;flex-direction: column;border-radius:4px;flex: 1;
+   background:linear-gradient(138deg,rgba(59,70,119,1) 0%,rgba(38,43,87,1) 100%);}
   .dig-header {border-top-left-radius: 4px;
     border-top-right-radius: 4px;padding: 0 22px 8px 32px;display: flex;align-items: center;
     justify-content: space-between;}
   .dig-header .dig-header-check {width: 308px;}
   .dig-header .dig-header-check button {width: 98px;height: 32px;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
-    color:rgba(37,47,51,1);padding-top: 22px;}
-  .dig-header .dig-header-check h4 {margin: 0;padding: 6px 0 13px;color:#576066;font-size: 12px;font-weight: normal;}
+    color:#fff;padding-top: 22px;}
+  .dig-header .dig-header-check h4 {margin: 0;padding: 6px 0 13px;color:#9097C7;font-size: 12px;font-weight: normal;}
   .dig-header .dig-header-check h4 span {font-family: Lato-Medium;}
-  .dig-header .dig-header-check p {font-family: Montserrat-Light;color: #839299;margin-top: 22px;}
-  .dig-header .dig-header-check ul {height: 33px;line-height: 33px;width: 162px;color:#252F33;
-    background:rgba(247,247,247,1);font-size: 14px;border-radius:4px;padding: 0 10px;}
+  .dig-header .dig-header-check p {font-family: Montserrat-Light;color: #9097C7;margin-top: 22px;}
+  .dig-header .dig-header-check ul {height: 33px;line-height: 33px;width: 162px;color:#F2F5FF;
+    background:rgba(0,0,0,.1);font-size: 14px;border-radius:4px;padding: 0 10px;}
   .dig-header .dig-header-check ul img {width: 16px;height: 16px;}
   .dig-header .dig-header-check ul li:first-child {display: flex;justify-content: space-between;
     align-items: center;}
   .dig-header .dig-header-check ul li:first-child:hover {cursor: pointer;}
   .dig-header .dig-header-check ul li {position: relative;}
   .dig-header .dig-header-check ul li ul {height: 160px;position: absolute;top: 0;left: -10px;z-index: 8;width: 182px;
-    overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;padding: 0;}
+    overflow: auto;border-radius: 4px;padding: 0;background:rgba(64,75,140,1);box-shadow:0px 1px 6px rgba(37,47,51,0.16);}
 
 
-  .dig-header .dig-header-check ul li ul li {height: 40px;padding-left:16px;}
+  .dig-header .dig-header-check ul li ul li {height: 40px;padding: 0 16px;display: flex;justify-content: space-between;
+    align-items: center;}
   .dig-header .dig-header-check ul li ul li:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
-  .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;background:rgba(237,242,241,1);}
+  .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;color: #FB8091;}
   
   .dig-header .dig-header-check .button-list {display: flex;align-items: center;justify-content: space-between;
     padding-right: 18px;margin-top: 8px;}
-  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;color:#576066;}
+  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;color:#9097C7;}
   .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
   
-  .dig-header .dig-header-list {flex: 1;height: 132px;background:rgba(247,247,247,1);border-radius: 4px;
-    overflow: auto;color: #252F33;padding: 16px 14px;}
+  .dig-header .dig-header-list {flex: 1;height: 132px;background:rgba(0,0,0,.1);border-radius: 4px;
+    overflow: auto;color: #BDC4F7;padding: 16px 14px;}
+
+
+  .dig-header .dig-header-list::-webkit-scrollbar { width: 2px; height: 2px;}
+  .dig-header .dig-header-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #F66767;background: #F66767;border-radius: 1px;}
+  .dig-header .dig-header-list::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.1);border-radius: 0; background: rgba(0,0,0,.1);}
+  
+  
   .dig-header .dig-header-list ul {list-style: disc;}
   .dig-header .dig-header-list ul li {padding-top: 5px;line-height: 1.5;}
   .dig-header .dig-header-list ul li:first-child {padding-top: 0;}
@@ -516,21 +533,25 @@ export default {
     border-radius: 4px;}
 
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #F66767;background: #F66767;border-radius: 1px;}
+  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.1);border-radius: 0; background: rgba(0,0,0,.1);}
   
   .dig-body {padding: 22px 22px 0 32px;flex: 1;}
   
   .dig-footer {padding: 0 22px 0 32px;color: #839299;height: 45px;
     border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
 
-  .miningIn {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%)!important;}
-  .dig-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;}
+  .miningIn {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%)!important;color: #fff;}
+  .activeWallet {background:linear-gradient(90deg,rgba(109,132,245,1) 0%,rgba(89,86,223,1) 100%);color: #fff;}
+  .walletCheckColor {color: #FB8091;}  
+
+  .dig-mask {position: relative;font-size: 14px;font-weight: 400;color: #BDC4F7;
+    background:linear-gradient(178deg,rgba(59,70,119,1) 0%,rgba(41,48,102,1) 100%);box-shadow:0px 0px 10px rgba(0,0,0,0.16);}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
   .dig-mask-body {padding: 44px 20px 16px 24px;text-align: right;}
   .dig-mask-body p {text-align: left;margin-bottom: 58px;}
-  .dig-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    height:32px;border: 0;border-radius: 4px;}
+  .dig-mask-body button {color: #fff;width:97px;height:32px;border: 0;border-radius: 4px;
+    background:linear-gradient(270deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%);}
   
   .noCursor {cursor: no-drop;}
 </style>

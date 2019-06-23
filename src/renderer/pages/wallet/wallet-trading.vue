@@ -15,7 +15,7 @@
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3 :class="textStyle">{{amount}} {{moneyType}}</h3>
+        <h3 :class="textStyle">{{amount}} {{ moneyType === "BIUT" ? 'DEFI' : 'TEC'}}</h3>
         <p :class="textStyle">{{status}}</p>
       </section>
 
@@ -30,10 +30,11 @@
       </section>
 
       <!-- 查看交易详情 -->
-      <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
+      <!-- <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img :src=" moneyType == 'BIUT' ? tradingLogo1 : tradingLogo2 " alt="">
         <a :href="transactionLink" target="_blank">See more details at {{moneyType}} BLOCKCHAIN</a>
       </section>
+       -->
     </section>
   </main>
 </template>
@@ -76,6 +77,9 @@ export default {
     }
   },
   computed: {
+    amountType() {
+      return this.moneyType === "BIUT" ? 'DEFI' : 'TEC'
+    },
     tradingList(){
       return [
           {
@@ -106,12 +110,12 @@ export default {
           {
             id: '06',
             title: 'Value',
-            cnt: this.amount + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
+            cnt: this.amount + ' '+  this.amountType //携带  SEC、SEN 做页面展示
           },
           {
             id: '07',
             title: 'Fee',
-            cnt: this.fee + ' BIU'
+            cnt: this.fee + ' TEC'
           }
       ]
     }
@@ -173,26 +177,28 @@ export default {
 
 <style scoped>
   .wallet-list >>> ul {pointer-events: none;}
-  .wallet-content {margin: 24px 32px;box-shadow:0px 0px 6px rgba(37,47,51,0.16);padding: 16px 36px 20px 20px;}
-  .wallet-content-return {display: flex;align-items: center;color: #839299;font-size: 14px}
+  .wallet-content {margin: 24px 32px;padding: 16px 36px 20px 20px;background:linear-gradient(137deg,rgba(59,70,119,1) 0%,rgba(38,43,87,1) 100%);
+    box-shadow:0px 0px 6px rgba(37,47,51,0.16);}
+  .wallet-content-return {display: flex;align-items: center;color: #BDC4F7;font-size: 14px}
   .wallet-content-return img {width: 24px;height: 24px;margin-right: 8px;}
 
-  .wallet-content-img {text-align: center;color: #29D893;padding: 50px 0 56px;}
+  .wallet-content-img {text-align: center;padding: 50px 0 56px;}
   .wallet-content-img h3 {font-weight: bold;font-size: 18px;margin: 6px 0 0;}
 
   .wallet-content-list {color: #252F33;font-size:14px;font-weight: 400;padding-bottom: 49px;
     padding-left: 36px;}
   .wallet-content-list ul li {display: flex;margin-bottom: 18px;}
   .wallet-content-list ul li:last-child {margin-bottom: 0;}
-  .wallet-content-list ul li span:first-child {width: 155px;color: #576066;}
-  .wallet-content-list ul li span:last-child {flex: 1;word-break: break-all;}
+  .wallet-content-list ul li span:first-child {width: 155px;color: #9097C7;}
+  .wallet-content-list ul li span:last-child {flex: 1;word-break: break-all;color: #BDC4F7;}
 
-  .wallet-content-footer {color: #0B7FE6;text-align: center;}
+  .wallet-content-footer {text-align: center;}
   .wallet-content-footer img {width: 18px;height: 18px;margin-right: 8px;vertical-align: middle;}
+  .wallet-content-footer a {color: #FB8091;}
 
-  .packed {color: #F5A623;}
-  .successful {color: #29D893;}
-  .mining {color: #388ED9;}
+  .packed {color: #EB9F34;}
+  .successful {color: #0CC5B7;}
+  .mining {color: #6D84F5;}
   .failed {color: #EE1C39;}
 
   .hideLink {display: none;}

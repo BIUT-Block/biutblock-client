@@ -68,7 +68,7 @@
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
               <p>Version Information</p>
-              <span>PC Miner V {{versionNumber}}</span>
+              <span>DeFiTec V {{versionNumber}}</span>
             </section>
           </section>
         </section>
@@ -285,53 +285,61 @@ export default {
   .wallet-index nav section {display: flex;align-items: center;color: #42535B;}
   .wallet-index nav section img {margin-right: 10px;}
   
-  .wallet-index .wallet-index-content {display: flex;height: calc(100vh - 30px);box-shadow:0px 1px 3px rgba(37,47,51,0.16) inset;}
-  .wallet-index .wallet-index-content aside {width: 70px;text-align: center;}
-  .wallet-index .wallet-index-content aside .wallet-aside-list li {padding-top: 51px;position: relative;}
-  .wallet-index .wallet-index-content aside .wallet-aside-list li:first-child {padding-top: 57px;}
-  .wallet-index .wallet-index-content aside .wallet-index-version {position: fixed;bottom: 24px;width: 70px;color: #839299;}
+  .wallet-index .wallet-index-content {display: flex;box-shadow:0px 1px 3px rgba(37,47,51,0.16) inset;}
+  .wallet-index .wallet-index-content aside {width: 70px;text-align: center;height: 100vh;
+    background:linear-gradient(153deg,rgba(59,66,118,1) 0%,rgba(34,39,78,1) 100%);}
+  .wallet-index .wallet-index-content aside .wallet-aside-list li {height: 64px;display: flex;align-items: center;
+    justify-content: center;}
+  .wallet-index .wallet-index-content aside .wallet-aside-list li:first-child {margin-top: 34px;}
+  .wallet-index .wallet-index-content aside .wallet-aside-list li img {margin-left: 4px;}
+  .wallet-index .wallet-index-content aside .wallet-aside-list .active-nav {border-left: 2px solid rgba(247,149,150,1);
+    box-sizing: border-box;background:rgba(255,255,255,0.05);}
+  .wallet-index .wallet-index-content aside .wallet-aside-list .active-nav img {margin-left: 2px;}
+
+  .wallet-index .wallet-index-content aside .wallet-index-version {position: fixed;bottom: 24px;width: 70px;color: #9097C7;}
   .wallet-index .wallet-index-content aside .wallet-index-version span {display: block;}
   .wallet-index .wallet-index-content aside .wallet-index-version span:first-child {margin-bottom: 4px;font-weight: bold;}
   .wallet-index .wallet-index-content aside .wallet-index-version span:last-child {font-family: Lato-Light;}
 
   .wallet-index .wallet-index-content .wallet-index-content-home {flex: 1;}
   
-  .active-nav::after {border-bottom: 7px solid transparent;border-top: 7px solid transparent;
-    border-right: 7px solid #EDF2F1;content: "";position: absolute;width: 0;right: 0;bottom: 2px;}
-
+  .setting-mask {background:linear-gradient(180deg,rgba(59,70,119,1) 0%,rgba(41,48,102,1) 100%);
+    box-shadow:0px 0px 10px rgba(0,0,0,0.16);}
   .setting-mask-header {display: flex;justify-content: space-between;align-items: center;height: 54px;
-    border-bottom: 1px solid #E5E5E5;padding: 0 24px 0 32px;}
-  .setting-mask-header h3 {font-size: 18px;margin: 0;color: #252F33;font-family: Lato-Bold;}
+    border-bottom: 1px solid rgba(0,0,0,.2);padding: 0 24px 0 32px;}
+  .setting-mask-header h3 {font-size: 18px;margin: 0;color: #fff;font-family: Lato-Bold;}
   .setting-mask-header img {width: 16px;height: 16px;}
 
   .setting-mask-body {height: 334px;display: flex;}
   .setting-mask-body-right-language,.setting-mask-body-right-version,
   .setting-mask-body-right-network {padding: 28px 0 0 18px;font-size: 14px;}
   .setting-mask-body-right-language p,.setting-mask-body-right-version p,
-  .setting-mask-body-right-network p {color: #839299;font-weight: 500;font-family: Lato-Medium;}
+  .setting-mask-body-right-network p {color: #BDC4F7;font-weight: 500;font-family: Lato-Medium;}
   .setting-mask-body-right-language section {display: flex;align-items: center;font-weight: 400;
-    color: #252F33;height: 32px;border-bottom: 1px solid #E5E5E5;width: 215px;margin-top: 8px;
+    color: #F2F5FF;height: 32px;border-bottom: 1px solid #465299;width: 215px;margin-top: 8px;
     justify-content: space-between;}
   .setting-mask-body-right-language:hover {cursor: no-drop;} 
 
-  .setting-mask-body-right-network section {color: #252F33;font-weight: 400;margin-top: 18px;}
+  .setting-mask-body-right-network section {color: #F2F5FF;font-weight: 400;margin-top: 18px;}
   .setting-mask-body-right-network section img {margin-right: 10px;vertical-align: top;width: 14px;height: 14px;}
   .setting-mask-body-right-network section:last-child {margin-top: 10px;}
   
-  .setting-mask-body-right-version span {color: #252F33;margin-top: 16px;display: block;}
+  .setting-mask-body-right-version span {color: #F2F5FF;margin-top: 16px;display: block;}
 
-  .setting-mask-body-left {width: 137px;height: 308px;border-right:1px solid #E5E5E5;
+  .setting-mask-body-left {width: 137px;height: 308px;border-right:1px solid rgba(0,0,0,.2);
     padding: 26px 0 0 32px;}
-  .setting-mask-body-left ul li {display: block;margin-top: 36px;}
+  .setting-mask-body-left ul li {display: block;margin-top: 36px;color: #9097C7;}
   .setting-mask-body-left ul li:first-child {margin-top: 0;}
-  .setting-mask-body-left ul .check-li {color: #29D893;border-right: 4px solid #29D893;margin-right: -2px;}
+  .setting-mask-body-left ul .check-li {color: #FB8091;border-right: 4px solid #FB8091;margin-right: -2px;}
 
-  .index-mask {display: flex;flex-direction: column;padding: 20px 20px 16px 24px;}
+  .index-mask {display: flex;flex-direction: column;padding: 20px 20px 16px 24px;
+    background:linear-gradient(179deg,rgba(59,70,119,1) 0%,rgba(41,48,102,1) 100%);
+    box-shadow:0px 0px 10px rgba(0,0,0,0.16);}
   .index-mask img {width: 12px;height: 12px;}
-  .index-mask p {line-height: 1.5;padding: 20px 0 18px;color: #576066;font-size: 14px;}
+  .index-mask p {line-height: 1.5;padding: 20px 0 18px;color: #BDC4F7;font-size: 14px;}
   .index-mask section {display: flex;justify-content: flex-end;}
   .index-mask section span {display: inline-block;width: 108px;height: 32px;text-align: center;line-height: 32px;
-    font-size: 14px;color: #388ED9;box-sizing: border-box;border: 1px solid #E5E5E5;border-radius: 4px;}
+    font-size: 14px;color: #BDC4F7;box-sizing: border-box;border: 1px solid #404B8C;border-radius: 4px;}
   .index-mask section span:last-child {margin-left: 12px;border: 0;color: #fff;}
   .index-mask section span:hover,.index-mask img  {cursor: pointer;}
 </style>

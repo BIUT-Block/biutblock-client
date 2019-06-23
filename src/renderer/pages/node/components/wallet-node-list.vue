@@ -56,15 +56,15 @@ export default {
 <style scoped>
   .list-node {overflow: auto;flex: 1;height: calc(100vh - 300px);padding-right: 32px;}
   .list-node::-webkit-scrollbar { width: 2px; height: 2px;}
-  .list-node::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .list-node::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  .list-node::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #F66767;background: #F66767;border-radius: 1px;}
+  .list-node::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.1);border-radius: 0; background: rgba(0,0,0,.1);}
   
-  .list-node h4 {height: calc(100vh - 350px);font-size: 16px;color: #839299;font-weight: normal;
+  .list-node h4 {height: calc(100vh - 350px);font-size: 16px;color: #9097C7;font-weight: normal;
     display: flex;align-items: center;justify-content: center;}
   
-  section ul {height: 40px;border-bottom: 1px solid rgba(229,229,229,1);color: #252F33;
+  section ul {height: 40px;border-bottom: 1px solid rgba(0,0,0,.2);color: #BDC4F7;
     display: flex;align-items: center;}
   section ul li{width: 25%;}
-  .test {border-bottom: 2px solid rgba(229,229,229,1);font-family: Lato-Bold;
-    color: #839299;margin-right: 32px;}
+  .test {border-bottom: 2px solid rgba(0,0,0,.2);font-family: Lato-Bold;
+    color: #9097C7;margin-right: 32px;}
 </style>

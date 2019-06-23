@@ -65,8 +65,7 @@ export default {
 
 <style scoped>
   section {display: flex;align-items: center;justify-content: space-between;height: 35px;
-    border-bottom: 1px solid #E6E6E6;}
-  section input {font-size: 14px;color: #252F33;height: 30px;flex: 1;border:none;font-family: Lato-Medium;}
-  section img {width: 17px;height: 17px;}
+    border-bottom: 1px solid #465299;}
+  section input {font-size: 14px;color: #fff;height: 30px;flex: 1;border:none;font-family: Lato-Medium;background: none;}
   section img:hover {cursor: pointer;}
 </style>

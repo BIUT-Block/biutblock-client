@@ -34,7 +34,6 @@ export default {
 </script>
 
 <style scoped>
-  section p:first-child {color: #839299;font-family: Lato-Bold;padding-bottom: 5px;}
-  section p:last-child {color: #839299;font-weight: 500;padding-top: 5px;font-size: 14px;
-    color: #252F33;font-family: Lato-Medium;}
+  section p:first-child {color: #9097C7;font-family: Lato-Bold;padding-bottom: 5px;}
+  section p:last-child {color: #fff;font-weight: 500;padding-top: 5px;font-size: 14px;font-family: Lato-Medium;}
 </style>

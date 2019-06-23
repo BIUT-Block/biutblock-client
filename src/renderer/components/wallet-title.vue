@@ -34,6 +34,6 @@ export default {
 </script>
 
 <style scoped>
-  p {font-size: 16px;color: #839299;font-family: Lato-Bold;}
-  p span {color: #EE1C39;}
+  p {font-size: 16px;color: #BDC4F7;font-family: Lato-Bold;}
+  p span {color: #F34860;}
 </style>

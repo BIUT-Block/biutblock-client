@@ -123,17 +123,17 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
-    align-content: stretch;display:-webkit-flex;}
-  .node-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
-    border-radius:4px;background: #fff;flex: 1;}
+  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;align-content: stretch;display:-webkit-flex;
+    background:linear-gradient(162deg,rgba(51,58,108,1) 0%,rgba(34,39,78,1) 100%);}
+  .node-container {display: flex;flex-direction: column;border-radius:4px;flex: 1;
+    background:linear-gradient(138deg,rgba(59,70,119,1) 0%,rgba(38,43,87,1) 100%);}
   .node-header {height: 141px;border-top-left-radius: 4px;border-top-right-radius: 4px;padding: 0 32px;}
-  .node-header h3 {font-size: 18px;font-family: Montserrat-SemiBold;font-weight: 600;color: #252F33;
+  .node-header h3 {font-size: 18px;font-family: Montserrat-SemiBold;font-weight: 600;color: #fff;
     margin: 22px 0 30px;}
   .node-header .node-header-list {display: flex;justify-content: space-between;}
 
   .node-body {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;
     padding: 24px 0 24px 32px;}
-  .node-body h3 {font-size: 14px;color: #839299;font-weight: 600;margin: 0;
-    font-family: Montserrat-SemiBold;background: #fff;padding-bottom: 16px;}
+  .node-body h3 {font-size: 14px;color: #839299;font-weight: 600;margin: 0;color: #fff;
+    font-family: Montserrat-SemiBold;padding-bottom: 16px;}
 </style>

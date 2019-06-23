@@ -31,5 +31,5 @@ export default {
 </script>
 
 <style scoped>
-  section {height: 8px;background:rgba(244,245,245,1);}
+  section {height: 8px;background:rgba(0,0,0,.15);}
 </style>

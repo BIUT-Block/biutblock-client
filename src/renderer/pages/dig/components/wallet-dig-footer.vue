@@ -2,7 +2,7 @@
   <ul>
     <li>
       <span>Whole Network Mining：</span>
-      <span>{{totalMining}} BIU</span>
+      <span>{{totalMining}} TEC</span>
     </li>
     <li>
       <span>Blocks：</span>
@@ -82,6 +82,6 @@ export default {
   ul {display: flex;justify-content: space-between;align-items: center;height: 46px;}
   ul li .dig-round {width:6px;height:6px;background:rgba(41,216,147,1);border-radius:50%;
       display: inline-block;margin-right: 8px;}
-  ul li span:first-child {color: #839299;font-family: Montserrat-Light;font-weight:300;}
-  ul li span:last-child {color: #252F33;font-weight: 500;font-family: Lato-Medium;}
+  ul li span:first-child {color: #9097C7;font-family: Montserrat-Light;font-weight:300;}
+  ul li span:last-child {color: #F2F5FF;font-weight: 500;font-family: Lato-Medium;}
 </style>

@@ -9,7 +9,7 @@ import {
   autoUpdater
 } from 'electron-updater'
 
-import updateChecker from './updateChecker.js'
+//import updateChecker from './updateChecker.js'
 import walletsHandler from '../renderer/lib/WalletsHandler'
 
 const packageJSON = require('../../package.json')
@@ -40,7 +40,7 @@ function createWindow () {
   /**
    * Initial window options
    */
-  updateChecker(app)
+//  updateChecker(app)
 
   if (shouldQuit) {
     app.quit()

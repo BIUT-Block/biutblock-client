@@ -103,19 +103,19 @@ export default {
   main {display: flex;flex-direction: column;align-items: center;position: relative;height: 100vh;}
   ul {margin-top: 24px;overflow: auto;width: 100%;height: calc(100vh - 124px);}
   ul::-webkit-scrollbar { width: 2px; height: 2px;}
-  ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+  ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #F66767;background: #F66767;border-radius: 1px;}
+  ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.1);border-radius: 0; background: rgba(0,0,0,.1);}
   
-  ul li {width:170px;height:64px;background:rgba(255,255,255,1);border-radius:4px;
+  ul li {width:170px;height:64px;background:#3A4480;border-radius:4px;
     margin: 0 auto;margin-bottom: 8px;display: flex;align-items: center;}
   ul li span {display: inline-block;height: 64px;width: 3px;
     border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
   ul li section {margin-left: 20px;}
-  ul li section p:first-child {color: #576066;font-size: 14px;font-family: Lato-Bold;}
-  ul li section p {color: #839299;}
+  ul li section p:first-child {color: #9097C7;font-size: 14px;font-family: Lato-Bold;}
+  ul li section p {color: #9097C7;}
   ul li:hover,.create-button:hover {cursor: pointer;}
-  .checked-nav {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    box-shadow:0px 0px 10px rgba(41,216,147,0.5);flex: 1;pointer-events: none;}
+  .checked-nav {background:linear-gradient(315deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%);
+    box-shadow:0px 3px 6px rgba(37,47,51,0.16);flex: 1;pointer-events: none;}
   ul .checked-nav section {margin-left: 23px;}
   ul .checked-nav section p,ul .checked-nav section p:first-child {color: #fff;}
   .border-hidden {display: none;} 

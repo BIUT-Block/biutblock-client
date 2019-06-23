@@ -37,6 +37,6 @@ export default {
 </script>
 
 <style scoped>
-  input {color: #252F33;font-size: 14px;font-weight: 500;border:none;border-bottom: 1px solid #E6E6E6;height: 35px;
-    line-height: 35px;width: 100%;font-family: Lato-Medium;}
+  input {color: #F2F5FF;font-size: 14px;font-weight: 500;border:none;border-bottom: 1px solid #465299;height: 35px;
+    line-height: 35px;width: 100%;font-family: Lato-Medium;background: none;}
 </style>

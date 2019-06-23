@@ -10,7 +10,7 @@
         </section>
       </section>
       <section class="list-amount" :class="item.listState | stateColor">
-        <p>{{item.listMoney}} {{item.listUnit}}</p>
+        <p>{{item.listMoney}} {{ item.listUnit === "BIUT" ? 'DEFI' : 'TEC'}}</p>
         <p>{{item.listState}}</p>
       </section>
     </li>
@@ -93,18 +93,18 @@ export default {
 </script>
 
 <style scoped>
-  ul li {display: flex;justify-content: space-between;height: 62px;align-items: center;margin: 0 32px;
-    border-bottom: 1px solid #E6E6E6;font-size: 13px;color: #252F33;box-sizing: border-box;}
+  ul li {display: flex;justify-content: space-between;height: 61px;align-items: center;margin: 0 32px;
+    border-bottom: 1px solid #38407A;font-size: 13px;color: #9097C7;box-sizing: border-box;}
   ul li .list-img {display: flex;}
-  ul li .list-img section p:last-child {color: #576066;font-size: 11px;}
+  ul li .list-img section p:last-child {color: #9097C7;font-size: 11px;}
   ul li .list-img img {width: 40px;height: 33px;margin-right: 13px;}
   ul li .list-amount {text-align: right;}
   ul li .list-amount p:last-child {font-size: 11px;}
 
   ul li:hover {cursor: pointer;}
 
-  .packed {color: #F5A623;}
-  .successful {color: #29D893;}
-  .mining {color: #388ED9;}
+  .packed {color: #EB9F34;}
+  .successful {color: #0CC5B7;}
+  .mining {color: #6D84F5;}
   .failed {color: #EE1C39;}
 </style>

@@ -40,7 +40,7 @@
               <section>
                 <img src="../../../assets/images/clearAddress.png" v-show="clearSentAmountImg" @click="clearSentAmount" alt="" />
                 <section>
-                  <span @click="openTradingList" id="amountListImg1">{{tradingText}} <img src="../../../assets/images/amountDown.png"/></span>
+                  <span @click="openTradingList" id="amountListImg1">{{tradingText}} <img src="../../../assets/images/moreDown.png"/></span>
                   <ul class="trading-list" v-show="tradingShow">
                     <li v-for="(item, index) in itemList" 
                         :key="index"
@@ -70,7 +70,7 @@
               :min="minFee"></el-slider>
             <section>
               <span :class="slowTips ? 'slow-color': ''">Slow</span>
-              <span>{{feeVal}} BIU</span>
+              <span>{{feeVal}} TEC</span>
               <span :class="fastTips ? 'fast-color' : ''">Fast</span>
             </section>
           </section>
@@ -95,7 +95,7 @@
             <p>AMOUNT</p>
             <span class="wallet-mask-sent-from-address">{{sentTradingAmount}} {{ tradingText }}</span>
             <p>FEE</p>
-            <span class="wallet-mask-sent-from-address">{{feeVal}} BIU</span>
+            <span class="wallet-mask-sent-from-address">{{feeVal}} TEC</span>
 
             <section v-show="!networkError">
               <button type="button" @click="backSent">Back</button>
@@ -121,7 +121,7 @@
               v-model="receiveAmount" 
               @input="clearNoNum" 
               onpaste="return false"/>
-            <label @click="openQrcodeList" id="amountListImg2">{{qrcodeText}} <img src="../../../assets/images/amountDown.png" /></label>
+            <label @click="openQrcodeList" id="amountListImg2">{{qrcodeText}} <img src="../../../assets/images/moreDown.png" /></label>
 
             <ul class="qrcode-list" v-show="qrcodeShow">
               <li v-for="(item, index) in itemList" 
@@ -136,7 +136,7 @@
           </section>
           <wallet-tips :tips="receiveError" />
           <qrcode :value="qrcodeWalletAddress" :options="{ size: 93 }"></qrcode>
-          <span>Your address(QR Code)</span>
+          <span style="color: #BDC4F7;">Your address(QR Code)</span>
         </section>
 
         <!-- 导出私钥 maskPages = 0 Export Private key -->
@@ -210,7 +210,7 @@ import Qrcode from '@xkeshi/vue-qrcode'
 import Clipboard from 'clipboard'
 import WalletHandler from '../../../lib/WalletsHandler';
 
-import amountChecked from '../../../assets/images/amountChecked.png'
+import amountChecked from '../../../assets/images/walletCheck.png'
 export default {
   name: 'walletMask',
   components: {
@@ -261,20 +261,20 @@ export default {
       amountPlaceHolder: `Maximum input of ${this.balance}`,
 
       qrcodeIdx: 0, //二维码切换 币种显示 下标
-      qrcodeText: 'BIUT', //二维码切换 币种显示
+      qrcodeText: 'DEFI', //二维码切换 币种显示
       qrcodeShow: false,//二维码切换 列表
       tradingIdx: 0, //交易
-      tradingText: 'BIUT',
+      tradingText: 'DEFI',
       tradingShow: false,
       imgUrl: amountChecked, //选中的图片
       itemList: [
         {
           id: '01',
-          cnt: 'BIUT'
+          cnt: 'DEFI'
         },
         {
           id: '02',
-          cnt: 'BIU'
+          cnt: 'TEC'
         }
       ],
 
@@ -285,7 +285,7 @@ export default {
       stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
-      feeErrorText: 'Fee cannot be greater than BIU balance.',
+      feeErrorText: 'Fee cannot be greater than TEC balance.',
       feeValError: false
     }
   },
@@ -314,7 +314,7 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than BIU balance.'
+        this.feeErrorText = 'Fee cannot be greater than TEC balance.'
         this.feeValError = true
       } else if (this.feeVal === 0) {
         this.feeErrorText = 'Fee Cannot be zero.'
@@ -482,8 +482,8 @@ export default {
       this.sentTradingAmount = ''
       this.walletNewPass = ''
       this.sentPages = 1
-      this.tradingText = 'BIUT'
-      this.qrcodeText = 'BIUT'
+      this.tradingText = 'DEFI'
+      this.qrcodeText = 'DEFI'
       this.qrcodeIdx = 0
       this.tradingIdx = 0
       this.feeVal=0.02
@@ -570,7 +570,7 @@ export default {
         txFee: this.feeVal.toString()
       })
 
-      if (this.tradingText === 'BIUT') {
+      if (this.tradingText === 'DEFI') {
         this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
         }, (balance) => {
@@ -598,13 +598,13 @@ export default {
     importantKeystroe () {
       let keyDataJSON = {}
       keyDataJSON[this.selectedWallet.walletAddress] = this.walletData
-      WalletHandler.saveKeyStore(`BIUT${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
+      WalletHandler.saveKeyStore(`DEFI${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
       this.clostMask()
     },
 
     //导出助记词
     importantPhrase () {
-      WalletHandler.savePhrase(`BIUT${this.selectedWallet.walletAddress}`, this.selectedWallet.englishWords)
+      WalletHandler.savePhrase(`DEFI${this.selectedWallet.walletAddress}`, this.selectedWallet.englishWords)
       this.clostMask()
     },
 
@@ -747,19 +747,20 @@ export default {
   .wallet-mask {position: relative;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
-  .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;height: 516px;padding: 28px 32px 0;}
+  .wallet-mask-sent {color: #F2F5FF;font-size: 14px;font-weight: 500;height: 516px;padding: 28px 32px 0;}
   .wallet-mask-sent img {width: 16px;height: 16px;}
-  .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
+  .wallet-mask-sent h3 {font-size: 24px;color: #fff;font-weight: 600;margin: 0;padding-bottom: 4px;
     font-family: Montserrat-SemiBold;}
-  .wallet-mask-sent p {font-family: Lato-Bold;font-size: 16px;color: #839299;padding-top: 24px;}
+  .wallet-mask-sent p {font-family: Lato-Bold;font-size: 16px;color: #BDC4F7;padding-top: 24px;}
 
-  .wallet-mask-sent .wallet-mask-sent-confirm p {padding-top: 20px;}
+  .wallet-mask-sent .wallet-mask-sent-confirm p {padding-top: 20px;color: #9097C7;}
+  .wallet-mask-sent .wallet-mask-sent-confirm span {color: #BDC4F7;}
   .wallet-mask-sent .wallet-mask-sent-confirm h3 {padding-bottom: 22px;}
   .wallet-mask-sent-from-address {display: block;padding-top: 12px;font-family: Lato-Medium;}
-  .wallet-mask-sent-to-address,.wallet-mask-sent-amount {display: flex;align-items: center;height: 36px;border-bottom:1px solid rgba(229,229,229,1);}
-  .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;}
+  .wallet-mask-sent-to-address,.wallet-mask-sent-amount {display: flex;align-items: center;height: 36px;border-bottom:1px solid #9097C7;}
+  .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;background: none;color: #F2F5FF;}
   .wallet-mask-sent-amount section {display: flex;align-items: center;}
-  .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;}
+  .wallet-mask-sent-amount section span {color: #BDC4F7;margin-left: 10px;}
   .wallet-mask-sent-amount section span:hover {cursor: pointer;}
   .wallet-mask-sent-amount section span img {vertical-align: middle;margin-left: 4px;}
   
@@ -767,70 +768,70 @@ export default {
   .wallet-mask-sent-amount section .trading-list {position: absolute;right: 0;top: 37px;z-index: 9;border-radius: 4px;
     box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
   .wallet-mask-sent-amount section .trading-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
-  .wallet-mask-sent-amount section .trading-list li span {color: #576066;}
+  .wallet-mask-sent-amount section .trading-list li span {color: #BDC4F7;}
   .wallet-mask-sent-amount section .trading-list li:hover {cursor: pointer;}
   
   .wallet-mask-sent button {margin-top: 40px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
-    border: 0;background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
-  .wallet-mask-sent button:last-child {margin-left: 8px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
+    border: 0;background:linear-gradient(90deg,rgba(109,132,245,1) 0%,rgba(89,86,223,1) 100%);}
+  .wallet-mask-sent button:last-child {margin-left: 8px;background:none;color: #BDC4F7;border:1px solid rgba(64,75,140,1);
+    box-sizing: border-box;}
   
-  .wallet-mask-sent .trading-title {color: #839299;font-size: 16px;padding: 24px 0 10px;}
+  .wallet-mask-sent .trading-title {color: #BDC4F7;font-size: 16px;padding: 24px 0 10px;}
   .transfer-slider section {display: flex;justify-content: space-between;align-items: center;font-size: 14px;}
-  .transfer-slider section span:first-child,.transfer-slider section span:last-child {color: #839299;}
-  .transfer-slider >>> .el-slider__runway {height: 2px;margin: 10px 0;}
-  .transfer-slider >>> .el-slider__bar {background-color: #00D86D;height: 2px;}
-  .transfer-slider >>> .el-slider__button {border-color: #00D86D;}
+  .transfer-slider section span:first-child,.transfer-slider section span:last-child {color: #9097C7;}
+  .transfer-slider >>> .el-slider__runway {height: 2px;margin: 10px 0;background-color: #9097C7;}
+  .transfer-slider >>> .el-slider__bar {background-color: #FB8091;height: 2px;}
+  .transfer-slider >>> .el-slider__button {border-color: #FB8091;}
   .transfer-slider >>> .el-slider__button-wrapper {width: 24px;height: 24px;top: -12px;}
 
-  .all-amount-list {color: #839299;font-size: 14px;padding-top: 8px;}
-  .all-amount-list span:last-child {color: #29D893;margin-left: 10px;}
+  .all-amount-list {color: #9097C7;font-size: 14px;padding-top: 8px;}
+  .all-amount-list span:last-child {color: #FB8091;margin-left: 10px;}
   .all-amount-list span:last-child:hover {cursor: pointer;}
 
   .wallet-mask-receive {padding: 36px 32px 28px;}
-  .wallet-mask-receive h3 {color: #252F33;font-size: 28px;margin: 0;padding-bottom: 28px;font-family: Montserrat-SemiBold;}
-  .wallet-mask-receive p {color: #839299;font-size: 14px;margin: 0;padding-top: 24px;}
-  .wallet-mask-receive span {color: #252F33;font-size: 14px;padding-top: 10px;display: block;
+  .wallet-mask-receive h3 {color: #fff;font-size: 28px;margin: 0;padding-bottom: 28px;font-family: Montserrat-SemiBold;}
+  .wallet-mask-receive p {color: #BDC4F7;font-size: 14px;margin: 0;padding-top: 24px;}
+  .wallet-mask-receive span {color: #F2F5FF;font-size: 14px;padding-top: 10px;display: block;
     font-weight: 500;font-family: Lato-Medium;}
   .wallet-mask-receive span:last-child {padding-top: 0;font-size: 12px;font-weight: 400;}
   .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;
-    color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
-  .wallet-mask-receive section input {border: 0;flex: 1;}
+    color: #BDC4F7;font-size: 14px;height: 28px;border-bottom: 1px solid #9097C7;}
+  .wallet-mask-receive section input {border: 0;flex: 1;background: none;color: #F2F5FF;}
   .wallet-mask-receive canvas {margin: 28px 0 7px;}
   .wallet-mask-receive section label img {vertical-align: middle;margin-left: 4px;}
   .wallet-mask-receive section label:hover {cursor: pointer;}
   .wallet-mask-receive .qrcode-list {position: absolute;top: 28px;right: 0;z-index: 9;border-radius: 4px;
     box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
   .wallet-mask-receive .qrcode-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
-  .wallet-mask-receive .qrcode-list li span {color: #576066;}
+  .wallet-mask-receive .qrcode-list li span {color: #BDC4F7;}
   .wallet-mask-receive .qrcode-list li:hover {cursor: pointer;}
 
-  .wallet-mask-priivate-key {padding: 32px 32px 28px;}
+  .wallet-mask-priivate-key {padding: 32px 32px 28px}
   .wallet-mask-priivate-key h3 {padding-bottom: 42px;}
-  .wallet-mask-priivate-key section {padding: 24px;background:rgba(229,229,229,1);
-    border-radius:4px;color: #42535B;font-size: 14px;word-wrap:break-word;margin: 16px 0 24px;}
-  .wallet-mask-priivate-key .priivate-key-button {display: block;height:48px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    border-radius:4px;line-height: 48px;text-align: center;color: #fff;}
-
+  .wallet-mask-priivate-key section {padding: 24px;background:rgba(0,0,0,0.1);
+    border-radius:4px;color: #BDC4F7;font-size: 14px;word-wrap:break-word;margin: 16px 0 24px;}
+  .wallet-mask-priivate-key .priivate-key-button {display: block;height:48px;background:linear-gradient(271deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%);
+    border-radius:4px;line-height: 48px;text-align: center;color: #F7FBFA;}
+  
   .wallet-mask-keystroe .tips {text-align: left;}
   .wallet-mask-keystroe h3 {padding-bottom: 24px!important;}
   .wallet-mask-keystroe .wallet-button {width:108px;height:32px;line-height: 32px;margin-top: 24px;}
-  .wallet-mask-keystroe .wallet-button {color: #388ED9;border:1px solid rgba(229,229,229,1);}
-  .wallet-mask-keystroe .wallet-button:last-child {pointer-events: none;margin-left: 10px;color: #fff;
-    background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
-
+  .wallet-mask-keystroe .wallet-button {background:linear-gradient(90deg,rgba(144,151,199,1) 0%,rgba(103,113,170,1) 100%);color: #fff;}
+  .wallet-mask-keystroe .wallet-button:last-child {pointer-events: none;margin-left: 10px;
+    color: #BDC4F7;border:1px solid #404B8C;background: none;}
 
   .wallet-mask-phrase,.wallet-mask-keystroe {padding: 32px 32px 16px;text-align: right;}
   .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-priivate-key  h3 
-    {font-size: 18px;font-family: Montserrat-SemiBold;color: #576066;margin: 0;padding-bottom: 12px;text-align: left;}
+    {font-size: 18px;font-family: Montserrat-SemiBold;color: #fff;margin: 0;padding-bottom: 12px;text-align: left;}
   .wallet-mask-phrase ul {display: flex;flex-wrap: wrap;}
-  .wallet-mask-phrase ul li {padding: 8px 6px;background:rgba(242,242,242,1);border-radius: 4px;text-align: left;
-    color: #42535B;font-size: 14px;margin-top: 12px;line-height: 1.5;}
-  .wallet-mask-phrase span {width:120px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
+  .wallet-mask-phrase ul li {padding: 8px 6px;border-radius: 4px;text-align: left;background:rgba(0,0,0,0.1);
+    color: #BDC4F7;font-size: 14px;margin-top: 12px;line-height: 1.5;}
+  .wallet-mask-phrase span {width:120px;background:linear-gradient(270deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%);
     height:36px;line-height: 36px;color: #fff;font-size: 16px!important;margin-top: 24px;}
 
-  .wallet-mask-delete {padding: 44px 20px 16px 24px;font-size: 14px;color: #576066;text-align: right;}
+  .wallet-mask-delete {padding: 44px 20px 16px 24px;font-size: 14px;color: #BDC4F7;text-align: right;}
   .wallet-mask-delete p {text-align: left;}
-  .wallet-mask-delete span {width:96px;background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%);
+  .wallet-mask-delete span {width:96px;background:linear-gradient(90deg,rgba(243,72,96,1) 0%,rgba(194,31,72,1) 100%);
     height:32px;line-height: 32px;color: #fff;margin-top: 40px;}
 
   .wallet-mask .wallet-button {text-align: center;font-size: 14px;display: inline-block;border-radius:4px;}
@@ -841,18 +842,22 @@ export default {
     margin: 0; 
   }
 
-.copySuccessBg {background: linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%)!important;
-  pointer-events: none;}
+.copySuccessBg {background: none!important;color: #BDC4F7!important;border:1px solid rgba(64,75,140,1);
+  pointer-events: none;box-sizing: border-box;}
 
-.keystroeActive {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;
+.keystroeActive {background:linear-gradient(270deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%)!important;
   pointer-events: auto!important;color: #fff!important;}
 
 .network-error span {padding-top: 36px;}
 .network-error button {display: block;width: 100%;margin-top: 20px;
-  background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
+  background:linear-gradient(265deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%)!important;}
 
-.list-active span {color: #29D893!important;}
+.list-active span {color: #FB8091!important;}
 
-.slow-color {color: #0B7FE6!important;}
-.fast-color {color: #F5A623!important;}
+.slow-color {color: #6D84F5!important;}
+.fast-color {color: #EB9F34!important;}
+
+.wallet-mask-keystroe,.wallet-mask-phrase,.wallet-mask-delete,.wallet-mask-priivate-key,.wallet-mask-receive,.wallet-mask-sent
+   {background:linear-gradient(179deg,rgba(59,70,119,1) 0%,rgba(41,48,102,1) 100%);
+    box-shadow:0px 0px 10px rgba(0,0,0,0.16);}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <main>
     <aside>
-      <img src="../../assets/images/loginLogo.png" alt="" title="BIUT"/>
+      <img src="../../assets/images/loginLogo.png" alt="" title="DEFI"/>
       <h2 class="titleTop">{{ createTitle1 }}</h2>
       <h2>{{ createTitle2 }}</h2>
       <span></span>
@@ -141,7 +141,7 @@
                       :class="phraseActive?'passCorrect':''"/>
       </section>
 
-     <p class="go-create">No wallet?   <span @click="closeCreate">Create Wallet</span></p> 
+     <p class="go-create">No wallet?&nbsp;&nbsp;<span @click="closeCreate">Create Wallet</span></p> 
     </section>
     <!-- 钱包版本号 -->
     <span class="wallet-version"> V {{ versionNumber }}</span>
@@ -418,7 +418,7 @@ export default {
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords
       }
-      walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
+      walletsHandler.saveKeyStore(`DEFI${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
 
       this.createClose = true //进入备份助记词关闭按钮显示
       this.createPages = 2
@@ -634,7 +634,7 @@ export default {
 </script>
 
 <style scoped>
-  main {display: flex;height: 100vh;position: relative;}
+  main {display: flex;height: 100vh;position: relative;background:linear-gradient(135deg,rgba(59,70,119,1) 0%,rgba(30,35,75,1) 100%);}
   main aside {background: url('../../assets/images/loginBackground.png') no-repeat center;
     background-size: 100% 100%;width: 372px;}
   main aside img {margin: 32px 0 0 24px;}
@@ -644,7 +644,7 @@ export default {
   main aside span {display: block;width:43px;height:10px;background:rgba(255,255,255,1);
     margin-top: 16px;margin-left: 64px;}
   
-  main .wallet-version {position: absolute;right: 28px;bottom: 24px;color: #839299;}
+  main .wallet-version {position: absolute;right: 28px;bottom: 24px;color: #9097C7;}
   main .closeImg {width: 24px;height: 24px;position: absolute;top: 20px;right: 20px;}
   main .wallet-nav {position: absolute;top: 0;right: 0;height: 30px;left: 351px;
     border-bottom: 1px solid #E5E5E5;text-align: right;}
@@ -654,39 +654,39 @@ export default {
   .wallet-create p {padding-top: 32px;}
   .wallet-create .wallet-button-create {width:190px;margin-top: 36px;}
   .wallet-create .wallet-button-important {display: inline-block;padding: 8px 12px;
-    color: #0B7FE6;font-weight: 400;border:1px solid rgba(229,229,229,1);border-radius:4px;
+    color: #FB8091;font-weight: 400;border:1px solid #FB8091;border-radius:4px;
     position: absolute;right: 68px;top: 48px;}
 
   /* 备份助记词 */
   .wallet-backup {padding: 124px 68px 0;flex: 1;}
-  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;}
+  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #FB8091;}
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
   .wallet-backup .private-key-title {padding-top: 17px;}
-  .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
+  .wallet-backup .private-key-contant {background:rgba(0,0,0,0.1);border-radius:4px;color: #F2F5FF;font-size: 14px;
     margin-top: 10px;padding: 11px 18px;word-break: break-all;line-height: 1.4;}
   .wallet-backup .private-key-contant img {margin-left: 20px;vertical-align: middle;}
   .wallet-backup .private-key-contant img:hover {cursor: pointer;}
   .wallet-backup .wallet-button-backup {width:190px;}
   .wallet-backup .radio-content {padding: 25px 0 16px;display: flex;align-items: center;color: #252F33;}
   .wallet-backup .radio-content img {margin-right: 10px;width: 14px;height: 14px;}
-  .wallet-backup .radio-content span {color: #00D86D;}
+  .wallet-backup .radio-content span {color: #BDC4F7;}
 
   /* 导入钱包 */
   .wallet-import {padding: 148px 90px 0 104px;flex: 1;}
   .wallet-import ul {display: flex;height: 36px;line-height: 36px;color: #388ED9;font-size: 14px;justify-content: space-between;}
-  .wallet-import ul li {text-align: center;border:1px solid rgba(229,229,229,1);display: block;flex: 1;}
+  .wallet-import ul li {text-align: center;border:1px solid #6A74CA;display: block;flex: 1;}
   .wallet-import ul li:first-child {border-top-left-radius: 4px;border-right: 0;border-bottom-left-radius: 4px;}
   .wallet-import ul li:last-child {border-top-right-radius: 4px;border-left: 0;border-bottom-right-radius: 4px;}
-  .wallet-import ul .check-li {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);color: #fff;}
+  .wallet-import ul .check-li {background:linear-gradient(90deg,rgba(109,132,245,1) 0%,rgba(89,86,223,1) 100%);color: #fff;}
   .wallet-import button {width: 190px!important;margin-top: 48px;}
-  .wallet-import .go-create {color: #576066;padding-top: 28px;}
-  .wallet-import .go-create span {color: #29D893;}
-  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 58px;color: #252F33;
+  .wallet-import .go-create {color: #BDC4F7;padding-top: 28px;}
+  .wallet-import .go-create span {color: #FB8091;}
+  .wallet-import textarea {border: 0;border-radius: 4px;height: 58px;color: #F2F5FF;
     padding: 24px;outline: none;resize: none;flex: 1;margin-top: 20px;font-size: 14px;overflow: auto;
-    font-family: Lato-Regular;}
+    font-family: Lato-Regular;background:rgba(0,0,0,0.1);}
   .wallet-import textarea::-webkit-scrollbar {display: none;}
 
-  .wallet-import .KeyStoreColor {color: #29D893;}
+  .wallet-import .KeyStoreColor {color: #FB8091;}
   /* 导入钱包 -- 私钥导入 */
   .wallet-import-private-key,.wallet-import-keystore,
   .wallet-import-phrase {display: flex;flex-direction: column;}
@@ -694,14 +694,13 @@ export default {
   .wallet-import-private-key input,.wallet-import-phrase input{margin-top: 32px;}
   
   /* 导入钱包 -- keyStore导入 */
-  .wallet-import-keystore p {font-size: 14px;color: #839299;font-family: Lato-Bold;}
+  .wallet-import-keystore p {font-size: 14px;color: #9097C7;font-family: Lato-Bold;}
   .wallet-import-keystore .wallet-import-keystore-title {margin: 32px 0 12px;}
-  .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;padding-left: 16px;
-    color: #42535B;font-size: 14px;margin-bottom: 20px;text-align: center;height: 36px;line-height: 36px;
-    position: relative;}
+  .wallet-import-keystore div {flex: 1;background:rgba(0,0,0,0.1);border-radius:4px;position: relative;
+    color: #F2F5FF;font-size: 12px;margin-bottom: 20px;height: 36px;line-height: 36px;text-align: center;}
   .wallet-import-keystore button {margin-top: 28px;}
   .wallet-import-keystore div input[type='file'] {position: absolute;top: 0;left: 0;right: 0;bottom: 0;
-    height: 36px;z-index: 2;width: 100%;opacity: 0;}
+    height: 36px;z-index: 2;width: 100%;opacity: 0;text-indent: 16px;}
 
   .phrase-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;}
   .maskCloseImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
@@ -710,4 +709,7 @@ export default {
   .phrase-mask-body p {text-align: left;margin-bottom: 58px;}
   .phrase-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
     height:32px;border: 0;border-radius: 4px;}
+
+  .passCorrect {background:linear-gradient(270deg,rgba(246,103,103,1) 0%,rgba(247,149,150,1) 100%)!important;
+    color: #fff;}
 </style>
