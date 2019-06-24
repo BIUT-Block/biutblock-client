@@ -1,10 +1,6 @@
 {
-<<<<<<< HEAD
   "name": "PC-Miner",
-=======
-  "name": "PC-Miner-intern",
->>>>>>> middleware
-  "version": "2.0.47",
+  "version": "2.0.48",
   "author": "MongoX Technology GmbH",
   "description": "BIUT PC Miner",
   "license": "MIT",
@@ -67,13 +63,8 @@
   },
   "dependencies": {
     "@biut-block/biutjs-blockchain": "^1.0.24",
-<<<<<<< HEAD
     "@biut-block/biutjs-datahandler": "^1.0.11",
-    "@biut-block/biutjs-node": "^1.0.63",
-=======
-    "@biut-block/biutjs-datahandler": "^1.0.10",
-    "@biut-block/biutjs-node": "^1.0.61",
->>>>>>> middleware
+    "@biut-block/biutjs-node": "^1.0.66",
     "@biut-block/biutjs-util": "^1.0.0",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",

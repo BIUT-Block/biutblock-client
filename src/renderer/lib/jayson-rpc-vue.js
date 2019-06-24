@@ -351,6 +351,12 @@ export default {
           fnSENSyncStatus(response)
         })
       },
+      checkRlpConnections: function (fnCheckPeers) {
+        this.client.request('sec_getRLPPeersNumber', [], (err, response) => {
+          if (err) return
+          fnCheckPeers(response)
+        })
+      },
       isTestNetwork: function () {
         if (process.env.netType === 'test') {
           return true

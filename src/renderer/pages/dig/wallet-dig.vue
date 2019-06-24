@@ -105,6 +105,8 @@ import digList from './components/wallet-dig-list'
 import walletMargin from '../../components/wallet-margin'
 import WalletsHandler from '../../lib/WalletsHandler'
 import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers'
+import { ipcRenderer } from 'electron'
+import { constants } from 'fs';
 const moment = require('moment-timezone')
 export default {
   name: 'walletDig',
@@ -139,6 +141,7 @@ export default {
       updateListJob: '',
       getBlockHeightJob: '',
       getSyncStatusJob: '',
+      checkNodeJob: '',
       processTexts: ['Enter the mining page, and wait for mining.'],
       moreList: [],
       
@@ -299,6 +302,15 @@ export default {
         this._getTotalReward()
       }, 5000)
     },
+
+    _startCheckPeersJob () {
+      this.$JsonRPCClient.checkRlpConnections((response) => {
+        if (response.result.message === 0) {
+          alert('No Peers Connection, please relaunch the application.')
+          ipcRenderer.send('close')
+        }
+      })
+    },
     
     _getWalletMiningHistory () {
       this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
@@ -448,6 +460,7 @@ export default {
                       this.saveMingingStatus()
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
+                      setInterval(this._startCheckPeersJob, 3000)
                     }
                   } else {
                     _statusSameTimes = 0
