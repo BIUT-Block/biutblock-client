@@ -1,8 +1,8 @@
 {
-  "name": "PC-Miner-DEFI",
+  "name": "DeFiTec",
   "version": "1.0.0",
   "author": "MongoX Technology GmbH",
-  "description": "DEFI PC Miner",
+  "description": "DEFI",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "repository": {
@@ -28,7 +28,7 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "PC-Miner-DEFI",
+    "productName": "DeFiTec",
     "appId": "biutblock.PC-Miner-DEFI",
     "directories": {
       "output": "build"
