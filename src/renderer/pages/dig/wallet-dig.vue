@@ -340,7 +340,7 @@ export default {
     //开启挖矿弹窗显示
     beginDigMask () {
       let balance = this.digBalance
-      if (balance < 10) {
+      if (balance < 10 && this.digButton == "Start Mining") {
         this.translucentShow = true
         setTimeout(() => {
           this.translucentShow = false
@@ -357,13 +357,14 @@ export default {
 
     //开启挖矿
     beginDig () {
-      if (this.digButton === "Start Mining") {    
+      let balance = this.digBalance
+      if (this.digButton === "Start Mining") {
         this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-        this.maskShow = true    
-      } else {        
+        this.maskShow = true
+      } else {
         this.digButton = "Stop Mining"
         this.maskText = "Confirm to Stop Mining?"
-        this.maskShow = true
+        this.maskShow = true  
       }
     },
 
