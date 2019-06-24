@@ -449,7 +449,7 @@ export default {
                 this.$JsonRPCClient.getSyncStatus((responseSEC) => {
                   let lastSyncStatus = window.sessionStorage.getItem('lastSyncStatus')
                   let currentSyncStatus = responseSEC.result.message.isSyncing
-                  if (lastSyncStatus === currentSyncStatus) {
+                  if (lastSyncStatus === currentSyncStatus.toString()) {
                     _statusSameTimes = _statusSameTimes + 1
                     // 两次检查同步状态相同。
                     if (_statusSameTimes === 2) {
