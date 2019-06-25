@@ -449,7 +449,7 @@ export default {
                 this.$JsonRPCClient.getSyncStatus((responseSEC) => {
                   let lastSyncStatus = window.sessionStorage.getItem('lastSyncStatus')
                   let currentSyncStatus = responseSEC.result.message.isSyncing
-                  if (lastSyncStatus === currentSyncStatus.toString()) {
+                  if (!currentSyncStatus && lastSyncStatus === currentSyncStatus.toString()) {
                     _statusSameTimes = _statusSameTimes + 1
                     // 两次检查同步状态相同。
                     if (_statusSameTimes === 2) {
@@ -460,7 +460,7 @@ export default {
                       this.saveMingingStatus()
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
-                      setInterval(this._startCheckPeersJob, 3000)
+                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 3000)
                     }
                   } else {
                     _statusSameTimes = 0
@@ -468,7 +468,7 @@ export default {
                   }
                 })
               }, 30*1000)
-            }, 1*60*1000)
+            }, 10*60*1000)
             this._beginMiningWithWallet()
           }
         })
