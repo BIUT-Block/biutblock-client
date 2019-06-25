@@ -297,9 +297,15 @@ export default {
       clearInterval(this.getBlockHeightJob)
       this._getWalletMiningHistory()
       this._getTotalReward()
-      this.getBlockHeightJob = setInterval(() => {
+      this._getLatestBlockInfo((balance) => {
+      })
+      this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
+      }, 5000)
+      this.getBlockHeightJob = setInterval(() => {
         this._getTotalReward()
+        this._getLatestBlockInfo((balance) => {
+        })
       }, 5000)
     },
 
