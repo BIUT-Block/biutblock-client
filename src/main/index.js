@@ -1,9 +1,9 @@
 import {
   app,
   BrowserWindow,
-  ipcMain,
+  ipcMain
   // dialog,
-  Menu
+  // Menu
 } from 'electron'
 import {
   autoUpdater
@@ -156,8 +156,7 @@ function createWindow () {
           app.quit()
         }
       }]
-    },
-    {
+    }, {
       label: 'Edit',
       submenu: [{
         label: 'Copy',
@@ -177,9 +176,9 @@ function createWindow () {
         label: 'Test Network'
       }]
     }]
-    //Menu.setApplicationMenu(null)
+    // Menu.setApplicationMenu(null)
   } else {
-    //Menu.setApplicationMenu(null)
+    // Menu.setApplicationMenu(null)
   }
   try {
     mainWindow.loadURL(winURL)
