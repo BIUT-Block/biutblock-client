@@ -1,6 +1,10 @@
 {
   "name": "PC-Miner",
+<<<<<<< HEAD
   "version": "2.0.48",
+=======
+  "version": "2.0.49",
+>>>>>>> 82bd7867a57291750865bec8202b24334438e640
   "author": "MongoX Technology GmbH",
   "description": "BIUT PC Miner",
   "license": "MIT",
@@ -28,7 +32,7 @@
     "major": "npm version major && git push origin master && git push origin --tags"
   },
   "build": {
-    "productName": "PC-Miner",
+    "productName": "PC-Miner-intern",
     "appId": "biutblock.PC-Miner",
     "directories": {
       "output": "build"
@@ -75,7 +79,11 @@
     "dom-to-image": "^2.6.0",
     "electron-prompt": "^1.3.1",
     "electron-updater": "^3.1.2",
+<<<<<<< HEAD
     "element-ui": "^2.9.2",
+=======
+    "element-ui": "^2.10.0",
+>>>>>>> 82bd7867a57291750865bec8202b24334438e640
     "file-saver": "^2.0.2",
     "ipify": "^2.0.0",
     "jayson": "^2.1.2",

@@ -183,6 +183,7 @@ export default {
       agreement,
       agreements,
       maskShow: false, //关闭遮罩层
+      syncBusy: false,
       maskIndexShow: false
     }
   },
@@ -193,7 +194,7 @@ export default {
     this.versionNumber = pkg.version
     this.wallets = this.$route.query.wallets
     this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
-    if (window.localStorage.getItem('secTest') === 'true') {
+    if (process.env.netType === 'test') {
       this.networkIdx = 1
       this.networkContent = 'Test Net'
     } else {
@@ -272,8 +273,11 @@ export default {
       this.$nextTick(()=> {
         this.idx = sessionStorage.getItem("asideIdx")
       })
+    },
+    
+    _closeSyncBusy () {
+      this.syncBusy = false
     }
-
   },
 }
 </script>

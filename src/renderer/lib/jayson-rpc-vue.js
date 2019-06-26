@@ -1,5 +1,6 @@
 import jayson from 'jayson/lib/client'
 import WalletsHandler from './WalletsHandler'
+import BufferHandler from './BufferHandler'
 const moment = require('moment-timezone')
 export default {
   install: function (Vue, options) {
@@ -334,17 +335,38 @@ export default {
           })
         })
       },
+      getSyncStatus: function (fnSECSyncStatus) {
+        this._getSECSyncStatus(fnSECSyncStatus)
+        // this._getSENSyncStatus(fnSENSyncStatus)
+      },
+      _getSECSyncStatus: function (fnSECSyncStatus) {
+        jayson.http(`http://${localhostAddress}:${localhostPort}`).request('sec_getSyncInfo', [], (err, response) => {
+          if (err) return
+          fnSECSyncStatus(response)
+        })
+      },
+      _getSENSyncStatus: function (fnSENSyncStatus) {
+        jayson.http(`http://${localhostAddress}:${localhostPortSEN}`).request('sec_getSyncInfo', [], (err, response) => {
+          if (err) return
+          fnSENSyncStatus(response)
+        })
+      },
+      checkRlpConnections: function (fnCheckPeers) {
+        this.client.request('sec_getRLPPeersNumber', [], (err, response) => {
+          if (err) return
+          fnCheckPeers(response)
+        })
+      },
       isTestNetwork: function () {
-        if (window.localStorage.getItem('secTest') === 'true') {
+        if (process.env.netType === 'test') {
           return true
         } else {
           return false
         }
       }
     }
-    
 
-    if (window.localStorage.getItem('secTest') === 'true') {
+    if (process.env.netType === 'test') {
       console.log('Start jayson client with test network')
       process.env.netType = 'test'
       jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
