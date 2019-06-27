@@ -485,6 +485,7 @@ export default {
 
     stopMining () {
       clearInterval(this.getBlockHeightJob)
+      clearInterval(this.updateListJob)
       this.$JsonRPCClient.switchToLocalHost()
       this.$JsonRPCClient.clientSEN.request('sec_setPOW', ['0'], (err, response) => {
         if (err) return
@@ -492,8 +493,8 @@ export default {
         this.processTexts.push(`0x${this.selectedWallet.walletAddress} stop mining`)
         this.saveMingingStatus()
       })
-      clearInterval(this.updateListJob)
-      //this.$JsonRPCClient.switchToExternalServer()
+      
+      this.$JsonRPCClient.switchToExternalServer()
       this._startUpdateLastBlockInfoJob()
     },
 
