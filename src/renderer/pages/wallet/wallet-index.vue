@@ -386,7 +386,7 @@ export default {
       jobID = setInterval(()=>{
         this._getWalletBalance(this.selectedWallet.walletAddress)
         this._getWalletTransactions(this.selectedWallet.walletAddress)
-      }, 5000)
+      }, 3 * 60 * 1000)
     },
 
     _getWalletBalance (walletAddress) {
