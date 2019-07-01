@@ -409,7 +409,7 @@ export default {
     _getWalletTransactions (walletAddress) {
       let skip = 0
       this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, (transactions) => {
-        this.tradingList = []
+        
         this.tradingListTotalLength = transactions.length
         if (this.tradingListSkip >= transactions.length && transactions.length > 0) {
           this.noMoreData = true
@@ -418,8 +418,8 @@ export default {
           this.noMoreData = false
           skip = this.tradingListSkip
         }
-
         if (transactions.length > 0) {
+          this.tradingList = []
           for (let i=0; i < skip; i++) {
             this.tradingList.push(transactions[i])
           }
