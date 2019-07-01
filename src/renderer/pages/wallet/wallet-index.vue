@@ -241,7 +241,6 @@ export default {
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
-          clipboard.destroy()
         } else {
           this.maskPages = 4
         }
