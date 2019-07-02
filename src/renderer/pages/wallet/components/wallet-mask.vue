@@ -702,7 +702,9 @@ export default {
       if (this.tradingIdx === 0) {
         this.sentTradingAmount = this.balance
       } else {
-        this.sentTradingAmount = (this.allfeeVal - this.feeVal).toFixed(3)
+        let _restFee = this.allfeeVal - this.feeVal
+        this.sentTradingAmount = (Math.floor(_restFee * 1000) / 1000).toString()
+        // this.sentTradingAmount = (this.allfeeVal - this.feeVal).toFixed(3)
       }
     },
 

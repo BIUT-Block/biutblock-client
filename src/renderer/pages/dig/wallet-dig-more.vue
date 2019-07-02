@@ -137,7 +137,7 @@ export default {
         clearInterval(updateListJob)
       }
       this.getMiningList()
-      updateListJob = setInterval(this.getMiningList, 5000)
+      updateListJob = setInterval(this.getMiningList, 3 * 60 * 1000)
     },
 
     //返回挖矿页面
