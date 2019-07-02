@@ -241,6 +241,7 @@ export default {
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
+          return
         } else {
           this.maskPages = 4
         }
