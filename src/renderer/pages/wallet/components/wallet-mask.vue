@@ -399,8 +399,8 @@ export default {
       }
       let amount1 = this._checkValueFormat(amount)
       let parm = {
-        address: this.selectedWallet.walletAddress,
-        value: amount1,
+        address: "0x" + this.selectedWallet.walletAddress,
+        value: amount1 || 0,
         type: this.qrcodeIdx
       }
       this.qrcodeWalletAddress = JSON.stringify(parm)
@@ -423,22 +423,24 @@ export default {
     //监听SEN的变化
     qrcodeIdx (newIdx, oldIdx) {
       let parm = {
-        address: this.selectedWallet.walletAddress,
-        value: Number(this.receiveAmount.replace(/^0+/,"")),
+        address: "0x" + this.selectedWallet.walletAddress,
+        value: Number(this.receiveAmount.replace(/^0+/,"")) || 0,
         type: newIdx
       }
       this.qrcodeWalletAddress = JSON.stringify(parm)
     }
   },
   created() {
+
+  },
+  updated () {
     //二维码初始字符串
     let parm = {
-        "address": this.selectedWallet.walletAddress,
-        "value": Number(this.receiveAmount.replace(/^0+/,"")),
+        "address": "0x" + this.selectedWallet.walletAddress,
+        "value": Number(this.receiveAmount.replace(/^0+/,"")) || 0,
         "type": this.qrcodeIdx
     }
     this.qrcodeWalletAddress = JSON.stringify(parm)
-
   },
   mounted() {
 

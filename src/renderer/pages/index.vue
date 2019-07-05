@@ -55,13 +55,20 @@
             <!-- 切换正式与测试网络 maskPages == 1 -->
             <section class="setting-mask-body-right-network" v-show="maskPages == 1">
               <p>Currently connected network</p>
-              <section>
-                <img :src="networkIdx === 1 ? agreements : agreement" alt="" @click="isNetwork(1)">
+              <section :class="networkIdx === 1 ? 'drop' :''">
+                <img 
+                  :src="networkIdx === 1 ? agreements : agreement" 
+                  :class="networkIdx === 1 ? 'drop' :''"
+                  alt="" 
+                  @click="isNetwork(1)">
                 <span>Test Network</span>
               </section>
               <!-- 主网暂时不提供选择 -->
-              <section>
-                <img :src="networkIdx === 2 ? agreements : agreement" alt="" @click="isNetwork(2)">
+              <section :class="networkIdx === 2 ? 'drop' :''">
+                <img :src="networkIdx === 2 ? agreements : agreement" 
+                :class="networkIdx === 2 ? 'drop' :''" 
+                alt="" 
+                @click="isNetwork(2)">
                 <span>Main Network</span>
               </section>
             </section>
@@ -177,7 +184,7 @@ export default {
       maskPages: 0, //setting
       settingIdex: 0,
       networkIdx: 1,
-      newNetworkIdx: 0,//默认新的网络下标为0
+      newNetworkIdx: 1,//默认新的网络下标为0
       networkContent: 'Test Net',
       tabNetworkContent: '',
       agreement,
@@ -236,13 +243,17 @@ export default {
 
     //切换网络切换
     isNetwork (index) {
-      this.cloasMask ()
-      this.maskIndexShow = true
-      this.newNetworkIdx = index //从新创建一个下标判断
-      if (index == 1) {
-        this.tabNetworkContent = "Test Net"
+      if (index == this.networkIdx) {
+        return
       } else {
-        this.tabNetworkContent = "Main Net"
+        this.cloasMask ()
+        this.maskIndexShow = true
+        this.newNetworkIdx = index //从新创建一个下标判断
+        if (index == 1) {
+          this.tabNetworkContent = "Test Net"
+        } else {
+          this.tabNetworkContent = "Main Net"
+        }
       }
     },
 
@@ -251,7 +262,7 @@ export default {
       let index = this.newNetworkIdx
       let settingPath = remote.app.getPath('appData') + '/' + packageJSON.name + '/BIUT_Wallet_setting.json'
       this.networkIdx = index //赋值给旧的网络切换下标
-      if (index === 1) {
+      if (index === 1 ) {
         this.networkContent = "Test Net"
         window.localStorage.setItem('secTest', true)
         fs.writeFileSync(settingPath, JSON.stringify({
@@ -274,7 +285,7 @@ export default {
         this.idx = sessionStorage.getItem("asideIdx")
       })
     },
-    
+      
     _closeSyncBusy () {
       this.syncBusy = false
     }
@@ -338,4 +349,8 @@ export default {
     font-size: 14px;color: #388ED9;box-sizing: border-box;border: 1px solid #E5E5E5;border-radius: 4px;}
   .index-mask section span:last-child {margin-left: 12px;border: 0;color: #fff;}
   .index-mask section span:hover,.index-mask img  {cursor: pointer;}
+
+
+  .drop {cursor: no-drop!important;}
+  
 </style>
