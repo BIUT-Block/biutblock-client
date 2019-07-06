@@ -630,6 +630,32 @@ export default {
       this.tabIndex = index
     }
   },
+  watch: {
+    walletName (newVal, oldVal) {
+      let xReg = /[^\x00-\xff]/g
+      if (this.getBLen(newVal) > 14 && xReg.test(newVal)) {
+        this.$nextTick(()=> {
+          this.walletName = newVal.slice(0, 7)
+        })
+      }
+    },
+    walletNameImport1 (newName1, oldName1) {
+      let xReg = /[^\x00-\xff]/g
+      if (this.getBLen(newName1) > 14 && xReg.test(newName1)) {
+        this.$nextTick(()=> {
+          this.walletNameImport1 = newName1.slice(0, 7)
+        })
+      }
+    },
+    walletNameImport2 (newName2, oldName2) {
+      let xReg = /[^\x00-\xff]/g
+      if (this.getBLen(newName2) > 14 && xReg.test(newName2)) {
+        this.$nextTick(()=> {
+          this.walletNameImport2 = newName2.slice(0, 7)
+        })
+      }
+    }
+  }
 }
 </script>
 

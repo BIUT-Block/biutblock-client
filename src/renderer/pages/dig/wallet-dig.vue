@@ -14,7 +14,10 @@
               </li>
               <li v-show="checkWallet">
                 <ul>
-                  <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">{{ wallet.walletName }}</li>
+                  <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">
+                    <span :class="wallet.walletAddress == selectedWalletAddress ? 'checkColor' : ''">{{ wallet.walletName }}</span>
+                    <img src="../../assets/images/amountChecked.png" v-show="wallet.walletAddress == selectedWalletAddress" alt="">
+                  </li>
                 </ul>
               </li>
             </ul>
@@ -129,6 +132,7 @@ export default {
       selectedPrivateKey: '',
       selectedWallet: '',
       selectedWalletName: '',
+      selectedWalletAddress: '',
       miningIn: false, //挖矿中改变按钮样式
       noCursor: false, //默认可以选择钱包
       disabledButton: false,//默认不可点击
@@ -208,15 +212,18 @@ export default {
         if (miningStatus.miningIn) {
           this.selectedWallet = miningStatus.wallet
           this.selectedWalletName = miningStatus.wallet.walletName
+          this.selectedWalletAddress =  miningStatus.wallet.walletAddress
           this.miningIn = miningStatus.miningIn
           this._setButton()
           this.isSynced = miningStatus.isSynced
         } else {
           this.selectedWalletName = this.selectedWallet.walletName
+          this.selectedWalletAddress = this.selectedWallet.walletAddress
         }
       } else {
         //this.selectedWallet = this.wallets[0]
         this.selectedWalletName = this.selectedWallet.walletName
+        this.selectedWalletAddress = this.selectedWallet.walletAddress
       }
       if (processTexts) {
         this.processTexts = JSON.parse(processTexts)
@@ -269,6 +276,7 @@ export default {
       window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
       this.selectedWallet = wallet
       this.selectedWalletName = wallet.walletName
+      this.selectedWalletAddress = wallet.walletAddress
       this.selectedPrivateKey = wallet.privateKey
       this._startUpdateHistoryJob()
       this.checkWallet = false
@@ -552,7 +560,7 @@ export default {
     overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;padding: 0;}
 
 
-  .dig-header .dig-header-check ul li ul li {height: 40px;padding-left:16px;}
+  .dig-header .dig-header-check ul li ul li {height: 40px;padding: 0 16px;display: flex;align-items: center;justify-content: space-between;}
   .dig-header .dig-header-check ul li ul li:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
   .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;background:rgba(237,242,241,1);}
@@ -590,4 +598,6 @@ export default {
     height:32px;border: 0;border-radius: 4px;}
   
   .noCursor {cursor: no-drop;}
+  
+  .checkColor {color: #29D893;}
 </style>

@@ -38,6 +38,15 @@ Vue.prototype.getPointNum = function (num,n) {
   return str1
 }
 
+//获取input输入框判断长度
+Vue.prototype.getBLen = function(str) {  
+  if (str == null) return 0;  
+  if (typeof str != "string"){  
+      str += "";  
+  }  
+  return str.replace(/[^\x00-\xff]/g,"01").length;  
+} 
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

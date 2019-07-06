@@ -455,6 +455,16 @@ export default {
       this.walletBalanceSEN = this._checkValueFormat(balance)
     }
   },
+  watch: {
+    walletName (newVal, oldVal) {
+      let xReg = /[^\x00-\xff]/g
+      if (this.getBLen(newVal) > 14 && xReg.test(newVal)) {
+        this.$nextTick(()=> {
+          this.walletName = newVal.slice(0, 7)
+        })
+      }
+    },
+  }
 
 }
 </script>
