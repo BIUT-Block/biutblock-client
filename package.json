@@ -1,6 +1,6 @@
 {
   "name": "PC-Miner",
-  "version": "2.0.54",
+  "version": "2.0.55",
   "author": "MongoX Technology GmbH",
   "description": "BIUT PC Miner",
   "license": "MIT",
@@ -64,7 +64,7 @@
   "dependencies": {
     "@biut-block/biutjs-blockchain": "^1.0.24",
     "@biut-block/biutjs-datahandler": "^1.0.11",
-    "@biut-block/biutjs-node": "^1.0.69",
+    "@biut-block/biutjs-node": "^1.0.70",
     "@biut-block/biutjs-util": "^1.0.0",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
@@ -81,7 +81,7 @@
     "jayson": "^2.1.2",
     "jsonwebtoken": "^8.5.1",
     "mdi": "^2.2.43",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.26",
     "net-ping": "^1.2.3",
     "node-fetch": "^2.6.0",
     "portfinder": "^1.0.20",
