@@ -191,7 +191,7 @@ export default {
       this._getLatestBlockInfo((balance) => {
       })
       this._getTotalReward()
-    }, 2500)
+    }, 3 * 60 * 1000)
   },
   mounted () {
     
