@@ -191,7 +191,7 @@ export default {
       this._getLatestBlockInfo((balance) => {
       })
       this._getTotalReward()
-    }, 2500)
+    }, 3 * 60 * 1000)
   },
   mounted () {
     
@@ -299,7 +299,7 @@ export default {
       this._getWalletMiningHistory()
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
-      }, 5000)
+      }, 3 * 60 * 1000)
     },
     _startUpdateLastBlockInfoJob () {
       clearInterval(this.getBlockHeightJob)
@@ -309,12 +309,12 @@ export default {
       })
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
-      }, 5000)
+      }, 3 * 60 * 1000)
       this.getBlockHeightJob = setInterval(() => {
         this._getTotalReward()
         this._getLatestBlockInfo((balance) => {
         })
-      }, 5000)
+      }, 3 * 60 * 1000)
     },
 
     _startCheckPeersJob () {
