@@ -94,6 +94,24 @@
       </section>
     </section>
 
+    <!-- 中途断网情况下，错误弹窗提示 -->
+    <section class="mask" v-show="networkError">
+      <section class="mask-container dig-mask">
+        <img
+          src="../../assets/images/closeMask.png"
+          alt=""
+          class="closeImg"
+          title="close"
+          @click="networkError = false"
+        />
+        <section class="dig-mask-body">
+          <p>{{networkErrorText}}</p>
+          <button type="button" class="continue" @click="onContinue()">Continue</button>
+          <button type="button" class="exit"  @click="onAppExit()">Exit</button>
+        </section>
+      </section>
+    </section>
+
     <section class="dig-mask-tips" v-show = "translucentShow">
       {{ translucentText }}
     </section>      
@@ -110,6 +128,7 @@ import WalletsHandler from '../../lib/WalletsHandler'
 import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers'
 import { ipcRenderer } from 'electron'
 import { constants } from 'fs';
+import WalletHandler from '../../lib/WalletsHandler';
 const moment = require('moment-timezone')
 export default {
   name: 'walletDig',
@@ -158,7 +177,9 @@ export default {
       translucentShow: false,
       navigatorPost: false,// 监听网络请求
       translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
-      
+      networkError: false,
+      networkErrorText: 'No connection to network. Continue or exit?',
+      networkCheckJob: ''
     }
   },
   computed: {
@@ -288,6 +309,14 @@ export default {
       this.mineStatusError = false
     },
 
+    onContinue () {
+      this.networkError = false
+    },
+
+    onAppExit () {
+      ipcRenderer.send('close')
+    },
+
     _restartAllJobs () {
       this._startUpdateHistoryJob()
       this._startUpdateLastBlockInfoJob()
@@ -320,10 +349,17 @@ export default {
     _startCheckPeersJob () {
       this.$JsonRPCClient.checkRlpConnections((response) => {
         if (response.result.message === 0) {
-          alert('No Peers Connection, please relaunch the application.')
-          ipcRenderer.send('close')
+          this.networkError = true
+          this.networkErrorText = 'No connected peer. You can exit the application and check your network'
         }
       })
+    },
+
+    _startCheckNetworkJob () {
+      if (!WalletsHandler.checkNetworkStatus()) {
+        this.networkError = true
+        this.networkErrorText = 'No network connection. You can exit the application and check your network'
+      }
     },
     
     _getWalletMiningHistory () {
@@ -444,6 +480,7 @@ export default {
     },
 
     startMining () {
+      setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {
@@ -475,7 +512,7 @@ export default {
                       this.saveMingingStatus()
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
-                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 3000)
+                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 2* 60 * 1000)
                     }
                   } else {
                     _statusSameTimes = 0
@@ -524,8 +561,6 @@ export default {
       })
       this.$JsonRPCClient.switchToExternalServer()
       this._startUpdateLastBlockInfoJob()
-      //this._getWalletMiningHistory()
-      //this.updateListJob = setInterval(this._getWalletMiningHistory, 5000)
     }
   },
   watch: {
@@ -600,4 +635,6 @@ export default {
   .noCursor {cursor: no-drop;}
   
   .checkColor {color: #29D893;}
+  .dig-mask-body .exit {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%);}
+  .dig-mask-body .continue {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(41,216,147,1) 100%);}
 </style>
