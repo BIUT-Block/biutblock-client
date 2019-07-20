@@ -115,6 +115,9 @@ import digs from '../assets/images/digs.png'
 import setting from '../assets/images/setting.png'
 import settings from '../assets/images/settings.png'
 
+import invitation from '../assets/images/invitation.png'
+import invitations from '../assets/images/invitations.png'
+
 import agreement from '../assets/images/agreement.png'
 import agreements from '../assets/images/agreements.png'
 
@@ -163,6 +166,13 @@ export default {
           imgUrl: setting,
           imgUrls: settings,
           routeLink: ''
+        },
+        {
+          id: "05",
+          title: "invitation",
+          imgUrl: invitation,
+          imgUrls: invitations,
+          routeLink: '/invitation'
         }
       ],
       idx: 0,

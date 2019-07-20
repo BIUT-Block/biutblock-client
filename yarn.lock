@@ -87,10 +87,10 @@
     chai "^4.1.2"
     describe "^1.2.0"
 
-"@biut-block/biutjs-node@^1.0.68":
-  version "1.0.68"
-  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-node/-/biutjs-node-1.0.68.tgz#9b6e5fa4d3e3c6ab4788204983f9f8e5b66c4932"
-  integrity sha512-h1qtAsxH9d5y0KsmKItw9TawoHfJyX04kKD05kp2DbRj26NNpYGPvF28qO7CxFgf1KQqHV3g/X0hNDGISq0skA==
+"@biut-block/biutjs-node@^1.0.72":
+  version "1.0.75"
+  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-node/-/biutjs-node-1.0.75.tgz#57dcd33cf26210046b63178952c218ee6b768270"
+  integrity sha512-/pBRuv/LOHPeW1HlcC/XKZ3OIyRkOZyf1+VJxSJ1L4IuZ3Ik6V0bwEC8bGx2HcI8zHEMbhJc1mOg9o66N2fqGQ==
   dependencies:
     "@biut-block/biutjs-blockchain" "^1.0.24"
     "@biut-block/biutjs-datahandler" "^1.0.11"
@@ -105,6 +105,7 @@
     bignumber.js "^8.1.1"
     chalk "^2.4.2"
     clone-deep "^4.0.1"
+    crypto-js "^3.1.9-1"
     geoip-lite "^1.3.7"
     get-folder-size "^2.0.1"
     jayson "^2.1.2"
@@ -3775,7 +3776,7 @@ electron@^1.8.8:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
-element-ui@^2.10.0:
+element-ui@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.10.1.tgz#1011016e50e76f5dae6fbf9c86e53b6e53fcb9eb"
   integrity sha512-V3WMDoVd1rOT+UI4xasvS8hmUkmc0ezXRuLzlTznBD0bN6jXAiGOeCtmYjj8GFN3lpGNeKyQ/8LCAFuAbxaEww==
@@ -7427,10 +7428,10 @@ mocha@^6.1.4:
     yargs-parser "13.0.0"
     yargs-unparser "1.5.0"
 
-moment-timezone@^0.5.25:
-  version "0.5.25"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.25.tgz#a11bfa2f74e088327f2cd4c08b3e7bdf55957810"
-  integrity sha512-DgEaTyN/z0HFaVcVbSyVCUU6HeFdnNC3vE4c9cgu2dgMTvjBUBdBzWfasTBmAW45u5OIMeCJtU8yNjM22DHucw==
+moment-timezone@^0.5.26:
+  version "0.5.26"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.26.tgz#c0267ca09ae84631aa3dc33f65bedbe6e8e0d772"
+  integrity sha512-sFP4cgEKTCymBBKgoxZjYzlSovC20Y6J7y3nanDc5RoBIXKlZhoYwBoZGe3flwU6A372AcRwScH8KiwV6zjy1g==
   dependencies:
     moment ">= 2.9.0"
 
@@ -8414,7 +8415,16 @@ pluralize@^7.0.0:
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
   integrity sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==
 
-portfinder@^1.0.20, portfinder@^1.0.9:
+portfinder@^1.0.21:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.21.tgz#60e1397b95ac170749db70034ece306b9a27e324"
+  integrity sha512-ESabpDCzmBS3ekHbmpAIiESq3udRsCBGiBZLsC+HgBKv2ezb0R4oG+7RnYEVZ/ZCfhel5Tx3UzdNWA0Lox2QCA==
+  dependencies:
+    async "^1.5.2"
+    debug "^2.2.0"
+    mkdirp "0.5.x"
+
+portfinder@^1.0.9:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
   integrity sha512-Yxe4mTyDzTd59PZJY4ojZR8F+E5e97iq2ZOHPz3HDgSvYC5siNad2tLooQ5y5QHyQhc3xVqvyk/eNA3wuoa7Sw==

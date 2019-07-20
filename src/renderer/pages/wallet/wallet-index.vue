@@ -60,6 +60,8 @@
           <section class="money-content">
             <span> BIUT Balance </span>
             <p>{{walletBalance}} BIUT</p>
+            <p class="money-text">可用：{{ availableMoney }}</p>
+            <p class="money-text">冻结：{{ freezeMoney }}</p>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
           <section class="money-content">
@@ -144,6 +146,9 @@ export default {
       walletName: 'wallet Name',
       oldWalletName: 'wallet Name',
       walletBalance: '0',//sec余额
+      availableMoney: 1000, //biut的可用金额
+      freezeMoney: 1000, //biut冻结金额
+
       walletBalanceSEN: '0',//sen余额
       walletAddress: '',
       inputReadonly: true,
@@ -516,6 +521,7 @@ export default {
     box-shadow:0px 3px 6px rgba(37,47,51,0.16);}
   .wallet-header-money-list .money-content span {display: block;font-size: 12px;padding: 12px 0 8px;}
   .wallet-header-money-list .money-content p {font-size: 24px;font-weight: normal;}
+  .wallet-header-money-list .money-content .money-text {font-size: 14px;font-weight: normal;padding-top: 5px;}
   .wallet-header-money-list .money-content img {width: 128px;height: 112px;position: absolute;right: 0;top: 0;}
 
   .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);margin-top: 24px;

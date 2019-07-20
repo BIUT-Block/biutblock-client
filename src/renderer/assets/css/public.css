@@ -18,7 +18,7 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-
 .passCorrect {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
 
 .wallet-container {display: flex;height: 100vh;align-content: stretch;display:-webkit-flex;}
-.wallet-container .wallet-list {width: 220px;background:rgba(237,242,241,1);height: 100vh;}
+.wallet-container .wallet-list {width: 220px;background:#edf2f1;height: 100vh;}
 .wallet-container .wallet-content {flex: 1;display: flex;flex-direction: column;}
 
 .wallet-create .wallet-button-important:hover,.wallet-import ul li:hover,button:hover,.setting-mask-header img:hover,

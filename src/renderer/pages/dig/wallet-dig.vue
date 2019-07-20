@@ -5,21 +5,20 @@
       <section class="dig-header">
         <section class="dig-header-check">
           <h3>Mining</h3>
-          <p>Wallet Account</p>
           <section class="button-list">
             <ul>
               <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" ref="walletListImg">
                 <span>{{selectedWalletName}}</span>
-                <img src="../../assets/images/moreDown.png" alt="">
+                <!-- <img src="../../assets/images/moreDown.png" alt=""> -->
               </li>
-              <li v-show="checkWallet">
+              <!-- <li v-show="checkWallet">
                 <ul>
                   <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">
                     <span :class="wallet.walletAddress == selectedWalletAddress ? 'checkColor' : ''">{{ wallet.walletName }}</span>
                     <img src="../../assets/images/amountChecked.png" v-show="wallet.walletAddress == selectedWalletAddress" alt="">
                   </li>
                 </ul>
-              </li>
+              </li> -->
             </ul>
             <wallet-button type="button" 
                 :text="digButton"
@@ -29,10 +28,9 @@
                   disabledButton ? 'noCursor' : '']"
                 @click.native="beginDigMask"/>
           </section>
-          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} BIUT</span></h4>
+          <h4>可用余额：<span>{{ digBalance.toLocaleString('en-US') }} BIUT</span></h4>
           <section class="dig-tips">
-            <label>Description:</label> After the node is mined, the BIUT Token is automatically acquired. 
-            The higher the balance, the greater probability to get BIU.
+            <label>Description:</label>首次开启挖矿时，钱包金额需有10个以上的BIUT余额
           </section>
         </section>
         <section class="dig-header-list">
@@ -44,15 +42,104 @@
       <wallet-margin/>
       <!-- 挖矿内容 -->
       <section class="dig-body">
-         <!-- 挖矿内容-头部 -->
-        <dig-title  :number="digNumber"
-                    :digTitleShow="true"
-                    :selectedWallet="selectedWallet" 
-                    :selectedPrivateKey="selectedPrivateKey" 
-                    :wallets="this.$route.query.wallets" :income="digIncome"/>
-        <!-- 挖矿内容-列表 -->
-        <section>
-          <dig-list :digLists="moreList"/>
+        <ul>
+          <li @click="tabPage(1)" :class="pageIdx == 1 ? 'checkColor' : ''">挖矿收益</li>
+          <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">锁仓记录</li>
+          <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">矿池</li>
+        </ul>
+
+        <!-- 挖矿收益 -->
+        <section class="dig-earnings" v-show="pageIdx == 1">
+          <!-- 挖矿内容-头部 -->
+          <dig-title  
+            :number="digNumber"
+            :digTitleShow="true"
+            :selectedWallet="selectedWallet" 
+            :selectedPrivateKey="selectedPrivateKey" 
+            :wallets="this.$route.query.wallets" :income="digIncome"/>
+          <!-- 挖矿内容-列表 -->
+          <section>
+            <dig-list :digLists="moreList"/>
+          </section>
+        </section>
+        
+        <!-- 锁仓记录 -->
+        <section class="Lock-record" v-show="pageIdx == 2">
+          <lock-record :itemList = "recordLists"/>
+        </section>
+
+        <!-- 矿池 -->
+        <section class="ore-pool" v-show="pageIdx == 3">
+
+          <!-- 条件不足、条件满足 --> 
+          <section class="ore-pool-conditions" v-show="orePoolPage == 1">
+            <p>当前钱包BIUT数量：</p>
+            <p>已冻结：{{ orePoolLock }} / {{ orePoolAllMoney }} </p>
+            <p>可用：{{ orePooAvailable }} BIUT</p>
+            <p>锁仓的数量越多，挖到BIU的机会会越大哦！点击“挖矿”按钮，锁仓更多数量吧！</p>
+            <button 
+              type="button" 
+              :class="orePoolTrue ? 'orePoolTrue' : ''"
+              :disabled="!orePoolTrue" 
+              @click="openPool">
+                {{ orePoolTxt }}
+            </button>
+          </section>
+        
+          <!-- 申请中 -->
+          <section class="ore-pool-apply" v-show="orePoolPage == 2">
+            <p>当前钱包BIUT数量：</p>
+            <p>已冻结：{{ orePoolLock }} / {{ orePoolAllMoney }} </p>
+            <p>可用：{{ orePooAvailable }} BIUT</p>
+            <p>锁仓的数量越多，挖到BIU的机会会越大哦！点击“挖矿”按钮，锁仓更多数量吧！</p>
+            <p>已申请开通矿池，请等待系统审核哦</p>
+            <p>名称：{{ orePoolName }}</p>
+          </section>  
+
+          <!-- 申请失败 -->
+          <section class="ore-pool-error"  v-show="orePoolPage == 3">
+            <p>当前钱包BIUT数量：{{ orePoolApplyMoney }} / {{ orePoolAllMoney }}</p>
+            <button type="button" @click="openPool">开启我的矿池</button>
+            <p>申请记录</p>
+            <ul>
+              <li>
+                <span>申请金额</span>
+                <span>时间</span>
+                <span>状态</span>
+              </li>
+              <li>
+                <span>{{ orePoolApplyMoney }}</span>
+                <span>{{ orePoolApplyTime }}</span>
+                <span>失败</span>
+              </li>
+            </ul>
+          </section>
+
+          <!-- 申请成功 -->
+          <section class="ore-pool-success"  v-show="orePoolPage == 4">
+            <p>当前钱包BIUT数量：已冻结：{{ orePoolApplyMoney }} / {{ orePoolAllMoney }}</p>
+            <p>名称：{{ orePoolName }}</p>
+            <p>矿池开通时间：{{ orePoolApplyTime }}</p>
+            <ul>
+              <li>
+                <span>我的矿池资产</span>
+                <span>{{ orePoolAssets }}</span>
+              </li>
+              <li>
+                <span>矿池节点数量</span>
+                <span>{{ orePoolNode }}</span>
+              </li>
+              <li>
+                <span>矿池总收益</span>
+                <span>{{ orePoolAllEarnings }}</span>
+              </li>
+              <li>
+                <span>我的收益</span>
+                <span>{{ orePoolMyEarnings }}</span>
+              </li>
+            </ul>
+          </section>
+
         </section>
       </section>
       <wallet-margin/>
@@ -61,6 +148,7 @@
         <dig-footer :walletAddress="minedByAddress" :totalBlockHeight="chainHeight" :timeDiff="timeDiff" :totalMining="networkMining"/>
       </section>
     </section>
+
     <!-- 遮罩层 -->
     <section class="mask" v-show="maskShow">
       <section class="mask-container dig-mask">
@@ -71,14 +159,60 @@
           title="close"
           @click="maskShow = false"
         />
-        <section class="dig-mask-body">
-          <p>{{maskText}}</p>
+
+        <!-- 首次开启挖矿 -->
+        <section class="mask-body" v-show = 'makePages == 0'>
+          <!-- <p>{{maskText}}</p> -->
+          <p>挖矿金额会被锁仓一年，锁仓的数量越多，挖到BIU的机会会越大哦！</p>
+          <section class="mask-body-list">
+            <span>选择挖矿金额</span>
+            <input type="text" placeholder="请输入挖矿金额" v-model="firstBeginIpt" />
+          </section>
+          <p>可用：{{ digBalance.toLocaleString('en-US') }}  BIUT <span>All</span></p>
           <button type="button"  @click="_confirm()">Confirm</button>
+          <p>BIUT余额10000以上可开启分享挖矿，获得更高收益哦！</p>
         </section>
+
+        <!-- 不是首次开启挖矿 -->
+        <section class="mask-body" v-show = 'makePages == 1'>
+          <p>你即将用“挖矿钱包 {{ selectedWalletAddress }}  开启挖矿</p>
+          <section>
+            <span>当前钱包已冻结：{{ digLockMoney }} BIUT</span>
+            <span>可用：{{ digAvailableMoney }} BIUT</span>
+          </section>
+          <section class="mask-body-list">
+            <span>请输入选择挖矿金额</span>
+            <section>
+              <input type="text" placeholder="请输入选择挖矿金额" v-model="lockMoneyIpt"/>
+            </section>
+          </section>
+          <button type="button"  @click="_confirm()">Confirm</button>
+          <p>BIUT余额10000以上可开启分享挖矿，获得更高收益哦！</p>
+        </section>
+
+        <!-- 邀请挖矿弹窗 -->
+        <section class="mask-body" v-show = 'makePages == 2'>
+          <p>恭喜你获得邀请挖矿的机会，完成以下操作即可开启邀请挖矿，享受更高挖矿收益</p>
+          <section class="mask-body-list">
+            <span>请输入选择挖矿金额</span>
+            <section>
+              <input type="text" placeholder="请输入选择挖矿金额" v-model="invitationMoneyIpt"/>
+            </section>
+          </section>
+          <section class="mask-body-list">
+            <span>填写邀请码</span>
+            <section>
+              <input type="text" placeholder="请输入邀请码" v-model="invitationIpt"/>
+            </section>
+          </section>
+          <button type="button"  @click="_confirm()">Confirm</button>
+          <p>BIUT余额10000以上可开启分享挖矿，获得更高收益哦！</p>
+        </section>
+
       </section>
     </section>
 
-    <section class="mask" v-show="mineStatusError">
+    <!-- <section class="mask" v-show="mineStatusError">
       <section class="mask-container dig-mask">
         <img
           src="../../assets/images/closeMask.png"
@@ -92,7 +226,7 @@
           <button type="button"  @click="onCloseMessage()">Confirm</button>
         </section>
       </section>
-    </section>
+    </section> -->
 
     <!-- 中途断网情况下，错误弹窗提示 -->
     <section class="mask" v-show="networkError">
@@ -104,7 +238,7 @@
           title="close"
           @click="networkError = false"
         />
-        <section class="dig-mask-body">
+        <section class="mask-body">
           <p>{{networkErrorText}}</p>
           <button type="button" class="continue" @click="onContinue()">Continue</button>
           <button type="button" class="exit"  @click="onAppExit()">Exit</button>
@@ -123,6 +257,9 @@ import digFooter from './components/wallet-dig-footer'
 import digTitle from './components/wallet-dig-title'
 import walletButton from '../../components/wallet-button'
 import digList from './components/wallet-dig-list'
+
+import lockRecord from './components/lock-record'
+
 import walletMargin from '../../components/wallet-margin'
 import WalletsHandler from '../../lib/WalletsHandler'
 import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers'
@@ -138,6 +275,7 @@ export default {
     digTitle,
     digList,
     walletMargin,
+    lockRecord
   },
   props: {},
   data () {
@@ -171,7 +309,7 @@ export default {
       maskShow: false,
       maskText: '',
       mineStatusText: 'Please stop mining before changing wallet',
-      mineStatusError: false,
+      // mineStatusError: false,
       bAlreadyShowed: false,
       digBalance: 0, //挖矿余额
       translucentShow: false,
@@ -179,11 +317,46 @@ export default {
       translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
       networkError: false,
       networkErrorText: 'No connection to network. Continue or exit?',
-      networkCheckJob: ''
+      networkCheckJob: '',
+
+
+      pageIdx: 1, //初始页面展示挖矿收益
+      itemList: [
+        {
+          id: '1',
+          lockTime: '2019-07-19 23:28   +8',
+          lockMoney: '10',
+          unlockTime: '2019-07-19 23:28   +8'
+        }
+      ],//锁仓记录
+
+      makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1  - 不是首次挖矿  2 - 邀请挖矿
+      firstBeginIpt: '',//第一次开启挖矿的input
+      lockMoneyIpt: '',//不是第一次挖矿的input
+      invitationMoneyIpt: '',//邀请挖矿金额的input
+      invitationIpt: '',//邀请挖矿的邀请码input
+      digLockMoney: 100, //挖矿冻结金额
+      digAvailableMoney: 10,//挖矿可用
+
+      orePoolLock: 0,//矿池已经冻结金额
+      orePoolAllMoney: 1000,//矿池所有金额
+      orePooAvailable: 10,//矿池可用金额
+      orePoolTrue: false, //挖矿是否可开启 默认 false
+      orePoolTxt: '无法开启矿池', //矿池是否可开启的文本内容  如果满足条件 orePoolTrue = true  orePoolTxt = '开启矿池'
+      orePoolName: '矿池名称',//矿池名称
+      orePoolApplyMoney: 800,//矿池已经申请金额
+      orePoolApplyTime: '2019-07-17 18:29',//矿池申请时间
+      orePoolPage: 4,//矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
+      orePoolAssets: 0,//我的矿池资产
+      orePoolNode: 0,//矿池节点数量
+      orePoolAllEarnings: 0,//矿池总收益
+      orePoolMyEarnings: 0,//我的收益
     }
   },
   computed: {
-
+    recordLists () {
+      return Array(5).fill(this.itemList[0])
+    }
   },
   created () {
     let wallets = this.$route.query.wallets
@@ -225,6 +398,16 @@ export default {
     }
   },
   methods: {
+    // tab切换
+    tabPage (idx) {
+      this.pageIdx = idx
+    },
+
+    //开启矿池
+    openPool () {
+      alert("点击了开启矿池")
+    },
+
     initMiningStatus () {
       let miningStatus = window.sessionStorage.getItem('miningStatus')
       let processTexts = window.sessionStorage.getItem('processTexts')
@@ -285,29 +468,29 @@ export default {
     },
 
     //选择钱包
-    checkDigWallet (wallet) {
-      let miningStatus = window.sessionStorage.getItem('miningStatus')
-      if (miningStatus) {
-        miningStatus = JSON.parse(miningStatus)
-        if (miningStatus.miningIn && wallet.walletAddress !== miningStatus.wallet.walletAddress) {
-          this.mineStatusError = true
-          return
-        }
-      }
-      window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
-      this.selectedWallet = wallet
-      this.selectedWalletName = wallet.walletName
-      this.selectedWalletAddress = wallet.walletAddress
-      this.selectedPrivateKey = wallet.privateKey
-      this._startUpdateHistoryJob()
-      this.checkWallet = false
-      this.checkedWallet = true
-      this.disabledButton = false
-    },
+    // checkDigWallet (wallet) {
+    //   let miningStatus = window.sessionStorage.getItem('miningStatus')
+    //   if (miningStatus) {
+    //     miningStatus = JSON.parse(miningStatus)
+    //     if (miningStatus.miningIn && wallet.walletAddress !== miningStatus.wallet.walletAddress) {
+    //       this.mineStatusError = true
+    //       return
+    //     }
+    //   }
+    //   window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
+    //   this.selectedWallet = wallet
+    //   this.selectedWalletName = wallet.walletName
+    //   this.selectedWalletAddress = wallet.walletAddress
+    //   this.selectedPrivateKey = wallet.privateKey
+    //   this._startUpdateHistoryJob()
+    //   this.checkWallet = false
+    //   this.checkedWallet = true
+    //   this.disabledButton = false
+    // },
 
-    onCloseMessage () {
-      this.mineStatusError = false
-    },
+    // onCloseMessage () {
+    //   this.mineStatusError = false
+    // },
 
     onContinue () {
       this.networkError = false
@@ -428,11 +611,14 @@ export default {
         }, 3000)
       } else {
         this.maskShow = true
-        if (this.digButton == "Start Mining") {
-          this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-        } else {
-          this.maskText = "Confirm to Stop Mining?"
-        }
+        //判断是否是首次开启挖矿
+
+
+        // if (this.digButton == "Start Mining") {
+        //   this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+        // } else {
+        //   this.maskText = "Confirm to Stop Mining?"
+        // }
       }
     },
 
@@ -450,24 +636,26 @@ export default {
     },
 
     _confirm () {
-      if (this.digButton === "Start Mining") {
-        if (!WalletsHandler.checkNetworkStatus()) {
-          this.processTexts.push('No network connection.')
-          return
-        }
-        this.digButton = "Stop Mining"
-        this.moreList = []
-        this.startMining()
-        this.maskShow = false
-        this.checkedWallet = false
-        this.noCursor = true
-      } else {
-        this.digButton = "Start Mining"
-        this.stopMining()
-        this.maskShow = false
-        this.checkedWallet = true
-        this.noCursor = false
-      }
+      alert("开启挖矿")
+      this.maskShow = false
+      // if (this.digButton === "Start Mining") {
+      //   if (!WalletsHandler.checkNetworkStatus()) {
+      //     this.processTexts.push('No network connection.')
+      //     return
+      //   }
+      //   this.digButton = "Stop Mining"
+      //   this.moreList = []
+      //   this.startMining()
+      //   this.maskShow = false
+      //   this.checkedWallet = false
+      //   this.noCursor = true
+      // } else {
+      //   this.digButton = "Start Mining"
+      //   this.stopMining()
+      //   this.maskShow = false
+      //   this.checkedWallet = true
+      //   this.noCursor = false
+      // }
     },
 
     saveMingingStatus () {
@@ -570,10 +758,10 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
+  main {padding: 24px 24px 0;background: #F4F5F5;height: calc(100vh - 25px);display: flex;
     align-content: stretch;display:-webkit-flex;}
   .dig-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
-  border-radius:4px;flex: 1;background: #fff;}
+    border-radius:4px;flex: 1;background: #fff;}
   .dig-header {border-top-left-radius: 4px;
     border-top-right-radius: 4px;padding: 0 22px 8px 32px;display: flex;align-items: center;
     justify-content: space-between;}
@@ -619,22 +807,55 @@ export default {
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
   .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
   
-  .dig-body {padding: 22px 22px 0 32px;flex: 1;}
-  
+  .dig-body {padding: 22px 22px 0 32px;flex: 1;display: flex;flex-direction: column;}
+  .dig-body ul {display: flex;height: 40px;}
+  .dig-body ul li {width: 100px;cursor: pointer;}
+
+  .Lock-record,.ore-pool,.dig-earnings {border: 1px solid red;flex: 1;box-sizing: border-box;}
+
+  .ore-pool-conditions p {padding: 10px 20px;}
+  .ore-pool-conditions button {margin: 20px;}
+
+  .ore-pool-apply p {padding: 10px 20px;}
+
+  .ore-pool-error p {padding: 10px 20px;}
+  .ore-pool-error button {margin: 20px;}
+  .ore-pool-error ul {display: flex;flex-direction: column;padding: 0 20px;}
+  .ore-pool-error ul li {display: flex;align-items: center;justify-content: space-between;width: 60%;height: 40px;}
+  .ore-pool-error ul li span:first-child {width: 20%}  
+  .ore-pool-error ul li span:nth-child(2) {width: 30%}  
+  .ore-pool-error ul li span:last-child {width: 10%}  
+
+  .ore-pool-success p {padding: 10px 20px;}
+  .ore-pool-success ul {display: flex;padding: 0 20px;height: auto;}
+  .ore-pool-success ul li {display: flex;flex-direction: column;flex: 1;align-items: center;}
+  .ore-pool-success ul li span:last-child {border-radius: 50%;display: flex;width: 100px;margin-top: 30px;
+    border: 1px solid red;height: 100px;align-items: center;justify-content: center;}
+
   .dig-footer {padding: 0 22px 0 32px;color: #839299;height: 45px;
     border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
 
   .miningIn {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%)!important;}
   .dig-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
+
   .dig-mask-body {padding: 44px 20px 16px 24px;text-align: right;}
   .dig-mask-body p {text-align: left;margin-bottom: 58px;}
   .dig-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
     height:32px;border: 0;border-radius: 4px;}
   
   .noCursor {cursor: no-drop;}
+
   
   .checkColor {color: #29D893;}
   .dig-mask-body .exit {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%);}
   .dig-mask-body .continue {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(41,216,147,1) 100%);}
+
+
+  .mask-body {padding: 44px 20px 16px 24px;}
+  .mask-body p {padding-top: 20px;}
+  .mask-body .mask-body-list {display: flex;padding: 20px 0;}
+
+
+  .orePoolTrue {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);}
 </style>
