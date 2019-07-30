@@ -60,8 +60,16 @@
           <section class="money-content">
             <span> BIUT Balance </span>
             <p>{{walletBalance}} BIUT</p>
-            <p class="money-text">可用：{{ availableMoney }}</p>
-            <p class="money-text">冻结：{{ freezeMoney }}</p>
+            <section class="money-text-list">
+              <p class="money-text">
+                <span>Available</span>
+                <span>{{ availableMoney }}</span>
+              </p>
+              <p class="money-text">
+                <span>Guarantee</span>
+                <span>{{ freezeMoney }}</span>
+              </p>
+            </section>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
           <section class="money-content">
@@ -521,8 +529,12 @@ export default {
     box-shadow:0px 3px 6px rgba(37,47,51,0.16);}
   .wallet-header-money-list .money-content span {display: block;font-size: 12px;padding: 12px 0 8px;}
   .wallet-header-money-list .money-content p {font-size: 24px;font-weight: normal;}
-  .wallet-header-money-list .money-content .money-text {font-size: 14px;font-weight: normal;padding-top: 5px;}
   .wallet-header-money-list .money-content img {width: 128px;height: 112px;position: absolute;right: 0;top: 0;}
+
+  .money-text-list {display: flex;padding-top: 16px;}
+  .wallet-header-money-list .money-content .money-text-list .money-text {font-size: 12px;display: flex;flex-direction: column;width: 50%;}
+  .wallet-header-money-list .money-content .money-text-list .money-text span {padding: 3px 0 0 0;}
+  .wallet-header-money-list .money-content .money-text-list .money-text span:first-child {padding: 0;}
 
   .wallet-content-body {box-shadow:0px 0px 6px rgba(37,47,51,0.16);margin-top: 24px;
     flex: 1;display: flex;flex-direction: column;border-top-left-radius:4px;border-top-right-radius:4px;}

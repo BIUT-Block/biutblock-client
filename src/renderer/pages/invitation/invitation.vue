@@ -71,9 +71,7 @@ export default {
 </script>
 
 <style scoped>
-  .invitation-content {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;}
+  .invitation-content {padding: 24px 24px 0;background: #F4F5F5;height: calc(100vh - 24px);display: flex;}
   .content {background: #fff;flex: 1;box-shadow: 0px 0px 3px rgba(0,0,0,0.16);border-radius: 4px;
-    padding: 24px 24px 32px;}
-
-
+    }
 </style>

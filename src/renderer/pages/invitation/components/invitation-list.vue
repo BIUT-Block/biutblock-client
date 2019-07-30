@@ -1,48 +1,66 @@
 <template>
-  <main>
+  <main class="list-content">
     <header>
-      <section>
-        <span>邀请记录</span>
-        <span>共 {{total}} 条记录</span>
-      </section>
-
-      <section>
-        <input type="text" placeholder="请输入搜索内容" v-model='searchIpt'/>
-        <button type="button" @click="searchFrom">搜索</button>
+      <h3>Invited record</h3>
+      <section class="ipt-list">
+        <input type="text" placeholder="Enter address to search" v-model='searchIpt'/>
+        <section class="img-list">
+          <img src="../../../assets/images/clearAddress.png" alt="" v-show="clearBtn" class="clear-img" @click="clearIpt"/>
+          <img src="../../../assets/images/search.png" alt="" class="search-img" @click="searchFrom"/>
+        </section>
       </section>
     </header>
 
     <ul>
       <li>
-        <span>地址</span>
-        <span>邀请时间</span>
-        <span>已获得奖励（BIUT）</span>
-        <span>操作</span>
+        <span>address</span>
+        <span>Invitation time</span>
+        <span>Received a reward (BIUT)</span>
+        <span>operation</span>
       </li>
-      <li v-for="(item, index) in itemLists" :key="index">
+      <li v-for="(item, index) in itemLists" :key="index" v-show="!dataNull">
         <span>{{ item.itemAddress }}</span>
         <span>{{ item.itemTime }}</span>
         <span>{{ item.itemMoney }}</span>
-        <span class="look-details" @click='lookDetails(""+ index +"")'>查看详情</span>
+        <span class="look-details" @click='lookDetails(""+ index +"")'>View details</span>
       </li>
+      <section class="list-none" v-show="dataNull">
+        <section>
+          <img src="../../../assets/images/wallet-null.png" alt="">
+          <p>No search results yet</p>
+        </section>
+      </section>
     </ul>
-    <!-- 分页可以用 election的插件、根据你那边做的来 -->
+
+    <!-- 分页 -->
+    <wallet-pages 
+      :total="total"
+      @next="nextPage"
+      @prev="prevPage"
+      @goPage="goPage"
+      v-show="!dataNull" />
   </main>
 </template>
 
 <script>
+import walletPages from '../../../components/wallet-pages'
 export default {
   name: '',
   props: {},
+  components: {
+    walletPages
+  },
   data() {
     return {
+      clearBtn: false,
+      dataNull: false,
       total: 50,//总记录数
       searchIpt: '',//input搜索内容
       itemList: [
         {
           id: '1',
           itemAddress: '0xc4be3c8093fd7acdcdf415331040fc974f8b2ad5',
-          itemTime:'2019-07-17 14:06 +8',
+          itemTime:'2019/07/21 13:50:46 GMT+8',
           itemMoney: '1234',
         }
       ]
@@ -51,7 +69,7 @@ export default {
   computed: {
     // 列表数据
     itemLists () {
-      return Array(5).fill(this.itemList[0])
+      return Array(6).fill(this.itemList[0])
     }
   },
   methods: {
@@ -65,16 +83,36 @@ export default {
       }
     },
 
+    clearIpt () {
+      this.searchIpt = ''
+      this.clearBtn = false
+    },
+
     //查看详情传对应的参数
     lookDetails (idx) {
       this.$emit('details', idx)
+    },
+
+    nextPage () {
+      alert("下一页")
+    },
+
+    prevPage () {
+      alert("上一页")
+    },
+
+    goPage (e) {
+      alert("失去焦点跳转页面" + e)
     }
   },
   watch: {
     searchIpt (newVal, oldVal) {
       //监听input 输入的变化
-      if (newVal.length === 0) {
+      if (newVal.length > 0) {
         //重新加载列表
+        this.clearBtn = true  
+      } else {
+        this.clearBtn = false
       }
     }
   },
@@ -82,13 +120,30 @@ export default {
 </script>
 
 <style scoped>
-  header {display: flex;align-items: center;justify-content: space-between;margin: 20px 0 10px;}
+  .list-content {padding: 0 32px;display: flex;flex-direction: column;
+    height: calc(100% - 146px);}
+  header {display: flex;align-items: center;justify-content: space-between;margin: 20px 0 6px;}
+  h3 {margin: 0;color: #252F33;font-size: 16px;font-family: Lato-Bold;}
 
-  ul li {height: 40px;display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;}
-  ul li:first-child {color: #839299;font-family: Lato-Bold;border-bottom: 2px solid #e5e5e5;
-    font-size: 16px;}
-  ul li span:first-child {width: 50%;}
-  ul li span:nth-child(2) {width: 20%;}
-  ul li span:nth-child(3) {width: 20%;}
-  ul li span:nth-child(4) {width: 10%;cursor: pointer;}
+  .ipt-list {width:232px;height:32px;border:1px solid #e6e6e6;border-radius:4px;display: flex;
+    align-items: center;justify-content: space-between;padding: 0 15px;}
+  .ipt-list input {flex: 1;border: 0;color: #252F33;}
+  .ipt-list .clear-img,.ipt-list .search-img {margin-left: 8px;cursor: pointer;}
+
+  .img-list {display: flex;align-items: center;}
+  ul {flex: 1;display: flex;flex-direction: column;}
+  ul li {display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;padding: 6px 0 6px 12px;}
+  ul li:first-child {color: #99A1A6;font-family: Lato-Bold;border-radius: 4px;border: 0;height: 36px;padding: 0 0 0 12px;
+    font-size: 13px;background:#f7fbfa;}
+  ul li span:first-child {width: 38%;}
+  ul li span:nth-child(2) {width: 25%;}
+  ul li span:nth-child(3) {width: 23%;}
+  ul li span:nth-child(4) {width: 14%;cursor: pointer;}
+  
+  .list-none {flex: 1;display: flex;align-items: center;justify-content: center;}
+  .list-none section {width: 138px;text-align: center;}
+  .list-none section p {color: #99A1A6;font-size: 14px;padding-top: 16px;}
+
+  .look-details {width:94px!important;height:32px;background:#f7fbfa;border-radius:4px;color: #29D893;font-size: 12px;
+    text-align: center;line-height: 32px;cursor: pointer;display: block;}
 </style>
