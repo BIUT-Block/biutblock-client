@@ -273,7 +273,7 @@ export default {
           this.translucentText = 'Copy success'
           setTimeout(() => {
             this.translucentShow = false
-       }, 3000)
+          }, 3000)
       })
       clipboard.on('error', e => {
           this.translucentText = 'Copy the failure'

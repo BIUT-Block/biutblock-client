@@ -18,8 +18,10 @@
           <input
             type="text"
             placeholder="10.0"
+            maxlength="16"
             v-model="firstBeginIpt"
-          />
+            @input="clearFirstAmount"
+            onpaste="return false" />
           <section>
             <img src="../../../assets/images/clearAddress.png" v-show="clearImg" alt="" @click="clearFirstIpt"/>
             <span>BIUT</span>
@@ -36,17 +38,22 @@
             <p class="first-dig-txt">Invitation Code <span class="color-red">*</span></p>
             <p class="color-red" v-show="codeError">Invitation code does not exist or is wrong</p>
           </section>
-          <section class="ipt-list flexBetween">
+          <section class="ipt-list flexBetween" :class="codeError ? 'border-red' : ''">
             <input
               type="text"
               placeholder="Please enter the invitation code"
               v-model="confirmBeginIpt"
-            />
+              maxlength="8"
+              @input="clearConfirmCode" />
             <img src="../../../assets/images/clearAddress.png" v-show="clearConfirmImg" alt="" @click="clearConfirmIpt"/>
           </section>
         </section>
         
-        <button type="button" @click="confirmFrom" class="confrimBtn">{{ firstBeginBtn }}</button>
+        <button type="button" 
+          class="confrimBtn" 
+          :class="firstBtn ? 'passCorrect' : ''"
+          :disabled="!firstBtn"
+          @click="confirmFrom">{{ firstBeginBtn }}</button>
       </section>
 
       <!-- 不是首次开启挖矿 -->
@@ -83,7 +90,9 @@
             type="text"
             placeholder="10.0"
             v-model="beginIpt"
-          />
+            maxlength="16"
+            @input="clearBeginAmount"
+            onpaste="return false" />
           <section>
             <img src="../../../assets/images/clearAddress.png" v-show="clearBeginImg" alt="" @click="clearBeginIpt"/>
             <span>BIUT</span>
@@ -99,24 +108,34 @@
             <p class="first-dig-txt">Invitation Code <span class="color-red">*</span></p>
             <p class="color-red" v-show="codeError2">Invitation code does not exist or is wrong</p>
           </section>
-          <section class="ipt-list flexBetween">
+          <section class="ipt-list flexBetween" :class="codeError2 ? 'border-red' : ''">
             <input
               type="text"
               placeholder="Please enter the invitation code"
               v-model="beginCodeIpt"
-            />
+              maxlength="8"
+              @input="clearBeginCode" />
             <img src="../../../assets/images/clearAddress.png" v-show="clearBeginConfirmImg" alt="" @click="clearBeginConfirmIpt"/>
           </section>
         </section>
 
-        <button type="button" class="confrimBtn" @click="confirmBeginFrom">{{ firstBeginBtn }}</button>
+        <button type="button" 
+          class="confrimBtn"
+          :class="beginBtn ? 'passCorrect' : ''"
+          :disabled="!beginBtn"
+          @click="confirmBeginFrom">{{ firstBeginBtn }}</button>
       </section>
 
       <!-- 断网 -->
       <section v-show="pages == 2">
-        <p>{{ networkErrorText }}</p>
-          <button type="button" class="continue" @click="onContinue">Continue</button>
+        <section class="network-list">
+          <img src="../../../assets/images/errorImg.png" alt="">
+          <span>{{ networkErrorText }}</span>
+        </section>
+        <section class="network-btn">
           <button type="button" class="exit"  @click="onAppExit">Exit</button>
+          <button type="button" class="continue" @click="onContinue">Continue</button>
+        </section>
       </section>
 
     </section>
@@ -132,8 +151,8 @@ export default {
     pages: Number,
     networkErrorText: String,
     selectedWalletAddress: String,
-    availableMoney: String,
-    freezeMoney: String,
+    availableMoney: Number,
+    freezeMoney: Number,
   },
   data() {
     return {
@@ -157,41 +176,77 @@ export default {
       agreements
     }
   },
+  computed: {
+    firstBtn () {
+      let txt = this.firstBeginBtn
+      let ipt1 = this.firstBeginIpt.replace(/\s+/g, "")
+      let ipt2 = this.confirmBeginIpt.replace(/\s+/g, "")
+      if (txt == "Open mining" && ipt1 > 0) {
+        return true
+      } else if (txt == "Start invitation mining" && ipt2.length === 8) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    beginBtn () {
+      let txt = this.firstBeginBtn
+      let ipt1 = this.beginIpt.replace(/\s+/g, "")
+      let ipt2 = this.beginCodeIpt.replace(/\s+/g, "")
+      let pageIdx = this.pageIdx
+      if (txt == "Open mining" && ipt1 > 0 && pageIdx != 1) {
+        return true
+      } else if (txt == "Start invitation mining" && ipt2.length === 8 && pageIdx != 1) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
   methods: {
+    //关闭弹窗
     closeMask () {
       this.$emit('close')
-      this.confrimContent = false
       this.firstBeginBtn = 'Open mining'
+
+      this.confrimContent = false
       this.firstBeginIpt = ''
       this.clearImg = false
       this.confirmBeginIpt = ''
       this.clearConfirmImg = false
 
+      this.confrimBeginContent = false
       this.beginIpt = ''
       this.clearBeginImg = false
       this.beginCodeIpt = ''
       this.clearBeginConfirmImg = false
-      this.confrimBeginContent = false
-
+      
       this.pageIdx = 1
+      this.codeError = false
+      this.codeError2 = false
     },
 
+    //清除第一次挖矿的金额输入框
     clearFirstIpt () {
       this.firstBeginIpt = ''
       this.clearImg = false
     },
 
+    //清除第一次转账确认邀请码输入框
     clearConfirmIpt () {
       this.confirmBeginIpt = ''
       this.clearConfirmImg = false
     },
-
+    
+    //第一次转账转出全部金额
     allAmount () {
      this.firstBeginIpt = this.availableMoney
     },
-
+    
+    //确认提交弹出输入邀请码
     confirmFrom () {
-      this.confrimBeginContent = true
+      this.confrimContent = true
       if (this.firstBeginBtn == 'Open mining') {
         this.$nextTick(()=>{
           this.firstBeginBtn = 'Start invitation mining'
@@ -201,37 +256,55 @@ export default {
       }
     },
 
+    //确认提交挖矿
     submitFrom () {
-      alert('点击了确认挖矿')
-      this.closeMask ()
+      /**
+       * 判断邀请码是否正确 或者 无效
+       * this.codeError = true
+       * this.confirmBeginIpt = ''
+       */
+      if (this.confirmBeginIpt != 12345678) {
+        this.codeError = true
+        this.confirmBeginIpt = ''
+        return
+      } else {
+        this.closeMask ()
+      }
     },
 
+    //断网的方法处理
     onContinue () {
       this.$emit('continue')
     },
 
+    //断网的方法处理
     onAppExit () {
       this.$emit('exit')
     },
 
+    //单选按钮选择
     checkRadio () {
       this.pageIdx = !this.pageIdx
     },
 
+    //清除不是第一次挖矿的金额输入框
     clearBeginIpt () {
       this.beginIpt = ''
       this.clearBeginImg = false
     },
 
+    //清除不是第一次挖矿的邀请码输入框
     clearBeginConfirmIpt () {
       this.beginCodeIpt = ''
       this.clearBeginConfirmImg = false
     },
 
+    //不是首次挖矿转出全部金额
     allBeginAmount () {
       this.beginIpt = this.availableMoney
     },
 
+    //不是首次挖矿确认输入邀请码
     confirmBeginFrom () {
       this.confrimBeginContent = true
       if (this.firstBeginBtn == 'Open mining') {
@@ -243,10 +316,64 @@ export default {
       }
     },
 
+    //不是首次挖矿的确认挖矿方法
     submitBeginFrom () {
-      alert('点击了确认挖矿')
-      this.closeMask ()
+      /**
+       * 判断邀请码是否正确 或者 无效
+       * this.codeError2 = true
+       * this.beginIpt = ''
+       */
+      if (this.beginCodeIpt != 12345678) {
+        this.codeError2 = true
+        this.beginCodeIpt = ''
+        return
+      } else {
+        this.closeMask ()
+      }
     },
+
+    //挖矿只能输入金额
+    clearFirstAmount () {
+      if (this.firstBeginIpt.length > 7 && this.firstBeginIpt.indexOf(".") < 0) {
+        this.firstBeginIpt = String(this.firstBeginIpt).substring(0,7)
+      } else if (this.firstBeginIpt.indexOf(".") == 0) {
+        this.firstBeginIpt = String(this.firstBeginIpt).substring(0,9)
+      } else {
+        this.firstBeginIpt =  this.firstBeginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        this.firstBeginIpt =  this.firstBeginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        this.firstBeginIpt =  this.firstBeginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+        this.firstBeginIpt =  this.firstBeginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      }
+    },
+
+    //挖矿只能输入金额
+    clearBeginAmount () {
+      if (this.beginIpt.length > 7 && this.beginIpt.indexOf(".") < 0) {
+        //只能输入7位整数
+        this.beginIpt = String(this.beginIpt).substring(0,7)
+      } else if (this.beginIpt.indexOf(".") == 0) {
+        this.beginIpt = String(this.beginIpt).substring(0,9)
+      } else {
+        this.beginIpt =  this.beginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        this.beginIpt =  this.beginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        this.beginIpt =  this.beginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+        this.beginIpt =  this.beginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      }
+    },
+
+    //不是首次挖矿的邀请码不能输入空格中文
+    clearBeginCode () {
+      this.$nextTick(()=> {
+        this.beginCodeIpt = this.inputNull(this.beginCodeIpt)
+      })
+    },
+
+    //首次挖矿的邀请码不能输入空格中文
+    clearConfirmCode () {
+      this.$nextTick(()=> {
+        this.confirmBeginIpt = this.inputNull(this.confirmBeginIpt)
+      })
+    }
   },
   watch: {
     firstBeginIpt(newIpt, oldIpt) {
@@ -258,7 +385,9 @@ export default {
     },
 
     confirmBeginIpt (confirmNew, confirmOld) {
-      if (confirmNew.length > 0) {
+      if (confirmNew.length == 8) {
+        this.codeError = false
+      } else if ( confirmNew.length > 0) {
         this.clearConfirmImg = true
       } else {
         this.clearConfirmImg = false
@@ -274,7 +403,9 @@ export default {
     },
 
     beginCodeIpt (codeNew, codeOld) {
-      if (codeNew.length > 0) {
+      if (codeNew.length == 8) {
+        this.codeError2 = false
+      } else if (codeNew.length > 0) {
         this.clearBeginConfirmImg = true
       } else {
         this.clearBeginConfirmImg = false
@@ -286,7 +417,7 @@ export default {
 
 <style scoped>
   .dig-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;width: 372px;padding: 30px 32px 32px;}
-  h2 {margin: 0;}
+  h2 {margin: 0;font-family: Montserrat-SemiBold;color: #252F33;font-size: 24px;}
   .color-red {color: #EE1C39;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
   
@@ -297,16 +428,16 @@ export default {
   .ipt-list input {flex: 1;border: 0;}
   .ipt-list section {display: flex;align-items: center;}
   .ipt-list img,.ipt-list section span {margin-left: 8px;cursor: pointer;}
-  .first-dig-txt {padding-top: 36px;font-size: 16px;}
-  .first-dig-txt-all {padding: 8px 0 12px;}
+  .first-dig-txt {padding-top: 36px;font-size: 16px;font-family: Lato-Bold;color: #99A1A6;}
+  .first-dig-txt-all {padding: 8px 0 12px;font-size: 12px;}
   .first-dig-txt-all span {color: #29D893;padding-left: 8px;cursor: pointer;}
   .first-dig-txt-tips {line-height: 1.2;padding-bottom: 28px;}
   
   .first-dig .flexBetween .first-dig-txt {padding: 0;}
   .confrim-content {padding: 8px 0 38px;}
 
-  .begin-dig-txt {font-size: 14px;color: #99A1A6;padding: 32px 0 2px;line-height: 1.2;}
-  .begin-dig-txt span {color: #252F33;}
+  .begin-dig-txt {font-size: 14px;color: #99A1A6;padding: 32px 0 2px;line-height: 1.5;}
+  .begin-dig-txt span {color: #252F33;font-family: Lato-Medium;}
   .begin-dig .first-dig-txt {padding-top: 0;}
 
   .tips-list {padding: 24px 0 16px;}
@@ -316,13 +447,18 @@ export default {
   .tips-list p img {display: flex;align-items: center;width: 16px;height: 16px;margin-right: 12px;cursor: pointer;}
   .tips-list p label {width: 28px;}
 
-  .confrimBtn {width:372px;height:48px;background:linear-gradient(90deg,#16d88b 0%,#0cbccc 100%);
-    border-radius:4px;color: #F7FBFA;font-size: 14px;border: 0;}
+  .confrimBtn {width:372px;height:48px;background:#D8D8D8;border-radius:4px;color: #F7FBFA;font-size: 14px;border: 0;
+    font-family: Lato-Regular;}
 
-  .exit {background:linear-gradient(90deg,#ee1c39 0%,#d91949 100%);}
-  .continue {background:linear-gradient(90deg,#29d893 0%,#29d893 100%);}
+  .network-list {display: flex;align-items: center;color: #576066;font-size: 14px;}
+  .network-list img {margin-right: 10px;}
+  .network-btn {display: flex;align-items: center;justify-content: flex-end;padding-top: 55px;}
+  .network-btn button {width:96px;height:32px;border-radius:4px;font-size: 14px;}
+  .exit {border:1px solid #e6e6e6;color: #EE1C39;background: #fff;}
+  .continue {background:linear-gradient(90deg,#29d893 0%,#0cc5b7 100%);color: #fff;border: 0;margin-left: 8px;}
 
   .border-bottom {border-bottom:1px solid #e6e6e6;height: 40px;}
+  .border-bottom span:first-child {font-family: Lato-Bold;color: #99A1A6;}
   .begin-padding {padding-bottom: 32px;}
   .confrim-content {margin: -12px 0 24px;padding: 0;}
 </style>

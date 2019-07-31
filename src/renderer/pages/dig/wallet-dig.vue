@@ -7,7 +7,7 @@
           <h3>Mining Family</h3>
           <section class="exclamation-list">
             <span>Mining Wallet</span>
-            <img src="../../assets/images/exclamationImg.png" alt="">
+            <img src="../../assets/images/exclamationImg.png" alt="" @mousemove="tipsShow=true" @mouseout="tipsShow=false" />
           </section>
 
           <section class="button-list">
@@ -18,17 +18,21 @@
             </ul>
             <wallet-button type="button" 
                 :text="digButton"
-                :disabled="disabledButton"
-                :class="[miningIn ? 'miningIn' : '', 
-                  checkedWallet ? 'passCorrect' : '', 
-                  disabledButton ? 'noCursor' : '']"
+                :disabled="!checkedWallet"
+                :class="[miningIn ? 'miningIn' : '', checkedWallet ? 'passCorrect' : '']"
                 @click.native="beginDigMask"/>
           </section>
           <h4 class="available-text">Available：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <h4 class="guarantee-text">Guarantee：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
-          <!-- <section class="dig-tips">
-            <label>Description:</label>首次开启挖矿时，钱包金额需有10个以上的BIUT余额
-          </section> -->
+          
+          <transition name="fade">
+            <section class="dig-tips" v-show="tipsShow">
+              <p class="dig-tips-txt">
+                Note：Inviting mining, the wallet amount must be  more than 10,000 BIUT balances.
+              </p>
+            </section>
+          </transition>
+
         </section>
 
         <section class="dig-header-list">
@@ -133,7 +137,7 @@ import walletMargin from '../../components/wallet-margin'
 
 import Clipboard from 'clipboard'
 import WalletsHandler from '../../lib/WalletsHandler'
-import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers'
+import { setInterval, clearInterval } from 'timers'
 import { ipcRenderer } from 'electron'
 import { constants } from 'fs';
 import WalletHandler from '../../lib/WalletsHandler';
@@ -158,15 +162,15 @@ export default {
       digNumber: 0,
       digIncome: '0',
       //checkWallet: false,
-      checkedWallet: true,
+      checkedWallet: false,
       wallets: [],
       selectedPrivateKey: '',
       selectedWallet: '',
       selectedWalletName: '',
       selectedWalletAddress: '',
       miningIn: false, //挖矿中改变按钮样式
-      noCursor: false, //默认可以选择钱包
-      disabledButton: false,//默认不可点击
+      //noCursor: false, //默认可以选择钱包
+      //disabledButton: false,//默认不可点击
       //digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
       isSynced: false,
       chainHeight: '0',
@@ -179,6 +183,7 @@ export default {
       checkNodeJob: '',
       processTexts: ['Enter the mining page, and wait for mining.'],
       moreList: [],
+      tipsShow: false,
       
       maskShow: false,
       maskText: '',
@@ -193,11 +198,11 @@ export default {
       networkErrorText: 'No connection to network. Continue or exit?',
       networkCheckJob: '',
 
-      makePages: 1,//默认是首次开启挖矿 0 - 首次挖矿 1  - 不是首次挖矿  2 - 断网
+      makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网
       digBalance: 0, //挖矿余额
       availableMoney: 1000001, //biut的可用金额
       freezeMoney: 1000, //biut冻结金额
-      invitationCode: 12345,//我的邀请码
+      invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
       itemList: [
         {
@@ -231,8 +236,8 @@ export default {
         this.stopMining()
         this.digButton = "Open mining"
         this.maskShow = false
-        this.checkedWallet = true
-        this.noCursor = false
+        this.checkedWallet = false
+        //this.noCursor = false
         this.miningIn = false
       }
     })
@@ -259,20 +264,18 @@ export default {
     copyCode() {
       var clipboard = new Clipboard('.copyButton')
       this.translucentShow = true
-      this.translucentText = 'Copy success'
       clipboard.on('success', e => {
-          clipboard.destroy()
-          this.translucentText = 'Copy success'
-          setTimeout(() => {
-            this.translucentShow = false
-       }, 3000)
-      })
-      clipboard.on('error', e => {
-        this.translucentText = 'Copy  fail'
-        this.translucentText = 'Copy the failure'
+        clipboard.destroy()
+        this.translucentText = 'Copy success'
         setTimeout(() => {
           this.translucentShow = false
         }, 3000)
+      })
+      clipboard.on('error', e => {
+        this.translucentText = 'Copy  fail'
+        setTimeout(() => {
+          this.translucentShow = false
+        }, 3)
         clipboard.destroy()
       })
     },
@@ -307,7 +310,7 @@ export default {
         this.processTexts = JSON.parse(processTexts)
       }
       if (this.miningIn) {
-        this.noCursor = true
+        //this.noCursor = true
       }
       this._startUpdateHistoryJob()
     },
@@ -369,6 +372,11 @@ export default {
     onContinue () {
       this.maskShow = false
       this.makePages = 0
+      this.translucentShow = true
+      this.translucentText = 'Reconnecting'
+      setTimeout(() => {
+        this.translucentShow = false
+      }, 3000)
     },
 
     onAppExit () {
@@ -480,61 +488,51 @@ export default {
 
     //开启挖矿弹窗显示
     beginDigMask () {
+
+      /**
+       * 判断是否是第一次挖矿
+       * 
+       * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网
+       */
       let balance = this.digBalance
-
       this.maskShow = true
-
-      // if (balance < 10 && this.digButton == "Open mining") {
-      //   this.translucentShow = true
-      //   setTimeout(() => {
-      //     this.translucentShow = false
-      //   }, 3000)
-      // } else {
-      //   this.maskShow = true
-      //   //判断是否是首次开启挖矿
-      //   // if (this.digButton == "Open mining") {
-      //   //   this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-      //   // } else {
-      //   //   this.maskText = "Confirm to Stop Mining?"
-      //   // }
-      // }
     },
 
     //开启挖矿
-    beginDig () {
-      let balance = this.digBalance
-      if (this.digButton === "Open mining") {
-        this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-        this.maskShow = true
-      } else {
-        this.digButton = "Stop Mining"
-        this.maskText = "Confirm to Stop Mining?"
-        this.maskShow = true  
-      }
-    },
+    // beginDig () {
+    //   let balance = this.digBalance
+    //   if (this.digButton === "Open mining") {
+    //     this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+    //     this.maskShow = true
+    //   } else {
+    //     this.digButton = "Stop Mining"
+    //     this.maskText = "Confirm to Stop Mining?"
+    //     this.maskShow = true  
+    //   }
+    // },
 
-    _confirm () {
-      alert("开启挖矿")
-      this.maskShow = false
-      // if (this.digButton === "Open mining") {
-      //   if (!WalletsHandler.checkNetworkStatus()) {
-      //     this.processTexts.push('No network connection.')
-      //     return
-      //   }
-      //   this.digButton = "Stop Mining"
-      //   this.moreList = []
-      //   this.startMining()
-      //   this.maskShow = false
-      //   this.checkedWallet = false
-      //   this.noCursor = true
-      // } else {
-      //   this.digButton = "Open mining"
-      //   this.stopMining()
-      //   this.maskShow = false
-      //   this.checkedWallet = true
-      //   this.noCursor = false
-      // }
-    },
+    // _confirm () {
+    //   alert("开启挖矿")
+    //   this.maskShow = false
+    //   // if (this.digButton === "Open mining") {
+    //   //   if (!WalletsHandler.checkNetworkStatus()) {
+    //   //     this.processTexts.push('No network connection.')
+    //   //     return
+    //   //   }
+    //   //   this.digButton = "Stop Mining"
+    //   //   this.moreList = []
+    //   //   this.startMining()
+    //   //   this.maskShow = false
+    //   //   this.checkedWallet = false
+    //   //   this.noCursor = true
+    //   // } else {
+    //   //   this.digButton = "Open mining"
+    //   //   this.stopMining()
+    //   //   this.maskShow = false
+    //   //   this.checkedWallet = true
+    //   //   this.noCursor = false
+    //   // }
+    // },
 
     saveMingingStatus () {
       let status = {
@@ -643,7 +641,7 @@ export default {
   .dig-header {border-top-left-radius: 4px;
     border-top-right-radius: 4px;padding: 20px 32px 16px;display: flex;align-items: center;
     justify-content: space-between;}
-  .dig-header .dig-header-check {width: 308px;}
+  .dig-header .dig-header-check {width: 308px;position: relative;}
   .dig-header .dig-header-check button {width: 98px;height: 32px;font-size: 13px;font-family: Lato-Regular;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
     color:#252f33;padding-top: 22px;}
@@ -663,8 +661,10 @@ export default {
   
   .dig-header .dig-header-check .button-list {display: flex;align-items: center;justify-content: space-between;
     padding-right: 22px;}
-  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;color:#576066;}
-  .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
+  .dig-tips {width: 248px;height: 112px;background: url('../../assets/images/tipsDig.png') center no-repeat;background-size: cover;
+    position: absolute;top: 80px;left: 60px;}
+  .dig-tips .dig-tips-txt {width: 186px;padding: 21px 31px 0;margin: 0!important;color:#D8E1E6!important;font-size: 12px!important;
+    line-height: 1.5;font-family: Lato-Regular!important;}
   
   .dig-header .dig-header-list {flex: 1;height: 132px;background:#f7f7f7;border-radius: 4px;
     overflow: auto;color: #252F33;padding: 16px 14px;}
@@ -689,9 +689,6 @@ export default {
 
   .miningIn {background:linear-gradient(90deg,#ee1c39 0%,#d91949 100%)!important;}
 
-  
-  .noCursor {cursor: no-drop;}
-
   .checkColor {color: #29D893!important;border-bottom:2px solid #29d893;}
 
   .tab-list {border-bottom:1px solid #e6e6e6;box-sizing: border-box;height: 56px;}
@@ -700,4 +697,11 @@ export default {
   .tab-list section p {font-size: 14px;color: #99A1A6;}
   .tab-list section p span {color: #252F33;font-family: Lato-Medium;}
   .tab-list section img {cursor: pointer;margin-left: 10px;}
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
 </style>
