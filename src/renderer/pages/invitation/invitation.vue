@@ -1,7 +1,9 @@
 <template>
   <main class="invitation-content">
     <main class="content">
-      <invitation-header 
+      <invitation-header
+        :level="userLevel"
+        :progress="userprogress"
         @rules = "rules"/>
 
       <invitation-list 
@@ -34,9 +36,12 @@ export default {
     return {
       maskShow: false,
       idx: 1,
-      maskMoney: "100",
-      maskLevel: '二级',
-      maskAddress: '0xc4be3c8093fd7acdcdf415331040fc974f8b2ad5'
+      userLevel: 1, //invitation-header  里面需要的参数判断显示 1 - Bronze partner  2 - Silver partner 3 - Gold partner  4 - Super partner
+      userprogress: 2, //进度条升级
+
+      maskMoney: "-",
+      maskLevel: '-',
+      maskAddress: '-'
     }
   },
   computed: {
@@ -50,10 +55,14 @@ export default {
   },
   destroyed () {},
   methods: {
-    //查看详情
+    //查看详情 idx 参数 从子组件获取
     details (idx) {
       this.maskShow = true
       this.idx = 2
+
+      this.maskMoney = 1000
+      this.maskLevel = "level" + 2
+      this.maskAddress = "0xc4be3c8093fd7acdcdf415331040fc974f8b2ad5"
     },
 
     //查看规则

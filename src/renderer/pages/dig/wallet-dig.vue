@@ -1,5 +1,5 @@
 <template>
-  <main @click="closeWalletList" class="wallet-dig-container">
+  <main class="wallet-dig-container">
     <section class="dig-container">
       <!-- 挖矿头部 -->
       <section class="dig-header">
@@ -83,7 +83,10 @@
 
         <!-- 矿池 -->
         <section class="ore-pool" v-show="pageIdx == 3">
-          <ore-pool :pages="orePoolPage" />
+          <ore-pool 
+            :pages="orePoolPage"
+            :availableMoney="availableMoney"
+            :freezeMoney="freezeMoney" />
         </section>
 
       </section>
@@ -154,7 +157,7 @@ export default {
       digButton: "Open mining",
       digNumber: 0,
       digIncome: '0',
-      checkWallet: false,
+      //checkWallet: false,
       checkedWallet: true,
       wallets: [],
       selectedPrivateKey: '',
@@ -164,7 +167,7 @@ export default {
       miningIn: false, //挖矿中改变按钮样式
       noCursor: false, //默认可以选择钱包
       disabledButton: false,//默认不可点击
-      digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
+      //digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
       isSynced: false,
       chainHeight: '0',
       minedByAddress: '',
@@ -177,24 +180,24 @@ export default {
       processTexts: ['Enter the mining page, and wait for mining.'],
       moreList: [],
       
-      maskShow: true,
+      maskShow: false,
       maskText: '',
-      makePages: 1,//默认是首次开启挖矿 0 - 首次挖矿 1  - 不是首次挖矿  2 - 断网
+      
       mineStatusText: 'Please stop mining before changing wallet',
       // mineStatusError: false,
       bAlreadyShowed: false,
-      digBalance: 0, //挖矿余额
-      availableMoney: 1000, //biut的可用金额
-      freezeMoney: 1000, //biut冻结金额
-
-      invitationCode: 12345,//我的邀请码
+      
       translucentShow: false,
       navigatorPost: false,// 监听网络请求
       translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
       networkErrorText: 'No connection to network. Continue or exit?',
       networkCheckJob: '',
 
-
+      makePages: 1,//默认是首次开启挖矿 0 - 首次挖矿 1  - 不是首次挖矿  2 - 断网
+      digBalance: 0, //挖矿余额
+      availableMoney: 1000001, //biut的可用金额
+      freezeMoney: 1000, //biut冻结金额
+      invitationCode: 12345,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
       itemList: [
         {
@@ -204,8 +207,7 @@ export default {
           unlockTime: '2019-07-19 23:28   +8'
         }
       ],//锁仓记录
-      
-      orePoolPage: 4,//矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
+      orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
     }
   },
   computed: {
@@ -311,23 +313,23 @@ export default {
     },
 
     //点击其他的地方关闭钱包选择
-    closeWalletList (event) {
-      let menuList = this.$refs.walletListImg
-      if (menuList && !menuList.contains(event.target) && this.checkWallet) {
-        this.checkWallet = false;
-      }
-    },
+    // closeWalletList (event) {
+    //   let menuList = this.$refs.walletListImg
+    //   if (menuList && !menuList.contains(event.target) && this.checkWallet) {
+    //     this.checkWallet = false;
+    //   }
+    // },
 
     //选择挖矿钱包
-    downCheckWallet () {
-      if (this.digButton == "Open mining" && this.checkWallet) {
-        this.checkWallet = !this.checkWallet
-      } else if (this.digButton == "Open mining") {
-        this.checkWallet = true
-      } else {
-        this.checkWallet = false
-      }
-    },
+    // downCheckWallet () {
+    //   if (this.digButton == "Open mining" && this.checkWallet) {
+    //     this.checkWallet = !this.checkWallet
+    //   } else if (this.digButton == "Open mining") {
+    //     this.checkWallet = true
+    //   } else {
+    //     this.checkWallet = false
+    //   }
+    // },
 
     _setButton () {
       if (this.miningIn) {
@@ -490,8 +492,6 @@ export default {
       // } else {
       //   this.maskShow = true
       //   //判断是否是首次开启挖矿
-
-
       //   // if (this.digButton == "Open mining") {
       //   //   this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
       //   // } else {
@@ -644,14 +644,15 @@ export default {
     border-top-right-radius: 4px;padding: 20px 32px 16px;display: flex;align-items: center;
     justify-content: space-between;}
   .dig-header .dig-header-check {width: 308px;}
-  .dig-header .dig-header-check button {width: 98px;height: 32px;font-size: 13px;}
+  .dig-header .dig-header-check button {width: 98px;height: 32px;font-size: 13px;font-family: Lato-Regular;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
-    color:rgba(37,47,51,1);padding-top: 22px;}
-  .available-text,.guarantee-text {margin: 0;color:#576066;font-size: 12px;font-weight: normal;}
+    color:#252f33;padding-top: 22px;}
+  .available-text,.guarantee-text {margin: 0;color:#576066;font-weight: normal;}
+  .available-text span,.guarantee-text span {font-family: Lato-Medium;}
   .available-text {color: #29D893;padding-top: 10px;}
   .guarantee-text {padding-top: 6px;}
 
-  .exclamation-list {display: flex;align-items: center;padding: 22px 0 12px;}
+  .exclamation-list {display: flex;align-items: center;padding: 22px 0 12px;font-family: Lato-Medium;color: #99A1A6;}
   .exclamation-list img {margin-left: 10px;cursor: pointer;}
 
   .dig-header .dig-header-check h4 span {font-family: Lato-Medium;}
@@ -665,7 +666,7 @@ export default {
   .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;color:#576066;}
   .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
   
-  .dig-header .dig-header-list {flex: 1;height: 132px;background:rgba(247,247,247,1);border-radius: 4px;
+  .dig-header .dig-header-list {flex: 1;height: 132px;background:#f7f7f7;border-radius: 4px;
     overflow: auto;color: #252F33;padding: 16px 14px;}
   .dig-header .dig-header-list ul {list-style: disc;}
   .dig-header .dig-header-list ul li {padding-top: 5px;line-height: 1.5;}
@@ -691,13 +692,12 @@ export default {
   
   .noCursor {cursor: no-drop;}
 
-  
   .checkColor {color: #29D893!important;border-bottom:2px solid #29d893;}
 
   .tab-list {border-bottom:1px solid #e6e6e6;box-sizing: border-box;height: 56px;}
   .tab-list,.tab-list section {display: flex;align-items: center;justify-content: space-between;}
   .tab-list section {padding-right: 32px;}
   .tab-list section p {font-size: 14px;color: #99A1A6;}
-  .tab-list section p span {color: #252F33;}
+  .tab-list section p span {color: #252F33;font-family: Lato-Medium;}
   .tab-list section img {cursor: pointer;margin-left: 10px;}
 </style>

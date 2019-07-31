@@ -42,7 +42,6 @@
         </p>
       </section>
 
-      
       <ul>
         <li>
           <span>Time</span>
@@ -134,18 +133,22 @@ export default {
     }
   },
   methods: {
+    //关闭弹窗
     cloasMask () {
       this.$emit('close')
     },
 
-    nexPage () {
+    //下一页
+    nextPage () {
       alert("下一页")
     },
 
+    //上一页
     prevPage () {
       alert("上一页")
     },
 
+    //失去焦点跳转到指定的页面
     goPage (e) {
       alert("失去焦点跳转页面" + e)
     }
@@ -155,14 +158,14 @@ export default {
 
 <style scoped>
   .public-title {display: flex;align-items: center;justify-content: space-between;position: relative;}
-  .public-title h2 {margin: 0;font-size: 24px;color: #252F33;padding: 30px 0 28px;}
+  .public-title h2 {margin: 0;font-size: 24px;color: #252F33;padding: 30px 0 28px;font-family: Montserrat-SemiBold;}
   .public-title img {cursor: pointer;position: absolute;right: -16px;top: 16px;}
 
   .rules-content {width: 332px;background: #fff;padding: 0 32px 36px;border-radius: 4px;}
   .rules-content p {padding-bottom: 14px;color: #99A1A6;font-size: 14px;}
   .rules-content ul li {display: flex;align-items: center;border-bottom:1px solid #e6e6e6;height: 42px;
     color: #252F33;font-size: 13px;}
-  .rules-content ul li:first-child {color: #99A1A6;background:#f7fbfa;border: 0;}
+  .rules-content ul li:first-child {color: #99A1A6;background:#f7fbfa;border: 0;font-family: Lato-Medium;}
   .rules-content ul li span:nth-child(2) {margin: 0 49px 0 20px;width: 100px;}
   .rules-content ul li span:last-child {width: 95px;text-align: center;}
   .rules-content ul li:first-child span:nth-child(2) {margin: 0 93px 0 44px;}
@@ -172,8 +175,8 @@ export default {
   .details-content {width: 492px;background: #fff;padding: 0 32px 0;border-radius: 4px;}
   .details-content h2 {padding: 30px 0 36px;}
   .details-content ul {margin-top: 30px;}
-  .details-content ul li {display: flex;align-items: center;padding: 15px 0 15px 20px;color: #252F33;font-size: 14px;
-    border-bottom: 1px solid #E6E6E6;}
+  .details-content ul li {display: flex;align-items: center;padding-left: 20px;color: #252F33;font-size: 14px;height: 42px;
+    box-sizing: border-box;border-bottom: 1px solid #E6E6E6;font-family: Lato-Medium;}
   .details-content ul li:first-child {height:42px;background:#f7fbfa;padding: 0 0 0 20px;color: #99A1A6;border: 0;}
   .details-content ul li span:first-child {margin-right: 108px;}
   .details-content ul li:first-child span:first-child {margin-right: 192px;}
@@ -181,9 +184,9 @@ export default {
 
   .details-list {font-size: 14px;color: #252F33;}
   .details-list-top {padding-top: 16px;}
-  .details-list-tit {color: #99A1A6;padding-bottom: 6px;}
+  .details-list-tit {color: #99A1A6;padding-bottom: 6px;font-family: Lato-Bold;}
   .details-list-level {width:56px;height:24px;background:#f5a623;border-radius:16px;display: inline-block;margin-left: 12px;
-    text-align: center;line-height: 24px;color: #fff;font-size: 12px;}
+    text-align: center;line-height: 24px;color: #fff;}
 
   .page-container {padding-top: 16px;}
 </style>

@@ -70,7 +70,7 @@ export default {
   .container {overflow: hidden;height: 100%;display: flex;flex-direction: column;}
   .container ul {display: flex;}
   .container .dig-list {padding-top: 26px;height: 32px;}
-  .container ul li {height: 42px;color: #252F33;display: flex;align-items: center;box-sizing: border-box;font-size: 12px;
+  .container ul li {height: 42px;color: #252F33;display: flex;align-items: center;box-sizing: border-box;
     border-bottom:1px solid rgba(229,229,229,1);}
   .container ul li:first-child {padding-left: 18px;}
   .container ul:last-child li {border: 0;}

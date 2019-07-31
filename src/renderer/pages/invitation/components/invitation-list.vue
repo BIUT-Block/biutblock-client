@@ -1,9 +1,9 @@
 <template>
   <main class="list-content">
     <header>
-      <h3>Invited record</h3>
+      <h2>Invited record</h2>
       <section class="ipt-list">
-        <input type="text" placeholder="Enter address to search" v-model='searchIpt'/>
+        <input type="text" placeholder="Enter address to search" v-model='searchIpt' maxlength="42" @input="searchChange"/>
         <section class="img-list">
           <img src="../../../assets/images/clearAddress.png" alt="" v-show="clearBtn" class="clear-img" @click="clearIpt"/>
           <img src="../../../assets/images/search.png" alt="" class="search-img" @click="searchFrom"/>
@@ -83,33 +83,43 @@ export default {
       }
     },
 
+    //搜索框不能输入中文跟空格
+    searchChange () {
+      this.$nextTick(() => {
+        this.searchIpt = this.inputNull(this.searchIpt)
+      })
+    },
+
+    //清空输入框
     clearIpt () {
       this.searchIpt = ''
       this.clearBtn = false
     },
 
-    //查看详情传对应的参数
+    //查看详情传对应的参数 地址、私钥都行
     lookDetails (idx) {
       this.$emit('details', idx)
     },
 
+    //下一页
     nextPage () {
       alert("下一页")
     },
 
+    //上一页
     prevPage () {
       alert("上一页")
     },
 
+    //失去焦点跳转到指定的页面
     goPage (e) {
       alert("失去焦点跳转页面" + e)
     }
   },
   watch: {
     searchIpt (newVal, oldVal) {
-      //监听input 输入的变化
+      //监听input 输入的变化  如果  newVal.length = 0 的时候重新渲染列表
       if (newVal.length > 0) {
-        //重新加载列表
         this.clearBtn = true  
       } else {
         this.clearBtn = false
@@ -123,11 +133,11 @@ export default {
   .list-content {padding: 0 32px;display: flex;flex-direction: column;
     height: calc(100% - 146px);}
   header {display: flex;align-items: center;justify-content: space-between;margin: 20px 0 6px;}
-  h3 {margin: 0;color: #252F33;font-size: 16px;font-family: Lato-Bold;}
+  h2 {margin: 0;color: #252F33;font-size: 16px;font-family: Lato-Bold;}
 
   .ipt-list {width:232px;height:32px;border:1px solid #e6e6e6;border-radius:4px;display: flex;
     align-items: center;justify-content: space-between;padding: 0 15px;}
-  .ipt-list input {flex: 1;border: 0;color: #252F33;}
+  .ipt-list input {flex: 1;border: 0;color: #252F33;font-family: Lato-Regular;}
   .ipt-list .clear-img,.ipt-list .search-img {margin-left: 8px;cursor: pointer;}
 
   .img-list {display: flex;align-items: center;}
@@ -144,6 +154,6 @@ export default {
   .list-none section {width: 138px;text-align: center;}
   .list-none section p {color: #99A1A6;font-size: 14px;padding-top: 16px;}
 
-  .look-details {width:94px!important;height:32px;background:#f7fbfa;border-radius:4px;color: #29D893;font-size: 12px;
+  .look-details {width:94px!important;height:32px;background:#f7fbfa;border-radius:4px;color: #29D893;
     text-align: center;line-height: 32px;cursor: pointer;display: block;}
 </style>

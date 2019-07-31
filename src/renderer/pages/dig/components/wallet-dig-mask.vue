@@ -172,6 +172,8 @@ export default {
       this.beginCodeIpt = ''
       this.clearBeginConfirmImg = false
       this.confrimBeginContent = false
+
+      this.pageIdx = 1
     },
 
     clearFirstIpt () {
@@ -290,7 +292,7 @@ export default {
   
   .flexBetween {display: flex;align-items: center;justify-content: space-between;}
 
-  .first-dig {color: #99A1A6;font-size: 12px;}
+  .first-dig {color: #99A1A6;}
   .ipt-list {height: 40px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;}
   .ipt-list input {flex: 1;border: 0;}
   .ipt-list section {display: flex;align-items: center;}

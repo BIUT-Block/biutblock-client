@@ -527,12 +527,12 @@ export default {
   .wallet-header-money-list .money-content:last-child {margin-left: 10px;
     background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);
     box-shadow:0px 3px 6px rgba(37,47,51,0.16);}
-  .wallet-header-money-list .money-content span {display: block;font-size: 12px;padding: 12px 0 8px;}
+  .wallet-header-money-list .money-content span {display: block;padding: 12px 0 8px;}
   .wallet-header-money-list .money-content p {font-size: 24px;font-weight: normal;}
   .wallet-header-money-list .money-content img {width: 128px;height: 112px;position: absolute;right: 0;top: 0;}
 
   .money-text-list {display: flex;padding-top: 16px;}
-  .wallet-header-money-list .money-content .money-text-list .money-text {font-size: 12px;display: flex;flex-direction: column;width: 50%;}
+  .wallet-header-money-list .money-content .money-text-list .money-text {display: flex;flex-direction: column;width: 50%;font-size: 12px;}
   .wallet-header-money-list .money-content .money-text-list .money-text span {padding: 3px 0 0 0;}
   .wallet-header-money-list .money-content .money-text-list .money-text span:first-child {padding: 0;}
 

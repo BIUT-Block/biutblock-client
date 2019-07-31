@@ -58,8 +58,7 @@ export default {
   ul {width: 100%;}
   ul li {display: flex;align-items: center;justify-content: space-between;height: 42px;box-sizing: border-box;
     border-bottom: 1px solid #e5e5e5;}
-  ul li:first-child {color: #99A1A6;border-bottom: 2px solid #E6E6E6;box-sizing: border-box;height: 34px;
-    font-size: 12px;}
+  ul li:first-child {color: #99A1A6;border-bottom: 2px solid #E6E6E6;box-sizing: border-box;height: 34px;}
 
   ul li span:first-child {width: 35%;}
   ul li span:nth-child(2) {width: 30%;}

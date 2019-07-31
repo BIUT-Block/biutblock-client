@@ -43,7 +43,7 @@ export default {
   .pages-list {display: flex;align-items: center;justify-content: space-between;padding: 0 0 20px 0;}
   p {color: #99A1A6;font-size: 13px;}
   span {width:86px;height:32px;border:1px solid #e6e6e6;border-radius:4px;display: inline-block;
-    color: #99A1A6;font-size: 12px;text-align: center;line-height: 32px;cursor: pointer;}
+    color: #99A1A6;text-align: center;line-height: 32px;cursor: pointer;}
   span:last-child {margin-left: 8px;}
 
   section {color: #99A1A6;}

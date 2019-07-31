@@ -9,10 +9,12 @@ import 'normalize.css'
 import './assets/css/public.css'
 import './assets/common/font.css'
 
-import { Slider } from 'element-ui'
+
+import { Slider,Progress } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(Slider)
+Vue.use(Progress)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -30,6 +32,7 @@ Vue.prototype.navClose = function () {
   ipc.send('close')
 }
 
+//小数点保留位数
 Vue.prototype.getPointNum = function (num,n) {
   let str = String(num);
   let index = str.indexOf(".");
@@ -45,7 +48,13 @@ Vue.prototype.getBLen = function(str) {
       str += "";  
   }  
   return str.replace(/[^\x00-\xff]/g,"01").length;  
-} 
+}
+
+//input输入框不能输入空格跟中文
+Vue.prototype.inputNull = function (ipt) {
+  let ipts = ipt.replace(/[\u4E00-\u9FA5]/g, '').replace(/\s+/g, '')
+  return ipts
+}
 
 /* eslint-disable no-new */
 new Vue({

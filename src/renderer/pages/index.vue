@@ -11,6 +11,8 @@
       <aside>
         <ul class="wallet-aside-list">
           <li v-for="(item, index) in navList"
+              v-if="item.navShow"
+              :key="index"
               :title="item.title"
               :class="idx == index ? 'active-nav' : ''"
               @click="istab(index, item.routeLink)">
@@ -138,43 +140,7 @@ export default {
   data () {
     return {
       wallets: {},
-      navList: [
-        {
-          id: "01",
-          title: "wallet",
-          imgUrl: wallet,
-          imgUrls: wallets,
-          routeLink: '/index'
-        },
-        {
-          id: "02",
-          title: "node",
-          imgUrl: node,
-          imgUrls: nodes,
-          routeLink: '/walletNode'
-        },
-        {
-          id: "03",
-          title: "mining",
-          imgUrl: dig,
-          imgUrls: digs,
-          routeLink: '/walletDig'
-        },
-        {
-          id: "04",
-          title: "setting",
-          imgUrl: setting,
-          imgUrls: settings,
-          routeLink: ''
-        },
-        {
-          id: "05",
-          title: "invitation",
-          imgUrl: invitation,
-          imgUrls: invitations,
-          routeLink: '/invitation'
-        }
-      ],
+      invitationShow: true,//邀请 侧栏导航 判断是否显示 参考需求文档  方便调试 先true显示
       idx: 0,
       settingList: [
         {
@@ -205,7 +171,50 @@ export default {
     }
   },
   computed: {
-
+    navList () {
+      return [
+        {
+          id: "01",
+          navShow: true,
+          title: "wallet",
+          imgUrl: wallet,
+          imgUrls: wallets,
+          routeLink: '/index'
+        },
+        {
+          id: "02",
+          navShow: true,
+          title: "node",
+          imgUrl: node,
+          imgUrls: nodes,
+          routeLink: '/walletNode'
+        },
+        {
+          id: "03",
+          navShow: true,
+          title: "mining",
+          imgUrl: dig,
+          imgUrls: digs,
+          routeLink: '/walletDig'
+        },
+        {
+          id: "04",
+          navShow: true,
+          title: "setting",
+          imgUrl: setting,
+          imgUrls: settings,
+          routeLink: ''
+        },
+        {
+          id: "05",
+          navShow: this.invitationShow,
+          title: "invitation",
+          imgUrl: invitation,
+          imgUrls: invitations,
+          routeLink: '/invitation'
+        }
+      ]
+    }
   },
   created () {
     this.versionNumber = pkg.version

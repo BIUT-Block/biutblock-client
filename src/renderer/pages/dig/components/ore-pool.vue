@@ -7,8 +7,7 @@
         type="button"
         :class="orePoolTrue ? 'orePoolTrue' : ''"
         :disabled="!orePoolTrue"
-        @click="openPool"
-      >
+        @click="maskShow = true">
         {{ orePoolTxt }}
       </button>
     </section>
@@ -18,7 +17,7 @@
       <img src="../../../assets/images/ongoingImg.png" alt="" />
       <p>
         You have applied for starting the mining pool(
-        <span>Shenma Mine PooL</span>),please wait for 3~5 days.
+        <span>{{ orePoolName }} Mine PooL</span>),please wait for 3~5 days.
       </p>
     </section>
 
@@ -61,6 +60,11 @@
         </li>
       </ul>
     </section>
+
+    <!-- 申请矿池弹窗 -->
+    <pool-mask
+       v-show="maskShow"
+       @close="closeMask"/>
   </main>
 </template>
 
@@ -69,15 +73,22 @@ import applySuccess1 from '../../../assets/images/applySuccess1.png'
 import applySuccess2 from '../../../assets/images/applySuccess2.png'
 import applySuccess3 from '../../../assets/images/applySuccess3.png'
 import applySuccess4 from '../../../assets/images/applySuccess4.png'
+
+import poolMask from './ore-pool-mask'
 export default {
   name: '',
   props: {
-    pages: Number
+    pages: Number,
+    availableMoney: Number,
+    freezeMoney: Number
+  },
+  components: {
+    poolMask
   },
   data() {
     return {
-      orePoolTrue: false, //挖矿是否可开启 默认 false
-      orePoolTxt: 'Unable to open mining pool', //矿池是否可开启的文本内容  如果满足条件 orePoolTrue = true  orePoolTxt = '开启矿池'
+      //orePoolTrue: true, //挖矿是否可开启 默认 false
+      orePoolTxt: 'Unable to open mining pool', //矿池是否可开启的文本内容  如果满足条件 orePoolTrue = true  orePoolTxt = 'Apply for opening a mining pool'
       orePoolApplyMoney: 800,//矿池已经申请金额
       orePoolApplyTime: '2019-07-17 18:29',//矿池申请时间
 
@@ -89,11 +100,22 @@ export default {
       applySuccess1,
       applySuccess2,
       applySuccess3,
-      applySuccess4
-      
+      applySuccess4,
+
+      maskShow: false  
     }
   },
   computed: {
+    orePoolTrue () {
+      if (this.availableMoney > 100000 || this.freezeMoney > 100000) {
+        this.orePoolTxt = 'Apply for opening a mining pool'
+        return true
+      } else {
+        this.orePoolTxt = 'Unable to open mining pool'
+        return false
+      }
+    },
+
     successList () {
       return [
         {
@@ -124,10 +146,12 @@ export default {
     }
   },
   methods: {
-    //开启矿池
-    openPool () {
-      alert("点击了开启矿池")
+    //关闭弹窗
+    closeMask () {
+      this.maskShow = false
     },
+
+    
   },
 }
 </script>
@@ -140,7 +164,7 @@ export default {
   .ore-pool-conditions .orePoolTrue {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
 
   .ore-pool-apply p {padding-top: 32px;width: 410px;text-align: center;color: #99A1A6;font-size: 14px;line-height: 1.5;}
-  .ore-pool-apply p span {color: #252F33;}
+  .ore-pool-apply p span {color: #252F33;font-family: Lato-Medium;}
 
 
   .ore-pool-error {height: 100%;display: flex;justify-content: space-between;align-items: center;flex-direction: column;}
@@ -153,7 +177,7 @@ export default {
 
 
   .ore-pool-success {height: 100%;}
-  .header-success-list {display: flex;align-items: center;justify-content: space-between;font-size: 12px;}
+  .header-success-list {display: flex;align-items: center;justify-content: space-between;}
   .header-success-list p:first-child {color: #252F33;font-size: 13px;}
   .header-success-list p:last-child {color: #99A1A6;}
   
@@ -162,7 +186,7 @@ export default {
     border-right: 1px solid #E6E6E6;height: 112px;}
   .ore-pool-success ul li:last-child {border: 0;}
   .ore-pool-success ul li .pool-tit {padding: 14px 0 12px;font-size: 13px;}
-  .ore-pool-success ul li .pool-txt {font-size: 18px;color: #252F33;}
+  .ore-pool-success ul li .pool-txt {font-size: 18px;color: #252F33;font-family: Lato-Medium;}
 
   .ore-pool-success ul li:first-child .pool-tit {color: #98A9D2;}
   .ore-pool-success ul li:nth-child(2) .pool-tit {color: #0B7FE6;}

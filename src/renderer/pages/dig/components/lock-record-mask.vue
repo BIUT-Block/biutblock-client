@@ -91,4 +91,5 @@ export default {
   ul li:nth-child(odd) {background:#f5f8fa;}
 
   ul li:first-child,ul li:first-child span:nth-child(2) {color: #99A1A6;}
+  ul li:first-child {font-family: Lato-Bold;}
 </style>
