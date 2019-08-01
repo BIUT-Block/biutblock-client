@@ -80,7 +80,8 @@ export default {
   props: {
     pages: Number,
     availableMoney: Number,
-    freezeMoney: Number
+    freezeMoney: Number,
+    walletAddress: String
   },
   components: {
     poolMask

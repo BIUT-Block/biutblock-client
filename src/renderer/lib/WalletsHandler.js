@@ -303,6 +303,11 @@ let WalletHandler = {
     return transferData
   },
 
+  generateContractAddress (walletAddress) {
+    let contractAddress = SECUtil.generateContractAddressString(walletAddress)
+    return contractAddress
+  },
+
   formatDate (date, offset) {
     let timezone = 0
     if (offset / -60 >= 0) {

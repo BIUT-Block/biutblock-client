@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import WalletHandler from '../../../lib/WalletsHandler';
 export default {
   name: '',
   props: {},
@@ -43,7 +44,8 @@ export default {
     return {
       poolName: '',
       clearImg: false,
-      nameError: false
+      nameError: false,
+      walletAddress: ''
     }
   },
   computed: {
@@ -66,6 +68,20 @@ export default {
     },
 
     submitFrom() {
+      let tranfer = {
+        nonce: 1,
+        timestamp: new Date().getTime(),
+        from: this.walletAddress,
+        value: 100000,
+        gasLimit: '0',
+        gasPrice: '0',
+        txFee: '0',
+        inputData: ''
+      }
+      this.$JsonRPCClient.createContractTransaction(this.walletAddress, transfer, (err, response) => {
+        console.log(response)
+      })
+
       alert("点击了提交按钮")
       this.cloasMask()
     },

@@ -404,6 +404,14 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
+        this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
+          this.freezeMoney = 0
+          for (let i = 0; i < history.length; i++) {
+            this.freezeMoney = this.freezeMoney + history.amount
+          }
+          this.freezeMoney = this._checkValueFormat(this.freezeMoney)
+          this.availableMoney = this.walletBalance - this.freezeMoney
+        })
         this.walletBalance = this._checkValueFormat(balanceSEC)
       }, (balanceSEN) => {
         this.walletBalanceSEN = this._checkValueFormat(balanceSEN)

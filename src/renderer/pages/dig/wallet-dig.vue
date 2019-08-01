@@ -90,7 +90,8 @@
           <ore-pool 
             :pages="orePoolPage"
             :availableMoney="availableMoney"
-            :freezeMoney="freezeMoney" />
+            :freezeMoney="freezeMoney"
+            :walletAddress="selectedWallet.walletAddress" />
         </section>
 
       </section>
@@ -180,6 +181,7 @@ export default {
       updateListJob: '',
       getBlockHeightJob: '',
       getSyncStatusJob: '',
+      getTimeLockJob: '',
       checkNodeJob: '',
       processTexts: ['Enter the mining page, and wait for mining.'],
       moreList: [],
@@ -392,8 +394,10 @@ export default {
     _startUpdateHistoryJob () {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
+      this._getTimeLockHistory()
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
+        this._getTimeLockHistory()
       }, 3 * 60 * 1000)
     },
     _startUpdateLastBlockInfoJob () {
@@ -428,6 +432,12 @@ export default {
         this.makePages = 2
         this.networkErrorText = 'No network connection. You can exit the application and check your network'
       }
+    },
+
+    _getTimeLockHistory () {
+      this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectWallet.contractAddress, (history) => {
+          this.itemList = history
+      })
     },
     
     _getWalletMiningHistory () {

@@ -1,7 +1,9 @@
 import jayson from 'jayson/lib/client'
 import WalletsHandler from './WalletsHandler'
 import BufferHandler from './BufferHandler'
+
 const moment = require('moment-timezone')
+const fs = require('fs')
 export default {
   install: function (Vue, options) {
     let externalServerAddress = 'scan.biut.io'
@@ -357,6 +359,57 @@ export default {
           fnCheckPeers(response)
         })
       },
+
+      getTimeLock: function (walletAddress, contractAddress, fnAfterGet) {
+        let history = []
+        this.client.request('sec_getTimeLock', [walletAddress, contractAddress], (err, response) => {
+          if (err) return
+          for (let i = 0; i < response.result.timeLock[contractAddress].length; i++) {
+            let unlockTime = WalletsHandler.formatDate(moment(response.result.timeLock[contractAddress].unlocktime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            let lockTime = WalletsHandler.formatDate(moment(response.result.timeLock[contractAddress].locktime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            history.push({
+              lockTime: lockTime,
+              unlockTime: unlockTime,
+              lockMoney: response.result.timeLock[contractAddress].amount
+            })
+          }
+          fnAfterGet(history)
+        })
+      },
+
+      createContractTransaction: function (walletAddress, transfer, fnAfterCreate) {
+        let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
+        let contractAddress = WalletsHandler.generateContractAddress(walletAddress)
+        let tokenName = `SEC-${contractAddress}`
+        transfer.inputData = sourceCode
+        transfer.to = contractAddress
+        let signedTransfer = WalletsHandler.encryptTransaction(transfer)
+        this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
+          if (err) return
+          fnAfterCreate(response)
+        })
+      },
+
+      sendContractTransaction: function (walletAddress, lockTime, transfer, fnAfterContract) {
+        let sourceCode = `lock( "${walletAddress}", ${transfer.amount}, ${lockTime})`.toString('base64')
+        transfer.inputData = sourceCode
+        let signedTransfer = WalletsHandler.encryptTransaction(transfer)
+        this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
+          if (err) return
+          fnAfterContract(response)
+        })
+      },
+
+      releaseContractLock: function (walletAddress, transfer, fnAfterRelease) {
+        let sourceCode = `releaseLock("${walletAddress}", ${transfer.value})`.toString('base64')
+        transfer.inputData = sourceCode
+        let signedTransfer = WalletsHandler.encryptTransaction(transfer)
+        this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
+          if (err) return
+          fnAfterRelease(response)
+        })
+      },
+
       isTestNetwork: function () {
         if (process.env.netType === 'test') {
           return true
