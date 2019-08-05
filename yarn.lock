@@ -87,10 +87,10 @@
     chai "^4.1.2"
     describe "^1.2.0"
 
-"@biut-block/biutjs-node@^1.0.68":
-  version "1.0.68"
-  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-node/-/biutjs-node-1.0.68.tgz#9b6e5fa4d3e3c6ab4788204983f9f8e5b66c4932"
-  integrity sha512-h1qtAsxH9d5y0KsmKItw9TawoHfJyX04kKD05kp2DbRj26NNpYGPvF28qO7CxFgf1KQqHV3g/X0hNDGISq0skA==
+"@biut-block/biutjs-node@^1.0.82":
+  version "1.0.83"
+  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-node/-/biutjs-node-1.0.83.tgz#0440548e47c99b9fb3d60704576f6e3f9cc1c0ca"
+  integrity sha512-oQgCRZKJlXR34Pdvb61OPTD13eiyUZoPHFOELcsRHRQtNWA/JxJ1/RUYO7/zH8DAhDYwcNeEnBaOcQkBUsp8Ow==
   dependencies:
     "@biut-block/biutjs-blockchain" "^1.0.24"
     "@biut-block/biutjs-datahandler" "^1.0.11"
@@ -99,18 +99,19 @@
     "@biut-block/biutjs-pow" "^1.0.1"
     "@biut-block/biutjs-randomdatagenerator" "^1.0.0"
     "@biut-block/biutjs-transactionpool" "^1.0.10"
-    "@biut-block/biutjs-tx" "^0.1.0"
+    "@biut-block/biutjs-tx" "^1.0.3"
     "@biut-block/biutjs-util" "^1.0.0"
     "@maxmind/geoip2-node" "^0.4.0"
     bignumber.js "^8.1.1"
     chalk "^2.4.2"
     clone-deep "^4.0.1"
+    crypto-js "^3.1.9-1"
     geoip-lite "^1.3.7"
     get-folder-size "^2.0.1"
     jayson "^2.1.2"
     jsonwebtoken "^8.5.1"
     minimist "^1.2.0"
-    mocha "^6.1.4"
+    mocha "^6.2.0"
     moment "^2.24.0"
     public-ip "^2.5.0"
     secp256k1 "3.6.1"
@@ -151,19 +152,19 @@
   dependencies:
     chai "^4.1.2"
 
-"@biut-block/biutjs-tx@^0.1.0":
-  version "0.1.38"
-  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-tx/-/biutjs-tx-0.1.38.tgz#68b41c183947804eb6e0055012b8b0feab17937a"
-  integrity sha512-y7eyBgIGXu2YdM/Nt9LU4SmpclcFYBHyquJaFO4StOMwAwIsf43ky3+795cCgr+v8CA37ic2qXe52ho8TX+5Ig==
+"@biut-block/biutjs-tx@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-tx/-/biutjs-tx-1.0.0.tgz#d1ddc733fe3df06b1ea47e80a30115d80f8ba26e"
+  integrity sha512-jftYcYoYdyLThs2LDhgsISR7caKJj9kwtezAqHzYvNmDjoY46zRl/iI7gCS6q8+2sU9kb09sJjk3l7XAC0F61g==
   dependencies:
     "@biut-block/biutjs-util" "^1.0.0"
     bignumber.js "^8.1.1"
     yargs "^3.15.0"
 
-"@biut-block/biutjs-tx@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-tx/-/biutjs-tx-1.0.0.tgz#d1ddc733fe3df06b1ea47e80a30115d80f8ba26e"
-  integrity sha512-jftYcYoYdyLThs2LDhgsISR7caKJj9kwtezAqHzYvNmDjoY46zRl/iI7gCS6q8+2sU9kb09sJjk3l7XAC0F61g==
+"@biut-block/biutjs-tx@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@biut-block/biutjs-tx/-/biutjs-tx-1.0.3.tgz#bcb72dad950c01fdecb8562e528c43fa64b3fdea"
+  integrity sha512-8IBMBpxWoEleASb83ul2c8By23L/56wSWlihpv4MSwjZePQ2Aw5q3hQOIIfv0KO9/g46JOlnVYgxOCySLiNBeg==
   dependencies:
     "@biut-block/biutjs-util" "^1.0.0"
     bignumber.js "^8.1.1"
@@ -3775,10 +3776,10 @@ electron@^1.8.8:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
 
-element-ui@^2.10.0:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.10.1.tgz#1011016e50e76f5dae6fbf9c86e53b6e53fcb9eb"
-  integrity sha512-V3WMDoVd1rOT+UI4xasvS8hmUkmc0ezXRuLzlTznBD0bN6jXAiGOeCtmYjj8GFN3lpGNeKyQ/8LCAFuAbxaEww==
+element-ui@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.11.1.tgz#2b67f9eee3eda2e6884873c1c589cbe30d9a9d60"
+  integrity sha512-PACNMHPWqm+/Wc2f/q93pLNzbNyVbpMCXCrYe81czengSWj7IBku7F3zccybkxtWn5qdCmMDBCpG5BzGJL4rKA==
   dependencies:
     async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
@@ -7398,10 +7399,10 @@ mocha@^5.2.0:
     mkdirp "0.5.1"
     supports-color "5.4.0"
 
-mocha@^6.1.4:
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-6.1.4.tgz#e35fada242d5434a7e163d555c705f6875951640"
-  integrity sha512-PN8CIy4RXsIoxoFJzS4QNnCH4psUCPWc4/rPrst/ecSJJbLBkubMiyGCP2Kj/9YnWbotFqAoeXyXMucj7gwCFg==
+mocha@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-6.2.0.tgz#f896b642843445d1bb8bca60eabd9206b8916e56"
+  integrity sha512-qwfFgY+7EKAAUAdv7VYMZQknI7YJSGesxHyhn6qD52DV8UcSZs5XwCifcZGMVIE4a5fbmhvbotxC0DLQ0oKohQ==
   dependencies:
     ansi-colors "3.2.3"
     browser-stdout "1.3.1"
@@ -7427,10 +7428,10 @@ mocha@^6.1.4:
     yargs-parser "13.0.0"
     yargs-unparser "1.5.0"
 
-moment-timezone@^0.5.25:
-  version "0.5.25"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.25.tgz#a11bfa2f74e088327f2cd4c08b3e7bdf55957810"
-  integrity sha512-DgEaTyN/z0HFaVcVbSyVCUU6HeFdnNC3vE4c9cgu2dgMTvjBUBdBzWfasTBmAW45u5OIMeCJtU8yNjM22DHucw==
+moment-timezone@^0.5.26:
+  version "0.5.26"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.26.tgz#c0267ca09ae84631aa3dc33f65bedbe6e8e0d772"
+  integrity sha512-sFP4cgEKTCymBBKgoxZjYzlSovC20Y6J7y3nanDc5RoBIXKlZhoYwBoZGe3flwU6A372AcRwScH8KiwV6zjy1g==
   dependencies:
     moment ">= 2.9.0"
 
@@ -8414,7 +8415,16 @@ pluralize@^7.0.0:
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
   integrity sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==
 
-portfinder@^1.0.20, portfinder@^1.0.9:
+portfinder@^1.0.21:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.21.tgz#60e1397b95ac170749db70034ece306b9a27e324"
+  integrity sha512-ESabpDCzmBS3ekHbmpAIiESq3udRsCBGiBZLsC+HgBKv2ezb0R4oG+7RnYEVZ/ZCfhel5Tx3UzdNWA0Lox2QCA==
+  dependencies:
+    async "^1.5.2"
+    debug "^2.2.0"
+    mkdirp "0.5.x"
+
+portfinder@^1.0.9:
   version "1.0.20"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.20.tgz#bea68632e54b2e13ab7b0c4775e9b41bf270e44a"
   integrity sha512-Yxe4mTyDzTd59PZJY4ojZR8F+E5e97iq2ZOHPz3HDgSvYC5siNad2tLooQ5y5QHyQhc3xVqvyk/eNA3wuoa7Sw==

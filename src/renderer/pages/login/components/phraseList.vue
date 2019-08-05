@@ -36,6 +36,6 @@ export default {
 
 <style scoped>
    ul {display: flex;flex-wrap: wrap;}
-   ul li {padding: 8px 6px;margin-right: 4px;background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
-    margin-top: 10px;}
+   ul li {padding: 0 6px;margin-right: 4px;background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
+    margin-top: 10px;height: 24px;line-height: 24px;}
 </style>
