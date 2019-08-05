@@ -527,7 +527,8 @@ export default {
             this.privateKeyError = true
           } else {
             window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+            this._getContractAddress(wallets)
+            //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         })
       } else if (walletIdx == 1) {
@@ -541,7 +542,8 @@ export default {
             this.walletnNewPassError = true
           } else {
             window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+            this._getContractAddress(wallets)
+            //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         }) 
       } else {
@@ -564,10 +566,18 @@ export default {
                 selectedPrivateKey: selectedPrivateKey
               }
               window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
-              this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
+              this._getContractAddress(wallets)
+              //this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
             }
         })
       }
+    },
+
+    _getContractAddress (wallet) {
+      this.$JsonRPCClient.getCreatorContract(wallet.walletAddress, (contractAddress) => {
+        wallet.contractAddress = wallet.walletAddress
+        this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
+      })
     },
 
     // _navToNext () {

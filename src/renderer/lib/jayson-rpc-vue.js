@@ -410,6 +410,13 @@ export default {
         })
       },
 
+      getCreatorContract: function (walletAddress, fnAfterGetContract) {
+        this.client.request('sec_getCreatorContract', [walletAddress], (err, response) => {
+          if (err) return
+          fnAfterGetContract(response)
+        })
+      },
+
       isTestNetwork: function () {
         if (process.env.netType === 'test') {
           return true
