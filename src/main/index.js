@@ -40,7 +40,7 @@ function createWindow () {
   /**
    * Initial window options
    */
-  updateChecker(app)
+  // updateChecker(app)
 
   if (shouldQuit) {
     app.quit()
@@ -71,65 +71,65 @@ function createWindow () {
     requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
   }
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
-  const SECNODE = require('@biut-block/biutjs-node')
-  let SECCore = new SECNODE.Core({
-    DBPath: path + '/data/',
-    SecDBPath: path + '/data/Sec',
-    SenDBPath: path + '/data/Sen',
-    cacheDBPath: path + '/data/powCache',
-    loggerPath: path + '/biutlogs',
-    NDPPrivKeyFilePath: path + '/ndpprivatekey',
-    ID: []
-  })
-  let SECRPC = new SECNODE.RPC(SECCore)
-  SECRPC.runRPCServer()
+  // const SECNODE = require('@biut-block/biutjs-node')
+  // let SECCore = new SECNODE.Core({
+  //   DBPath: path + '/data/',
+  //   SecDBPath: path + '/data/Sec',
+  //   SenDBPath: path + '/data/Sen',
+  //   cacheDBPath: path + '/data/powCache',
+  //   loggerPath: path + '/biutlogs',
+  //   NDPPrivKeyFilePath: path + '/ndpprivatekey',
+  //   ID: []
+  // })
+  // let SECRPC = new SECNODE.RPC(SECCore)
+  // SECRPC.runRPCServer()
 
   // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
-  requestBIUT.on('response', response => {
-    response.on('data', remotegenesisHash => {
-      remotegenesisHash = remotegenesisHash.toString()
-      console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
-      SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
-        if (err) {
-          return console.log('BIUT Blockchain Database is empty')
-        }
-        console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
-        if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('BIUT GenesisHash check passed')
-        } else {
-          SECCore.secAPIs.clearDB((err) => {
-            if (err) return console.error(err)
-            console.log('BIUT GenesisHash not passed, remove local database')
-          })
-        }
-      })
-    })
-    response.on('end', () => { })
-  })
-  requestBIUT.end()
+  // requestBIUT.on('response', response => {
+  //   response.on('data', remotegenesisHash => {
+  //     remotegenesisHash = remotegenesisHash.toString()
+  //     console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
+  //     SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+  //       if (err) {
+  //         return console.log('BIUT Blockchain Database is empty')
+  //       }
+  //       console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
+  //       if (genesisBlock[0].Hash === remotegenesisHash) {
+  //         return console.log('BIUT GenesisHash check passed')
+  //       } else {
+  //         SECCore.secAPIs.clearDB((err) => {
+  //           if (err) return console.error(err)
+  //           console.log('BIUT GenesisHash not passed, remove local database')
+  //         })
+  //       }
+  //     })
+  //   })
+  //   response.on('end', () => { })
+  // })
+  // requestBIUT.end()
 
-  requestBIU.on('response', response => {
-    response.on('data', remotegenesisHash => {
-      remotegenesisHash = remotegenesisHash.toString()
-      console.log(`remote BIU GenesisHash: ${remotegenesisHash}`)
-      SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
-        if (err) {
-          return console.log('BIU Blockchain Database is empty')
-        }
-        console.log(`Local BIU GenesisHash: ${genesisBlock[0].Hash}`)
-        if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('BIU GenesisHash check passed')
-        } else {
-          SECCore.senAPIs.clearDB((err) => {
-            if (err) return console.error(err)
-            console.log('BIU GenesisHash not passed, remove local database')
-          })
-        }
-      })
-    })
-    response.on('end', () => { })
-  })
-  requestBIU.end()
+  // requestBIU.on('response', response => {
+  //   response.on('data', remotegenesisHash => {
+  //     remotegenesisHash = remotegenesisHash.toString()
+  //     console.log(`remote BIU GenesisHash: ${remotegenesisHash}`)
+  //     SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+  //       if (err) {
+  //         return console.log('BIU Blockchain Database is empty')
+  //       }
+  //       console.log(`Local BIU GenesisHash: ${genesisBlock[0].Hash}`)
+  //       if (genesisBlock[0].Hash === remotegenesisHash) {
+  //         return console.log('BIU GenesisHash check passed')
+  //       } else {
+  //         SECCore.senAPIs.clearDB((err) => {
+  //           if (err) return console.error(err)
+  //           console.log('BIU GenesisHash not passed, remove local database')
+  //         })
+  //       }
+  //     })
+  //   })
+  //   response.on('end', () => { })
+  // })
+  // requestBIU.end()
 
   mainWindow = new BrowserWindow({
     height: 610,

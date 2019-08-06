@@ -39,13 +39,12 @@
 import WalletHandler from '../../../lib/WalletsHandler';
 export default {
   name: '',
-  props: {},
+  props: {walletAddress: String},
   data() {
     return {
       poolName: '',
       clearImg: false,
-      nameError: false,
-      walletAddress: ''
+      nameError: false
     }
   },
   computed: {
@@ -68,15 +67,14 @@ export default {
     },
 
     submitFrom() {
-      let tranfer = {
+      let transfer = {
         nonce: 1,
         timestamp: new Date().getTime(),
         from: this.walletAddress,
         value: 100000,
         gasLimit: '0',
         gasPrice: '0',
-        txFee: '0',
-        inputData: ''
+        txFee: '0'
       }
       this.$JsonRPCClient.createContractTransaction(this.walletAddress, transfer, (err, response) => {
         console.log(response)

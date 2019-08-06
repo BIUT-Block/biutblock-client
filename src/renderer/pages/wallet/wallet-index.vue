@@ -154,8 +154,8 @@ export default {
       walletName: 'wallet Name',
       oldWalletName: 'wallet Name',
       walletBalance: '0',//sec余额
-      availableMoney: 1000, //biut的可用金额
-      freezeMoney: 1000, //biut冻结金额
+      availableMoney: 0, //biut的可用金额
+      freezeMoney: 0, //biut冻结金额
 
       walletBalanceSEN: '0',//sen余额
       walletAddress: '',
@@ -404,15 +404,20 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
-          this.freezeMoney = 0
-          for (let i = 0; i < history.length; i++) {
-            this.freezeMoney = this.freezeMoney + history.amount
-          }
-          this.freezeMoney = this._checkValueFormat(this.freezeMoney)
-          this.availableMoney = this.walletBalance - this.freezeMoney
-        })
-        this.walletBalance = this._checkValueFormat(balanceSEC)
+        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0) {
+          this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
+            this.freezeMoney = 0
+            for (let i = 0; i < history.length; i++) {
+              this.freezeMoney = this.freezeMoney + history.amount
+            }
+            this.freezeMoney = this._checkValueFormat(this.freezeMoney)
+            this.walletBalance = this._checkValueFormat(this.walletBalance)
+            this.availableMoney = this.walletBalance - this.freezeMoney
+          })
+        } else if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length === 0) {
+          this.walletBalance = this._checkValueFormat(balanceSEC)
+          this.availableMoney = this.walletBalance
+        }
       }, (balanceSEN) => {
         this.walletBalanceSEN = this._checkValueFormat(balanceSEN)
       })

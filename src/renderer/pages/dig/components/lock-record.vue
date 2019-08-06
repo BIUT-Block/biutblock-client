@@ -9,13 +9,13 @@
           <span @click="maskShow = true">More</span>
         </p>
       </li>
-      <li v-for="(item, index) in itemList" v-if="index < 5" :key="index" v-show="idx == 0">
+      <li v-for="(item, index) in itemList" v-if="itemList.length > 0 && index < 5" :key="index" v-show="idx == 0">
         <span>{{ item.lockTime }}</span>
         <span>{{ item.lockMoney }}</span>
         <span>{{ item.unlockTime }}</span>
       </li>
     </ul>
-    <section class="list-null" v-show="idx == 1">
+    <section class="list-null" v-show="itemList.length === 0">
       <img src="../../../assets/images/wallet-null.png" alt="">
       <p>No record</p>
     </section>

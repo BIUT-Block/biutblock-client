@@ -4,10 +4,13 @@ import BufferHandler from './BufferHandler'
 
 const moment = require('moment-timezone')
 const fs = require('fs')
+
+let sourceCode = "ZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcywgYW1vdW50KSB7CiAgICB2YXIgdHJhbnNmZXJGbGFnID0gZmFsc2UKICAgIGlmKGFtb3VudD4wKXsKICAgICAgICB0cmFuc2ZlckZsYWcgPSB0cnVlCiAgICB9CiAgICByZXR1cm4geydBZGRyZXNzJzogYWRkcmVzcywgJ0Ftb3VudCc6IGFtb3VudCwgJ1RyYW5zZmVyRmxhZyc6IHRyYW5zZmVyRmxhZ30KfQoKZnVuY3Rpb24gbG9jayhiZW5lZml0QWRkcmVzcywgYW1vdW50LCB0aW1lKXsKICAgIHZhciBsb2NrRmxhZyA9IGZhbHNlCiAgICBpZihhbW91bnQ+MCl7CiAgICAgICAgbG9ja0ZsYWcgPSB0cnVlCiAgICB9CiAgICByZXR1cm4geydBZGRyZXNzJzogYmVuZWZpdEFkZHJlc3MsICdBbW91bnQnOiBhbW91bnQsICdUaW1lJzogdGltZSwgJ0xvY2tGbGFnJzogbG9ja0ZsYWd9Cn0KCmZ1bmN0aW9uIHJlbGVhc2VMb2NrKGJlbmVmaXRBZGRyZXNzLCBhbW91bnQpewogICAgdmFyIHJlbGVhc2VMb2NrRmxhZyA9IGZhbHNlCiAgICBpZihhbW91bnQ+MCl7CiAgICAgICAgcmVsZWFzZUxvY2tGbGFnID0gdHJ1ZQogICAgfQogICAgcmV0dXJuIHsnQWRkcmVzcyc6IGJlbmVmaXRBZGRyZXNzLCAnQW1vdW50JzogYW1vdW50LCAnUmVsZWFzZUxvY2tGbGFnJzogcmVsZWFzZUxvY2tGbGFnfQp9"
+
 export default {
   install: function (Vue, options) {
     let externalServerAddress = 'scan.biut.io'
-    let externalServerAddressTest = 'test.biut.io'
+    let externalServerAddressTest = '127.0.0.1'//'test.biut.io'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
     let localhostAddress = '127.0.0.1'
@@ -35,23 +38,23 @@ export default {
         }
       },
 
-      _getBalance: function (client, walletAddress, fnUpdateBalance) {
-        client.request('sec_getBalance', [walletAddress], (err, response) => {
+      _getBalance: function (client, walletAddress, tokenName, fnUpdateBalance) {
+        client.request('sec_getBalance', [walletAddress, tokenName], (err, response) => {
           if (err) return
           if (response.result.status === '1') {
             fnUpdateBalance(response.result.value)
           }
         })
       },
-      getWalletBalance: function (walletAddress, fnUpdateBalance) {
-        this._getBalance(this.client, walletAddress, fnUpdateBalance)
+      getWalletBalance: function (walletAddress, tokenName, fnUpdateBalance) {
+        this._getBalance(this.client, walletAddress, tokenName, fnUpdateBalance)
       },
-      getWalletBalanceSEN: function (walletAddress, fnUpdateBalance) {
-        this._getBalance(this.clientSEN, walletAddress, fnUpdateBalance)
+      getWalletBalanceSEN: function (walletAddress, tokenName, fnUpdateBalance) {
+        this._getBalance(this.clientSEN, walletAddress, tokenName, fnUpdateBalance)
       },
       getWalletBalanceOfBothChains: function (walletAddress, fnUpdateBalanceSEC, fnUpdateBalanceSEN) {
-        this.getWalletBalance(walletAddress, fnUpdateBalanceSEC)
-        this.getWalletBalanceSEN(walletAddress, fnUpdateBalanceSEN)
+        this.getWalletBalance(walletAddress, 'SEC', fnUpdateBalanceSEC)
+        this.getWalletBalanceSEN(walletAddress, 'SEN', fnUpdateBalanceSEN)
       },
 
       _getTransactions: function (client, tokenUnit, walletAddress, fnFillWalletList) {
@@ -364,13 +367,13 @@ export default {
         let history = []
         this.client.request('sec_getTimeLock', [walletAddress, contractAddress], (err, response) => {
           if (err) return
-          for (let i = 0; i < response.result.timeLock[contractAddress].length; i++) {
-            let unlockTime = WalletsHandler.formatDate(moment(response.result.timeLock[contractAddress].unlocktime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-            let lockTime = WalletsHandler.formatDate(moment(response.result.timeLock[contractAddress].locktime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+          for (let i = 0; i < response.result.timeLock.length; i++) {
+            let unlockTime = WalletsHandler.formatDate(moment(response.result.timeLock[i].unlocktime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            let lockTime = WalletsHandler.formatDate(moment(response.result.timeLock[i].locktime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
             history.push({
               lockTime: lockTime,
               unlockTime: unlockTime,
-              lockMoney: response.result.timeLock[contractAddress].amount
+              lockMoney: response.result.timeLock[i].amount
             })
           }
           fnAfterGet(history)
@@ -378,10 +381,14 @@ export default {
       },
 
       createContractTransaction: function (walletAddress, transfer, fnAfterCreate) {
-        let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
+        // let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
         let contractAddress = WalletsHandler.generateContractAddress(walletAddress)
         let tokenName = `SEC-${contractAddress}`
-        transfer.inputData = sourceCode
+        transfer.inputData = {
+          sourceCode: sourceCode,
+          totalSupply: 100000000,
+          tokenName: 'SEC'
+        }
         transfer.to = contractAddress
         let signedTransfer = WalletsHandler.encryptTransaction(transfer)
         this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
@@ -407,6 +414,13 @@ export default {
         this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
           if (err) return
           fnAfterRelease(response)
+        })
+      },
+
+      getCreatorContract: function (walletAddress, fnAfterGetContract) {
+        this.client.request('sec_getCreatorContract', [walletAddress], (err, response) => {
+          if (err) return
+          fnAfterGetContract(response.result.contractAddress)
         })
       },
 
