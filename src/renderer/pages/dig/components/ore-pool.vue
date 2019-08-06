@@ -66,6 +66,7 @@
        v-show="maskShow"
        :walletAddress="walletAddress"
        :privateKey="privateKey"
+       @appendContract="appendContractAddress"
        @close="closeMask"/>
   </main>
 </template>
@@ -84,7 +85,8 @@ export default {
     availableMoney: Number,
     freezeMoney: Number,
     walletAddress: String,
-    privateKey: String
+    privateKey: String,
+    hasContract: Boolean
   },
   components: {
     poolMask
@@ -149,12 +151,21 @@ export default {
       ]
     }
   },
+
+  created () {
+    
+  },
+
   methods: {
     //关闭弹窗
     closeMask () {
       this.maskShow = false
     },
 
+    appendContractAddress (privateKey, contractAddress) {
+      this.maskShow = false
+      this.$emit('addContract', privateKey, contractAddress)
+    }
     
   },
 }

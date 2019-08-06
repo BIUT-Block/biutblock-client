@@ -92,7 +92,8 @@
             :availableMoney="availableMoney"
             :freezeMoney="freezeMoney"
             :walletAddress="selectedWallet.walletAddress"
-            :privateKey="selectedWallet.privateKey" />
+            :privateKey="selectedWallet.privateKey"
+            @addContract="onAddContract" />
         </section>
 
       </section>
@@ -205,6 +206,7 @@ export default {
       digBalance: 0, //挖矿余额
       availableMoney: 0, //biut的可用金额
       freezeMoney: 0, //biut冻结金额
+      hasContract: false,
       invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
       itemList: [
@@ -232,6 +234,15 @@ export default {
       }
     }
     this.selectedWallet = wallets[this.selectedPrivateKey]
+    if (this.selectedWallet.contractAddress.length > 0) {
+      if (this.selectedWallet.contractAddress[0].status === 'success') {
+        this.orePoolPage = 2
+      } else {
+        this.orePoolPage = 4
+      }
+    } else {
+      this.orePoolPage = 1
+    }
     this.initMiningStatus()
 
     this._getLatestBlockInfo((balance) => {
@@ -386,6 +397,14 @@ export default {
       ipcRenderer.send('close')
     },
 
+    onAddContract (privateKey, contractAddress) {
+      let wallet = this.selectedWallet
+      wallet.contractAddress.push(contractAddress)
+      WalletsHandler.updateWalletFile(wallet, () => {
+        console.log('update wallet file')
+      })
+    },
+
     _restartAllJobs () {
       this._startUpdateHistoryJob()
       this._startUpdateLastBlockInfoJob()
@@ -421,7 +440,8 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0) {
+        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0 && this.selectedWallet.contractAddress[0].status === 'success') {
+          let contractAddress = this.selectedWallet.contractAddress[0].contractAddress
           this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
             this.freezeMoney = 0
             for (let i = 0; i < history.length; i++) {

@@ -404,7 +404,8 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0) {
+        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0 && this.selectedWallet.contractAddress[0].status === 'success') {
+          let contractAddress = this.selectedWallet.contractAddress[0].contractAddress
           this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
             this.freezeMoney = 0
             for (let i = 0; i < history.length; i++) {

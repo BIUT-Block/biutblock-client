@@ -71,14 +71,28 @@ export default {
         nonce: 1,
         timestamp: new Date().getTime(),
         walletAddress: this.walletAddress,
-        amount: '100000',
+        amount: '0',
         gasLimit: '0',
         gasPrice: '0',
         txFee: '0',
         chainName: 'SEC'
       }
-      this.$JsonRPCClient.createContractTransaction(this.walletAddress, this.privateKey, transfer, (err, response) => {
-        console.log(response)
+      this.$JsonRPCClient.createContractTransaction(this.walletAddress, this.privateKey, transfer, (contractAddress, response) => {
+        let transferTimeLock = {
+          timestamp: new Date().getTime(),
+          walletAddress: this.walletAddress,
+          sendToAddress: contractAddress,
+          amount: '100000',
+          gasLimit: '0',
+          gasPrice: '0',
+          txFee: '0',
+          chainName: 'SEC'
+        }
+        this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 60 * 1000, transferTimeLock, (response) => {
+          if (response.result.status === '1') {
+            this.$emit('appendContract', this.privateKey, contractAddress)
+          } 
+        })
       })
 
       alert("点击了提交按钮")

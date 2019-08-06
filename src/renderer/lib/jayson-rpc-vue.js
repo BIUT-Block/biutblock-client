@@ -401,29 +401,31 @@ export default {
           transfer.nonce = nonce
           let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transfer)
           this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
-           if (err) return
-            fnAfterCreate(response)
+            if (err) return
+            fnAfterCreate(contractAddress, response)
           })
         })
       },
 
-      sendContractTransaction: function (walletAddress, lockTime, transfer, fnAfterContract) {
+      sendContractTransaction: function (walletAddress, privateKey, lockTime, transfer, fnAfterContract) {
         let sourceCode = `lock( "${walletAddress}", ${transfer.amount}, ${lockTime})`.toString('base64')
         transfer.inputData = sourceCode
-        let signedTransfer = WalletsHandler.encryptTransaction(transfer)
-        this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
-          if (err) return
-          fnAfterContract(response)
+        this.getNonce(walletAddress, (nonce) => {
+          transfer.nonce = nonce
+          let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transfer)
+          this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
+            if (err) return
+            fnAfterContract(response)
+          })
         })
       },
 
-      releaseContractLock: function (walletAddress, transfer, fnAfterRelease) {
+      releaseContractLock: function (walletAddress, privateKey, transfer, fnAfterRelease) {
         let sourceCode = `releaseLock("${walletAddress}", ${transfer.value})`.toString('base64')
         transfer.inputData = sourceCode
-        let signedTransfer = WalletsHandler.encryptTransaction(transfer)
 
         this.getNonce(walletAddress, (nonce) => {
-          signedTransfer.nonce = nonce
+          transfer.nonce = nonce
           let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transfer)
           this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
             if (err) return
@@ -435,7 +437,10 @@ export default {
       getCreatorContract: function (walletAddress, fnAfterGetContract) {
         this.client.request('sec_getCreatorContract', [walletAddress], (err, response) => {
           if (err) return
-          fnAfterGetContract(response.result.contractAddress)
+          fnAfterGetContract({
+            contractAddress: response.result.contractAddress,
+            status: response.result.contractstatus
+          })
         })
       },
 
