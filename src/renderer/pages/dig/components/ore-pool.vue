@@ -65,6 +65,7 @@
     <pool-mask
        v-show="maskShow"
        :walletAddress="walletAddress"
+       :privateKey="privateKey"
        @close="closeMask"/>
   </main>
 </template>
@@ -82,7 +83,8 @@ export default {
     pages: Number,
     availableMoney: Number,
     freezeMoney: Number,
-    walletAddress: String
+    walletAddress: String,
+    privateKey: String
   },
   components: {
     poolMask

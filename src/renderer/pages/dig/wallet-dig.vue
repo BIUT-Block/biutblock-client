@@ -91,7 +91,8 @@
             :pages="orePoolPage"
             :availableMoney="availableMoney"
             :freezeMoney="freezeMoney"
-            :walletAddress="selectedWallet.walletAddress" />
+            :walletAddress="selectedWallet.walletAddress"
+            :privateKey="selectedWallet.privateKey" />
         </section>
 
       </section>

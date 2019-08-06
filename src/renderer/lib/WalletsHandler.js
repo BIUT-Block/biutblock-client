@@ -286,11 +286,13 @@ let WalletHandler = {
       to: transfer.sendToAddress,
       value: transfer.amount,
       txFee: transfer.txFee,
+      nonce: transfer.nonce,
       gasLimit: '0',
       gas: '0',
       gasPrice: '0',
       data: '',
-      inputData: ''
+      inputData: transfer.inputData,
+      chainName: transfer.chainName
     }]
     const tokenTxBuffer = [
       SECUtil.bufferToInt(transferData[0].timestamp),
@@ -300,7 +302,9 @@ let WalletHandler = {
       Buffer.from(transferData[0].gasLimit),
       Buffer.from(transferData[0].gas),
       Buffer.from(transferData[0].gasPrice),
-      Buffer.from(transferData[0].inputData)
+      Buffer.from(transferData[0].nonce),
+      Buffer.from(transferData[0].inputData),
+      Buffer.from(transferData[0].chainName)
     ]
     let txSigHash = Buffer.from(SECUtil.rlphash(tokenTxBuffer).toString('hex'), 'hex')
     let signature = SECUtil.ecsign(txSigHash, Buffer.from(privateKey, 'hex'))

@@ -9,7 +9,7 @@ let sourceCode = "ZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcywgYW1vdW50KSB7CiAgICB2YXIgdH
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = 'scan.biut.io'
+    let externalServerAddress = '127.0.0.1'//'scan.biut.io'
     let externalServerAddressTest = '127.0.0.1'//'test.biut.io'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
@@ -363,6 +363,13 @@ export default {
         })
       },
 
+      getNonce: function (walletAddress, fnAfterGetNonce) {
+        this.client.request('sec_getNonce', [walletAddress], (err, response) => {
+          if (err) return
+          fnAfterGetNonce(response.result.Nonce)
+        })
+      },
+
       getTimeLock: function (walletAddress, contractAddress, fnAfterGet) {
         let history = []
         this.client.request('sec_getTimeLock', [walletAddress, contractAddress], (err, response) => {
@@ -380,20 +387,23 @@ export default {
         })
       },
 
-      createContractTransaction: function (walletAddress, transfer, fnAfterCreate) {
+      createContractTransaction: function (walletAddress, privateKey, transfer, fnAfterCreate) {
         // let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
-        let contractAddress = WalletsHandler.generateContractAddress(walletAddress)
+        let contractAddress = WalletsHandler.generateContractAddress(privateKey)
         let tokenName = `SEC-${contractAddress}`
-        transfer.inputData = {
+        transfer.inputData = JSON.stringify({
           sourceCode: sourceCode,
           totalSupply: 100000000,
           tokenName: 'SEC'
-        }
-        transfer.to = contractAddress
-        let signedTransfer = WalletsHandler.encryptTransaction(transfer)
-        this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
-          if (err) return
-          fnAfterCreate(response)
+        })
+        transfer.sendToAddress = contractAddress
+        this.getNonce(walletAddress, (nonce) => {
+          transfer.nonce = nonce
+          let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transfer)
+          this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
+           if (err) return
+            fnAfterCreate(response)
+          })
         })
       },
 
@@ -411,9 +421,14 @@ export default {
         let sourceCode = `releaseLock("${walletAddress}", ${transfer.value})`.toString('base64')
         transfer.inputData = sourceCode
         let signedTransfer = WalletsHandler.encryptTransaction(transfer)
-        this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
-          if (err) return
-          fnAfterRelease(response)
+
+        this.getNonce(walletAddress, (nonce) => {
+          signedTransfer.nonce = nonce
+          let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transfer)
+          this.client.request('sec_sendContractTransaction', signedTransfer, (err, response) => {
+            if (err) return
+            fnAfterRelease(response)
+          })
         })
       },
 
