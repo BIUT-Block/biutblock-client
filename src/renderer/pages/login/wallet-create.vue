@@ -523,7 +523,7 @@ export default {
           if (wallets === 'error') {
             this.privateKeyError = true
           } else if (wallets === 'DuplicateKey') {
-            this.privateKeyErrorText = 'Wallet already exisits or imported.'
+            this.privateKeyErrorText = 'Wallet already exists or imported.'
             this.privateKeyError = true
           } else {
             window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
@@ -535,7 +535,7 @@ export default {
           console.log(wallets)
           if (wallets === 'error') {
             this.walletnNewPassError = true
-            this.walletnNewPassErrorText = 'Password error, unable to unlock wallet'
+            this.walletnNewPassErrorText = 'Password error, unable to unlock wallet.'
           } else if (wallets === 'DuplicateKey'){
             this.walletnNewPassErrorText = 'Wallet already exists or imported.'
             this.walletnNewPassError = true
@@ -684,7 +684,7 @@ export default {
     position: absolute;right: 68px;top: 48px;}
 
   /* 备份助记词 */
-  .wallet-backup {padding: 124px 68px 0;flex: 1;}
+  .wallet-backup {padding: 120px 68px 0;flex: 1;}
   .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;}
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
   .wallet-backup .private-key-title {padding-top: 17px;}

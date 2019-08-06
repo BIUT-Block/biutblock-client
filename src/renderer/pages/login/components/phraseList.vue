@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-for="item in itemList" class="contant">{{item.cnt}}</li>
+    <li v-for="item in itemList" class="contant">{{ item.cnt }}</li>
   </ul>
 </template>
 
@@ -13,7 +13,7 @@ export default {
   props: {
     itemList: Array
   },
-  data () {
+  data() {
     return {
 
     }
@@ -21,13 +21,13 @@ export default {
   computed: {
 
   },
-  created () {
+  created() {
 
   },
-  mounted () {
+  mounted() {
 
   },
-  destroyed () {},
+  destroyed() { },
   methods: {
 
   },
@@ -35,7 +35,19 @@ export default {
 </script>
 
 <style scoped>
-   ul {display: flex;flex-wrap: wrap;}
-   ul li {padding: 8px 6px;margin-right: 4px;background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
-    margin-top: 10px;}
+ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+ul li {
+  padding: 0 6px;
+  margin-right: 4px;
+  background: rgba(242, 242, 242, 1);
+  border-radius: 4px;
+  color: #252f33;
+  font-size: 14px;
+  margin-top: 10px;
+  height: 24px;
+  line-height: 24px;
+}
 </style>
