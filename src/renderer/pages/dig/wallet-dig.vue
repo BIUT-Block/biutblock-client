@@ -202,8 +202,8 @@ export default {
 
       makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网
       digBalance: 0, //挖矿余额
-      availableMoney: 1000001, //biut的可用金额
-      freezeMoney: 1000, //biut冻结金额
+      availableMoney: 0, //biut的可用金额
+      freezeMoney: 0, //biut冻结金额
       invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
       itemList: [
@@ -219,7 +219,7 @@ export default {
   },
   computed: {
     recordLists () {
-      return Array(10).fill(this.itemList[0])
+      return this.itemList
     }
   },
   created () {
@@ -395,9 +395,11 @@ export default {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
       this._getTimeLockHistory()
+      this._getWalletBalance(this.selectedWallet.walletAddress)
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
         this._getTimeLockHistory()
+        this._getWalletBalance(this.selectedWallet.walletAddress)
       }, 3 * 60 * 1000)
     },
     _startUpdateLastBlockInfoJob () {
@@ -414,6 +416,38 @@ export default {
         this._getLatestBlockInfo((balance) => {
         })
       }, 3 * 60 * 1000)
+    },
+
+    _getWalletBalance (walletAddress) {
+      this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
+        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0) {
+          this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
+            this.freezeMoney = 0
+            for (let i = 0; i < history.length; i++) {
+              this.freezeMoney = this.freezeMoney + history.amount
+            }
+            this.freezeMoney = this._checkValueFormat(this.freezeMoney)
+            balanceSEC = this._checkValueFormat(balanceSEC)
+            this.availableMoney = Number(balanceSEC - this.freezeMoney)
+            this.freezeMoney = Number(this.freezeMoney)
+          })
+        } else if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length === 0) {
+          this.availableMoney = Number(this._checkValueFormat(balanceSEC))
+          this.freezeMoney = 0
+        }
+      }, (balanceSEN) => {
+        
+      })
+    },
+
+    /** intern methode to handle the value format */
+    _checkValueFormat (value) {
+      let splitValue = value.split("e-")
+      if (splitValue.length > 1) {
+        return Number(value).toFixed(Number(splitValue[1])).toString()
+      } else {
+        return value
+      }
     },
 
     _startCheckPeersJob () {
@@ -435,7 +469,7 @@ export default {
     },
 
     _getTimeLockHistory () {
-      this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectWallet.contractAddress, (history) => {
+      this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectedWallet.contractAddress, (history) => {
           this.itemList = history
       })
     },
@@ -464,23 +498,25 @@ export default {
     },
 
     _getLatestBlockInfo (fnCheckMining) {
-      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, (balance) => {
+      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, 'SEC', (balance) => {
         this.digBalance = balance
         fnCheckMining(balance)
       })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
         this.chainHeight = height.toString()
       //  this.networkMining = (Number(this.chainHeight)*2).toString()
-        this.minedByAddress = block[0].Beneficiary
-        this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
-        if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
-          if (this.processTexts.length > 6) { // should not be showed if the page is initial
-            let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-            this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
-            this.processTexts.push('Continue mining...')
-            this.bAlreadyShowed = true // to avoid duplicate showed text in job
-          } else {
-            this.bAlreadyShowed = false
+        if (block.length > 0) {
+          this.minedByAddress = block[0].Beneficiary
+          this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
+          if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
+            if (this.processTexts.length > 6) { // should not be showed if the page is initial
+              let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+              this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
+              this.processTexts.push('Continue mining...')
+              this.bAlreadyShowed = true // to avoid duplicate showed text in job
+            } else {
+              this.bAlreadyShowed = false
+            }
           }
         }
       })

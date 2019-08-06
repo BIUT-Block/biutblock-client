@@ -503,7 +503,8 @@ export default {
         privateKey: this.keys.privateKey,
         publicKey: this.keys.publicKey,
         walletAddress: this.keys.userAddress,
-        englishWords: this.keys.englishWords
+        englishWords: this.keys.englishWords,
+        contractAddress: ''
       }, (keyDataJSON) => {
         window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
         this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
@@ -527,7 +528,7 @@ export default {
             this.privateKeyError = true
           } else {
             window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this._getContractAddress(wallets)
+            this._getContractAddress(wallets, selectedPrivateKey)
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         })
@@ -542,7 +543,7 @@ export default {
             this.walletnNewPassError = true
           } else {
             window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this._getContractAddress(wallets)
+            this._getContractAddress(wallets, selectedPrivateKey)
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
           }
         }) 
@@ -566,17 +567,19 @@ export default {
                 selectedPrivateKey: selectedPrivateKey
               }
               window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
-              this._getContractAddress(wallets)
+              this._getContractAddress(wallets, selectedPrivateKey)
               //this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
             }
         })
       }
     },
 
-    _getContractAddress (wallet) {
-      this.$JsonRPCClient.getCreatorContract(wallet.walletAddress, (contractAddress) => {
-        wallet.contractAddress = wallet.walletAddress
-        this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
+    _getContractAddress (wallets, privateKey) {
+      this.$JsonRPCClient.getCreatorContract(wallets[privateKey].walletAddress, (contractAddress) => {
+        wallets[privateKey].contractAddress = contractAddress
+        walletsHandler.backUpWalletIntoFile(wallets[privateKey], () => {
+          this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
+        })
       })
     },
 

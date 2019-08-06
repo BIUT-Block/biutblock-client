@@ -64,6 +64,7 @@
     <!-- 申请矿池弹窗 -->
     <pool-mask
        v-show="maskShow"
+       :walletAddress="walletAddress"
        @close="closeMask"/>
   </main>
 </template>
