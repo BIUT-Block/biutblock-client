@@ -93,6 +93,8 @@
             :freezeMoney="freezeMoney"
             :walletAddress="selectedWallet.walletAddress"
             :privateKey="selectedWallet.privateKey"
+            :poolAssets="poolAssets"
+            :poolNode="poolNode"
             @addContract="onAddContract" />
         </section>
 
@@ -209,6 +211,8 @@ export default {
       hasContract: false,
       invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
+      poolNode: 0,
+      poolAssets: 0,
       itemList: [
         {
           id: '1',
@@ -234,12 +238,8 @@ export default {
       }
     }
     this.selectedWallet = wallets[this.selectedPrivateKey]
-    if (this.selectedWallet.contractAddress.length > 0) {
-      if (this.selectedWallet.contractAddress[0].status === 'success') {
-        this.orePoolPage = 2
-      } else {
-        this.orePoolPage = 4
-      }
+    if (this.selectedWallet.contract.length > 0) {
+      this._getTimeLockHistory()
     } else {
       this.orePoolPage = 1
     }
@@ -397,9 +397,9 @@ export default {
       ipcRenderer.send('close')
     },
 
-    onAddContract (privateKey, contractAddress) {
+    onAddContract (privateKey, contract) {
       let wallet = this.selectedWallet
-      wallet.contractAddress.push(contractAddress)
+      wallet.contract.push(contract)
       WalletsHandler.updateWalletFile(wallet, () => {
         console.log('update wallet file')
       })
@@ -414,11 +414,15 @@ export default {
     _startUpdateHistoryJob () {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
-      this._getTimeLockHistory()
+      if (this.selectedWallet.contract.length > 0) {
+        this._getTimeLockHistory()
+      }
       this._getWalletBalance(this.selectedWallet.walletAddress)
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
-        this._getTimeLockHistory()
+        if (this.selectedWallet.contract.length > 0) {
+          this._getTimeLockHistory()
+        }
         this._getWalletBalance(this.selectedWallet.walletAddress)
       }, 3 * 60 * 1000)
     },
@@ -440,24 +444,30 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0 && this.selectedWallet.contractAddress[0].status === 'success') {
-          let contractAddress = this.selectedWallet.contractAddress[0].contractAddress
-          this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
-            this.freezeMoney = 0
-            for (let i = 0; i < history.length; i++) {
-              this.freezeMoney = this.freezeMoney + history.amount
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney)
-            balanceSEC = this._checkValueFormat(balanceSEC)
-            this.availableMoney = Number(balanceSEC - this.freezeMoney)
-            this.freezeMoney = Number(this.freezeMoney)
+        this.walletBalance = balanceSEC.toString()
+        if (this.selectedWallet.contract && this.selectedWallet.contract.length !== 0) {
+          let contractAddress = this.selectedWallet.contract[0].contractAddress
+          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+            this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+              this.freezeMoney = 0
+              if (Object.keys(contractInfo.timeLock).length > 0) {
+                let beniftAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+                for (let i = 0; i < benifitAddress.length; i++) {
+                  this.freezeMoney = this.freezeMoney + beniftAddress[i].lockAmount
+                }
+              }
+              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
+              this.walletBalance = this._checkValueFormat(balanceSEC.toString())
+              this.availableMoney = this.walletBalance - this.freezeMoney
+              
+            })
           })
-        } else if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length === 0) {
-          this.availableMoney = Number(this._checkValueFormat(balanceSEC))
+        } else if (this.selectedWallet.contract && this.selectedWallet.contract.length === 0) {
+          this.availableMoney = Number(this._checkValueFormat(balanceSEC.toString()))
           this.freezeMoney = 0
         }
       }, (balanceSEN) => {
-        
+        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString())
       })
     },
 
@@ -467,7 +477,7 @@ export default {
       if (splitValue.length > 1) {
         return Number(value).toFixed(Number(splitValue[1])).toString()
       } else {
-        return value
+        return Number(value)
       }
     },
 
@@ -490,9 +500,36 @@ export default {
     },
 
     _getTimeLockHistory () {
-      this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectedWallet.contractAddress, (history) => {
-          this.itemList = history
+      let contractAddress = this.selectedWallet.contract[0].contractAddress
+      this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+        this.selectedWallet.contract[0].status = contractInfo.status
+        WalletsHandler.updateWalletFile(this.selectedWallet, () => {
+          console.log('update wallet file')
+        })
+        if (this.selectedWallet.contract[0].status === 'success') {
+          this.orePoolPage = 4
+          this._calcMiningPool(contractInfo.timeLock)
+        } else {
+          this.orePoolPage = 2
+        }
       })
+      // this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectedWallet.contractAddress, (history) => {
+      //     this.itemList = history
+      // })
+    },
+
+    _calcMiningPool (timeLock) {
+      let poolNode = Object.keys(timeLock).length
+      let poolAssets = 0
+      let benifs = timeLock[this.selectedWallet.walletAddress]
+      for (let address in benifs) {
+        poolAssets = poolAssets + benifs[address].lockAmount
+        this.itemList.push({
+          lockTime: WalletsHandler.formatDate(benifs[address].lockTime),
+          lockMoney: benifs[address].lockAmount,
+          unlockTime: WalletsHandler.formatDate(benifs[address].unlockTime)
+        })
+      }
     },
     
     _getWalletMiningHistory () {

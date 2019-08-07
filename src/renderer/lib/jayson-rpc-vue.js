@@ -387,6 +387,13 @@ export default {
         })
       },
 
+      getContractInfo: function (contractAddress, fnAfterGetInfo) {
+        this.client.request('sec_getContractInfo', [contractAddress], (err, response) => {
+          if (err) return
+          fnAfterGetInfo(response.result.contractInfo)
+        })
+      },
+
       createContractTransaction: function (walletAddress, privateKey, transfer, fnAfterCreate) {
         // let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
         let contractAddress = WalletsHandler.generateContractAddress(privateKey)
@@ -409,6 +416,7 @@ export default {
 
       sendContractTransaction: function (walletAddress, privateKey, lockTime, transfer, fnAfterContract) {
         let sourceCode = `lock( "${walletAddress}", ${transfer.amount}, ${lockTime})`.toString('base64')
+        sourceCode = JSON.stringify({callCode: Buffer.from(sourceCode).toString('base64')})
         transfer.inputData = sourceCode
         this.getNonce(walletAddress, (nonce) => {
           transfer.nonce = nonce
@@ -422,6 +430,7 @@ export default {
 
       releaseContractLock: function (walletAddress, privateKey, transfer, fnAfterRelease) {
         let sourceCode = `releaseLock("${walletAddress}", ${transfer.value})`.toString('base64')
+        sourceCode = JSON.stringify({callCode: Buffer.from(sourceCode).toString('base64')})
         transfer.inputData = sourceCode
 
         this.getNonce(walletAddress, (nonce) => {
@@ -437,10 +446,7 @@ export default {
       getCreatorContract: function (walletAddress, fnAfterGetContract) {
         this.client.request('sec_getCreatorContract', [walletAddress], (err, response) => {
           if (err) return
-          fnAfterGetContract({
-            contractAddress: response.result.contractAddress,
-            status: response.result.contractstatus
-          })
+          fnAfterGetContract(response.result.contractAddress)
         })
       },
 

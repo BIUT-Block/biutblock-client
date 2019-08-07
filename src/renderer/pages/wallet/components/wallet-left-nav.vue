@@ -46,7 +46,7 @@ export default {
         privateKey: privateKey,
         publicKey: this.wallets[privateKey].publicKey,
         englishWords: this.wallets[privateKey].englishWords,
-        contractAddress: this.wallets[privateKey].contractAddress
+        contract: this.wallets[privateKey].contract
         })
         if (privateKey === this.selectedPrivateKey) {
           selectedWallet = {
@@ -57,7 +57,7 @@ export default {
             privateKey: privateKey,
             publicKey: this.wallets[privateKey].publicKey,
             englishWords: this.wallets[privateKey].englishWords,
-            contractAddress: this.wallets[privateKey].contractAddress
+            contract: this.wallets[privateKey].contract
           }
         }
       })
@@ -84,7 +84,7 @@ export default {
         privateKey: this.selectedPrivateKey,
         publicKey: this.wallets[this.selectedPrivateKey].publicKey,
         englishWords: this.wallets[this.selectedPrivateKey].englishWords,
-        contractAddress: this.wallets[this.selectedPrivateKey].contractAddress
+        contract: this.wallets[this.selectedPrivateKey].contract
       })
     }  
   },

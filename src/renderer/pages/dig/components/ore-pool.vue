@@ -86,7 +86,10 @@ export default {
     freezeMoney: Number,
     walletAddress: String,
     privateKey: String,
-    hasContract: Boolean
+    hasContract: Boolean,
+    poolList: Array,
+    poolNode: Number,
+    poolAssets: Number,
   },
   components: {
     poolMask
@@ -97,17 +100,16 @@ export default {
       orePoolTxt: 'Unable to open mining pool', //矿池是否可开启的文本内容  如果满足条件 orePoolTrue = true  orePoolTxt = 'Apply for opening a mining pool'
       orePoolApplyMoney: 800,//矿池已经申请金额
       orePoolApplyTime: '2019-07-17 18:29',//矿池申请时间
-
+      
       orePoolName: '矿池名称',//矿池名称
-      orePoolAssets: 1000000,//我的矿池资产
-      orePoolNode: 1000000,//矿池节点数量
+      orePoolAssets: this.poolAssets,//我的矿池资产
+      orePoolNode: this.poolNode,//矿池节点数量
       orePoolAllEarnings: 1000000,//矿池总收益
       orePoolMyEarnings: 1000000,//我的收益
       applySuccess1,
       applySuccess2,
       applySuccess3,
       applySuccess4,
-
       maskShow: false  
     }
   },
@@ -153,7 +155,9 @@ export default {
   },
 
   created () {
-    
+    if (this.pages === 4) {
+
+    }
   },
 
   methods: {
@@ -164,7 +168,7 @@ export default {
 
     appendContractAddress (privateKey, contractAddress) {
       this.maskShow = false
-      this.$emit('addContract', privateKey, contractAddress)
+      this.$emit('addContract', privateKey, {contractAddress: contractAddress, status: 'pending'})
     }
     
   },
