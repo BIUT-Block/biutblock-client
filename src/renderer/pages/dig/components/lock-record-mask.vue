@@ -12,10 +12,10 @@
           <span>LOCKED AMOUNT (BIUT)</span>
           <span>UNLOCK TIME</span>
         </li>
-        <li v-for="(item, index) in itemLists" :key="index">
+        <li v-for="(item, index) in itemList" :key="index">
           <span>{{ item.lockTime }}</span>
-          <span>{{ item.lockAmount }}</span>
-          <span>{{ item.unLockTime }}</span>
+          <span>{{ item.lockMoney }}</span>
+          <span>{{ item.unlockTime }}</span>
         </li>
       </ul>
 
@@ -32,7 +32,7 @@
 import walletPages from '../../../components/wallet-pages'
 export default {
   name: '',
-  props: {},
+  props: {itemList: Array},
   components: {
     walletPages
   },
@@ -43,15 +43,7 @@ export default {
   },
   data () {
     return {
-      total: 20,
-      itemList: [
-        {
-          id: 0,
-          lockTime: '2019/01/24 11:01:25    GMT+8',
-          lockAmount: '1000580',
-          unLockTime: '2019/01/24 11:01:25    GMT+8'
-        }
-      ]
+      total: 20
     }
   },
   methods: {

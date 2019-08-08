@@ -95,6 +95,10 @@
             :privateKey="selectedWallet.privateKey"
             :poolAssets="poolAssets"
             :poolNode="poolNode"
+            :poolMyEarnings="poolMyEarnings"
+            :poolAllEarnings="poolAllEarnings"
+            :poolApplyMoney="poolApplyMoney"
+            :poolApplyTime="poolApplyTime"
             @addContract="onAddContract" />
         </section>
 
@@ -213,14 +217,11 @@ export default {
       pageIdx: 1, //初始页面展示挖矿收益
       poolNode: 0,
       poolAssets: 0,
-      itemList: [
-        {
-          id: '1',
-          lockTime: '2019-07-19 23:28   +8',
-          lockMoney: '10',
-          unlockTime: '2019-07-19 23:28   +8'
-        }
-      ],//锁仓记录
+      poolAllEarnings: 0,
+      poolMyEarnings: 0,
+      poolApplyTime: '',
+      poolApplyMoney: 0,
+      itemList: [],//锁仓记录
       orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
     }
   },
@@ -400,6 +401,7 @@ export default {
     onAddContract (privateKey, contract) {
       let wallet = this.selectedWallet
       wallet.contract.push(contract)
+      this.orePoolPage = 2
       WalletsHandler.updateWalletFile(wallet, () => {
         console.log('update wallet file')
       })
@@ -451,14 +453,14 @@ export default {
             this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
               this.freezeMoney = 0
               if (Object.keys(contractInfo.timeLock).length > 0) {
-                let beniftAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+                let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
-                  this.freezeMoney = this.freezeMoney + beniftAddress[i].lockAmount
+                  this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
                 }
               }
               this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
               this.walletBalance = this._checkValueFormat(balanceSEC.toString())
-              this.availableMoney = this.walletBalance - this.freezeMoney
+              this.availableMoney = this.walletBalance
               
             })
           })
@@ -503,13 +505,17 @@ export default {
       let contractAddress = this.selectedWallet.contract[0].contractAddress
       this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
         this.selectedWallet.contract[0].status = contractInfo.status
+        this.poolApplyMoney = contractInfo.totalSupply
+        this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
         WalletsHandler.updateWalletFile(this.selectedWallet, () => {
           console.log('update wallet file')
         })
         if (this.selectedWallet.contract[0].status === 'success') {
           this.orePoolPage = 4
+          this.checkedWallet = true
           this._calcMiningPool(contractInfo.timeLock)
         } else {
+          this.checkedWallet = false
           this.orePoolPage = 2
         }
       })
@@ -519,15 +525,17 @@ export default {
     },
 
     _calcMiningPool (timeLock) {
-      let poolNode = Object.keys(timeLock).length
-      let poolAssets = 0
-      let benifs = timeLock[this.selectedWallet.walletAddress]
-      for (let address in benifs) {
-        poolAssets = poolAssets + benifs[address].lockAmount
+      this.poolNode = Object.keys(timeLock).length
+      this.poolAssets = 0
+      let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+      this.itemList = []
+      for (let benifit of benifs) {
+        this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
         this.itemList.push({
-          lockTime: WalletsHandler.formatDate(benifs[address].lockTime),
-          lockMoney: benifs[address].lockAmount,
-          unlockTime: WalletsHandler.formatDate(benifs[address].unlockTime)
+          id: '1',
+          lockTime: WalletsHandler.formatDate(moment(benifit.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+          lockMoney: benifit.lockAmount,
+          unlockTime: WalletsHandler.formatDate(moment(benifit.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
         })
       }
     },
@@ -543,6 +551,8 @@ export default {
         miningHistory.forEach((element, index) => {
           let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
           this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+          this.poolAllEarnings = this.digIncome
+          this.poolMyEarnings = this.digIncome
           this.digNumber = this.digNumber + 1
           this.moreList.push({
             id: index,

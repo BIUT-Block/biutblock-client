@@ -410,14 +410,14 @@ export default {
             this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
               this.freezeMoney = 0
               if (Object.keys(contractInfo.timeLock).length > 0) {
-                let beniftAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+                let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
-                  this.freezeMoney = this.freezeMoney + beniftAddress[i].lockAmount
+                  this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
                 }
               }
               this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
               this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
-              this.availableMoney = this.walletBalance - this.freezeMoney
+              this.availableMoney = this.walletBalance
             })
         } else if (this.selectedWallet.contract && this.selectedWallet.contract.length === 0) {
           this.walletBalance = this._checkValueFormat(balanceSEC).toString()

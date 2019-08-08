@@ -504,7 +504,7 @@ export default {
         publicKey: this.keys.publicKey,
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords,
-        contract: ''
+        contract: []
       }, (keyDataJSON) => {
         window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
         this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
