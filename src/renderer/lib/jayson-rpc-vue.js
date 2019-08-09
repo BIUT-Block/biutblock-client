@@ -394,14 +394,14 @@ export default {
         })
       },
 
-      createContractTransaction: function (walletAddress, privateKey, transfer, fnAfterCreate) {
+      createContractTransaction: function (walletAddress, privateKey, contractName, transfer, fnAfterCreate) {
         // let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
         let contractAddress = WalletsHandler.generateContractAddress(privateKey)
-        let tokenName = `SEC-${contractAddress}`
+        let tokenName = `SEC-${contractAddress}-${contractName}`
         transfer.inputData = JSON.stringify({
           sourceCode: sourceCode,
           totalSupply: 100000000,
-          tokenName: 'SEC'
+          tokenName: tokenName
         })
         transfer.sendToAddress = contractAddress
         this.getNonce(walletAddress, (nonce) => {

@@ -99,6 +99,7 @@
             :poolAllEarnings="poolAllEarnings"
             :poolApplyMoney="poolApplyMoney"
             :poolApplyTime="poolApplyTime"
+            :poolName="poolName"
             @addContract="onAddContract" />
         </section>
 
@@ -221,6 +222,7 @@ export default {
       poolMyEarnings: 0,
       poolApplyTime: '',
       poolApplyMoney: 0,
+      poolName: '',
       itemList: [],//锁仓记录
       orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
     }
@@ -507,6 +509,8 @@ export default {
         this.selectedWallet.contract[0].status = contractInfo.status
         this.poolApplyMoney = contractInfo.totalSupply
         this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+        let tokenName = contractInfo.tokenName
+        this.poolName = tokenName.split('-')[2]
         WalletsHandler.updateWalletFile(this.selectedWallet, () => {
           console.log('update wallet file')
         })

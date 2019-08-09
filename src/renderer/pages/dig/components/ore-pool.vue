@@ -17,7 +17,7 @@
       <img src="../../../assets/images/ongoingImg.png" alt="" />
       <p>
         You have applied for starting the mining pool(
-        <span>{{ orePoolName }} Mine PooL</span>),please wait for 3~5 days.
+        <span>{{ poolName }} Mine PooL</span>),please wait for 3~5 days.
       </p>
     </section>
 
@@ -49,7 +49,7 @@
     <!-- 申请成功 -->
     <section class="ore-pool-success" v-show="pages == 4">
       <section class="header-success-list">
-        <p>{{ orePoolName }} Mine Pool</p>
+        <p>{{ poolName }} Mine Pool</p>
         <p>start time：{{ poolApplyTime }}</p>
       </section>
       <ul>
@@ -88,6 +88,7 @@ export default {
     privateKey: String,
     hasContract: Boolean,
     poolList: Array,
+    poolName: String,
     poolNode: Number,
     poolAssets: Number,
     poolAllEarnings: Number,
