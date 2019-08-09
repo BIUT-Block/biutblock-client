@@ -9,7 +9,7 @@
       <section>
         <p class="pool-txt1">Congratulations on getting the opportunity to creat mining pool. You can get more mining profit by completing the following operations.</p>
         <section class="flexBetween">
-          <p class="pool-txt2">Guarantee Amount<span class="color-red">*</span></p>
+          <p class="pool-txt2">Mining Pool Name<span class="color-red">*</span></p>
           <p class="color-red" v-show="nameError">Duplicate mine name</p>
         </section>
         
