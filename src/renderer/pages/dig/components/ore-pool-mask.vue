@@ -77,7 +77,7 @@ export default {
         txFee: '0',
         chainName: 'SEC'
       }
-      this.$JsonRPCClient.createContractTransaction(this.walletAddress, this.privateKey, transfer, (contractAddress, response) => {
+      this.$JsonRPCClient.createContractTransaction(this.walletAddress, this.privateKey, this.poolName, transfer, (contractAddress, response) => {
         let transferTimeLock = {
           timestamp: new Date().getTime(),
           walletAddress: this.walletAddress,
