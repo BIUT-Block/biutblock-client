@@ -404,22 +404,27 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0) {
-          this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
-            this.freezeMoney = 0
-            for (let i = 0; i < history.length; i++) {
-              this.freezeMoney = this.freezeMoney + history.amount
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney)
-            this.walletBalance = this._checkValueFormat(this.walletBalance)
-            this.availableMoney = this.walletBalance - this.freezeMoney
-          })
-        } else if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length === 0) {
-          this.walletBalance = this._checkValueFormat(balanceSEC)
+        this.walletBalance = balanceSEC.toString()
+        if (this.selectedWallet.contract && this.selectedWallet.contract.length !== 0) {
+            let contractAddress = this.selectedWallet.contract[0].contractAddress
+            this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+              this.freezeMoney = 0
+              if (Object.keys(contractInfo.timeLock).length > 0) {
+                let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+                for (let i = 0; i < benifitAddress.length; i++) {
+                  this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                }
+              }
+              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
+              this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
+              this.availableMoney = this.walletBalance
+            })
+        } else if (this.selectedWallet.contract && this.selectedWallet.contract.length === 0) {
+          this.walletBalance = this._checkValueFormat(balanceSEC).toString()
           this.availableMoney = this.walletBalance
         }
       }, (balanceSEN) => {
-        this.walletBalanceSEN = this._checkValueFormat(balanceSEN)
+        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
       })
     },
 
@@ -429,7 +434,7 @@ export default {
       if (splitValue.length > 1) {
         return Number(value).toFixed(Number(splitValue[1])).toString()
       } else {
-        return value
+        return Number(value)
       }
     },
 
@@ -473,12 +478,12 @@ export default {
 
     /** Event Method, triggered if wallet balance updated */
     onUpdateWalletBalance (balance, walletAddress) {
-      this.walletBalance = this._checkValueFormat(balance)
+      this.walletBalance = this._checkValueFormat(balance.toString())
       this._getWalletTransactions(walletAddress)
     },
 
     onUpdateWalletBalanceSEN (balance, walletAddress) {
-      this.walletBalanceSEN = this._checkValueFormat(balance)
+      this.walletBalanceSEN = this._checkValueFormat(balance.toString())
     }
   },
   watch: {

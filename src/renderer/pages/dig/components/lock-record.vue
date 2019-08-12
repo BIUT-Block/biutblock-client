@@ -9,7 +9,7 @@
           <span @click="maskShow = true">More</span>
         </p>
       </li>
-      <li v-for="(item, index) in itemList" v-if="itemList.length > 0 && index < 5" :key="index" v-show="idx == 0">
+      <li v-for="(item, index) in itemList" v-if="itemList.length > 0 && index < 5" :key="index" v-show="idx == 1">
         <span>{{ item.lockTime }}</span>
         <span>{{ item.lockMoney }}</span>
         <span>{{ item.unlockTime }}</span>
@@ -20,7 +20,7 @@
       <p>No record</p>
     </section>
 
-    <record-mask @close = 'closeMask' v-show="maskShow"/>
+    <record-mask @close = 'closeMask' :itemList="itemList" v-show="maskShow"/>
   </section>
 </template>
 

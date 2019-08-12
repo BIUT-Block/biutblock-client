@@ -39,7 +39,7 @@
 import WalletHandler from '../../../lib/WalletsHandler';
 export default {
   name: '',
-  props: {walletAddress: String},
+  props: {walletAddress: String, privateKey: String},
   data() {
     return {
       poolName: '',
@@ -70,14 +70,29 @@ export default {
       let transfer = {
         nonce: 1,
         timestamp: new Date().getTime(),
-        from: this.walletAddress,
-        value: 100000,
+        walletAddress: this.walletAddress,
+        amount: '0',
         gasLimit: '0',
         gasPrice: '0',
-        txFee: '0'
+        txFee: '0',
+        chainName: 'SEC'
       }
-      this.$JsonRPCClient.createContractTransaction(this.walletAddress, transfer, (err, response) => {
-        console.log(response)
+      this.$JsonRPCClient.createContractTransaction(this.walletAddress, this.privateKey, this.poolName, transfer, (contractAddress, response) => {
+        let transferTimeLock = {
+          timestamp: new Date().getTime(),
+          walletAddress: this.walletAddress,
+          sendToAddress: contractAddress,
+          amount: '100000',
+          gasLimit: '0',
+          gasPrice: '0',
+          txFee: '0',
+          chainName: 'SEC'
+        }
+        this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 60 * 1000, transferTimeLock, (response) => {
+          if (response.result.status === '1') {
+            this.$emit('appendContract', this.privateKey, contractAddress)
+          } 
+        })
       })
 
       alert("点击了提交按钮")

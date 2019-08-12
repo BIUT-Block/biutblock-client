@@ -91,7 +91,16 @@
             :pages="orePoolPage"
             :availableMoney="availableMoney"
             :freezeMoney="freezeMoney"
-            :walletAddress="selectedWallet.walletAddress" />
+            :walletAddress="selectedWallet.walletAddress"
+            :privateKey="selectedWallet.privateKey"
+            :poolAssets="poolAssets"
+            :poolNode="poolNode"
+            :poolMyEarnings="poolMyEarnings"
+            :poolAllEarnings="poolAllEarnings"
+            :poolApplyMoney="poolApplyMoney"
+            :poolApplyTime="poolApplyTime"
+            :poolName="poolName"
+            @addContract="onAddContract" />
         </section>
 
       </section>
@@ -204,16 +213,17 @@ export default {
       digBalance: 0, //挖矿余额
       availableMoney: 0, //biut的可用金额
       freezeMoney: 0, //biut冻结金额
+      hasContract: false,
       invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
-      itemList: [
-        {
-          id: '1',
-          lockTime: '2019-07-19 23:28   +8',
-          lockMoney: '10',
-          unlockTime: '2019-07-19 23:28   +8'
-        }
-      ],//锁仓记录
+      poolNode: 0,
+      poolAssets: 0,
+      poolAllEarnings: 0,
+      poolMyEarnings: 0,
+      poolApplyTime: '',
+      poolApplyMoney: 0,
+      poolName: '',
+      itemList: [],//锁仓记录
       orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
       codeShow: true //邀请码是否显示 
     }
@@ -232,6 +242,11 @@ export default {
       }
     }
     this.selectedWallet = wallets[this.selectedPrivateKey]
+    if (this.selectedWallet.contract.length > 0) {
+      this._getTimeLockHistory()
+    } else {
+      this.orePoolPage = 1
+    }
     this.initMiningStatus()
 
     this._getLatestBlockInfo((balance) => {
@@ -386,6 +401,15 @@ export default {
       ipcRenderer.send('close')
     },
 
+    onAddContract (privateKey, contract) {
+      let wallet = this.selectedWallet
+      wallet.contract.push(contract)
+      this.orePoolPage = 2
+      WalletsHandler.updateWalletFile(wallet, () => {
+        console.log('update wallet file')
+      })
+    },
+
     _restartAllJobs () {
       this._startUpdateHistoryJob()
       this._startUpdateLastBlockInfoJob()
@@ -395,11 +419,15 @@ export default {
     _startUpdateHistoryJob () {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
-      this._getTimeLockHistory()
+      if (this.selectedWallet.contract.length > 0) {
+        this._getTimeLockHistory()
+      }
       this._getWalletBalance(this.selectedWallet.walletAddress)
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
-        this._getTimeLockHistory()
+        if (this.selectedWallet.contract.length > 0) {
+          this._getTimeLockHistory()
+        }
         this._getWalletBalance(this.selectedWallet.walletAddress)
       }, 3 * 60 * 1000)
     },
@@ -421,23 +449,30 @@ export default {
 
     _getWalletBalance (walletAddress) {
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length !== 0) {
-          this.$JsonRPCClient.getTimeLock(walletAddress, contractAddress, (history) => {
-            this.freezeMoney = 0
-            for (let i = 0; i < history.length; i++) {
-              this.freezeMoney = this.freezeMoney + history.amount
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney)
-            balanceSEC = this._checkValueFormat(balanceSEC)
-            this.availableMoney = Number(balanceSEC - this.freezeMoney)
-            this.freezeMoney = Number(this.freezeMoney)
+        this.walletBalance = balanceSEC.toString()
+        if (this.selectedWallet.contract && this.selectedWallet.contract.length !== 0) {
+          let contractAddress = this.selectedWallet.contract[0].contractAddress
+          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+            this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+              this.freezeMoney = 0
+              if (Object.keys(contractInfo.timeLock).length > 0) {
+                let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+                for (let i = 0; i < benifitAddress.length; i++) {
+                  this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                }
+              }
+              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
+              this.walletBalance = this._checkValueFormat(balanceSEC.toString())
+              this.availableMoney = this.walletBalance
+              
+            })
           })
-        } else if (this.selectedWallet.contractAddress && this.selectedWallet.contractAddress.length === 0) {
-          this.availableMoney = Number(this._checkValueFormat(balanceSEC))
+        } else if (this.selectedWallet.contract && this.selectedWallet.contract.length === 0) {
+          this.availableMoney = Number(this._checkValueFormat(balanceSEC.toString()))
           this.freezeMoney = 0
         }
       }, (balanceSEN) => {
-        
+        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString())
       })
     },
 
@@ -447,7 +482,7 @@ export default {
       if (splitValue.length > 1) {
         return Number(value).toFixed(Number(splitValue[1])).toString()
       } else {
-        return value
+        return Number(value)
       }
     },
 
@@ -470,9 +505,44 @@ export default {
     },
 
     _getTimeLockHistory () {
-      this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectedWallet.contractAddress, (history) => {
-          this.itemList = history
+      let contractAddress = this.selectedWallet.contract[0].contractAddress
+      this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+        this.selectedWallet.contract[0].status = contractInfo.status
+        this.poolApplyMoney = contractInfo.totalSupply
+        this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+        let tokenName = contractInfo.tokenName
+        this.poolName = tokenName.split('-')[2]
+        WalletsHandler.updateWalletFile(this.selectedWallet, () => {
+          console.log('update wallet file')
+        })
+        if (this.selectedWallet.contract[0].status === 'success') {
+          this.orePoolPage = 4
+          this.checkedWallet = true
+          this._calcMiningPool(contractInfo.timeLock)
+        } else {
+          this.checkedWallet = false
+          this.orePoolPage = 2
+        }
       })
+      // this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectedWallet.contractAddress, (history) => {
+      //     this.itemList = history
+      // })
+    },
+
+    _calcMiningPool (timeLock) {
+      this.poolNode = Object.keys(timeLock).length
+      this.poolAssets = 0
+      let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+      this.itemList = []
+      for (let benifit of benifs) {
+        this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
+        this.itemList.push({
+          id: '1',
+          lockTime: WalletsHandler.formatDate(moment(benifit.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+          lockMoney: benifit.lockAmount,
+          unlockTime: WalletsHandler.formatDate(moment(benifit.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+        })
+      }
     },
     
     _getWalletMiningHistory () {
@@ -486,6 +556,8 @@ export default {
         miningHistory.forEach((element, index) => {
           let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
           this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+          this.poolAllEarnings = this.digIncome
+          this.poolMyEarnings = this.digIncome
           this.digNumber = this.digNumber + 1
           this.moreList.push({
             id: index,
