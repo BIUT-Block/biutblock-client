@@ -565,24 +565,38 @@ export default {
       } else {
         sendToAddress = this.sentAddress
       }
-      let encryptTransferData = WalletHandler.encryptTransaction(this.selectedWallet.privateKey, {
-        walletAddress: this.selectedWallet.walletAddress,
-        sendToAddress: sendToAddress,
-        amount: this.sentTradingAmount + '',
-        txFee: this.feeVal.toString()
-      })
+      
 
       if (this.tradingText === 'BIUT') {
-        this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
+        let chainName = 'SEC'
+        let transferData = {
+          walletAddress: this.selectedWallet.walletAddress,
+          sendToAddress: sendToAddress,
+          amount: this.sentTradingAmount + '',
+          txFee: this.feeVal.toString(),
+          inputData: '',
+          chainName: chainName
+        }
+
+        this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
         this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
         }, (balance) => {
           this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
         })
       } else {
-        this.$JsonRPCClient.sendTransactionsSEN(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
+        let chainName = 'SEN'
+        let encryptTransferData = {
+          walletAddress: this.selectedWallet.walletAddress,
+          sendToAddress: sendToAddress,
+          amount: this.sentTradingAmount + '',
+          txFee: this.feeVal.toString(),
+          inputData: '',
+          chainName: chainName
+        }
+        this.$JsonRPCClient.sendTransactionsSEN(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
           this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
         }, (balance) => {
-        this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
         })
       }
       

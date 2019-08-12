@@ -280,11 +280,20 @@ export default {
           }
         })
       },
-      sendTransactions: function (walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
-        this._sendTransactions(this.client, walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN)
+      sendTransactions: function (walletAddress, privateKey, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
+        this.getNonce(walletAddress, (nonce) => {
+          transferData.nonce = nonce
+          let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transferData)
+          this._sendTransactions(this.client, walletAddress, signedTransfer, fnAfterTransactionSEC, fnAfterTransactionSEN)
+        })
+        
       },
-      sendTransactionsSEN: function (walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
-        this._sendTransactions(this.clientSEN, walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN)
+      sendTransactionsSEN: function (walletAddress, privateKey, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
+        this.getNonce(walletAddress, (nonce) => {
+          transferData.nonce = nonce
+          let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transferData)
+          this._sendTransactions(this.client, walletAddress, signedTransfer, fnAfterTransactionSEC, fnAfterTransactionSEN)
+        })
       },
 
       _chargeWallet: function (client, args, fnAfterCharging) {

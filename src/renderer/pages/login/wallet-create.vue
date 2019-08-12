@@ -521,31 +521,15 @@ export default {
           return
         } 
         walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport1, (wallets, selectedPrivateKey) => {
-          if (wallets === 'error') {
-            this.privateKeyError = true
-          } else if (wallets === 'DuplicateKey') {
-            this.privateKeyErrorText = 'Wallet already exists or imported.'
-            this.privateKeyError = true
-          } else {
-            window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this._getContractAddress(wallets, selectedPrivateKey)
+          window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
+          this._getContractAddress(wallets, selectedPrivateKey, 'privatekey')
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
-          }
         })
       } else if (walletIdx == 1) {
         walletsHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
-          console.log(wallets)
-          if (wallets === 'error') {
-            this.walletnNewPassError = true
-            this.walletnNewPassErrorText = 'Password error, unable to unlock wallet.'
-          } else if (wallets === 'DuplicateKey'){
-            this.walletnNewPassErrorText = 'Wallet already exists or imported.'
-            this.walletnNewPassError = true
-          } else {
-            window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this._getContractAddress(wallets, selectedPrivateKey)
+          window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
+          this._getContractAddress(wallets, selectedPrivateKey, 'keystore')
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
-          }
         }) 
       } else {
         if (this.walletNameImport2 === '' || this.walletNameImport2.trim().length === ' ') {
@@ -553,32 +537,58 @@ export default {
           return
         } 
         walletsHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
-            console.log(wallets)
+              //this.maskShow = true
+          this.navQuery = {
+            wallets: wallets,
+            selectedPrivateKey: selectedPrivateKey
+          }
+          window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
+          this._getContractAddress(wallets, selectedPrivateKey, 'phrase')
+              //this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
+        })
+      }
+    },
+
+    _getContractAddress (wallets, privateKey, from) {
+      this.$JsonRPCClient.getCreatorContract(wallets[privateKey].walletAddress, (contract) => {
+        wallets[privateKey].contract = contract
+        walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
+          switch (from) {
+          case "privatekey":
+            if (wallets === 'error') {
+              this.privateKeyError = true
+            } else if (wallets === 'DuplicateKey') {
+              this.privateKeyErrorText = 'Wallet already exists or imported.'
+              this.privateKeyError = true
+            } else {
+              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
+            }
+            break
+          case "keystore":
+           if (wallets === 'error') {
+              this.walletnNewPassError = true
+              this.walletnNewPassErrorText = 'Password error, unable to unlock wallet.'
+            } else if (wallets === 'DuplicateKey'){
+              this.walletnNewPassErrorText = 'Wallet already exists or imported.'
+              this.walletnNewPassError = true
+            } else {
+              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
+            }
+            break
+          case "phrase":
             if (wallets === 'error') {
               this.phraseError = true
               this.phraseErrorText = "Phrase error."
             } else if (wallets === 'DuplicateKey') {
               this.phraseError = true
               this.phraseErrorText = 'Wallet already exists or imported.'
-            } else {  
-              //this.maskShow = true
-              this.navQuery = {
-                wallets: wallets,
-                selectedPrivateKey: selectedPrivateKey
-              }
-              window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
-              this._getContractAddress(wallets, selectedPrivateKey)
-              //this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
+            } else {
+              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
             }
-        })
-      }
-    },
-
-    _getContractAddress (wallets, privateKey) {
-      this.$JsonRPCClient.getCreatorContract(wallets[privateKey].walletAddress, (contract) => {
-        wallets[privateKey].contract = contract
-        walletsHandler.backUpWalletIntoFile(wallets[privateKey], () => {
-          this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
+            break
+          default:
+            break
+          }
         })
       })
     },

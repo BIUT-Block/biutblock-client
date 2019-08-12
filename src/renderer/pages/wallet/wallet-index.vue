@@ -478,12 +478,12 @@ export default {
 
     /** Event Method, triggered if wallet balance updated */
     onUpdateWalletBalance (balance, walletAddress) {
-      this.walletBalance = this._checkValueFormat(balance.toString())
+      this.walletBalance = this._checkValueFormat(balance.toString()).toString()
       this._getWalletTransactions(walletAddress)
     },
 
     onUpdateWalletBalanceSEN (balance, walletAddress) {
-      this.walletBalanceSEN = this._checkValueFormat(balance.toString())
+      this.walletBalanceSEN = this._checkValueFormat(balance.toString()).toString()
     }
   },
   watch: {
