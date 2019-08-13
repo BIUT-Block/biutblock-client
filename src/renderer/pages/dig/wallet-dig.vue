@@ -52,7 +52,7 @@
             <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">Lock Record</li>
             <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">Mining Pool</li>
           </ul>
-          <section>
+          <section v-show="codeShow">
             <p>
               My invitation code：
               <span id="invitationCode">{{ invitationCode }}</span>
@@ -225,6 +225,7 @@ export default {
       poolName: '',
       itemList: [],//锁仓记录
       orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
+      codeShow: true //邀请码是否显示 
     }
   },
   computed: {

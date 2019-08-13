@@ -24,12 +24,12 @@
             <section class="dig-body-title-list">
               <section>
                 <span></span>
-                <span>Number Of Mined：</span>
+                <span>Number Of Mining：</span>
                 <span>{{this.digNumber}}</span>
               </section>
               <section>
                 <span></span>
-                <span>Income of Mined：</span>
+                <span>Income of Mining：</span>
                 <span>{{this.digIncome}} BIU</span>
               </section>
             </section>

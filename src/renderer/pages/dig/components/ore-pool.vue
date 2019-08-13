@@ -113,7 +113,7 @@ export default {
   },
   computed: {
     orePoolTrue () {
-      if (this.availableMoney > 100000 || this.freezeMoney > 100000) {
+      if (this.freezeMoney >= 500000) {
         this.orePoolTxt = 'Apply for opening a mining pool'
         return true
       } else {
@@ -140,13 +140,13 @@ export default {
           id: 2,
           poolImg: this.applySuccess3,
           poolTit: 'Total pool profit',
-          poolTxt: this.poolAllEarnings.toLocaleString('en-US') + " BIUT",
+          poolTxt: this.poolAllEarnings.toLocaleString('en-US') + " BIU",
         },
         {
           id: 3,
           poolImg: this.applySuccess4,
           poolTit: 'My profit',
-          poolTxt: this.poolMyEarnings.toLocaleString('en-US') + " BIUT",
+          poolTxt: this.poolMyEarnings.toLocaleString('en-US') + " BIU",
         }
       ]
     }
