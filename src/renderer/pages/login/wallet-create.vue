@@ -25,6 +25,7 @@
       <wallet-title :title="walletPassText1" :choose="true"/>
       <wallet-input-pass placeholder="Password" maxlength="30" 
           v-model="walletPass1"
+          :class="passFormatShow ? 'border-red' : ''"
           @loseFocus="loseFocus"
           @getFocus="getFocus"
           @input="inputContent1"></wallet-input-pass>
@@ -33,10 +34,21 @@
       <wallet-title :title="walletPassText2" :choose="true"/>
       <wallet-input-pass 
           placeholder="Confirm Password" 
-          maxlength="30" 
+          maxlength="30"
+          :class="passFormat2Show ? 'border-red' : ''"
           v-model="walletPass2"
           @input="inputContent2"></wallet-input-pass>
       <wallet-tips :tips="passFormat2"  v-show="passFormat2Show"/>
+
+      <wallet-title :title="walletCodeText" :choose="true"/>
+      <wallet-input 
+        type="text" 
+        placeholder="Enter invitation code"
+        :class="walletCodeError ? 'border-red' : ''"
+        maxlength="8"
+        v-model="walletCode"
+        @input="inputCode"></wallet-input>
+      <wallet-tips :tips="walletCodeErrorText"  v-show="walletCodeError"/>
 
       <wallet-button  type="button" 
                       class="wallet-button-create" 
@@ -206,6 +218,11 @@ export default {
       walletName: '', //创建钱包名称
       walletPass1: '',//密码
       walletPass2: '',//确认密码
+      walletCodeText: 'INVITATION CODE', //邀请码标题
+      walletCode: '',//邀请码输入框
+      walletCodeError: false,//邀请码错误是否显示
+      walletCodeErrorText: 'Please enter the correct invitation code',//邀请码错误提示语
+
       walletButtonText: 'Create Wallet',
       passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
       passFormatShow: false,//密码格式提示
@@ -272,7 +289,8 @@ export default {
       return this.walletName.trim().length > 0 
              && pass1.length > 7
              && passReg.test(pass1)
-             && pass2 == pass1 ? true : false
+             && pass2 == pass1
+             && this.walletCode.length === 8 ? true : false
     },
     
     //备份助记词按钮是否激活
@@ -345,6 +363,13 @@ export default {
       })
     },
 
+    //邀请码不能输入空格
+    inputCode () {
+      this.$nextTick(()=> {
+        this.walletCode = this.walletCode.replace(/\s+/g, "").replace(/[\u4E00-\u9FA5]/g,'')
+      })
+    },
+
     //私钥钱包名称不能输入空格开头
     inputName1 () {
       this.$nextTick(()=> {
@@ -369,24 +394,21 @@ export default {
     //不能输入中文
     inputContent1 () {
       this.$nextTick(()=> {
-        this.walletPass1 = this.walletPass1.replace(/[\u4E00-\u9FA5]/g,'')
-        this.walletPass1 = this.walletPass1.replace(/\s+/g,'')
+        this.walletPass1 = this.walletPass1.replace(/[\u4E00-\u9FA5]/g,'').replace(/\s+/g,'')
       })
     },
 
     //不能输入中文
     inputContent2 () {
       this.$nextTick(()=> {
-        this.walletPass2 = this.walletPass2.replace(/[\u4E00-\u9FA5]/g,'')
-        this.walletPass2 = this.walletPass2.replace(/\s+/g,'')
+        this.walletPass2 = this.walletPass2.replace(/[\u4E00-\u9FA5]/g,'').replace(/\s+/g,'')
       })
     },
 
     //不能输入中文
     inputContent3 () {
       this.$nextTick(()=> {
-        this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'')
-        this.walletNewPass = this.walletNewPass.replace(/\s+/g,'')
+        this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'').replace(/\s+/g,'')
       })
     },
 
@@ -398,7 +420,7 @@ export default {
       this.createTitle2 = 'Wallet'
     },
 
-    //创建钱包
+    //创建钱包  需要传邀请码
     createWallet() {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       let wordsArray = this.keys.englishWords.split(' ')
@@ -662,6 +684,7 @@ export default {
         })
       }
     },
+
     walletNameImport1 (newName1, oldName1) {
       let xReg = /[^\x00-\xff]/g
       if (this.getBLen(newName1) > 14 && xReg.test(newName1)) {
@@ -670,12 +693,21 @@ export default {
         })
       }
     },
+
     walletNameImport2 (newName2, oldName2) {
       let xReg = /[^\x00-\xff]/g
       if (this.getBLen(newName2) > 14 && xReg.test(newName2)) {
         this.$nextTick(()=> {
           this.walletNameImport2 = newName2.slice(0, 7)
         })
+      }
+    },
+
+    walletCode (newCode, oldCode) {
+      if (newCode.length > 0 && newCode.length < 8) {
+       this.walletCodeError = true
+      } else {
+        this.walletCodeError = false
       }
     }
   }
@@ -699,8 +731,8 @@ export default {
     border-bottom: 1px solid #E5E5E5;text-align: right;}
   
   /* 创建钱包 */
-  .wallet-create {padding: 112px 68px 0;flex: 1;width: 450px;}
-  .wallet-create p {padding-top: 32px;}
+  .wallet-create {padding: 102px 68px 0;flex: 1;width: 450px;}
+  .wallet-create p {padding-top: 24px;}
   .wallet-create .wallet-button-create {width:190px;margin-top: 36px;}
   .wallet-create .wallet-button-important {display: inline-block;padding: 8px 12px;
     color: #0B7FE6;font-weight: 400;border:1px solid rgba(229,229,229,1);border-radius:4px;

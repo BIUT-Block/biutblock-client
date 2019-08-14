@@ -31,3 +31,6 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-
 .mask-wallet-index .closeImg:hover,.wallet-mask .wallet-button:hover,.wallet-mask img:hover,
 .wallet-mask-sent-amount-tips section span:last-child:hover,.wallet-import-keystore div input[type='file']:hover,
 .wallet-content-return img:hover,.moreList:hover {cursor: pointer;}
+
+.flex {display: flex;}
+.flex-between {display: flex;align-items: center;justify-content: space-between;}

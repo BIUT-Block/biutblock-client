@@ -13,6 +13,9 @@ import './assets/common/font.css'
 import { Slider,Progress } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+import {currency} from './utils/currency'
+Vue.filter("currency",currency)
+
 Vue.use(Slider)
 Vue.use(Progress)
 

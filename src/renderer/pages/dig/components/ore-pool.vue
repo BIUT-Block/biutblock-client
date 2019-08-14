@@ -2,7 +2,7 @@
   <main class="ore-container">
     <!-- 条件不足、条件满足 -->
     <section class="ore-pool-conditions" v-show="pages == 1">
-      <p>Only more than 100,000 you can apply for opening the mining pool!</p>
+      <p>Only more than 500,000 you  can apply for opening the mining pool!</p>
       <button
         type="button"
         :class="orePoolTrue ? 'orePoolTrue' : ''"
@@ -113,7 +113,7 @@ export default {
   },
   computed: {
     orePoolTrue () {
-      if (this.freezeMoney >= 500000) {
+      if (this.freezeMoney >= 500000) {//
         this.orePoolTxt = 'Apply for opening a mining pool'
         return true
       } else {
@@ -153,9 +153,7 @@ export default {
   },
 
   created () {
-    if (this.pages === 4) {
-
-    }
+    console.log(this.pages)
   },
 
   methods: {
@@ -177,8 +175,9 @@ export default {
   .ore-container {height: 100%;}
   .ore-pool-conditions,.ore-pool-apply {height: 100%;display: flex;justify-content: center;align-items: center;flex-direction: column;}
   .ore-pool-conditions p {padding-bottom: 40px;color: #99A1A6;font-size: 14px;width: 342px;text-align: center;line-height: 1.5;}
-  .ore-pool-conditions button {width:210px;height:48px;background:#d9d9d9;border-radius:4px;border: 0;color: #fff;}
-  .ore-pool-conditions .orePoolTrue {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
+  .ore-pool-conditions button {width:210px;height:48px;background:#fff;border-radius:4px;color: #99A1A6;
+    border: 1px solid #E6E6E6;box-sizing: border-box;}
+  .ore-pool-conditions .orePoolTrue {color: #29D893;border-color: #29D893;}
 
   .ore-pool-apply p {padding-top: 32px;width: 410px;text-align: center;color: #99A1A6;font-size: 14px;line-height: 1.5;}
   .ore-pool-apply p span {color: #252F33;font-family: Lato-Medium;}

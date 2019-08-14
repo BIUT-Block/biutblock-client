@@ -55,7 +55,7 @@
             </section>
             
             <section class="all-amount-list">
-              <span>Available Balance：</span>
+              <span>Available：</span>
               <span>{{tradingIdx === 0 ? allAmount : allfeeVal}} {{tradingText}}</span>
               <span @click="sentAllAmount">All</span>
             </section>

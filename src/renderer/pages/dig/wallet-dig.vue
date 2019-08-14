@@ -1,11 +1,46 @@
 <template>
   <main class="wallet-dig-container">
-    <section class="dig-container">
+    <section class="dig-enter" v-show="digPage">
+      <h2>PC-Miner</h2>
+
+      <section class="mining-wallet">
+        <p class="mining-tit">Mining Wallet</p>
+        <p class="mining-address">0x{{ selectedWalletAddress }}</p>
+        <p class="flex-between">
+          <span>Available：</span>
+          <span>{{ availableMoney | currency("") }}</span>
+        </p>
+        <p class="flex-between">
+          <span>Guarantee：</span>
+          <span>{{ freezeMoney | currency("") }}</span>
+        </p>
+        <p class="mining-txt">Mortgage amount <span style="color: #EE1C39;">*</span></p>
+        <section class="flex-between mining-list">
+          <input type="text" placeholder="Mortgage amount"  v-model="mortgageAmount"/>
+          <span>BIUT</span>
+        </section>
+        
+        <p class="mining-tips">This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
+        <button type="button" 
+          :disabled="!mortgageActive"
+          :class="mortgageActive ? 'passCorrect' : ''"
+          @click="digPage=false">Mortgage</button>
+      </section>
+   
+    </section>  
+
+    <section class="dig-container" v-show="!digPage">
       <!-- 挖矿头部 -->
       <section class="dig-header">
         <section class="dig-header-check">
-          <h3>Mining Family</h3>
-          <section class="exclamation-list">
+          <h3>PC-Miner</h3>
+          <section class="minging-list">
+            <span>
+              {{ miningWallet }}
+            </span>
+            0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}
+          </section>
+          <!-- <section class="exclamation-list">
             <span>Mining Wallet</span>
             <img src="../../assets/images/exclamationImg.png" alt="" @mousemove="tipsShow=true" @mouseout="tipsShow=false" />
           </section>
@@ -21,17 +56,21 @@
                 :disabled="!checkedWallet"
                 :class="[miningIn ? 'miningIn' : '', checkedWallet ? 'passCorrect' : '']"
                 @click.native="beginDigMask"/>
-          </section>
+          </section> -->
+
           <h4 class="available-text">Available：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <h4 class="guarantee-text">Guarantee：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
-          
-          <transition name="fade">
+          <section class="dig-button-list">
+            <button type="button" @click="beginDigMask">Open mining</button>
+            <button type="button" @click="beginDigMask2">Mortgage more</button>
+          </section>
+          <!-- <transition name="fade">
             <section class="dig-tips" v-show="tipsShow">
               <p class="dig-tips-txt">
                 Note：Inviting mining, the wallet amount must be  more than 10,000 BIUT balances.
               </p>
             </section>
-          </transition>
+          </transition> -->
 
         </section>
 
@@ -168,6 +207,8 @@ export default {
   props: {},
   data () {
     return {
+      digPage: true,//
+      mortgageAmount: '',//输入开启挖矿冻结金额
       digButton: "Open mining",
       digNumber: 0,
       digIncome: '0',
@@ -182,6 +223,8 @@ export default {
       //noCursor: false, //默认可以选择钱包
       //disabledButton: false,//默认不可点击
       //digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
+
+      miningWallet: 'Mining Wallet',
       isSynced: false,
       chainHeight: '0',
       minedByAddress: '',
@@ -231,9 +274,23 @@ export default {
   computed: {
     recordLists () {
       return this.itemList
+    },
+
+    //是否可点击开启挖矿
+    mortgageActive () {
+      let ipt = this.mortgageAmount
+      return this.mortgageAmount > 10000 
+        && this.availableMoney > 10000 
+        && this.mortgageAmount <= this.availableMoney ? true : false
     }
   },
   created () {
+    /**
+     * 
+     * 
+     */
+    
+
     let wallets = this.$route.query.wallets
     this.selectedPrivateKey = this.$route.query.selectedPrivateKey
     for (let key in wallets) {
@@ -258,6 +315,8 @@ export default {
         //this.noCursor = false
         this.miningIn = false
       }
+
+
     })
     this._getTotalReward()
 
@@ -611,9 +670,15 @@ export default {
       /**
        * 判断是否是第一次挖矿
        * 
-       * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网
+       * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网 3 - 追加更多
        */
       let balance = this.digBalance
+      this.maskShow = true
+    },
+
+    beginDigMask2 () {
+      let balance = this.digBalance
+      this.makePages = 3
       this.maskShow = true
     },
 
@@ -758,16 +823,41 @@ export default {
   .dig-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
     border-radius:4px 4px 0 0;flex: 1;background: #fff;}
   .dig-header {border-top-left-radius: 4px;
-    border-top-right-radius: 4px;padding: 20px 32px 16px;display: flex;align-items: center;
-    justify-content: space-between;}
+    border-top-right-radius: 4px;padding: 20px 32px 16px;display: flex;justify-content: space-between;}
   .dig-header .dig-header-check {width: 308px;position: relative;}
-  .dig-header .dig-header-check button {width: 98px;height: 32px;font-size: 13px;font-family: Lato-Regular;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
-    color:#252f33;padding-top: 22px;}
+    color:#252f33;padding-bottom: 26px;}
+  .minging-list {padding-bottom: 10px;color: #252F33;font-size: 14px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;
+    width: 246px;}
+  .minging-list span {color: #99A1A6;margin-right: 12px;}
   .available-text,.guarantee-text {margin: 0;color:#576066;font-weight: normal;}
   .available-text span,.guarantee-text span {font-family: Lato-Medium;}
   .available-text {color: #29D893;padding-top: 10px;}
   .guarantee-text {padding-top: 6px;}
+
+  .dig-enter {padding: 106px 112px 0 0;background: url('../../assets/images/digBg.png') center no-repeat, #fff;background-size: cover;
+    display: flex;justify-content: space-between;box-shadow: 0px 0px 3px rgba(0,0,0,0.16);
+    border-radius: 4px 4px 0 0;flex: 1;}
+
+  .dig-enter h2 {margin: 140px 0 0 150px;width: 89px;height: 20px;padding-bottom: 10px;
+    border-bottom: 7px solid #29D893;font-size: 20px;color: #252F33;}
+  
+  .mining-wallet {width: 290px;color: #6D7880;font-size: 12px;}
+  .mining-wallet .mining-tit {padding-bottom: 8px;}
+  .mining-wallet .mining-txt {padding-top: 36px;color: #6D7880;font-size: 14px;}
+  .mining-wallet .mining-address {color: #252F33;font-size: 14px;line-height: 1.6;word-wrap: break-word;}
+  .mining-wallet .mining-tips {line-height: 1.5;word-wrap: break-word;padding-top: 16px;}
+  .mining-wallet .flex-between {padding-bottom: 10px;border-bottom: 1px solid #E6E6E6;padding-top: 12px;}
+  .mining-wallet .mining-list {padding: 0;height: 34px;}
+
+  .dig-enter input {border: 0;flex: 1;}
+  .dig-enter button {width:291px;border: 0;color: #fff;font-size: 14px;margin-top: 44px;
+    height:48px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);border-radius:4px;}
+
+  .dig-button-list {display: flex;padding-top: 14px;}
+  .dig-button-list button {width:120px;height:32px;background:linear-gradient(90deg,#29d893 0%,#0cc5b7 100%);border-radius:4px;
+    border: 0;color: #fff;font-size: 13px;}
+  .dig-button-list button:last-child {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);margin-left: 16px;}
 
   .exclamation-list {display: flex;align-items: center;padding: 22px 0 12px;font-family: Lato-Medium;color: #99A1A6;}
   .exclamation-list img {margin-left: 10px;cursor: pointer;}

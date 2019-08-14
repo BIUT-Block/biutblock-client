@@ -16,7 +16,7 @@
         <section class="ipt-list flexBetween" :class="nameError ? 'border-red' : ''">
           <input
             type="text"
-            placeholder="10.0"
+            placeholder="name your pool"
             v-model="poolName"
             maxlength="15"
             @input="poolNameIpt" />

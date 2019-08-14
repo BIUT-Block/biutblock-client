@@ -56,6 +56,8 @@
           @click="confirmFrom">{{ firstBeginBtn }}</button>
       </section>
 
+     
+
       <!-- 不是首次开启挖矿 -->
       <section class="begin-dig" v-show="pages == 1">
         <h2>Start Mining</h2>
@@ -99,7 +101,7 @@
           </section>
         </section>
         <p class="first-dig-txt-all begin-padding">
-          Available：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allBeginAmount">All</span>
+          Available：{{ availableMoney }} BIUT <span @click="allBeginAmount">All</span>
         </p>
 
         <!-- 确认挖矿 -->
@@ -138,6 +140,36 @@
         </section>
       </section>
 
+       <!-- 抵押更多 -->
+      <section class="first-dig" v-show="pages == 3">
+        <h2>Mortgage</h2>
+        <p class="first-dig-txt">Mortgage amount <span class="color-red">*</span></p>
+
+        <section class="ipt-list flexBetween">
+          <input
+            type="text"
+            placeholder="10.0"
+            maxlength="16"
+            v-model="mortgageIpt"
+            @input="clearMortgage"
+            onpaste="return false" />
+          <section>
+            <img src="../../../assets/images/clearAddress.png" v-show="mortgageImg" alt="" @click="clearMortgageIpt"/>
+            <span>BIUT</span>
+          </section>
+        </section>
+        <p class="first-dig-txt-all">
+          Available：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allAmountMortgage">All</span>
+        </p>
+        <p class="first-dig-txt-tips">This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
+        
+        <button type="button" 
+          class="confrimBtn" 
+          :class="mortgageActive ? 'passCorrect' : ''"
+          :disabled="!mortgageActive"
+          @click="mortgageFrom">{{ mortgageBtn }}</button>
+      </section>
+
     </section>
   </section>
 </template>
@@ -171,6 +203,10 @@ export default {
       clearBeginImg: false,
       clearBeginConfirmImg: false,
 
+      mortgageIpt: '',
+      mortgageImg: false,
+      mortgageBtn: 'Mortgage',
+
       pageIdx: 1,
       agreement,
       agreements
@@ -179,7 +215,7 @@ export default {
   computed: {
     firstBtn () {
       let txt = this.firstBeginBtn
-      let ipt1 = this.firstBeginIpt.replace(/\s+/g, "")
+      let ipt1 = this.firstBeginIpt
       let ipt2 = this.confirmBeginIpt.replace(/\s+/g, "")
       if (txt == "Open mining" && ipt1 > 0) {
         return true
@@ -192,7 +228,7 @@ export default {
 
     beginBtn () {
       let txt = this.firstBeginBtn
-      let ipt1 = this.beginIpt.replace(/\s+/g, "")
+      let ipt1 = this.beginIpt
       let ipt2 = this.beginCodeIpt.replace(/\s+/g, "")
       let pageIdx = this.pageIdx
       if (txt == "Open mining" && ipt1 > 0 && pageIdx != 1) {
@@ -202,6 +238,11 @@ export default {
       } else {
         return false
       }
+    },
+
+    mortgageActive () {
+      let ipt1 = this.mortgageIpt
+      return ipt1 > 0 && ipt1 < this.availableMoney ? true : false
     }
   },
   methods: {
@@ -221,6 +262,9 @@ export default {
       this.clearBeginImg = false
       this.beginCodeIpt = ''
       this.clearBeginConfirmImg = false
+
+      this.mortgageIpt = ''
+      this.mortgageImg = false
       
       this.pageIdx = 1
       this.codeError = false
@@ -242,6 +286,21 @@ export default {
     //第一次转账转出全部金额
     allAmount () {
      this.firstBeginIpt = this.availableMoney
+    },
+
+    clearMortgage () {
+      this.$nextTick(()=> {
+        this.mortgageIpt = this.inputNull(this.mortgageIpt)
+      })
+    },
+
+    clearMortgageIpt () {
+      this.mortgageIpt = ''
+      this.mortgageImg = false
+    },
+
+    allAmountMortgage () {
+      this.mortgageIpt = this.availableMoney
     },
     
     //确认提交弹出输入邀请码
@@ -334,15 +393,16 @@ export default {
 
     //挖矿只能输入金额
     clearFirstAmount () {
-      if (this.firstBeginIpt.length > 7 && this.firstBeginIpt.indexOf(".") < 0) {
-        this.firstBeginIpt = String(this.firstBeginIpt).substring(0,7)
-      } else if (this.firstBeginIpt.indexOf(".") == 0) {
-        this.firstBeginIpt = String(this.firstBeginIpt).substring(0,9)
+      let beginIpt = this.firstBeginIpt.toString()
+      if (beginIpt.length > 7 && beginIpt.indexOf(".") < 0) {
+        this.firstBeginIpt = String(beginIpt).substring(0,7)
+      } else if (beginIpt.indexOf(".") == 0) {
+        this.firstBeginIpt = String(beginIpt).substring(0,9)
       } else {
-        this.firstBeginIpt =  this.firstBeginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
-        this.firstBeginIpt =  this.firstBeginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-        this.firstBeginIpt =  this.firstBeginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
-        this.firstBeginIpt =  this.firstBeginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+        this.firstBeginIpt =  beginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        this.firstBeginIpt =  beginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        this.firstBeginIpt =  beginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+        this.firstBeginIpt =  beginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
       }
     },
 
@@ -373,6 +433,10 @@ export default {
       this.$nextTick(()=> {
         this.confirmBeginIpt = this.inputNull(this.confirmBeginIpt)
       })
+    },
+
+    mortgageFrom () {
+      this.closeMask ()
     }
   },
   watch: {

@@ -14,34 +14,50 @@
         
         <section class="wallet-content-header-left">
           <!-- 头部删除 修改名字 -->
-          <section>
-            <img src="../../assets/images/menu.png" alt="" @click="tabMenuList" id='menuListImg'>
-            <section class="wallet-content-header-left-update"
-                    :class="inputActive?'input-active':''"
-                     @click="updateName">
-              <span v-show="inputReadonly">{{ oldWalletName }}</span>
-              <input type="text" 
-                   maxlength="14"
-                   ref="contentInput"
-                   v-model="walletName"
-                   v-show="!inputReadonly"
-                   :readonly="inputReadonly"
-                   onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"
-                   @input="inputUpdateName"
-                   @blur="saveName"/>
-              <!-- <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput"> -->
+          <section class="flex-between">
+            <section class="header-left">
+              <img src="../../assets/images/menu.png" alt="" @click="tabMenuList" id='menuListImg'>
+              <section class="wallet-content-header-left-update"
+                      :class="inputActive?'input-active':''"
+                      @click="updateName">
+                <span v-show="inputReadonly">{{ oldWalletName }}</span>
+                <input type="text" 
+                    maxlength="14"
+                    ref="contentInput"
+                    v-model="walletName"
+                    v-show="!inputReadonly"
+                    :readonly="inputReadonly"
+                    onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"
+                    @input="inputUpdateName"
+                    @blur="saveName"/>
+                <!-- <img src="../../assets/images/updateName.png" v-show="inputActive" alt="" @click="clearInput"> -->
+              </section>
+              
+              <ul v-show="menuShow">
+                <li v-for="(item, index) in menuList" 
+                  @click="lookMask(index)">{{item.text}}</li>
+              </ul>
             </section>
-            
-            <ul v-show="menuShow">
-              <li v-for="(item, index) in menuList" 
-                @click="lookMask(index)">{{item.text}}</li>
-            </ul>
+
+            <section class="invitation-list">
+              <figure class="flex">
+                <figcaption>
+                  My invitation code：
+                  <span id="invitation">
+                    {{ invitationCode }}
+                  </span>
+                </figcaption>
+                <img src="../../assets/images/copy.png" alt="" @click="copyCode" 
+                data-clipboard-target="#invitation" class="copyCodeButton">
+              </figure>
+            </section>
           </section>
+          
 
           <!-- 私钥 转账 --->
           <!-- <h2>{{walletBalance}} <span>BIUT Token</span></h2> -->
           <section class="wallet-header-list">
-            <section>
+            <section class="wallet-header-copy-list">
               <span id="address">0x{{selectedWallet.walletAddress}}</span>
               <img src="../../assets/images/copy.png" alt="" @click="copyCnt" 
                 data-clipboard-target="#address" class="copyButton"/>
@@ -59,7 +75,7 @@
         <section class="wallet-header-money-list">
           <section class="money-content">
             <span> BIUT Balance </span>
-            <p>{{walletBalance}} BIUT</p>
+            <p>{{ walletBalance | currency("") }} BIUT</p>
             <section class="money-text-list">
               <p class="money-text">
                 <span>Available</span>
@@ -74,7 +90,7 @@
           </section>
           <section class="money-content">
             <span> BIU Balance </span>
-            <p>{{walletBalanceSEN}} BIU</p>
+            <p>{{ walletBalanceSEN | currency("") }} BIU</p>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
         </section>
@@ -156,6 +172,7 @@ export default {
       walletBalance: '0',//sec余额
       availableMoney: 0, //biut的可用金额
       freezeMoney: 0, //biut冻结金额
+      invitationCode: '12345678',//邀请码
 
       walletBalanceSEN: '0',//sen余额
       walletAddress: '',
@@ -264,6 +281,26 @@ export default {
       this.maskShow = true
     },
     
+    //复制邀请码
+    copyCode () {
+      var clipboard = new Clipboard('.copyCodeButton')
+      this.translucentShow = true
+      clipboard.on('success', e => {
+          clipboard.destroy()
+          this.translucentText = 'Copy success'
+          setTimeout(() => {
+            this.translucentShow = false
+          }, 3000)
+      })
+      clipboard.on('error', e => {
+          this.translucentText = 'Copy the failure'
+          setTimeout(() => {
+            this.translucentShow = false
+          }, 3000)
+          clipboard.destroy()
+      })
+    },
+
     //复制地址
     copyCnt () {
       var clipboard = new Clipboard('.copyButton')
@@ -503,19 +540,22 @@ export default {
 <style scoped>
   .wallet-content {padding: 36px 32px 0;}
   .wallet-content-header {display: flex;justify-content: space-between;flex-direction: column;}
-  .wallet-content-header-left section:first-child {display: flex;align-items: center;color: #576066;} 
-  .wallet-content-header-left section:first-child img {width: 16px;height: 12px;margin-right: 12px;}
-  .wallet-content-header-left section:first-child {position: relative;}
-  .wallet-content-header-left section:first-child ul {width:146px;background:rgba(66,83,91,1);
+  .wallet-content-header-left .header-left {display: flex;align-items: center;color: #576066;justify-content: space-between;} 
+  .wallet-content-header-left .header-left img {width: 16px;height: 12px;margin-right: 12px;}
+  .wallet-content-header-left .header-left {position: relative;}
+  .wallet-content-header-left .header-left ul {width:146px;background:rgba(66,83,91,1);
     box-shadow:0px 10px 10px rgba(66,83,91,0.2);position: absolute;top: 24px;left:-7px;z-index: 9;
     border-radius: 4px;color: #AFC3CC;font-size: 14px;}
-  .wallet-content-header-left section:first-child ul li {height: 37px;line-height: 37px;padding-left: 12px;
+  .wallet-content-header-left .header-left ul li {height: 37px;line-height: 37px;padding-left: 12px;
     border-bottom: 1px solid #536973;}
-  .wallet-content-header-left section:first-child ul li:first-child {border-top-left-radius: 4px;
+  .wallet-content-header-left .header-left ul li:first-child {border-top-left-radius: 4px;
     border-top-right-radius: 4px;position: relative;}
-  .wallet-content-header-left section:first-child ul li:last-child {border:0;border-bottom-left-radius: 4px;
+  .wallet-content-header-left .header-left ul li:last-child {border:0;border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;}
-  .wallet-content-header-left section:first-child ul li:hover {cursor: pointer;background: #536973;}
+  .wallet-content-header-left .header-left ul li:hover {cursor: pointer;background: #536973;}
+
+  .invitation-list img {margin-left: 12px;}
+  .invitation-list figure {margin: 0;}
   
   /* 修改名称 */
   .wallet-content-header-left-update {display: flex;align-items: center;height:24px;
@@ -528,8 +568,9 @@ export default {
   .wallet-content-header-left-update span:hover {background: #F2F2F2;cursor: pointer;}
 
   /* 按钮列表 */
-  .wallet-header-list {display: flex;justify-content: space-between;padding: 8px 0 24px;}
-  .wallet-header-list section:first-child img {width: 14px;height: 14px;margin-left: 12px;}
+  .wallet-header-list {display: flex;justify-content: space-between;padding: 8px 0 24px;align-items: center;}
+  .wallet-header-list .wallet-header-copy-list {display: flex;align-items: center;}
+  .wallet-header-list .wallet-header-copy-list img {width: 14px;height: 14px;margin-left: 12px;}
   .wallet-button-list {display: flex;}
   .wallet-button-list section {width: 96px;height: 36px;line-height: 36px;border-radius: 4px;
     border:1px solid rgba(229,229,229,1);font-size: 14px;}
