@@ -16,11 +16,11 @@
         </p>
         <p class="mining-txt">Mortgage amount <span style="color: #EE1C39;">*</span></p>
         <section class="flex-between mining-list">
-          <input type="text" placeholder="Mortgage amount"  v-model="mortgageAmount"/>
+          <input type="text" placeholder="10,000.00"  v-model="mortgageAmount"/>
           <span>BIUT</span>
         </section>
         
-        <p class="mining-tips">This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
+        <p class="mining-tips">Not less than 10,000 BIUT, This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
         <button type="button" 
           :disabled="!mortgageActive"
           :class="mortgageActive ? 'passCorrect' : ''"
@@ -278,9 +278,8 @@ export default {
 
     //是否可点击开启挖矿
     mortgageActive () {
-      let ipt = this.mortgageAmount
-      return this.mortgageAmount > 10000 
-        && this.availableMoney > 10000 
+      return this.mortgageAmount >= 10000 
+        && this.availableMoney >= 10000 
         && this.mortgageAmount <= this.availableMoney ? true : false
     }
   },
