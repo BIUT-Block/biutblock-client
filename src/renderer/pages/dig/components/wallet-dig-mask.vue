@@ -33,7 +33,7 @@
         <p class="first-dig-txt-tips">This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
 
         <!-- 确认挖矿 -->
-        <section class="confrim-content" v-show="confrimContent">
+        <!-- <section class="confrim-content" v-show="confrimContent">
           <section class="flexBetween">
             <p class="first-dig-txt">Invitation Code <span class="color-red">*</span></p>
             <p class="color-red" v-show="codeError">Invitation code does not exist or is wrong</p>
@@ -41,13 +41,13 @@
           <section class="ipt-list flexBetween" :class="codeError ? 'border-red' : ''">
             <input
               type="text"
-              placeholder="Please enter the invitation code"
+              placeholder="Enter invitation code"
               v-model="confirmBeginIpt"
               maxlength="8"
               @input="clearConfirmCode" />
             <img src="../../../assets/images/clearAddress.png" v-show="clearConfirmImg" alt="" @click="clearConfirmIpt"/>
           </section>
-        </section>
+        </section> -->
         
         <button type="button" 
           class="confrimBtn" 
@@ -59,7 +59,7 @@
      
 
       <!-- 不是首次开启挖矿 -->
-      <section class="begin-dig" v-show="pages == 1">
+      <!-- <section class="begin-dig" v-show="pages == 1">
         <h2>Start Mining</h2>
         <p class="begin-dig-txt">
           You will start mining with "<span>mining wallet<br/> 0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}</span>"
@@ -113,7 +113,7 @@
           <section class="ipt-list flexBetween" :class="codeError2 ? 'border-red' : ''">
             <input
               type="text"
-              placeholder="Please enter the invitation code"
+              placeholder="Enter invitation code"
               v-model="beginCodeIpt"
               maxlength="8"
               @input="clearBeginCode" />
@@ -126,7 +126,7 @@
           :class="beginBtn ? 'passCorrect' : ''"
           :disabled="!beginBtn"
           @click="confirmBeginFrom">{{ firstBeginBtn }}</button>
-      </section>
+      </section> -->
 
       <!-- 断网 -->
       <section v-show="pages == 2">
@@ -191,7 +191,7 @@ export default {
       confrimContent: false,//第一次确认挖矿邀请码
       firstBeginBtn: 'Open mining',
       firstBeginIpt: '',//第一次开启挖矿的input
-      confirmBeginIpt: '',//第一次开启挖矿邀请码的input
+      //confirmBeginIpt: '',//第一次开启挖矿邀请码的input
       clearConfirmImg: false,
       clearImg: false,
       codeError: false, //邀请码输入错误的时候显示
@@ -214,16 +214,17 @@ export default {
   },
   computed: {
     firstBtn () {
-      let txt = this.firstBeginBtn
       let ipt1 = this.firstBeginIpt
-      let ipt2 = this.confirmBeginIpt.replace(/\s+/g, "")
-      if (txt == "Open mining" && ipt1 > 0) {
-        return true
-      } else if (txt == "Start invitation mining" && ipt2.length === 8) {
-        return true
-      } else {
-        return false
-      }
+      //let ipt2 = this.confirmBeginIpt.replace(/\s+/g, "")
+
+      return ipt1 > 0 && ipt < this.availableMoney ? true : false
+      // if (txt == "Open mining" && ipt1 > 0) {
+      //   return true
+      // } else if (txt == "Start invitation mining" && ipt2.length === 8) {
+      //   return true
+      // } else {
+      //   return false
+      // }
     },
 
     beginBtn () {
@@ -305,14 +306,15 @@ export default {
     
     //确认提交弹出输入邀请码
     confirmFrom () {
-      this.confrimContent = true
-      if (this.firstBeginBtn == 'Open mining') {
-        this.$nextTick(()=>{
-          this.firstBeginBtn = 'Start invitation mining'
-        })
-      } else {
-        this.submitFrom()
-      }
+      // this.confrimContent = true
+      // if (this.firstBeginBtn == 'Open mining') {
+      //   this.$nextTick(()=>{
+      //     this.firstBeginBtn = 'Start invitation mining'
+      //   })
+      // } else {
+      //   this.submitFrom()
+      // }
+      this.submitFrom()
     },
 
     //确认提交挖矿
@@ -322,13 +324,15 @@ export default {
        * this.codeError = true
        * this.confirmBeginIpt = ''
        */
-      if (this.confirmBeginIpt != 12345678) {
-        this.codeError = true
-        this.confirmBeginIpt = ''
-        return
-      } else {
-        this.closeMask ()
-      }
+      // if (this.confirmBeginIpt != 12345678) {
+      //   this.codeError = true
+      //   this.confirmBeginIpt = ''
+      //   return
+      // } else {
+      //    this.closeMask ()
+      // }
+
+      this.closeMask ()
     },
 
     //断网的方法处理

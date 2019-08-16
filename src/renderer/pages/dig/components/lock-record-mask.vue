@@ -2,7 +2,7 @@
   <main class="mask">
     <section class="mask-container record-mask">
       <header class="record-head">
-        <h2>View rules</h2>
+        <h2>Lock record</h2>
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </header>
 

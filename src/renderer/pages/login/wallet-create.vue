@@ -221,7 +221,7 @@ export default {
       walletCodeText: 'INVITATION CODE', //邀请码标题
       walletCode: '',//邀请码输入框
       walletCodeError: false,//邀请码错误是否显示
-      walletCodeErrorText: 'Please enter the correct invitation code',//邀请码错误提示语
+      walletCodeErrorText: 'Please enter the correct invitation code.',//邀请码错误提示语
 
       walletButtonText: 'Create Wallet',
       passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
@@ -230,7 +230,7 @@ export default {
       passFormat2Show: false,//密码格式提示
       backupText1: 'PHRASE',
       backupText2: 'PRIVATE KEY',
-      privateKey: '8305dcbb827255ef79f348654cd381768bd95349d330530ab33a9b2336a8f2e6',//备份助记词私钥
+      privateKey: '',//备份助记词私钥
       walletBackupButton: 'Enter Wallet',
       radioImg: agreement,//协议按钮
       radioIndex: 1,// 1 表示默认不选择 相反选择
@@ -266,7 +266,7 @@ export default {
       showPass: false,//选择keystroe之后出现密码输入的框
       KeyStoreVal: 'Select Keystore',
       walletnNewPassError: false,//密码错误提示语是否显示
-      phraseErrorText: 'Phrase error',//助记词提示语错误
+      phraseErrorText: 'Phrase error.',//助记词提示语错误
       phraseError: false,//助记词提示语是否显示
       KeyStoreColor: true,
       copyText: 'Copy success',//私钥复制

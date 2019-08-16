@@ -91,7 +91,7 @@
             <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">Lock Record</li>
             <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">Mining Pool</li>
           </ul>
-          <section v-show="codeShow">
+          <!-- <section v-show="codeShow">
             <p>
               My invitation code：
               <span id="invitationCode">{{ invitationCode }}</span>
@@ -100,7 +100,7 @@
               @click="copyCode"  
               data-clipboard-target="#invitationCode" 
               class="copyButton"/>
-          </section>
+          </section> -->
         </section>
 
         <!-- 挖矿收益 -->
@@ -207,7 +207,7 @@ export default {
   props: {},
   data () {
     return {
-      digPage: true,//
+      digPage: true,// 第一次进入的时候  后面进入成 false
       mortgageAmount: '',//输入开启挖矿冻结金额
       digButton: "Open mining",
       digNumber: 0,
@@ -242,7 +242,7 @@ export default {
       maskShow: false,
       maskText: '',
       
-      mineStatusText: 'Please stop mining before changing wallet',
+      //mineStatusText: 'Please stop mining before changing wallet',
       // mineStatusError: false,
       bAlreadyShowed: false,
       
@@ -252,7 +252,7 @@ export default {
       networkErrorText: 'No connection to network. Continue or exit?',
       networkCheckJob: '',
 
-      makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网
+      makePages: 0,//默认是首次开启挖矿 0 - 开启挖矿 2 - 断网  3 - 追加更多
       digBalance: 0, //挖矿余额
       availableMoney: 0, //biut的可用金额
       freezeMoney: 0, //biut冻结金额
@@ -669,10 +669,12 @@ export default {
       /**
        * 判断是否是第一次挖矿
        * 
-       * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿 1 - 不是首次挖矿  2 - 断网 3 - 追加更多
+       * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿  2 - 断网 3 - 追加更多
        */
       let balance = this.digBalance
       this.maskShow = true
+
+      this.makePages = 2
     },
 
     beginDigMask2 () {

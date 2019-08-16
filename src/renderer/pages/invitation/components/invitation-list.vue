@@ -13,10 +13,10 @@
 
     <ul>
       <li>
-        <span>address</span>
+        <span>Address</span>
         <span>Invitation time</span>
         <span>Received a reward (BIUT)</span>
-        <span>operation</span>
+        <span>Operation</span>
       </li>
       <li v-for="(item, index) in itemLists" :key="index" v-show="!dataNull">
         <span>{{ item.itemAddress }}</span>

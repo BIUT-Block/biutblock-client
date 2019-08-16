@@ -17,7 +17,7 @@
       <img src="../../../assets/images/ongoingImg.png" alt="" />
       <p>
         You have applied for starting the mining pool(
-        <span>{{ poolName }} Mine PooL</span>),please wait for 3~5 days.
+        <span>{{ poolName }} </span>),please wait for 3~5 days.
       </p>
     </section>
 
