@@ -93,7 +93,11 @@ let WalletHandler = {
         publicKey: wallet.publicKey,
         walletAddress: wallet.walletAddress,
         englishWords: wallet.englishWords,
-        contract: wallet.contract
+        invitationCode: wallet.invitationCode,
+        ownInvitationCode: wallet.invitationCode,
+        mortgagePoolAddress: wallet.mortgagePoolAddress,
+        ownPoolAddress: wallet.ownPoolAddress,
+        role: wallet.role
       }
     }
 
@@ -130,7 +134,11 @@ let WalletHandler = {
         publicKey: wallet.publicKey,
         walletAddress: wallet.walletAddress,
         englishWords: wallet.englishWords,
-        contract: wallet.contract
+        invitationCode: wallet.invitationCode,
+        ownInvitationCode: wallet.invitationCode,
+        mortgagePoolAddress: wallet.mortgagePoolAddress,
+        ownPoolAddress: wallet.ownPoolAddress,
+        role: wallet.role
       }
       let keyFileData = JSON.stringify(keyDataJSON)
       let cipherText = CryptoJS.AES.encrypt(keyFileData, SECFileKey).toString()

@@ -20,6 +20,7 @@
         placeholder="Wallet Name" 
         maxlength="14"
         v-model="walletName"
+        :disable="walletNameDisable"
         @input="inputName"></wallet-input>
       
       <wallet-title :title="walletPassText1" :choose="true"/>
@@ -100,6 +101,7 @@
           placeholder="Wallet Name" 
           maxlength="14" 
           v-model="walletNameImport1"
+          :disable="walletNameDisable"
           @input="inputName1"></wallet-input>
         <textarea placeholder="Eenter your private key here" 
             maxlength="64" 
@@ -142,6 +144,7 @@
           placeholder="Wallet Name" 
           maxlength="14" 
           v-model="walletNameImport2"
+          :disable="walletNameDisable"
           @input="inputName2"></wallet-input>
         <textarea placeholder="Enter your Phrase here width space-separated"
           v-model.trim="walletPhrase"></textarea>
@@ -192,6 +195,7 @@ import walletsHandler from '../../lib/WalletsHandler'
 
 const fs = require('fs')
 const pkg = require('../../../../package.json')
+const dataCenterHandler = require('../../lib/DataCenterHandler')
 
 export default {
   name: 'walletCreate',
@@ -216,6 +220,7 @@ export default {
       walletPassText1: 'PASSWORD',
       walletPassText2: 'CONFIRM PASSWORD',
       walletName: '', //创建钱包名称
+      walletNameDisable: false,
       walletPass1: '',//密码
       walletPass2: '',//确认密码
       walletCodeText: 'INVITATION CODE', //邀请码标题
@@ -321,6 +326,9 @@ export default {
       this.createClose = true
     } else {
       this.createClose = false
+      this.walletName = '挖矿钱包'
+      this.walletNameImport1 = '挖矿钱包'
+      this.walletNameImport2 = '挖矿钱包'
     }
     this.versionNumber = pkg.version
     // if (createId !== 1) {
@@ -423,29 +431,36 @@ export default {
     //创建钱包  需要传邀请码
     createWallet() {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
-      let wordsArray = this.keys.englishWords.split(' ')
-      let keyDataJSON = {}
-      this.itemList = []
-      this.privateKey = this.keys.privateKey
-      wordsArray.forEach((word, index)=>{
-        this.itemList.push({
-          id: index.toString(),
-          cnt: word
-        })
+      dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode}, (body) => {
+        if (body && body.status) {
+          this.parentWallet = body.doc
+          let wordsArray = this.keys.englishWords.split(' ')
+          let keyDataJSON = {}
+          this.itemList = []
+          this.privateKey = this.keys.privateKey
+          wordsArray.forEach((word, index)=>{
+            this.itemList.push({
+              id: index.toString(),
+              cnt: word
+            })
+          })
+          keyDataJSON[this.keys.privateKey] = {
+            walletName: this.walletName,
+            privateKey: this.keys.privateKey,
+            publicKey: this.keys.publicKey,
+            walletAddress: this.keys.userAddress,
+            englishWords: this.keys.englishWords
+          }
+          walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
+          this.createClose = true //进入备份助记词关闭按钮显示
+          this.createPages = 2
+          this.createTitle1 = 'Wallet'
+          this.createTitle2 = 'Created!'
+        } else {
+          this.walletCodeError = true
+          this.walletCodeErrorText = body.message
+        }
       })
-      keyDataJSON[this.keys.privateKey] = {
-        walletName: this.walletName,
-        privateKey: this.keys.privateKey,
-        publicKey: this.keys.publicKey,
-        walletAddress: this.keys.userAddress,
-        englishWords: this.keys.englishWords
-      }
-      walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
-
-      this.createClose = true //进入备份助记词关闭按钮显示
-      this.createPages = 2
-      this.createTitle1 = 'Wallet'
-      this.createTitle2 = 'Created!'
     },
 
     //创建钱包的关闭方法
@@ -470,6 +485,7 @@ export default {
         this.agreedId = false
         this.radioImg = agreement
         this.walletName = ''
+        this.walletNameDisable = true
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
@@ -479,10 +495,10 @@ export default {
         this.createClose = false
         this.createTitle1 = 'Create'
         this.createTitle2 = 'New Wallet'
-        this.walletNameImport1 = ''
+        this.walletNameImport1 = '挖矿钱包'
         this.walletPrivateKey = ''
         this.showPass = false
-        this.walletNameImport2 = ''
+        this.walletNameImport2 = '挖矿钱包'
         this.walletPhrase = ''
         this.KeyStoreVal = 'Select Keystore'
         this.walletNewPass = ''
@@ -491,7 +507,8 @@ export default {
         this.radioIndex = 1
         this.agreedId = false
         this.radioImg = agreement
-        this.walletName = ''
+        this.walletName = '挖矿钱包'
+        this.walletNameDisable = true
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
@@ -519,17 +536,21 @@ export default {
     },
 
     //备份助记词成功进入钱包主页
-    backupWallet () {
+    backupWallet () {  
       walletsHandler.backUpWalletIntoFile({
         walletName: this.walletName,
         privateKey: this.keys.privateKey,
         publicKey: this.keys.publicKey,
         walletAddress: this.keys.userAddress,
         englishWords: this.keys.englishWords,
-        contract: []
+        invitationCode: this.parentWallet.invitationCode,
+        ownInvitationCode: this.parentWallet.invitationCode,
+        mortgagePoolAddress: this.parentWallet.mortgagePoolAddress,
+        ownPoolAddress: this.parentWallet.ownPoolAddress,
+        role: this.parentWallet.role
       }, (keyDataJSON) => {
         window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
-        this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
+          this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
       })
     },
 
@@ -544,13 +565,16 @@ export default {
         } 
         walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport1, (wallets, selectedPrivateKey) => {
           window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-          this._getContractAddress(wallets, selectedPrivateKey, 'privatekey')
+          this._findOutWallet(wallets, selectedPrivateKey, 'privatekey')
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
         })
       } else if (walletIdx == 1) {
         walletsHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
           window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-          this._getContractAddress(wallets, selectedPrivateKey, 'keystore')
+          if (this.createId === 1) {
+            wallets[selectedPrivateKey].walletName = '挖矿钱包'
+          }
+          this._findOutWallet(wallets, selectedPrivateKey, 'keystore')
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
         }) 
       } else {
@@ -565,54 +589,47 @@ export default {
             selectedPrivateKey: selectedPrivateKey
           }
           window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
-          this._getContractAddress(wallets, selectedPrivateKey, 'phrase')
+          this._findOutWallet(wallets, selectedPrivateKey, 'phrase')
               //this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
         })
       }
     },
 
-    _getContractAddress (wallets, privateKey, from) {
-      this.$JsonRPCClient.getCreatorContract(wallets[privateKey].walletAddress, (contract) => {
-        wallets[privateKey].contract = contract
-        walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
-          switch (from) {
-          case "privatekey":
+    _findOutWallet (wallets, privateKey, from) {
+      dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
+        if (body && body.doc.length > 0) {
+          walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
             if (wallets === 'error') {
-              this.privateKeyError = true
+              this._showImportError(from, 'Input value is not valid.')
             } else if (wallets === 'DuplicateKey') {
-              this.privateKeyErrorText = 'Wallet already exists or imported.'
-              this.privateKeyError = true
+              this._showImportError(from, 'Wallet already exists or imported.')
             } else {
               this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
             }
-            break
-          case "keystore":
-           if (wallets === 'error') {
-              this.walletnNewPassError = true
-              this.walletnNewPassErrorText = 'Password error, unable to unlock wallet.'
-            } else if (wallets === 'DuplicateKey'){
-              this.walletnNewPassErrorText = 'Wallet already exists or imported.'
-              this.walletnNewPassError = true
-            } else {
-              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
-            }
-            break
-          case "phrase":
-            if (wallets === 'error') {
-              this.phraseError = true
-              this.phraseErrorText = "Phrase error."
-            } else if (wallets === 'DuplicateKey') {
-              this.phraseError = true
-              this.phraseErrorText = 'Wallet already exists or imported.'
-            } else {
-              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
-            }
-            break
-          default:
-            break
-          }
-        })
+          })
+        } else {
+          this._showImportError(from, body.message)
+        }
       })
+    },
+
+    _showImportError (from, error) {
+      switch (from) {
+        case "privatekey":
+          this.privateKeyError = true
+          this.privateKeyErrorText = error
+          break
+        case "keystore":
+          this.walletnNewPassError = true
+          this.walletnNewPassErrorText = error
+          break
+        case "phrase":
+            this.phraseError = true
+            this.phraseErrorText = error
+          break
+        default:
+          break
+      }
     },
 
     // _navToNext () {
