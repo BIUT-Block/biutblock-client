@@ -46,7 +46,11 @@ export default {
         privateKey: privateKey,
         publicKey: this.wallets[privateKey].publicKey,
         englishWords: this.wallets[privateKey].englishWords,
-        contract: this.wallets[privateKey].contract
+        invitationCode: this.wallets[privateKey].invitationCode,
+        ownInvitationCode: this.wallets[privateKey].ownInvitationCode,
+        role: this.wallets[privateKey].role,
+        mortgagePoolAddress: this.wallets[privateKey].mortgagePoolAddress,
+        ownPoolAddress: this.wallets[privateKey].ownPoolAddress
         })
         if (privateKey === this.selectedPrivateKey) {
           selectedWallet = {
@@ -57,7 +61,11 @@ export default {
             privateKey: privateKey,
             publicKey: this.wallets[privateKey].publicKey,
             englishWords: this.wallets[privateKey].englishWords,
-            contract: this.wallets[privateKey].contract
+            invitationCode: this.wallets[privateKey].invitationCode,
+            ownInvitationCode: this.wallets[privateKey].ownInvitationCode,
+            role: this.wallets[privateKey].role,
+            mortgagePoolAddress: this.wallets[privateKey].mortgagePoolAddress,
+            ownPoolAddress: this.wallets[privateKey].ownPoolAddress
           }
         }
       })
@@ -84,7 +92,11 @@ export default {
         privateKey: this.selectedPrivateKey,
         publicKey: this.wallets[this.selectedPrivateKey].publicKey,
         englishWords: this.wallets[this.selectedPrivateKey].englishWords,
-        contract: this.wallets[this.selectedPrivateKey].contract
+        invitationCode: this.wallets[this.selectedPrivateKey].invitationCode,
+        ownInvitationCode: this.wallets[this.selectedPrivateKey].ownInvitationCode,
+        role: this.wallets[this.selectedPrivateKey].role,
+        mortgagePoolAddress: this.wallets[this.selectedPrivateKey].mortgagePoolAddress,
+        ownPoolAddress: this.wallets[this.selectedPrivateKey].ownPoolAddress
       })
     }  
   },

@@ -433,7 +433,7 @@ export default {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode}, (body) => {
         if (body && body.status) {
-          this.parentWallet = body.doc
+          this.parentWallet = body.doc[0]
           let wordsArray = this.keys.englishWords.split(' ')
           let keyDataJSON = {}
           this.itemList = []
@@ -545,8 +545,8 @@ export default {
         englishWords: this.keys.englishWords,
         invitationCode: this.parentWallet.invitationCode,
         ownInvitationCode: this.parentWallet.invitationCode,
-        mortgagePoolAddress: this.parentWallet.mortgagePoolAddress,
-        ownPoolAddress: this.parentWallet.ownPoolAddress,
+        mortgagePoolAddress: this.parentWallet.mortgagePoolAddress.replace('0x', ''),
+        ownPoolAddress: this.parentWallet.ownPoolAddress.replace('0x', ''),
         role: this.parentWallet.role
       }, (keyDataJSON) => {
         window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
@@ -598,6 +598,11 @@ export default {
     _findOutWallet (wallets, privateKey, from) {
       dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
         if (body && body.doc.length > 0) {
+          wallets[privateKey].role = body.doc[0].role
+          wallets[privateKey].invitationCode = body.doc[0].invitationCode
+          wallets[privateKey].ownInvitationCode = body.doc[0].ownInvitationCode
+          wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress.replace('0x', '')
+          wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress.replace('0x', '')
           walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
             if (wallets === 'error') {
               this._showImportError(from, 'Input value is not valid.')

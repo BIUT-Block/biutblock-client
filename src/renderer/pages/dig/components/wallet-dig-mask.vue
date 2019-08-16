@@ -183,8 +183,8 @@ export default {
     pages: Number,
     networkErrorText: String,
     selectedWalletAddress: String,
-    availableMoney: Number,
-    freezeMoney: Number,
+    availableMoney: String,
+    freezeMoney: String,
   },
   data() {
     return {

@@ -237,11 +237,13 @@ export default {
     istab (index,url) {
       this.idx = index
       this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
+      
       WalletsHandler.getAllWalletsFromFile( (wallets) => {
+        let firstKey = Object.keys(wallets)[0]
         if (wallets.hasOwnProperty(this.selectedPrivateKey)) {
-          this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: this.selectedPrivateKey }})
+          this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: this.selectedPrivateKey, firstKey: firstKey }})
         } else {
-          this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: Object.keys(wallets)[0] }})
+          this.$router.push({ path: ""+url+"", query: {wallets: wallets, selectedPrivateKey: firstKey, firstKey: firstKey }})
         }
       
         if (index === 3) {

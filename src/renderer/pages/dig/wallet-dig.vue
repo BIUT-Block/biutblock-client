@@ -219,6 +219,7 @@ export default {
       selectedWallet: '',
       selectedWalletName: '',
       selectedWalletAddress: '',
+      contractAddress: '',
       miningIn: false, //挖矿中改变按钮样式
       //noCursor: false, //默认可以选择钱包
       //disabledButton: false,//默认不可点击
@@ -254,8 +255,8 @@ export default {
 
       makePages: 0,//默认是首次开启挖矿 0 - 开启挖矿 2 - 断网  3 - 追加更多
       digBalance: 0, //挖矿余额
-      availableMoney: 0, //biut的可用金额
-      freezeMoney: 0, //biut冻结金额
+      availableMoney: "0", //biut的可用金额
+      freezeMoney: "0", //biut冻结金额
       hasContract: false,
       invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
@@ -284,25 +285,28 @@ export default {
     }
   },
   created () {
-    /**
-     * 
-     * 
-     */
-    
-
     let wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
+    this.selectedPrivateKey = this.$route.query.firstKey
+    this.selectedWalletAddress = wallets[this.selectedPrivateKey].walletAddress
     for (let key in wallets) {
       if (wallets.hasOwnProperty(key)) {
         this.wallets.push(wallets[key])
       }
     }
     this.selectedWallet = wallets[this.selectedPrivateKey]
-    if (this.selectedWallet.contract.length > 0) {
-      this._getTimeLockHistory()
+    if (this.selectedWallet.role === 'Miner') {
+      this.contractAddress =  wallets[this.selectedPrivateKey].mortgagePoolAddress
+      if (this.selectedWallet.mortgageValue === '0' ) {
+        this.digPage = true
+      } else {
+        this.digpage = false
+        this.orePoolPage = 1
+      }
     } else {
-      this.orePoolPage = 1
+      this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
+      this._getTimeLockHistory()
     }
+
     this.initMiningStatus()
 
     this._getLatestBlockInfo((balance) => {
@@ -477,15 +481,11 @@ export default {
     _startUpdateHistoryJob () {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
-      if (this.selectedWallet.contract.length > 0) {
-        this._getTimeLockHistory()
-      }
+      this._getTimeLockHistory()
       this._getWalletBalance(this.selectedWallet.walletAddress)
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
-        if (this.selectedWallet.contract.length > 0) {
-          this._getTimeLockHistory()
-        }
+        this._getTimeLockHistory()
         this._getWalletBalance(this.selectedWallet.walletAddress)
       }, 3 * 60 * 1000)
     },
@@ -506,31 +506,54 @@ export default {
     },
 
     _getWalletBalance (walletAddress) {
+      let contractAddress = ''
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
         this.walletBalance = balanceSEC.toString()
-        if (this.selectedWallet.contract && this.selectedWallet.contract.length !== 0) {
-          let contractAddress = this.selectedWallet.contract[0].contractAddress
-          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-            this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-              this.freezeMoney = 0
+        if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
+          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {
+            this.freezeMoney = 0
+            if (Object.keys(contractInfo.timeLock).length > 0) {
+              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+              }
+            }
+            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
+            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
+            this.availableMoney = this.walletBalance
+            this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
               if (Object.keys(contractInfo.timeLock).length > 0) {
                 let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
                   this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
                 }
               }
-              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-              this.walletBalance = this._checkValueFormat(balanceSEC.toString())
+              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString()).toString()
+              this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
               this.availableMoney = this.walletBalance
-              
             })
           })
-        } else if (this.selectedWallet.contract && this.selectedWallet.contract.length === 0) {
-          this.availableMoney = Number(this._checkValueFormat(balanceSEC.toString()))
-          this.freezeMoney = 0
+        } else {
+          if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress === '') {
+            contractAddress = this.selectedWallet.mortgagePoolAddress
+          } else if (this.selectedWallet.mortgagePoolAddress === '' && this.selectedWallet.ownPoolAddress !== '') {
+            contractAddress = this.selectedWallet.ownPoolAddress
+          }
+          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+            this.freezeMoney = 0
+            if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
+              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+              }
+            }
+            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString()).toString()
+            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
+            this.availableMoney = this.walletBalance
+          })
         }
       }, (balanceSEN) => {
-        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString())
+        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
       })
     },
 
@@ -563,43 +586,85 @@ export default {
     },
 
     _getTimeLockHistory () {
-      let contractAddress = this.selectedWallet.contract[0].contractAddress
-      this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-        this.selectedWallet.contract[0].status = contractInfo.status
-        this.poolApplyMoney = contractInfo.totalSupply
-        this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-        let tokenName = contractInfo.tokenName
-        this.poolName = tokenName.split('-')[2]
-        WalletsHandler.updateWalletFile(this.selectedWallet, () => {
-          console.log('update wallet file')
+      let contractAddress = ''
+      let benifs = []
+      if (this.selectedWallet.ownPoolAddress !== '' && this.selectedWallet.mortgagePoolAddress !== '') {
+        this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfoMortgage) => {
+          if (contractInfoMortgage.timeLock) {
+            benifs.push(contractInfoMortgage.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
+          }
+          //benifs.push(contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
+          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfoOwner) => {
+            if (contractInfoOwner.timeLock) {
+              benifs.push(contractInfoOwner.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
+            }
+            this.poolApplyMoney = contractInfo.totalSupply
+            this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            let tokenName = contractInfo.tokenName
+            this.poolName = tokenName.split('-')[2]
+
+            if (contractInfo.status === 'success') {
+              this.orePoolPage = 4
+              this.checkedWallet = true
+              this._calcMiningPool(benifs)
+              this._insertLockHistory(benifs)
+            } else {
+              this.checkedWallet = false
+              this.orePoolPage = 2
+            }
+          })
         })
-        if (this.selectedWallet.contract[0].status === 'success') {
-          this.orePoolPage = 4
-          this.checkedWallet = true
-          this._calcMiningPool(contractInfo.timeLock)
-        } else {
-          this.checkedWallet = false
-          this.orePoolPage = 2
+      } else {
+        if (this.selectedWallet.ownPoolAddress !== '' && this.selectedWallet.mortgagePoolAddress === '') {
+          contractAddress = this.selectedWallet.ownPoolAddress
+        } else if (this.selectedWallet.ownPoolAddress === '' && this.selectedWallet.mortgagePoolAddress !== '') {
+          contractAddress = this.selectedWallet.mortgagePoolAddress
         }
-      })
-      // this.$JsonRPCClient.getTimeLock(this.selectedWallet.walletAddress, this.selectedWallet.contractAddress, (history) => {
-      //     this.itemList = history
-      // })
+        this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+          if (contractInfo.timeLock) {
+            benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+          }
+          if (this.selectedWallet.role === 'Miner') {
+            this.poolApplyMoney = contractInfo.totalSupply
+            this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            let tokenName = contractInfo.tokenName
+            this.poolName = tokenName.split('-')[2]
+
+            if (contractInfo.status === 'success') {
+              this.orePoolPage = 4
+              this.checkedWallet = true
+              this._calcMiningPool(benifs)
+              this._insertLockHistory(benifs)
+            } else {
+              this.checkedWallet = false
+              this.orePoolPage = 2
+            }
+          } else {
+            this._insertLockHistory()
+          }
+        })
+      }
     },
 
-    _calcMiningPool (timeLock) {
-      this.poolNode = Object.keys(timeLock).length
-      this.poolAssets = 0
-      let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+    _insertLockHistory (benifs) {
       this.itemList = []
+ //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
-        this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
         this.itemList.push({
           id: '1',
           lockTime: WalletsHandler.formatDate(moment(benifit.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
           lockMoney: benifit.lockAmount,
           unlockTime: WalletsHandler.formatDate(moment(benifit.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
         })
+      }
+    },
+
+    _calcMiningPool (benifs) {
+      this.poolNode = Object.keys(timeLock).length
+      this.poolAssets = 0
+ //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+      for (let benifit of benifs) {
+        this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
       }
     },
     

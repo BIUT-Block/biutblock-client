@@ -82,8 +82,8 @@ export default {
   name: '',
   props: {
     pages: Number,
-    availableMoney: Number,
-    freezeMoney: Number,
+    availableMoney: String,
+    freezeMoney: String,
     walletAddress: String,
     privateKey: String,
     hasContract: Boolean,

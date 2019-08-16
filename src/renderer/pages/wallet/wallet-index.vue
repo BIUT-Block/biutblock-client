@@ -44,7 +44,7 @@
                 <figcaption>
                   My invitation code：
                   <span id="invitation">
-                    {{ invitationCode }}
+                    {{ selectedWalletData.ownInvitationCode }}
                   </span>
                 </figcaption>
                 <img src="../../assets/images/copy.png" alt="" @click="copyCode" 
@@ -172,7 +172,7 @@ export default {
       walletBalance: '0',//sec余额
       availableMoney: 0, //biut的可用金额
       freezeMoney: 0, //biut冻结金额
-      invitationCode: '12345678',//邀请码
+      invitationCode: '',//邀请码
 
       walletBalanceSEN: '0',//sen余额
       walletAddress: '',
@@ -418,7 +418,7 @@ export default {
      this._resetSkipTotal()
       this.selectedWallet = selectedWallet
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
-      
+      console.log(this.selectedWalletData)
       this.selectedPrivateKey = selectedWallet.privateKey
       //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
       this.oldWalletName = selectedWallet.name
@@ -434,18 +434,29 @@ export default {
       this._getWalletBalance(this.selectedWallet.walletAddress)
       this._getWalletTransactions(this.selectedWallet.walletAddress)
       jobID = setInterval(()=>{
+        console.log('Job ID')
         this._getWalletBalance(this.selectedWallet.walletAddress)
         this._getWalletTransactions(this.selectedWallet.walletAddress)
-      }, 3 * 60 * 1000)
+      },  3* 60 * 1000)
     },
 
     _getWalletBalance (walletAddress) {
+      let contractAddress = ''
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
         this.walletBalance = balanceSEC.toString()
-        if (this.selectedWallet.contract && this.selectedWallet.contract.length !== 0) {
-            let contractAddress = this.selectedWallet.contract[0].contractAddress
-            this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-              this.freezeMoney = 0
+        if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
+          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {
+            this.freezeMoney = 0
+            if (Object.keys(contractInfo.timeLock).length > 0) {
+              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+              }
+            }
+            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
+            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
+            this.availableMoney = this.walletBalance
+            this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
               if (Object.keys(contractInfo.timeLock).length > 0) {
                 let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
@@ -456,9 +467,25 @@ export default {
               this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
               this.availableMoney = this.walletBalance
             })
-        } else if (this.selectedWallet.contract && this.selectedWallet.contract.length === 0) {
-          this.walletBalance = this._checkValueFormat(balanceSEC).toString()
-          this.availableMoney = this.walletBalance
+          })
+        } else {
+          if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress === '') {
+            contractAddress = this.selectedWallet.mortgagePoolAddress
+          } else if (this.selectedWallet.mortgagePoolAddress === '' && this.selectedWallet.ownPoolAddress !== '') {
+            contractAddress = this.selectedWallet.ownPoolAddress
+          }
+          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
+            this.freezeMoney = 0
+            if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
+              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+              }
+            }
+            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
+            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
+            this.availableMoney = this.walletBalance
+          })
         }
       }, (balanceSEN) => {
         this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
