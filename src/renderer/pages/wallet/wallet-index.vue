@@ -293,7 +293,7 @@ export default {
           }, 3000)
       })
       clipboard.on('error', e => {
-          this.translucentText = 'Copy the failure'
+          this.translucentText = 'Copy failure'
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
@@ -313,7 +313,7 @@ export default {
           }, 3000)
       })
       clipboard.on('error', e => {
-          this.translucentText = 'Copy the failure'
+          this.translucentText = 'Copy failure'
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
