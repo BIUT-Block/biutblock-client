@@ -82,7 +82,7 @@ export default {
           timestamp: new Date().getTime(),
           walletAddress: this.walletAddress,
           sendToAddress: contractAddress,
-          amount: '100000',
+          amount: '500000',
           gasLimit: '0',
           gasPrice: '0',
           txFee: '0',

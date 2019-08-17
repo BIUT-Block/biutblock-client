@@ -546,7 +546,7 @@ export default {
         invitationCode: this.parentWallet.invitationCode,
         ownInvitationCode: this.parentWallet.ownInvitationCode,
         mortgagePoolAddress: this.parentWallet.mortgagePoolAddress.replace('0x', ''),
-        mortgageValue: this.parentWallet.mortgageAmount,
+        mortgageValue: '0',
         ownPoolAddress: this.parentWallet.ownPoolAddress.replace('0x', ''),
         role: this.parentWallet.role
       }, (keyDataJSON) => {
@@ -597,6 +597,10 @@ export default {
     },
 
     _findOutWallet (wallets, privateKey, from) {
+      if (wallets === 'error') {
+        this._showImportError(from, 'Input value is not valid.')
+        return
+      }
       dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
         if (body && body.doc.length > 0) {
           wallets[privateKey].role = body.doc[0].role
@@ -606,9 +610,7 @@ export default {
           wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress.replace('0x', '')
           wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress.replace('0x', '')
           walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
-            if (wallets === 'error') {
-              this._showImportError(from, 'Input value is not valid.')
-            } else if (wallets === 'DuplicateKey') {
+            if (wallets === 'DuplicateKey') {
               this._showImportError(from, 'Wallet already exists or imported.')
             } else {
               this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})

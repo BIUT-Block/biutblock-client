@@ -33,6 +33,17 @@ const DataCenterHandler = {
 		}, (err, res, body) => {
 			callback(body)
 		})
+	},
+
+	updatePoolAddress: function (params, callback) {
+		request({
+			url: `${dataCenterUrl}updatepooladdress`,
+			method: 'POST',
+			body: params,
+			json: true
+		}, (err, res, body) => {
+			callback(body)
+		})
 	}
 }
 

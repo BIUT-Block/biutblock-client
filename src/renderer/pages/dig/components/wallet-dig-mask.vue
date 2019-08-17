@@ -76,12 +76,12 @@ export default {
     selectedWalletAddress: String,
     availableMoney: String,
     freezeMoney: String,
+    poolName: String, // 如果是矿池就启用框挖矿、没矿池就用钱包名称
   },
   data() {
     return {
       confrimContent: false,//第一次确认挖矿邀请码
       firstBeginBtn: 'Open mining',
-      poolName: '矿池名称或者钱包名称', // 如果是矿池就启用框挖矿、没矿池就用钱包名称
       firstBeginIpt: '',//第一次开启挖矿的input
       //confirmBeginIpt: '',//第一次开启挖矿邀请码的input
       clearConfirmImg: false,
@@ -223,7 +223,7 @@ export default {
       // } else {
       //    this.closeMask ()
       // }
-
+      this.$emit('beginMining')
       this.closeMask ()
     },
 
@@ -332,6 +332,7 @@ export default {
     },
 
     mortgageFrom () {
+      this.$emit('addMoreMortgage', this.mortgageIpt)
       this.closeMask ()
     }
   },

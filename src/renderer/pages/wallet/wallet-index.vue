@@ -442,25 +442,25 @@ export default {
 
     _getWalletBalance (walletAddress) {
       let contractAddress = ''
+      this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
         this.walletBalance = balanceSEC.toString()
         if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
-          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {
-            this.freezeMoney = 0
-            if (Object.keys(contractInfo.timeLock).length > 0) {
+          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {   
+            if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
               let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
               }
             }
             this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
             this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
             this.availableMoney = this.walletBalance
             this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
-              if (Object.keys(contractInfo.timeLock).length > 0) {
+              if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
                 let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
-                  this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                  this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
                 }
               }
               this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
@@ -479,7 +479,7 @@ export default {
             if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
               let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
               }
             }
             this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())

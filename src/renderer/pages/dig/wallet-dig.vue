@@ -160,10 +160,13 @@
       :networkErrorText="networkErrorText"
       :selectedWalletAddress="selectedWalletAddress"
       :availableMoney="availableMoney"
-      :freezeMoney="freezeMoney"
+      :freezeMoney="freezeMoney.toString()"
+      :poolName="poolName"
       @continue="onContinue" 
       @exit="onAppExit" 
-      @close="maskShow = false" />
+      @close="maskShow = false"
+      @beginMining="onBeginMining"
+      @addMoreMortgage="onAddMoreMortgage" />
 
     <wallet-translucent :text="translucentText" v-show="translucentShow"/>   
   </main>
@@ -297,6 +300,7 @@ export default {
     this.selectedWallet = wallets[this.selectedPrivateKey]
     if (this.selectedWallet.role === 'Miner') {
       this.contractAddress =  wallets[this.selectedPrivateKey].mortgagePoolAddress
+      this.poolName = this.selectedWallet.walletName
       if (this.selectedWallet.mortgageValue === '0' ) {
         this.digPage = true
       } else {
@@ -305,6 +309,7 @@ export default {
       }
     } else {
       this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
+      this.orePoolPage = 2
       this._getTimeLockHistory()
     }
 
@@ -467,7 +472,17 @@ export default {
     onAddContract (privateKey, contract) {
       let wallet = this.selectedWallet
       wallet.ownPoolAddress = contract
+      wallet.role = 'Owner'
+      wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
       this.orePoolPage = 2
+      dataCenterHandler.updatePoolAddress({
+        address: this.selectedWalletAddress,
+        ownPoolAddress: contract,
+        mortgageValue: wallet.mortgageValue,
+        role: 'Owner'
+      }, (doc) => {
+        console.log('update pool address success')
+      })
       WalletsHandler.updateWalletFile(wallet, () => {
         console.log('update wallet file')
       })
@@ -508,25 +523,25 @@ export default {
 
     _getWalletBalance (walletAddress) {
       let contractAddress = ''
+      this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
         this.walletBalance = balanceSEC.toString()
         if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
           this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {
-            this.freezeMoney = 0
-            if (Object.keys(contractInfo.timeLock).length > 0) {
+            if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
               let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
               }
             }
             this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
             this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
             this.availableMoney = this.walletBalance
             this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
-              if (Object.keys(contractInfo.timeLock).length > 0) {
+              if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
                 let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
-                  this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                  this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
                 }
               }
               this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString()).toString()
@@ -545,7 +560,7 @@ export default {
             if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
               let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + benifitAddress[i].lockAmount
+                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
               }
             }
             this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString()).toString()
@@ -595,19 +610,19 @@ export default {
             benifs.push(contractInfoMortgage.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
           }
           //benifs.push(contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
-          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfoOwner) => {
+          this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfoOwner) => {
             if (contractInfoOwner.timeLock) {
               benifs.push(contractInfoOwner.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
             }
             if (benifs.length > 0) {
               this.digPage = false
             }
-            this.poolApplyMoney = contractInfo.totalSupply
-            this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-            let tokenName = contractInfo.tokenName
+            this.poolApplyMoney = contractInfoOwner.totalSupply
+            this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfoOwner.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+            let tokenName = contractInfoOwner.tokenName
             this.poolName = tokenName.split('-')[2]
 
-            if (contractInfo.status === 'success') {
+            if (contractInfoOwner.status === 'success') {
               this.orePoolPage = 4
               this.checkedWallet = true
               this._calcMiningPool(benifs)
@@ -657,21 +672,25 @@ export default {
       this.itemList = []
  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
-        this.itemList.push({
-          id: '1',
-          lockTime: WalletsHandler.formatDate(moment(benifit.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
-          lockMoney: benifit.lockAmount,
-          unlockTime: WalletsHandler.formatDate(moment(benifit.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-        })
+        for (let item of benifit) {
+          this.itemList.push({
+            id: '1',
+            lockTime: WalletsHandler.formatDate(moment(item.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+            lockMoney: item.lockAmount,
+            unlockTime: WalletsHandler.formatDate(moment(item.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+          })
+        }     
       }
     },
 
     _calcMiningPool (benifs) {
-      this.poolNode = Object.keys(timeLock).length
+      this.poolNode = benifs.length
       this.poolAssets = 0
  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
-        this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
+        for (let item of benifit) {
+          this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
+        }   
       }
     },
     
@@ -737,11 +756,15 @@ export default {
 
     onMortgage () {
       let privateKey = this.selectedPrivateKey
+      this._addMoreMortgage(this.mortgageAmount)
+    },
+
+    _addMoreMortgage (mortgage) {
       let transferTimeLock = {
         timestamp: new Date().getTime(),
         walletAddress: this.selectedWalletAddress,
         sendToAddress: this.selectedWallet.mortgagePoolAddress,
-        amount: this.mortgageAmount,
+        amount: mortgage,
         gasLimit: '0',
         gasPrice: '0',
         txFee: '0',
@@ -755,7 +778,7 @@ export default {
           this.selectedWallet.mortgageValue = (Number(this.selectedWallet.mortgageValue) + Number(this.mortgageAmount)).toString()
           dataCenterHandler.updateWallet({
             address: this.selectedWalletAddress,
-            mortgageValue: (Number(this.selectedWallet.mortgageValue) + Number(this.mortgageAmount)).toString()
+            mortgageValue: this.selectedWallet.mortgageValue
           }, (body) => {
             console.log('update wallet mortgage value')
           })
@@ -774,16 +797,33 @@ export default {
        * 
        * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿  2 - 断网 3 - 追加更多
        */
-      let balance = this.digBalance
-      this.maskShow = true
-
-      this.makePages = 2
+      if (this.digButton === 'Stop mining') {
+        this.digButton = 'Open mining'
+        this.stopMining()
+      } else {
+        this.maskShow = true
+        this.digButton = 'Stop mining'
+        if (window.onoffline) {
+          this.makePages = 2
+        } else {
+          this.makePages = 0
+        }
+      }
+      
     },
 
     beginDigMask2 () {
       let balance = this.digBalance
       this.makePages = 3
       this.maskShow = true
+    },
+
+    onBeginMining () {
+      this.startMining()
+    },
+
+    onAddMoreMortgage (mortgage) {
+      this._addMoreMortgage(mortgage)
     },
 
     //开启挖矿

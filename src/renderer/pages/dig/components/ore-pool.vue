@@ -113,7 +113,7 @@ export default {
   },
   computed: {
     orePoolTrue () {
-      if (this.freezeMoney >= 500000) {//
+      if (this.availableMoney >= 500000) {//
         this.orePoolTxt = 'Apply for opening a mining pool'
         return true
       } else {
@@ -164,7 +164,7 @@ export default {
 
     appendContractAddress (privateKey, contractAddress) {
       this.maskShow = false
-      this.$emit('addContract', privateKey, {contractAddress: contractAddress, status: 'pending'})
+      this.$emit('addContract', privateKey, contractAddress)
     }
     
   },
