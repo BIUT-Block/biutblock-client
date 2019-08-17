@@ -24,7 +24,7 @@
         <button type="button" 
           :disabled="!mortgageActive"
           :class="mortgageActive ? 'passCorrect' : ''"
-          @click="digPage=false">Mortgage</button>
+          @click="onMortgage">Mortgage</button>
       </section>
    
     </section>  
@@ -190,6 +190,7 @@ import { setInterval, clearInterval } from 'timers'
 import { ipcRenderer } from 'electron'
 import { constants } from 'fs';
 import WalletHandler from '../../lib/WalletsHandler';
+const dataCenterHandler = require('../../lib/DataCenterHandler')
 const moment = require('moment-timezone')
 export default {
   name: 'walletDig',
@@ -299,7 +300,7 @@ export default {
       if (this.selectedWallet.mortgageValue === '0' ) {
         this.digPage = true
       } else {
-        this.digpage = false
+        this.digPage = false
         this.orePoolPage = 1
       }
     } else {
@@ -465,7 +466,7 @@ export default {
 
     onAddContract (privateKey, contract) {
       let wallet = this.selectedWallet
-      wallet.contract.push(contract)
+      wallet.ownPoolAddress = contract
       this.orePoolPage = 2
       WalletsHandler.updateWalletFile(wallet, () => {
         console.log('update wallet file')
@@ -598,6 +599,9 @@ export default {
             if (contractInfoOwner.timeLock) {
               benifs.push(contractInfoOwner.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
             }
+            if (benifs.length > 0) {
+              this.digPage = false
+            }
             this.poolApplyMoney = contractInfo.totalSupply
             this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
             let tokenName = contractInfo.tokenName
@@ -624,7 +628,10 @@ export default {
           if (contractInfo.timeLock) {
             benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
           }
-          if (this.selectedWallet.role === 'Miner') {
+          if (benifs.length > 0) {
+            this.digPage = false
+          }
+          if (this.selectedWallet.role === 'Owner') {
             this.poolApplyMoney = contractInfo.totalSupply
             this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
             let tokenName = contractInfo.tokenName
@@ -640,7 +647,7 @@ export default {
               this.orePoolPage = 2
             }
           } else {
-            this._insertLockHistory()
+            this._insertLockHistory(benifs)
           }
         })
       }
@@ -725,6 +732,37 @@ export default {
         } else {
           this.networkMining = reward.toString()
         }
+      })
+    },
+
+    onMortgage () {
+      let privateKey = this.selectedPrivateKey
+      let transferTimeLock = {
+        timestamp: new Date().getTime(),
+        walletAddress: this.selectedWalletAddress,
+        sendToAddress: this.selectedWallet.mortgagePoolAddress,
+        amount: this.mortgageAmount,
+        gasLimit: '0',
+        gasPrice: '0',
+        txFee: '0',
+        chainName: 'SEC'
+      }
+      this.$JsonRPCClient.sendContractTransaction(this.selectedWalletAddress, this.selectedPrivateKey, 
+        365 * 24 * 3600 * 1000, transferTimeLock,
+        (response) => {
+          this._getTimeLockHistory()
+          this._getWalletBalance()
+          this.selectedWallet.mortgageValue = (Number(this.selectedWallet.mortgageValue) + Number(this.mortgageAmount)).toString()
+          dataCenterHandler.updateWallet({
+            address: this.selectedWalletAddress,
+            mortgageValue: (Number(this.selectedWallet.mortgageValue) + Number(this.mortgageAmount)).toString()
+          }, (body) => {
+            console.log('update wallet mortgage value')
+          })
+          WalletsHandler.updateWalletFile(this.selectedWallet, () => {
+            console.log('update wallet file')
+          })
+          this.digPage = false
       })
     },
 

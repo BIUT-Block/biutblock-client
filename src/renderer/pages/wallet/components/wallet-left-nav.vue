@@ -50,6 +50,7 @@ export default {
         ownInvitationCode: this.wallets[privateKey].ownInvitationCode,
         role: this.wallets[privateKey].role,
         mortgagePoolAddress: this.wallets[privateKey].mortgagePoolAddress,
+        mortgageValue: this.wallets[privateKey].mortgageValue,
         ownPoolAddress: this.wallets[privateKey].ownPoolAddress
         })
         if (privateKey === this.selectedPrivateKey) {
@@ -65,6 +66,7 @@ export default {
             ownInvitationCode: this.wallets[privateKey].ownInvitationCode,
             role: this.wallets[privateKey].role,
             mortgagePoolAddress: this.wallets[privateKey].mortgagePoolAddress,
+            mortgageValue: this.wallets[privateKey].mortgageValue,
             ownPoolAddress: this.wallets[privateKey].ownPoolAddress
           }
         }

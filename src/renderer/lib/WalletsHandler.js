@@ -96,6 +96,7 @@ let WalletHandler = {
         invitationCode: wallet.invitationCode,
         ownInvitationCode: wallet.invitationCode,
         mortgagePoolAddress: wallet.mortgagePoolAddress,
+        mortgageValue: wallet.mortgageValue,
         ownPoolAddress: wallet.ownPoolAddress,
         role: wallet.role
       }
@@ -135,8 +136,9 @@ let WalletHandler = {
         walletAddress: wallet.walletAddress,
         englishWords: wallet.englishWords,
         invitationCode: wallet.invitationCode,
-        ownInvitationCode: wallet.invitationCode,
+        ownInvitationCode: wallet.ownInvitationCode,
         mortgagePoolAddress: wallet.mortgagePoolAddress,
+        mortgageValue: wallet.mortgageValue,
         ownPoolAddress: wallet.ownPoolAddress,
         role: wallet.role
       }
