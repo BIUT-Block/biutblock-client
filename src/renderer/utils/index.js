@@ -7,14 +7,8 @@ import elementEnLocale from 'element-ui/lib/locale/lang/en'
 import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN'
 
 const messages = {
-  en: {
-    ...enLocale,
-    ...elementEnLocale
-  },
-  zh: {
-    ...zhLocale,
-    ...elementZhLocale
-  }
+  en: Object.assign(enLocale,elementEnLocale),
+  zh: Object.assign(zhLocale,elementZhLocale),
 }
 
 Vue.use(VueI8n)

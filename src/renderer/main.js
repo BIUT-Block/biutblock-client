@@ -9,15 +9,18 @@ import 'normalize.css'
 import './assets/css/public.css'
 import './assets/common/font.css'
 
-
-import { Slider,Progress } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
+import i18n from './utils/index'
 
 import {currency} from './utils/currency'
 Vue.filter("currency",currency)
 
-Vue.use(Slider)
-Vue.use(Progress)
+import Element from 'element-ui'
+
+Vue.use(Element, {
+  i18n: (key, value) => i18n.t(key, value)
+})
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -64,6 +67,7 @@ new Vue({
   el: '#app',
   components: { App },
   router,
+  i18n,
   store,
   template: '<App/>'
-})
+}).$mount('#app')

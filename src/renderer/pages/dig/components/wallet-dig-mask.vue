@@ -9,124 +9,15 @@
         title="close"
         @click="closeMask"
       />
-      <!-- 首次开启挖矿 -->
-      <section class="first-dig" v-show="pages == 0">
-        <h2>Start Mining</h2>
-        <p class="first-dig-txt">Mortgage amount <span class="color-red">*</span></p>
-
-        <section class="ipt-list flexBetween">
-          <input
-            type="text"
-            placeholder="10.0"
-            maxlength="16"
-            v-model="firstBeginIpt"
-            @input="clearFirstAmount"
-            onpaste="return false" />
-          <section>
-            <img src="../../../assets/images/clearAddress.png" v-show="clearImg" alt="" @click="clearFirstIpt"/>
-            <span>BIUT</span>
-          </section>
-        </section>
-        <p class="first-dig-txt-all">
-          Available：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allAmount">All</span>
-        </p>
-        <p class="first-dig-txt-tips">This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
-
-        <!-- 确认挖矿 -->
-        <!-- <section class="confrim-content" v-show="confrimContent">
-          <section class="flexBetween">
-            <p class="first-dig-txt">Invitation Code <span class="color-red">*</span></p>
-            <p class="color-red" v-show="codeError">Invitation code does not exist or is wrong</p>
-          </section>
-          <section class="ipt-list flexBetween" :class="codeError ? 'border-red' : ''">
-            <input
-              type="text"
-              placeholder="Enter invitation code"
-              v-model="confirmBeginIpt"
-              maxlength="8"
-              @input="clearConfirmCode" />
-            <img src="../../../assets/images/clearAddress.png" v-show="clearConfirmImg" alt="" @click="clearConfirmIpt"/>
-          </section>
-        </section> -->
+     <!-- 首次开启挖矿 -->
+      <section class="begin-dig" v-show="pages == 0">
+        
+        <p class="first-dig-tips">Whether to enable {{ poolName }} to open mining</p>
         
         <button type="button" 
-          class="confrimBtn" 
-          :class="firstBtn ? 'passCorrect' : ''"
-          :disabled="!firstBtn"
+          class="first-dig-btn passCorrect"
           @click="confirmFrom">{{ firstBeginBtn }}</button>
       </section>
-
-     
-
-      <!-- 不是首次开启挖矿 -->
-      <!-- <section class="begin-dig" v-show="pages == 1">
-        <h2>Start Mining</h2>
-        <p class="begin-dig-txt">
-          You will start mining with "<span>mining wallet<br/> 0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}</span>"
-        </p>
-        <section class="flexBetween border-bottom">
-          <span>Guarantee:</span>
-          <span>{{ freezeMoney }} BIUT</span>
-        </section>
-
-        <section class="flexBetween border-bottom">
-          <span>Available:</span>
-          <span>{{ availableMoney }} BIUT</span>
-        </section>
-
-        <section class="tips-list">
-          <p>
-            <img :src="pageIdx == 1 ? agreement : agreements" alt="" @click="checkRadio"/>
-            <span>Increase the number of frozen.</span>
-          </p>
-          <p>
-            <label></label>
-            <span>Higer of the Mortgage amount, and higher the profit of BIU token </span>
-          </p>
-        </section>
-
-        <p class="first-dig-txt">Guarantee Amount<span class="color-red">*</span></p>
-
-        <section class="ipt-list flexBetween">
-          <input
-            type="text"
-            placeholder="10.0"
-            v-model="beginIpt"
-            maxlength="16"
-            @input="clearBeginAmount"
-            onpaste="return false" />
-          <section>
-            <img src="../../../assets/images/clearAddress.png" v-show="clearBeginImg" alt="" @click="clearBeginIpt"/>
-            <span>BIUT</span>
-          </section>
-        </section>
-        <p class="first-dig-txt-all begin-padding">
-          Available：{{ availableMoney }} BIUT <span @click="allBeginAmount">All</span>
-        </p>
-
-        <!-- 确认挖矿 -->
-        <section class="confrim-content begin-content" v-show="confrimBeginContent">
-          <section class="flexBetween">
-            <p class="first-dig-txt">Invitation Code <span class="color-red">*</span></p>
-            <p class="color-red" v-show="codeError2">Invitation code does not exist or is wrong</p>
-          </section>
-          <section class="ipt-list flexBetween" :class="codeError2 ? 'border-red' : ''">
-            <input
-              type="text"
-              placeholder="Enter invitation code"
-              v-model="beginCodeIpt"
-              maxlength="8"
-              @input="clearBeginCode" />
-            <img src="../../../assets/images/clearAddress.png" v-show="clearBeginConfirmImg" alt="" @click="clearBeginConfirmIpt"/>
-          </section>
-        </section>
-
-        <button type="button" 
-          class="confrimBtn"
-          :class="beginBtn ? 'passCorrect' : ''"
-          :disabled="!beginBtn"
-          @click="confirmBeginFrom">{{ firstBeginBtn }}</button>
-      </section> -->
 
       <!-- 断网 -->
       <section v-show="pages == 2">
@@ -148,7 +39,7 @@
         <section class="ipt-list flexBetween">
           <input
             type="text"
-            placeholder="10.0"
+            placeholder="10000.0"
             maxlength="16"
             v-model="mortgageIpt"
             @input="clearMortgage"
@@ -190,6 +81,7 @@ export default {
     return {
       confrimContent: false,//第一次确认挖矿邀请码
       firstBeginBtn: 'Open mining',
+      poolName: '矿池名称或者钱包名称', // 如果是矿池就启用框挖矿、没矿池就用钱包名称
       firstBeginIpt: '',//第一次开启挖矿的input
       //confirmBeginIpt: '',//第一次开启挖矿邀请码的input
       clearConfirmImg: false,
@@ -491,7 +383,13 @@ export default {
   
   .flexBetween {display: flex;align-items: center;justify-content: space-between;}
 
-  .first-dig {color: #99A1A6;}
+  .begin-dig {height: 110px;text-align: right;}
+  .begin-dig .first-dig-tips {font-size: 14px;padding-top: 10px;text-align: left;color: #576066;}
+  .first-dig-btn {width:97px;border:0;color: #fff;
+    height:32px;margin-top: 58px;
+    background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
+    border-radius:4px;}
+  
   .ipt-list {height: 40px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;}
   .ipt-list input {flex: 1;border: 0;}
   .ipt-list section {display: flex;align-items: center;}
