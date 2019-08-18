@@ -97,7 +97,7 @@
           <ore-pool 
             :pages="orePoolPage"
             :availableMoney="availableMoney"
-            :freezeMoney="freezeMoney"
+            :freezeMoney="freezeMoney.toString()"
             :walletAddress="selectedWallet.walletAddress"
             :privateKey="selectedWallet.privateKey"
             :poolAssets="poolAssets"
@@ -510,12 +510,12 @@ export default {
       let benifs = []
       if (this.selectedWallet.ownPoolAddress !== '' && this.selectedWallet.mortgagePoolAddress !== '') {
         this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfoMortgage) => {
-          if (contractInfoMortgage.timeLock) {
+          if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
             benifs.push(contractInfoMortgage.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
           }
           //benifs.push(contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
           this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfoOwner) => {
-            if (contractInfoOwner.timeLock) {
+            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
               benifs.push(contractInfoOwner.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
             }
             if (benifs.length > 0) {
@@ -542,7 +542,7 @@ export default {
           contractAddress = this.selectedWallet.mortgagePoolAddress
         }
         this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-          if (contractInfo.timeLock && contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]) {
+          if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress) ) {
             benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
           }
           if (benifs.length > 0) {
