@@ -46,7 +46,7 @@
           <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <section class="dig-button-list">
-            <button type="button" :class="openPool ? 'sotpPool' : ''" @click="beginDigMask(1)">{{ $t('publicBtn.openBtn') }}</button>
+            <button type="button" :class="openPool ? 'sotpPool' : ''" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
             <button type="button" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
           </section>
 
@@ -181,7 +181,7 @@ export default {
     return {
       digPage: false,// 第一次进入的时候  后面进入成 false
       mortgageAmount: '',//输入开启挖矿冻结金额
-      digButton: "public.openBtn",
+      digButton: "publicBtn.openBtn",
       digNumber: 0,
       digIncome: '0',
       wallets: [],
@@ -691,17 +691,16 @@ export default {
 
     //开启挖矿弹窗显示
     beginDigMask (idx) {
-
       /**
-       * 判断是否是第一次挖矿
        * 
-       * idx 1 开启挖矿  2 追加更多 
+       * idx  1 开启挖矿  2 追加更多 
        * 
-       * makePages: 0,//开启挖矿 0 - 首次挖矿  2 - 断网 3 - 追加更多
+       * makePages 0 - 开启挖矿  2 - 断网 3 - 追加更多
        */
       if (idx === 1) {
         //开启挖矿改变状态
-        if (this.digButton === 'Stop mining' || this.digButton === '停止挖矿') {
+        console.log(this.digButton)
+        if (this.digButton === 'publicBtn.stopBtn') {
           this.digButton = 'publicBtn.openBtn'
           this.openPool = false
           this.stopMining()
@@ -724,9 +723,10 @@ export default {
 
     onBeginMining () {
       this.startMining()
-
       this.openPool = true
-      this.digButton = 'publicBtn.mortgageBtn2'
+      this.$nextTick(()=> {
+        this.digButton = 'publicBtn.stopBtn'
+      })
     },
 
     onAddMoreMortgage (mortgage) {

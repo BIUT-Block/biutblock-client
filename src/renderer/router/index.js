@@ -22,7 +22,7 @@ export default new Router({
     {
       path: '/',
       name: 'walletCreate',
-      component: WalletDig
+      component: walletCreate
     },
     {
       path: '/index',
