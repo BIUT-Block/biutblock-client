@@ -536,7 +536,7 @@ export default {
         englishWords: this.keys.englishWords,
         invitationCode: this.parentWallet.invitationCode,
         ownInvitationCode: this.parentWallet.ownInvitationCode,
-        mortgagePoolAddress: this.parentWallet.mortgagePoolAddress.replace('0x', ''),
+        mortgagePoolAddress: this.parentWallet.role === 'Miner' ? this.parentWallet.mortgagePoolAddress.replace('0x', '') : this.parentWallet.ownPoolAddress.replace('0x', ''),
         mortgageValue: '0',
         ownPoolAddress: this.parentWallet.ownPoolAddress.replace('0x', ''),
         role: this.parentWallet.role
@@ -598,7 +598,7 @@ export default {
           wallets[privateKey].invitationCode = body.doc[0].invitationCode
           wallets[privateKey].ownInvitationCode = body.doc[0].ownInvitationCode
           wallets[privateKey].mortgageValue = body.doc[0].mortgageValue
-          wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress.replace('0x', '')
+          wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress
           wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress.replace('0x', '')
           walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
             if (wallets === 'DuplicateKey') {
