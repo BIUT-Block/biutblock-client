@@ -689,7 +689,7 @@ export default {
  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
         for (let item of benifit) {
-          this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
+          this.poolAssets = this.poolAssets + Number(item.lockAmount)
         }   
       }
     },

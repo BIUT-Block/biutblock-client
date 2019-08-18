@@ -1,5 +1,5 @@
 const request = require('request')
-const dataCenterUrl = "http://localhost:3000/mining-pool/"
+const dataCenterUrl = "http://test.biut.io:3000/mining-pool/"
 
 const DataCenterHandler = {
 	createWallet: function (params, callback) {
