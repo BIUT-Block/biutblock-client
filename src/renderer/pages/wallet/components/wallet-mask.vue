@@ -583,7 +583,7 @@ export default {
         })
       } else {
         let chainName = 'SEN'
-        let encryptTransferData = {
+        let transferData = {
           walletAddress: this.selectedWallet.walletAddress,
           sendToAddress: sendToAddress,
           amount: this.sentTradingAmount + '',

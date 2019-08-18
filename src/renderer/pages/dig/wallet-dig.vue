@@ -542,7 +542,7 @@ export default {
           contractAddress = this.selectedWallet.mortgagePoolAddress
         }
         this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-          if (contractInfo.timeLock) {
+          if (contractInfo.timeLock && contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]) {
             benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
           }
           if (benifs.length > 0) {
