@@ -3,10 +3,10 @@
     <section class="list-header">
       <ul>
         <li style="width: 6%;"> &nbsp; </li>
-        <li style="width: 24%;">AGE</li>
-        <li style="width: 17%;">REWARD</li>
-        <li style="width: 17%;">BLOCKS</li>
-        <li style="width: 36%;">BLOCK HASH</li>
+        <li style="width: 24%;">{{ $t('homeDig.hdNavProfitListTxt1') }}</li>
+        <li style="width: 17%;">{{ $t('homeDig.hdNavProfitListTxt2') }}</li>
+        <li style="width: 17%;">{{ $t('homeDig.hdNavProfitListTxt3') }}</li>
+        <li style="width: 36%;">{{ $t('homeDig.hdNavProfitListTxt4') }}</li>
       </ul>
     </section>
     <section class="more-list">

@@ -2,21 +2,21 @@
   <section class="mask">
     <section class="mask-container pool-mask">
       <header class="record-head">
-        <h2>Create the mining pool</h2>
+        <h2>{{ $t('homeDigMask.hdMaskPoolTit') }}</h2>
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </header>
 
       <section>
-        <p class="pool-txt1">Congratulations on getting the opportunity to creat mining pool. You can get more mining profit by completing the following operations.</p>
+        <p class="pool-txt1">{{ $t('homeDigMask.hdMaskPoolTxt1') }}</p>
         <section class="flexBetween">
-          <p class="pool-txt2">Mining Pool Name<span class="color-red">*</span></p>
-          <p class="color-red" v-show="nameError">Duplicate mine name</p>
+          <p class="pool-txt2">{{ $t('homeDigMask.hdMaskPoolTxt2') }}<span class="color-red">*</span></p>
+          <p class="color-red" v-show="nameError">{{ $t('homeDigMask.hdMaskPoolTxt4') }}</p>
         </section>
         
         <section class="ipt-list flexBetween" :class="nameError ? 'border-red' : ''">
           <input
             type="text"
-            placeholder="name your pool"
+            :placeholder="$t('homeDigMask.hdMaskPoolNameIpt')" 
             v-model="poolName"
             maxlength="15"
             @input="poolNameIpt" />
@@ -29,7 +29,7 @@
         :class="updateIpt ? 'passCorrect' : ''"
         :disabled="!updateIpt"
         @click="submitFrom">
-        Apply for opening a mining pool
+        {{ $t('homeDigMask.hdMaskPoolTxt4') }}
       </button>
     </section>
   </section>

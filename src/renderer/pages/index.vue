@@ -33,7 +33,7 @@
     <section v-show="maskShow" class="mask">
       <section class="mask-container setting-mask">
         <section class="setting-mask-header">
-          <h3>Setting</h3>
+          <h3>{{ $t('homeSet.hsTit') }}</h3>
           <img src="../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
         </section>
         <section class="setting-mask-body">
@@ -41,29 +41,31 @@
             <ul>
               <li v-for="(item, index) in settingList"
                   :class="settingIdex == index ? 'check-li': ''"
-                  @click="tabSetting(index)">{{item.cnt}}</li>
+                  @click="tabSetting(index)">
+                  {{ $t(item.cnt) }}
+              </li>
             </ul>
           </section>
           <section class="setting-mask-body-right">
             <!-- 切换语言 maskPages == 0 -->
             <section class="setting-mask-body-right-language" v-show="maskPages == 0">
-              <p>Language</p>
+              <p>{{ $t('homeSet.hsTxt1') }}</p>
               <section>
-                <span>Follow system</span>
+                <span>{{ $t('homeSet.hsTxt2') }}</span>
                 <img src="../assets/images/moreDown.png" alt="">
               </section>
             </section>
 
             <!-- 切换正式与测试网络 maskPages == 1 -->
             <section class="setting-mask-body-right-network" v-show="maskPages == 1">
-              <p>Currently connected network</p>
+              <p>{{ $t('homeSet.hsTxt3') }}</p>
               <section :class="networkIdx === 1 ? 'drop' :''">
                 <img 
                   :src="networkIdx === 1 ? agreements : agreement" 
                   :class="networkIdx === 1 ? 'drop' :''"
                   alt="" 
                   @click="isNetwork(1)">
-                <span>Test Network</span>
+                <span>{{ $t('homeSet.hsTxt4') }}</span>
               </section>
               <!-- 主网暂时不提供选择 -->
               <section :class="networkIdx === 2 ? 'drop' :''">
@@ -71,12 +73,12 @@
                 :class="networkIdx === 2 ? 'drop' :''" 
                 alt="" 
                 @click="isNetwork(2)">
-                <span>Main Network</span>
+                <span>{{ $t('homeSet.hsTxt5') }}</span>
               </section>
             </section>
             <!-- 版本 maskPages == 2 -->
             <section class="setting-mask-body-right-version" v-show="maskPages == 2">
-              <p>Version Information</p>
+              <p>{{ $t('homeSet.hsTxt6') }}</p>
               <span>PC Miner V {{versionNumber}}</span>
             </section>
           </section>
@@ -91,12 +93,11 @@
           <img src="../assets/images/closeMask.png" alt="" title="close" @click="maskIndexShow = false">
         </section>
         <p>
-          You will switch to the {{ tabNetworkContent }}, this operation will restart the client and update the wallet data, 
-          please confirm that the wallet information has been saved!
+          {{ $t('homeSet.hsNetwork1') }} {{ tabNetworkContent }} {{ $t('homeSet.hsNetwork2') }}
         </p>
         <section>
-          <span @click="maskIndexShow = false">Cancel</span>
-          <span class="passCorrect" @click="confirmNetwork">Confirm</span>
+          <span @click="maskIndexShow = false">{{ $t('publicBtn.cancelBtn') }}</span>
+          <span class="passCorrect" @click="confirmNetwork">{{ $t('publicBtn.confirmBtn') }}</span>
         </section>
       </section>
     </section>
@@ -145,15 +146,15 @@ export default {
       settingList: [
         {
           id: '01',
-          cnt: "Language"
+          cnt: "homeSet.hsTit1"
         },
         {
           id: '02',
-          cnt: "Switching Network"
+          cnt: "homeSet.hsTit2"
         },
         {
           id: '03',
-          cnt: "Version"
+          cnt: "homeSet.hsTit3"
         }
       ],
       versionNumber: '',

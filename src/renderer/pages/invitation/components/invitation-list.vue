@@ -1,9 +1,9 @@
 <template>
   <main class="list-content">
     <header>
-      <h2>Invited record</h2>
+      <h2>{{ $t('homeInvitation.hiListTit') }}</h2>
       <section class="ipt-list">
-        <input type="text" placeholder="Enter address to search" v-model='searchIpt' maxlength="42" @input="searchChange"/>
+        <input type="text" :placeholder="$t('homeInvitation.hiListSearch')" v-model='searchIpt' maxlength="42" @input="searchChange"/>
         <section class="img-list">
           <img src="../../../assets/images/clearAddress.png" alt="" v-show="clearBtn" class="clear-img" @click="clearIpt"/>
           <img src="../../../assets/images/search.png" alt="" class="search-img" @click="searchFrom"/>
@@ -13,21 +13,21 @@
 
     <ul>
       <li>
-        <span>Address</span>
-        <span>Invitation time</span>
-        <span>Received a reward (BIUT)</span>
-        <span>Operation</span>
+        <span>{{ $t('homeInvitation.hiListTxt1') }}</span>
+        <span>{{ $t('homeInvitation.hiListTxt2') }}</span>
+        <span>{{ $t('homeInvitation.hiListTxt3') }}</span>
+        <span>{{ $t('homeInvitation.hiListTxt4') }}</span>
       </li>
       <li v-for="(item, index) in itemLists" :key="index" v-show="!dataNull">
         <span>{{ item.itemAddress }}</span>
         <span>{{ item.itemTime }}</span>
         <span>{{ item.itemMoney }}</span>
-        <span class="look-details" @click='lookDetails(""+ index +"")'>View details</span>
+        <span class="look-details" @click='lookDetails(""+ index +"")'>{{ $t('homeInvitation.hiListBtn') }}</span>
       </li>
       <section class="list-none" v-show="dataNull">
         <section>
           <img src="../../../assets/images/wallet-null.png" alt="">
-          <p>No search results yet</p>
+          <p>{{ $t('homeInvitation.hiListSearchNull') }}</p>
         </section>
       </section>
     </ul>

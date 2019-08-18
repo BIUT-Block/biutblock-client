@@ -29,7 +29,7 @@ export default {
     return {
       bgColorArr: ['bgColor1','bgColor2','bgColor3','bgColor4'],
       navIdx: 0,
-      createButtonText: "Create and Import Wallets",
+      createButtonText: "homeLeftNav.createBtn",
       imgUrl: imgUrl
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <p>{{this.title}}<span v-if="choose">*</span></p>
+  <p>{{ $t(title) }}<span v-if="choose">*</span></p>
 </template>
 
 <script>

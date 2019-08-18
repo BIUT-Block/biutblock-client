@@ -2,8 +2,8 @@
   <main>
     <aside>
       <img src="../../assets/images/loginLogo.png" alt="" title="BIUT"/>
-      <h2 class="titleTop">{{ createTitle1 }}</h2>
-      <h2>{{ createTitle2 }}</h2>
+      <h2 class="titleTop">{{ $t(createTitle1) }}</h2>
+      <h2>{{ $t(createTitle2) }}</h2>
       <span></span>
     </aside>
     <!-- <section class="wallet-nav">
@@ -12,19 +12,19 @@
     <img src="../../assets/images/closeImg.png" v-show="createClose" title="close" class="closeImg" @click="closeCreate"/>
     <!-- 创建钱包 createPages == 1 -->
     <section class="wallet-create" v-if="createPages == 1">
-      <span class="wallet-button-important" @click="importCreate">Import Wallet</span>
+      <span class="wallet-button-important" @click="importCreate">{{ $t("login.loginImportBtn") }}</span>
       
       <wallet-title :title="walletNameText" :choose="true"/>
       <wallet-input 
         type="text" 
-        placeholder="Wallet Name" 
+        :placeholder="$t('input.walletNameIpt')" 
         maxlength="14"
         v-model="walletName"
         :disable="walletNameDisable"
         @input="inputName"></wallet-input>
       
       <wallet-title :title="walletPassText1" :choose="true"/>
-      <wallet-input-pass placeholder="Password" maxlength="30" 
+      <wallet-input-pass :placeholder="$t('input.walletPass1Ipt')" maxlength="30" 
           v-model="walletPass1"
           :class="passFormatShow ? 'border-red' : ''"
           @loseFocus="loseFocus"
@@ -34,7 +34,7 @@
       
       <wallet-title :title="walletPassText2" :choose="true"/>
       <wallet-input-pass 
-          placeholder="Confirm Password" 
+          :placeholder="$t('input.walletPass2Ipt')" 
           maxlength="30"
           :class="passFormat2Show ? 'border-red' : ''"
           v-model="walletPass2"
@@ -44,7 +44,7 @@
       <wallet-title :title="walletCodeText" :choose="true"/>
       <wallet-input 
         type="text" 
-        placeholder="Enter invitation code"
+        :placeholder="$t('input.walletCodeIpt')" 
         :class="walletCodeError ? 'border-red' : ''"
         maxlength="8"
         v-model="walletCode"
@@ -62,8 +62,8 @@
     <!-- 创建钱包 -- 备份助记词 createPages == 2 -->
     <section class="wallet-backup"  v-if="createPages == 2">
       <section class="backup-title">
-        <label>Save these details!</label> 
-        If you lose these credentials, you lose access to your assets.
+        <label>{{ $t('login.createdTips1') }}</label> 
+        {{ $t('login.createdTips2') }}
       </section>
       <wallet-title :title="backupText1" :choose="false"/>
       <phrase-list :itemList="itemList"/>
@@ -78,7 +78,7 @@
       <wallet-translucent :text="copyText" v-show="copyShow"/>
       <section class="radio-content">
         <img :src="radioImg" alt="" @click="checkRadio">
-        <span>I have backed up these credentials</span>
+        <span>{{ $t('login.createdAgreement') }}</span>
       </section>
       <wallet-button  class="wallet-button-backup" 
                       :text="walletBackupButton"
@@ -92,24 +92,26 @@
       <ul>
         <li v-for="(item, index) in tabList" 
             :class="tabIndex == index?'check-li':''"
-            @click="isTab(index)">{{item.cnt}}</li>
+            @click="isTab(index)">{{ $t(item.cnt) }}</li>
       </ul>
 
       <!-- 私钥导入 -->
       <section class="wallet-import-private-key" v-show="tabIndex == 0">
         <wallet-input 
-          placeholder="Wallet Name" 
+          :placeholder="$t('input.walletNameIpt')" 
           maxlength="14" 
           v-model="walletNameImport1"
           :disable="walletNameDisable"
           @input="inputName1"></wallet-input>
-        <textarea placeholder="Eenter your private key here" 
+        <textarea
+            :placeholder="$t('input.walletPrivateKey')" 
             maxlength="64" 
+            :class="privateKeyError ? 'border-red1' : ''"
             v-model="walletPrivateKey"
             @input="inputPrivateKey">
         </textarea>
         <wallet-tips :tips="privateKeyErrorText" v-show="privateKeyError"/>
-        <wallet-button  class="wallet-button-backup" 
+        <wallet-button class="wallet-button-backup" 
                       :text="walletImportButton"
                       @click.native="importWallet"
                       :disabled="!privateActive"
@@ -118,16 +120,19 @@
 
       <!-- keystore导入 -->
       <section class="wallet-import-keystore" v-show="tabIndex == 1">
-         <p class="wallet-import-keystore-title">Select your Keystore</p>
+         <p class="wallet-import-keystore-title">{{ $t('login.importSelectTit') }}</p>
          <div>
-           <span :class="KeyStoreColor?'KeyStoreColor':''">{{KeyStoreVal}}</span>
+           <span :class="KeyStoreColor?'KeyStoreColor':''">{{ $t(KeyStoreVal) }}</span>
            <input type="file" @change="tirggerFile($event)"/>
          </div>
          
          <section v-show="showPass">
             <wallet-title :title="walletnNewPassText" :choose="false"/>
-            <wallet-input-pass placeholder="Password" maxlength="30" 
+            <wallet-input-pass
+              :placeholder="$t('input.walletPass1Ipt')" 
+              maxlength="30" 
               v-model="walletNewPass"
+              :class="walletnNewPassError ? 'border-red' : ''"
               @input="inputContent3"></wallet-input-pass>
             <wallet-tips :tips="walletnNewPassErrorText" v-show="walletnNewPassError"/>
          </section>
@@ -141,41 +146,27 @@
       <!-- 助记词导入 -->
       <section  class="wallet-import-phrase" v-show="tabIndex == 2">
         <wallet-input 
-          placeholder="Wallet Name" 
+          :placeholder="$t('input.walletNameIpt')" 
           maxlength="14" 
           v-model="walletNameImport2"
           :disable="walletNameDisable"
           @input="inputName2"></wallet-input>
-        <textarea placeholder="Enter your Phrase here width space-separated"
+        <textarea
+          :placeholder="$t('input.walletPhrase')"
+          :class="phraseError ? 'border-red1' : ''"
           v-model.trim="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
-        <wallet-button  class="wallet-button-backup" 
+        <wallet-button class="wallet-button-backup" 
                       :text="walletImportButton"
                       @click.native="importWallet"
                       :disabled="!phraseActive"
                       :class="phraseActive?'passCorrect':''"/>
       </section>
 
-     <p class="go-create">No wallet?   <span @click="closeCreate">Create Wallet</span></p> 
+     <p class="go-create">{{ $t('login.loginFooter1') }}   <span @click="closeCreate">{{ $t('login.loginFooter2') }}</span></p> 
     </section>
     <!-- 钱包版本号 -->
     <span class="wallet-version"> V {{ versionNumber }}</span>
-    <!-- 遮罩层
-    <section class="mask" v-show="maskShow">
-      <section class="mask-container phrase-mask">
-        <img
-          src="../../assets/images/closeMask.png"
-          alt=""
-          class="maskCloseImg"
-          title="close"
-          @click="maskShow = false"
-        />
-        <section class="phrase-mask-body">
-          <p>This is a new wallet, are you confirm to import and save it locally?</p>
-          <button type="button"  @click="_navToNext">Confirm</button>
-        </section>
-      </section>
-    </section> -->
   </main>
 </template>
 
@@ -212,31 +203,31 @@ export default {
   props: {},
   data () {
     return {
-      createTitle1: 'Create',
-      createTitle2: 'New Wallet',
+      createTitle1: 'login.loginCreate1',
+      createTitle2: 'login.loginCreate2',
       createPages: 1, // 1 创建钱包 2 备份助记词 3 导入钱包
       createClose: false, //创建钱包页面关闭按钮是否显示
-      walletNameText: 'WALLET NAME',
-      walletPassText1: 'PASSWORD',
-      walletPassText2: 'CONFIRM PASSWORD',
+      walletNameText: 'input.walletName',
+      walletPassText1: 'input.walletPass1',
+      walletPassText2: 'input.walletPass2',
       walletName: '', //创建钱包名称
       walletNameDisable: false,
       walletPass1: '',//密码
       walletPass2: '',//确认密码
-      walletCodeText: 'INVITATION CODE', //邀请码标题
+      walletCodeText: 'input.walletCode', //邀请码标题
       walletCode: '',//邀请码输入框
       walletCodeError: false,//邀请码错误是否显示
-      walletCodeErrorText: 'Please enter the correct invitation code.',//邀请码错误提示语
+      walletCodeErrorText: 'input.walletCodeError',//邀请码错误提示语
 
-      walletButtonText: 'Create Wallet',
-      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
+      walletButtonText: 'login.loginBtn1',
+      passFormat: 'input.passFormatTips',
       passFormatShow: false,//密码格式提示
-      passFormat2: 'Two passwords are inconsistent.',//两次密码输入不一致
+      passFormat2: 'input.passDifferent',//两次密码输入不一致
       passFormat2Show: false,//密码格式提示
-      backupText1: 'PHRASE',
-      backupText2: 'PRIVATE KEY',
+      backupText1: 'login.createdPhrase',
+      backupText2: 'login.createdKey',
       privateKey: '',//备份助记词私钥
-      walletBackupButton: 'Enter Wallet',
+      walletBackupButton: 'login.loginBtn3',
       radioImg: agreement,//协议按钮
       radioIndex: 1,// 1 表示默认不选择 相反选择
       agreedId: false, //备份助记词按钮默认不可点击
@@ -245,15 +236,15 @@ export default {
       tabList: [
         {
           id: '01',
-          cnt: 'Private Key'
+          cnt: 'login.importKey'
         },
         {
           id: '02',
-          cnt: 'Keystore'
+          cnt: 'login.importKeystore'
         },
         {
           id: '03',
-          cnt: 'Phrase'
+          cnt: 'login.importPhrase'
         }
       ],//导入钱包title
       tabIndex: 0,
@@ -263,18 +254,18 @@ export default {
       walletNewPass: '',//导入keystroe文件输入密码
       walletPhrase: '',//助记词
       selectedKeystorePath: '',
-      walletImportButton: 'Login',
-      privateKeyErrorText: 'Private Error.',//私钥错误提示语
+      walletImportButton: 'login.loginBtn2',
+      privateKeyErrorText: 'input.privateKeyError',//私钥错误提示语
       privateKeyError: false,//私钥错误提示是否显示
-      walletnNewPassText: 'Your wallet is encrypted.Good! Please enter the password.',//
-      walletnNewPassErrorText: 'Password Error, unlock failed.',//密码错误提示语
+      walletnNewPassText: 'login.importSelectTxt2',//
+      walletnNewPassErrorText: 'input.passUnlockError',//密码错误提示语
       showPass: false,//选择keystroe之后出现密码输入的框
-      KeyStoreVal: 'Select Keystore',
+      KeyStoreVal: 'login.importSelectTxt1',
       walletnNewPassError: false,//密码错误提示语是否显示
-      phraseErrorText: 'Phrase error.',//助记词提示语错误
+      phraseErrorText: 'input.phraseError',//助记词提示语错误
       phraseError: false,//助记词提示语是否显示
       KeyStoreColor: true,
-      copyText: 'Copy success',//私钥复制
+      copyText: 'tips.copySuccess',//私钥复制
       copyShow: false,
       maskShow: false, //助记词导入钱包提示
       navQuery: {}
@@ -424,8 +415,8 @@ export default {
     importCreate () {
       this.createClose = true //进入导入钱包关闭按钮显示
       this.createPages = 3
-      this.createTitle1 = 'Import'
-      this.createTitle2 = 'Wallet'
+      this.createTitle1 = 'login.loginImport1'
+      this.createTitle2 = 'login.loginImport2'
     },
 
     //创建钱包  需要传邀请码
@@ -454,8 +445,8 @@ export default {
           walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
           this.createClose = true //进入备份助记词关闭按钮显示
           this.createPages = 2
-          this.createTitle1 = 'Wallet'
-          this.createTitle2 = 'Created!'
+          this.createTitle1 = 'login.loginImport2'
+          this.createTitle2 = 'login.loginCreated'
         } else {
           this.walletCodeError = true
           this.walletCodeErrorText = body.message
@@ -470,14 +461,14 @@ export default {
         this.$router.push({name: 'walletIndex', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
       } else if (this.createPages == 2 && createId == 1  || this.createPages == 3  && createId == 1) {
         this.createPages = 1
-        this.createTitle1 = 'Create'
-        this.createTitle2 = 'New Wallet'
+        this.createTitle1 = 'login.loginCreate1'
+        this.createTitle2 = 'login.loginCreate2'
         this.walletNameImport1 = ''
         this.walletPrivateKey = ''
         this.showPass = false
         this.walletNameImport2 = ''
         this.walletPhrase = ''
-        this.KeyStoreVal = 'Select Keystore'
+        this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
         this.walletnNewPassError = false
         this.KeyStoreColor = true
@@ -493,14 +484,14 @@ export default {
       } else {  //其他就是创建钱包
         this.createPages = 1
         this.createClose = false
-        this.createTitle1 = 'Create'
-        this.createTitle2 = 'New Wallet'
+        this.createTitle1 = 'login.loginCreate1'
+        this.createTitle2 = 'login.loginCreate2'
         this.walletNameImport1 = '挖矿钱包'
         this.walletPrivateKey = ''
         this.showPass = false
         this.walletNameImport2 = '挖矿钱包'
         this.walletPhrase = ''
-        this.KeyStoreVal = 'Select Keystore'
+        this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
         this.walletnNewPassError = false
         this.KeyStoreColor = true
@@ -527,7 +518,7 @@ export default {
           }, 3000)
       })
       clipboard.on('error', e => {
-          this.copyText = "Copy the failure"
+          this.copyText = "tips.copyFailure"
           setTimeout(() => {
               this.copyShow = false
           }, 3000)
@@ -598,7 +589,7 @@ export default {
 
     _findOutWallet (wallets, privateKey, from) {
       if (wallets === 'error') {
-        this._showImportError(from, 'Input value is not valid.')
+        this._showImportError(from, 'input.privateKeyError2')
         return
       }
       dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
@@ -611,7 +602,7 @@ export default {
           wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress.replace('0x', '')
           walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
             if (wallets === 'DuplicateKey') {
-              this._showImportError(from, 'Wallet already exists or imported.')
+              this._showImportError(from, 'input.imporantExists')
             } else {
               this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
             }
@@ -650,15 +641,15 @@ export default {
     _importNameError (index) {
       switch (index) {
         case 0:
-          this.privateKeyErrorText = 'Please input wallet name.'
+          this.privateKeyErrorText = 'input.nameNull'
           this.privateKeyError = true
           break
         case 1:
-          this.walletnNewPassErrorText = 'Please input wallet name.'
+          this.walletnNewPassErrorText = 'input.nameNull'
           this.walletnNewPassError = true
           break
         case 2:
-          this.phraseErrorText = 'Please input wallet name.'
+          this.phraseErrorText = 'input.nameNull'
           this.phraseError = true
           break
       }
@@ -673,7 +664,7 @@ export default {
         this.showPass = true
         this.KeyStoreColor = false
       } else {
-        this.KeyStoreVal = 'Select Keystore'
+        this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
         this.walletnNewPassError = false
         this.showPass = false
@@ -788,7 +779,7 @@ export default {
   .wallet-import button {width: 190px!important;margin-top: 48px;}
   .wallet-import .go-create {color: #576066;padding-top: 28px;}
   .wallet-import .go-create span {color: #29D893;}
-  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 58px;color: #252F33;
+  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 58px;color: #252F33;box-sizing: border-box;
     padding: 24px;outline: none;resize: none;flex: 1;margin-top: 20px;font-size: 14px;overflow: auto;
     font-family: Lato-Regular;}
   .wallet-import textarea::-webkit-scrollbar {display: none;}

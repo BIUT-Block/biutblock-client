@@ -6,11 +6,11 @@
         <img src="../../assets/images/returnImg.png" @click="returnDig" title="return"/>
         <section class="dig-more-header-title">
           <section>
-            <p>Wallet Name</p>
+            <p>{{ $t('homeDigMore.hdmTit1') }}</p>
             <p>{{selectedWallet.walletName}}</p>
           </section>
           <section>
-            <p>Wallet Account</p>
+            <p>{{ $t('homeDigMore.hdmTit2') }}</p>
             <p>0x{{selectedWallet.walletAddress}}</p>
           </section>
         </section>
@@ -20,16 +20,16 @@
       <section class="dig-more-body" :class="loadMore?'dig-body-padding-bottom':''">
           
           <section class="dig-body-title">
-            <h3>Mining Record</h3>
+            <h3>{{ $t('homeDig.hdNavProfitListTit1') }}</h3>
             <section class="dig-body-title-list">
               <section>
                 <span></span>
-                <span>Number Of Mining：</span>
+                <span>{{ $t('homeDig.hdNavProfitListTit2') }}：</span>
                 <span>{{this.digNumber}}</span>
               </section>
               <section>
                 <span></span>
-                <span>Income of Mining：</span>
+                <span>{{ $t('homeDig.hdNavProfitListTit3') }}：</span>
                 <span>{{this.digIncome}} BIU</span>
               </section>
             </section>
@@ -39,7 +39,7 @@
           <dig-list :moreList="moreList"/>
         </section>
 
-        <p v-show="loadMore" class="load-more" @click="onClickLoadMore">Click to load more</p>
+        <p v-show="loadMore" class="load-more" @click="onClickLoadMore">{{ $t('page.clickMore') }}</p>
       </section>
     </section>
   </main>

@@ -1,13 +1,13 @@
 <template>
   <section>
     <ul class="test">
-      <li>NODE IP</li>
-      <li>COUNTRY</li>
-      <li>CITY</li>
-      <li>NODE TIME</li>
+      <li>{{ $t('homeNode.hnListTxt1') }}</li>
+      <li>{{ $t('homeNode.hnListTxt2') }}</li>
+      <li>{{ $t('homeNode.hnListTxt3') }}</li>
+      <li>{{ $t('homeNode.hnListTxt4') }}</li>
     </ul>
     <section class="list-node">
-      <h4 v-show="listContent">Please check for network failure</h4>
+      <h4 v-show="listContent">{{ $t('homeNode.hnNetwork') }}</h4>
       <ul v-for="(item, index) in nodeList" :key="index" v-show="!listContent">
         <li>{{item.nodeIp}}</li>
         <li>{{item.nodeCountry}}</li>

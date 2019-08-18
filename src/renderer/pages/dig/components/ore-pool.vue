@@ -2,45 +2,49 @@
   <main class="ore-container">
     <!-- 条件不足、条件满足 -->
     <section class="ore-pool-conditions" v-show="pages == 1">
-      <p>Only more than 500,000 you  can apply for opening the mining pool!</p>
+      <p>{{ $t(conditionsTips) }}</p>
       <button
         type="button"
         :class="orePoolTrue ? 'orePoolTrue' : ''"
         :disabled="!orePoolTrue"
         @click="maskShow = true">
-        {{ orePoolTxt }}
+        {{ $t(orePoolTxt) }}
       </button>
     </section>
 
     <!-- 申请中 -->
     <section class="ore-pool-apply" v-show="pages == 2">
       <img src="../../../assets/images/ongoingImg.png" alt="" />
-      <p>
+      <p v-show="poolApplyShow">
         You have applied for starting the mining pool(
         <span>{{ poolName }} </span>),please wait for 3~5 days.
       </p>
+      <section v-show="!poolApplyShow">
+        <p>已申请开通矿池，请等待系统审核哦</p>
+        <span>{{ poolName }}123</span>
+      </section>
     </section>
 
     <!-- 申请失败 -->
     <section class="ore-pool-error" v-show="pages == 3">
       <span></span>
-      <button type="button">Create my mine pool</button>
+      <button type="button">{{ $t('homeDig.hdNavPoolFailureTit') }}</button>
       <ul>
         <li>
           <p>
-            Application record
+            {{ $t('homeDig.hdNavPoolFailureTxt1') }}
           </p>
           <p>
-            Application Amount：
+            {{ $t('homeDig.hdNavPoolFailureTxt2') }}：
             <span>{{ poolApplyMoney }}</span>
           </p>
           <p>
-            Time：
+            {{ $t('homeDig.hdNavPoolFailureTxt3') }}：
             <span>{{ poolApplyTime }}</span>
           </p>
           <p>
-            Status：
-            <span>Refuse</span>
+            {{ $t('homeDig.hdNavPoolFailureTxt4') }}：
+            <span>{{ $t('homeDig.hdNavPoolFailureTxt5') }}</span>
           </p>
         </li>
       </ul>
@@ -49,13 +53,13 @@
     <!-- 申请成功 -->
     <section class="ore-pool-success" v-show="pages == 4">
       <section class="header-success-list">
-        <p>{{ poolName }} Mine Pool</p>
-        <p>start time：{{ poolApplyTime }}</p>
+        <p>{{ poolName }} {{ $t('homeDig.hdNavPoolSuccessTit1') }} </p>
+        <p>{{ $t('homeDig.hdNavPoolSuccessTit2') }}：{{ poolApplyTime }}</p>
       </section>
       <ul>
         <li v-for="(item, index) in successList" :key="index">
           <img :src="item.poolImg" alt="">
-          <span class="pool-tit">{{ item.poolTit }}</span>
+          <span class="pool-tit">{{ $t(item.poolTit) }}</span>
           <span class="pool-txt">{{ item.poolTxt }}</span>
         </li>
       </ul>
@@ -102,22 +106,35 @@ export default {
   data() {
     return {
       //orePoolTrue: true, //挖矿是否可开启 默认 false
-      orePoolTxt: 'Unable to open mining pool', //矿池是否可开启的文本内容  如果满足条件 orePoolTrue = true  orePoolTxt = 'Apply for opening a mining pool'
+      orePoolTxt: 'homeDig.hdNavPoolBtn1', //矿池是否可开启的文本内容  如果满足条件 orePoolTrue = true  orePoolTxt = 'Apply for opening a mining pool'
+      conditionsTips: 'homeDig.hdNavPoolTxt1', //可以开启挖矿 homeDig.hdNavPoolTxt2
       orePoolName: '矿池名称',//矿池名称
       applySuccess1,
       applySuccess2,
       applySuccess3,
       applySuccess4,
-      maskShow: false  
+      maskShow: false,
+
+      poolApplyShow: false
+    }
+  },
+  updated() {
+    let locale = this.$i18n.locale
+    if (locale === "en") {
+      this.poolApplyShow = true
+    } else {
+      this.poolApplyShow = false
     }
   },
   computed: {
     orePoolTrue () {
       if (this.availableMoney >= 500000) {//
-        this.orePoolTxt = 'Apply for opening a mining pool'
+        this.orePoolTxt = 'homeDig.hdNavPoolBtn2'
+        this.conditionsTips = "homeDig.hdNavPoolTxt2"
         return true
       } else {
-        this.orePoolTxt = 'Unable to open mining pool'
+        this.orePoolTxt = 'homeDig.hdNavPoolBtn1'
+        this.conditionsTips = "homeDig.hdNavPoolTxt1"
         return false
       }
     },
@@ -127,25 +144,25 @@ export default {
         {
           id: 0,
           poolImg: this.applySuccess1,
-          poolTit: 'My pool assets',
+          poolTit: 'homeDig.hdNavPoolSuccessListTxt1',
           poolTxt: this.poolAssets.toLocaleString('en-US') + " BIUT",
         },
         {
           id: 1,
           poolImg: this.applySuccess2,
-          poolTit: 'Number of pool nodes',
+          poolTit: 'homeDig.hdNavPoolSuccessListTxt2',
           poolTxt: this.poolNode.toLocaleString('en-US') + " BIUT",
         },
         {
           id: 2,
           poolImg: this.applySuccess3,
-          poolTit: 'Total pool profit',
+          poolTit: 'homeDig.hdNavPoolSuccessListTxt3',
           poolTxt: this.poolAllEarnings.toLocaleString('en-US') + " BIU",
         },
         {
           id: 3,
           poolImg: this.applySuccess4,
-          poolTit: 'My profit',
+          poolTit: 'homeDig.hdNavPoolSuccessListTxt4',
           poolTxt: this.poolMyEarnings.toLocaleString('en-US') + " BIU",
         }
       ]
@@ -179,8 +196,8 @@ export default {
     border: 1px solid #E6E6E6;box-sizing: border-box;}
   .ore-pool-conditions .orePoolTrue {color: #29D893;border-color: #29D893;}
 
-  .ore-pool-apply p {padding-top: 32px;width: 410px;text-align: center;color: #99A1A6;font-size: 14px;line-height: 1.5;}
-  .ore-pool-apply p span {color: #252F33;font-family: Lato-Medium;}
+  .ore-pool-apply p,.ore-pool-apply section {padding-top: 32px;width: 410px;text-align: center;color: #99A1A6;font-size: 14px;line-height: 1.5;}
+  .ore-pool-apply section span {color: #252F33;font-family: Lato-Medium;}
 
 
   .ore-pool-error {height: 100%;display: flex;justify-content: space-between;align-items: center;flex-direction: column;}

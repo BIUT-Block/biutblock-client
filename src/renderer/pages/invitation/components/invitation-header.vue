@@ -1,24 +1,34 @@
 <template>
   <main>
-    <h2>My Level</h2>
+    <header class="flex-between">
+      <h2>{{ $t('homeInvitation.hiTit') }}</h2>
+      <button type="button" class="rules-btn" @click="shareShow = true">{{ $t('homeInvitation.hiShare') }}</button>
+    </header>
+
     <section class="header-list">
       <section class="header-img">
         <img :src="headerImg" alt="" />
       </section>
       
       <section class="header-text">
-        <h3>{{ headerLevel }}</h3>
-        <p class="header-txt">Gold medal</p>
+        <h3>{{ $t(headerLevel) }}</h3>
+        <p class="header-txt">{{ $t('homeInvitation.hiTxt') }}</p>
         <p class="look-list">
           <section class="progress-list clearfix">
             <el-progress :percentage="progress" color="#29D893" /> 
             <span>{{ progress }} / {{ levelNumber }}</span>
           </section>
-          <span @click="lookRules" class="rules-btn">View rules</span>
+          <span @click="lookRules" class="rules-btn">{{ $t('homeInvitation.hiBtn') }}</span>
         </p>
       </section>
     </section>
     <section class="line"></section>
+
+    <!-- 分享弹窗 -->
+    <share-mask 
+      :invitationCode="invitationCode"
+      v-show="shareShow"
+      @close = 'closeMask'/>
   </main>
 </template>
 
@@ -27,8 +37,13 @@ import level1 from '../../../assets/images/levels1.png'
 import level2 from '../../../assets/images/levels2.png'
 import level3 from '../../../assets/images/levels3.png'
 import level4 from '../../../assets/images/levels4.png'
+
+import shareMask from './invitation-share-mask'
 export default {
   name: '',
+  components: {
+    shareMask
+  },  
   props: {
     level: Number,
     progress: Number
@@ -38,7 +53,9 @@ export default {
       level1,
       level2,
       level3,
-      level4
+      level4,
+      shareShow: false,
+      invitationCode: '1234654' //邀请码
     }
   },
   computed: {
@@ -56,13 +73,13 @@ export default {
 
     headerLevel () {
       if (this.level == 1) {
-        return 'Bronze partner'
+        return 'homeInvitationMask.hiMaskRulesListLevel1'
       } else if (this.level == 2) {
-        return 'Silver partner'
+        return 'homeInvitationMask.hiMaskRulesListLevel2'
       } else if (this.level == 3) {
-        return 'Gold partner'
+        return 'homeInvitationMask.hiMaskRulesListLevel3'
       } else {
-        return 'Super partner'
+        return 'homeInvitationMask.hiMaskRulesListLevel4'
       }
     },
 
@@ -82,6 +99,10 @@ export default {
     //查看规则
     lookRules () {
       this.$emit('rules')
+    },
+    
+    closeMask () {
+      this.shareShow = false
     }
   },
 }
@@ -89,7 +110,10 @@ export default {
 
 <style scoped>
   main {padding-top: 20px;}
-  h2 {margin: 0;color: #252F33;font-size: 18px;padding: 0 32px;font-family: Montserrat-SemiBold;}
+  header {padding: 0 32px;}
+  header button {border: 0;margin-left: 0!important;}
+  h2 {margin: 0;color: #252F33;font-size: 18px;font-family: Montserrat-SemiBold;}
+
 
   .header-list {display: flex;align-items: center;padding: 20px 32px 16px;height: 64px;}
 

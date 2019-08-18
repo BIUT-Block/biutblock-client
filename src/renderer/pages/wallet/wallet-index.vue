@@ -35,14 +35,16 @@
               
               <ul v-show="menuShow">
                 <li v-for="(item, index) in menuList" 
-                  @click="lookMask(index)">{{item.text}}</li>
+                  @click="lookMask(index)">
+                  {{ $t(item.text) }}
+                </li>
               </ul>
             </section>
 
             <section class="invitation-list">
               <figure class="flex">
                 <figcaption>
-                  My invitation code：
+                  {{ $t('homeWallet.hwCode') }}：
                   <span id="invitation">
                     {{ selectedWalletData.ownInvitationCode }}
                   </span>
@@ -74,22 +76,22 @@
         <!-- 金额展示 -->
         <section class="wallet-header-money-list">
           <section class="money-content">
-            <span> BIUT Balance </span>
+            <span>{{ $t('homeWallet.hwBiut') }}</span>
             <p>{{ walletBalance | currency("") }} BIUT</p>
             <section class="money-text-list">
               <p class="money-text">
-                <span>Available</span>
+                <span>{{ $t('homeWallet.hwBiutTxt1') }}</span>
                 <span>{{ availableMoney }}</span>
               </p>
               <p class="money-text">
-                <span>Guarantee</span>
+                <span>{{ $t('homeWallet.hwBiutTxt2') }}</span>
                 <span>{{ freezeMoney }}</span>
               </p>
             </section>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
           <section class="money-content">
-            <span> BIU Balance </span>
+            <span>{{ $t('homeWallet.hwBiu') }}</span>
             <p>{{ walletBalanceSEN | currency("") }} BIU</p>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
@@ -99,13 +101,13 @@
       </section>
 
       <section class="wallet-content-body" :class="moreShow ? '' : 'wallet-padidng-bottom'">
-        <p class="wallet-content-body-title">Transaction Record</p>
+        <p class="wallet-content-body-title">{{ $t('homeWallet.hwListTit') }}</p>
 
         <section class="wallet-container-list">
           <!-- 没有数据列表 walletContent == 1  -->
           <section class="wallet-content-body-mull" :style="noTradingStyle">
             <img src="../../assets/images/wallet-null.png" alt="">
-            <p>No transaction data</p>
+            <p>{{ $t('homeWallet.hwListNull') }}</p>
           </section>
           <!-- 有数据列表 walletContent == 1 -->
           <section class="wallet-content-body-list" :style="noTradingStyles">
@@ -117,7 +119,7 @@
         <!-- <p class="noMore" v-show="noMoreData">No further data available ^_^</p> -->
         <section class="moreList" v-show="moreShow" @click="onClickLoadMore">
           <img src="../../assets/images/moreList.png" alt="">
-          <span>Click to load more</span>
+          <span>{{ $t('page.clickMore') }}</span>
         </section>
       </section>
 
@@ -158,17 +160,17 @@ export default {
   props: {},
   data () {
     return {
-      receiptButton: 'Receipt',
+      receiptButton: 'homeWallet.hwBtn1',
       receiptImg: receiptImg,
-      transferButon: 'Sent',
+      transferButon: 'homeWallet.hwBtn2',
       wallets: {},
       selectedWallet: {},
       selectedPrivateKey: '',
       selectedWalletData: {},
       transferImg: transferImg,
       menuShow: false,
-      walletName: 'wallet Name',
-      oldWalletName: 'wallet Name',
+      walletName: '',
+      oldWalletName: '',
       walletBalance: '0',//sec余额
       availableMoney: 0, //biut的可用金额
       freezeMoney: 0, //biut冻结金额
@@ -182,19 +184,19 @@ export default {
       menuList: [
         {
           id: '01',
-          text: 'Export Private key',
+          text: 'homeWallet.hwSet1',
         },
         {
           id: '02',
-          text: 'Export Keystore',
+          text: 'homeWallet.hwSet2',
         },
         {
           id: '03',
-          text: 'Export Phrase',
+          text: 'homeWallet.hwSet3',
         },
         {
           id: '04',
-          text: 'Delete Wallet',
+          text: 'homeWallet.hwSet4',
         }
       ],
       translucentText: '',
@@ -267,7 +269,7 @@ export default {
         */
         if (Number(this.walletBalanceSEN) < 0.01) {
           this.translucentShow = true
-          this.translucentText = "BIU isn't enough to sent"
+          this.translucentText = "homeWallet.hwBiuInsufficient"
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
@@ -287,13 +289,13 @@ export default {
       this.translucentShow = true
       clipboard.on('success', e => {
           clipboard.destroy()
-          this.translucentText = 'Copy success'
+          this.translucentText = 'tips.copySuccess'
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
       })
       clipboard.on('error', e => {
-          this.translucentText = 'Copy failure'
+          this.translucentText = 'tips.copyFailure'
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
@@ -307,13 +309,13 @@ export default {
       this.translucentShow = true
       clipboard.on('success', e => {
           clipboard.destroy()
-          this.translucentText = 'Copy success'
+          this.translucentText = 'tips.copySuccess'
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
       })
       clipboard.on('error', e => {
-          this.translucentText = 'Copy failure'
+          this.translucentText = 'tips.copyFailure'
           setTimeout(() => {
             this.translucentShow = false
           }, 3000)
@@ -347,7 +349,7 @@ export default {
        let newKeyStore = {} 
        if (this.walletName.trim().length === 0) {
          this.translucentShow = true
-         this.translucentText = "Wallet name cannot be empty or only with space"
+         this.translucentText = "homeWallet.hwNameNull"
          setTimeout(() => {
           this.translucentShow = false
        }, 4000)
@@ -370,7 +372,7 @@ export default {
        newKeyStore[this.selectedWalletData.privateKey] = this.selectedWalletData
        WalletsHandler.updateWalletFile(this.selectedWalletData, () => {
          this.translucentShow = true
-         this.translucentText = "Change wallet name success"
+         this.translucentText = "homeWallet.hwUpdateNameSuccess"
          this.oldWalletName = this.walletName
        })
 
@@ -527,7 +529,7 @@ export default {
     onUpdateWalletList (wallets) {
       // Delete wallet successfully 删除成功 Delete wallet failure 删除失败
       this.translucentShow = true
-      this.translucentText = "Delete wallet successfully"
+      this.translucentText = "homeWallet.hwDeleteSuccess"
       setTimeout(() => {
           this.translucentShow = false
           this.translucentText = ""

@@ -2,15 +2,15 @@
   <main class="mask">
     <section class="mask-container record-mask">
       <header class="record-head">
-        <h2>Lock record</h2>
+        <h2>{{ $t('homeDigMask.hdMaskRecordTit') }}</h2>
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </header>
 
       <ul>
         <li>
-          <span>LOCK TIME</span>
-          <span>LOCKED AMOUNT (BIUT)</span>
-          <span>UNLOCK TIME</span>
+          <span>{{ $t('homeDigMask.hdMaskRecordListTxt1') }}</span>
+          <span>{{ $t('homeDigMask.hdMaskRecordListTxt2') }}</span>
+          <span>{{ $t('homeDigMask.hdMaskRecordListTxt3') }}</span>
         </li>
         <li v-for="(item, index) in itemList" :key="index">
           <span>{{ item.lockTime }}</span>

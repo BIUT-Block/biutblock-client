@@ -12,29 +12,29 @@
      <!-- 首次开启挖矿 -->
       <section class="begin-dig" v-show="pages == 0">
         
-        <p class="first-dig-tips">Whether to enable {{ poolName }} to open mining</p>
+        <p class="first-dig-tips">{{ $t('homeDigMask.hdMaskBeginTxt1') }} {{ poolName }} {{ $t('homeDigMask.hdMaskBeginTxt2') }}</p>
         
         <button type="button" 
           class="first-dig-btn passCorrect"
-          @click="confirmFrom">{{ firstBeginBtn }}</button>
+          @click="confirmFrom">{{ $t('publicBtn.openBtn') }}</button>
       </section>
 
       <!-- 断网 -->
       <section v-show="pages == 2">
         <section class="network-list">
           <img src="../../../assets/images/errorImg.png" alt="">
-          <span>{{ networkErrorText }}</span>
+          <span>{{ $t(networkErrorText) }}</span>
         </section>
         <section class="network-btn">
-          <button type="button" class="exit"  @click="onAppExit">Exit</button>
-          <button type="button" class="continue" @click="onContinue">Continue</button>
+          <button type="button" class="exit"  @click="onAppExit">{{ $t('homeDigMask.hdMaskNetworkExit') }}</button>
+          <button type="button" class="continue" @click="onContinue">{{ $t('homeDigMask.hdMaskNetworkContinue') }}</button>
         </section>
       </section>
 
        <!-- 抵押更多 -->
       <section class="first-dig" v-show="pages == 3">
-        <h2>Mortgage</h2>
-        <p class="first-dig-txt">Mortgage amount <span class="color-red">*</span></p>
+        <h2>{{ $t('homeDigMask.hdMaskMortgageTit') }}</h2>
+        <p class="first-dig-txt">{{ $t('homeDigMask.hdMaskMortgageTxt1') }} <span class="color-red">*</span></p>
 
         <section class="ipt-list flexBetween">
           <input
@@ -50,15 +50,15 @@
           </section>
         </section>
         <p class="first-dig-txt-all">
-          Available：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allAmountMortgage">All</span>
+          {{ $t('homeWallet.hwBiutTxt1') }}：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allAmountMortgage">All</span>
         </p>
-        <p class="first-dig-txt-tips">This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
+        <p class="first-dig-txt-tips">{{ $t('homeDigMask.hdEnteryTxt4') }}</p>
         
         <button type="button" 
           class="confrimBtn" 
           :class="mortgageActive ? 'passCorrect' : ''"
           :disabled="!mortgageActive"
-          @click="mortgageFrom">{{ mortgageBtn }}</button>
+          @click="mortgageFrom">{{ $t('publicBtn.mortgageBtn1') }}</button>
       </section>
 
     </section>
@@ -66,8 +66,6 @@
 </template>
 
 <script>
-import agreement from '../../../assets/images/agreement.png'
-import agreements from '../../../assets/images/agreements.png'
 export default {
   name: '',
   props: {
@@ -80,59 +78,15 @@ export default {
   },
   data() {
     return {
-      confrimContent: false,//第一次确认挖矿邀请码
-      firstBeginBtn: 'Open mining',
       firstBeginIpt: '',//第一次开启挖矿的input
-      //confirmBeginIpt: '',//第一次开启挖矿邀请码的input
-      clearConfirmImg: false,
-      clearImg: false,
-      codeError: false, //邀请码输入错误的时候显示
-
-      confrimBeginContent: false,
-      beginIpt: '',//不是第一次挖矿的input
-      beginCodeIpt: '',//不是第一次开启挖矿邀请码的input
-      codeError2: false,//不是第一次挖矿邀请码输入错误显示
-      clearBeginImg: false,
-      clearBeginConfirmImg: false,
 
       mortgageIpt: '',
       mortgageImg: false,
-      mortgageBtn: 'Mortgage',
 
-      pageIdx: 1,
-      agreement,
-      agreements
+      pageIdx: 1
     }
   },
   computed: {
-    firstBtn () {
-      let ipt1 = this.firstBeginIpt
-      //let ipt2 = this.confirmBeginIpt.replace(/\s+/g, "")
-
-      return ipt1 > 0 && ipt < this.availableMoney ? true : false
-      // if (txt == "Open mining" && ipt1 > 0) {
-      //   return true
-      // } else if (txt == "Start invitation mining" && ipt2.length === 8) {
-      //   return true
-      // } else {
-      //   return false
-      // }
-    },
-
-    beginBtn () {
-      let txt = this.firstBeginBtn
-      let ipt1 = this.beginIpt
-      let ipt2 = this.beginCodeIpt.replace(/\s+/g, "")
-      let pageIdx = this.pageIdx
-      if (txt == "Open mining" && ipt1 > 0 && pageIdx != 1) {
-        return true
-      } else if (txt == "Start invitation mining" && ipt2.length === 8 && pageIdx != 1) {
-        return true
-      } else {
-        return false
-      }
-    },
-
     mortgageActive () {
       let ipt1 = this.mortgageIpt
       return ipt1 > 0 && ipt1 < this.availableMoney ? true : false
@@ -142,43 +96,11 @@ export default {
     //关闭弹窗
     closeMask () {
       this.$emit('close')
-      this.firstBeginBtn = 'Open mining'
-
-      this.confrimContent = false
-      this.firstBeginIpt = ''
-      this.clearImg = false
-      this.confirmBeginIpt = ''
-      this.clearConfirmImg = false
-
-      this.confrimBeginContent = false
-      this.beginIpt = ''
-      this.clearBeginImg = false
-      this.beginCodeIpt = ''
-      this.clearBeginConfirmImg = false
 
       this.mortgageIpt = ''
       this.mortgageImg = false
       
       this.pageIdx = 1
-      this.codeError = false
-      this.codeError2 = false
-    },
-
-    //清除第一次挖矿的金额输入框
-    clearFirstIpt () {
-      this.firstBeginIpt = ''
-      this.clearImg = false
-    },
-
-    //清除第一次转账确认邀请码输入框
-    clearConfirmIpt () {
-      this.confirmBeginIpt = ''
-      this.clearConfirmImg = false
-    },
-    
-    //第一次转账转出全部金额
-    allAmount () {
-     this.firstBeginIpt = this.availableMoney
     },
 
     clearMortgage () {
@@ -196,33 +118,8 @@ export default {
       this.mortgageIpt = this.availableMoney
     },
     
-    //确认提交弹出输入邀请码
+    //确认提交
     confirmFrom () {
-      // this.confrimContent = true
-      // if (this.firstBeginBtn == 'Open mining') {
-      //   this.$nextTick(()=>{
-      //     this.firstBeginBtn = 'Start invitation mining'
-      //   })
-      // } else {
-      //   this.submitFrom()
-      // }
-      this.submitFrom()
-    },
-
-    //确认提交挖矿
-    submitFrom () {
-      /**
-       * 判断邀请码是否正确 或者 无效
-       * this.codeError = true
-       * this.confirmBeginIpt = ''
-       */
-      // if (this.confirmBeginIpt != 12345678) {
-      //   this.codeError = true
-      //   this.confirmBeginIpt = ''
-      //   return
-      // } else {
-      //    this.closeMask ()
-      // }
       this.$emit('beginMining')
       this.closeMask ()
     },
@@ -237,99 +134,20 @@ export default {
       this.$emit('exit')
     },
 
-    //单选按钮选择
-    checkRadio () {
-      this.pageIdx = !this.pageIdx
-    },
-
-    //清除不是第一次挖矿的金额输入框
-    clearBeginIpt () {
-      this.beginIpt = ''
-      this.clearBeginImg = false
-    },
-
-    //清除不是第一次挖矿的邀请码输入框
-    clearBeginConfirmIpt () {
-      this.beginCodeIpt = ''
-      this.clearBeginConfirmImg = false
-    },
-
-    //不是首次挖矿转出全部金额
-    allBeginAmount () {
-      this.beginIpt = this.availableMoney
-    },
-
-    //不是首次挖矿确认输入邀请码
-    confirmBeginFrom () {
-      this.confrimBeginContent = true
-      if (this.firstBeginBtn == 'Open mining') {
-        this.$nextTick(()=>{
-          this.firstBeginBtn = 'Start invitation mining'
-        })
-      } else {
-        this.submitBeginFrom()
-      }
-    },
-
-    //不是首次挖矿的确认挖矿方法
-    submitBeginFrom () {
-      /**
-       * 判断邀请码是否正确 或者 无效
-       * this.codeError2 = true
-       * this.beginIpt = ''
-       */
-      if (this.beginCodeIpt != 12345678) {
-        this.codeError2 = true
-        this.beginCodeIpt = ''
-        return
-      } else {
-        this.closeMask ()
-      }
-    },
-
     //挖矿只能输入金额
-    clearFirstAmount () {
-      let beginIpt = this.firstBeginIpt.toString()
-      if (beginIpt.length > 7 && beginIpt.indexOf(".") < 0) {
-        this.firstBeginIpt = String(beginIpt).substring(0,7)
-      } else if (beginIpt.indexOf(".") == 0) {
-        this.firstBeginIpt = String(beginIpt).substring(0,9)
-      } else {
-        this.firstBeginIpt =  beginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
-        this.firstBeginIpt =  beginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-        this.firstBeginIpt =  beginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
-        this.firstBeginIpt =  beginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
-      }
-    },
-
-    //挖矿只能输入金额
-    clearBeginAmount () {
-      if (this.beginIpt.length > 7 && this.beginIpt.indexOf(".") < 0) {
-        //只能输入7位整数
-        this.beginIpt = String(this.beginIpt).substring(0,7)
-      } else if (this.beginIpt.indexOf(".") == 0) {
-        this.beginIpt = String(this.beginIpt).substring(0,9)
-      } else {
-        this.beginIpt =  this.beginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
-        this.beginIpt =  this.beginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
-        this.beginIpt =  this.beginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
-        this.beginIpt =  this.beginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
-      }
-    },
-
-    //不是首次挖矿的邀请码不能输入空格中文
-    clearBeginCode () {
-      this.$nextTick(()=> {
-        this.beginCodeIpt = this.inputNull(this.beginCodeIpt)
-      })
-    },
-
-    //首次挖矿的邀请码不能输入空格中文
-    clearConfirmCode () {
-      this.$nextTick(()=> {
-        this.confirmBeginIpt = this.inputNull(this.confirmBeginIpt)
-      })
-    },
+    // clearFirstAmount () {
+    //   let beginIpt = this.firstBeginIpt.toString()
+    //   if (beginIpt.length > 7 && beginIpt.indexOf(".") < 0) {
+    //     this.firstBeginIpt = String(beginIpt).substring(0,7)
+    //   } else if (beginIpt.indexOf(".") == 0) {
+    //     this.firstBeginIpt = String(beginIpt).substring(0,9)
+    //   } else {
+    //     this.firstBeginIpt =  beginIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+    //     this.firstBeginIpt =  beginIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+    //     this.firstBeginIpt =  beginIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+    //     this.firstBeginIpt =  beginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+    //   }
+    // },
 
     mortgageFrom () {
       this.$emit('addMoreMortgage', this.mortgageIpt)
@@ -337,41 +155,7 @@ export default {
     }
   },
   watch: {
-    firstBeginIpt(newIpt, oldIpt) {
-      if (newIpt.length > 0) {
-        this.clearImg = true
-      } else {
-        this.clearImg = false
-      }
-    },
 
-    confirmBeginIpt (confirmNew, confirmOld) {
-      if (confirmNew.length == 8) {
-        this.codeError = false
-      } else if ( confirmNew.length > 0) {
-        this.clearConfirmImg = true
-      } else {
-        this.clearConfirmImg = false
-      }
-    },
-
-    beginIpt(beginNew, beginOld) {
-      if (beginNew.length > 0) {
-        this.clearBeginImg = true
-      } else {
-        this.clearBeginImg = false
-      }
-    },
-
-    beginCodeIpt (codeNew, codeOld) {
-      if (codeNew.length == 8) {
-        this.codeError2 = false
-      } else if (codeNew.length > 0) {
-        this.clearBeginConfirmImg = true
-      } else {
-        this.clearBeginConfirmImg = false
-      }
-    }
   },
 }
 </script>

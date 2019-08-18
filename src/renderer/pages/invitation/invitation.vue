@@ -12,7 +12,7 @@
       <invitation-mask 
         :pagesIdx = idx
         :maskAddress = maskAddress
-        :maskLevel = maskLevel
+        :maskLevel = userLevel
         :maskMoney = maskMoney
         v-show = "maskShow"
         @close = 'closeMask' />
@@ -36,11 +36,10 @@ export default {
     return {
       maskShow: false,
       idx: 1,
-      userLevel: 1, //invitation-header  里面需要的参数判断显示 1 - Bronze partner  2 - Silver partner 3 - Gold partner  4 - Super partner
+      userLevel: 1, //用户等级 invitation-header 里面需要的参数判断显示 1 - Bronze partner  2 - Silver partner 3 - Gold partner  4 - Super partner
       userprogress: 2, //进度条升级
 
       maskMoney: "-",
-      maskLevel: '-',
       maskAddress: '-'
     }
   },
@@ -61,7 +60,6 @@ export default {
       this.idx = 2
 
       this.maskMoney = 1000
-      this.maskLevel = "level" + 2
       this.maskAddress = "0xc4be3c8093fd7acdcdf415331040fc974f8b2ad5"
     },
 
