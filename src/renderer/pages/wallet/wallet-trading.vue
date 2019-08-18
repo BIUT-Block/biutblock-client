@@ -9,7 +9,7 @@
       <!-- 返回钱包首页 -->
       <section class="wallet-content-return">
         <img src="../../assets/images/returnImg.png" @click="returnWallet" title="return"/>
-        <span>Transaction Details</span>
+        <span>{{ $t('homeWalletDetails.hwdTit') }}</span>
       </section>
 
       <!-- 图片 -->
@@ -23,7 +23,7 @@
       <section class="wallet-content-list">
         <ul>
           <li v-for="item in tradingList" :key="item.id">
-            <span>{{item.title}}</span>
+            <span>{{ $t(item.title) }}</span>
             <span>{{item.cnt}}</span>
           </li>          
         </ul>
@@ -32,7 +32,7 @@
       <!-- 查看交易详情 -->
       <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img :src=" moneyType == 'BIUT' ? tradingLogo1 : tradingLogo2 " alt="">
-        <a :href="transactionLink" target="_blank">See more details at {{moneyType}} BLOCKCHAIN</a>
+        <a :href="transactionLink" target="_blank">{{ $t('homeWalletDetails.hwFootTxt1') }} {{moneyType}} {{ $t('homeWalletDetails.hwFootTxt2') }}</a>
       </section>
     </section>
   </main>
@@ -80,37 +80,37 @@ export default {
       return [
           {
             id: '01',
-            title: 'Transaction number',
+            title: 'homeWalletDetails.hwdListTxt1',
             cnt: this.transactionNumber
           },
           {
             id: '02',
-            title: 'Block',
+            title: 'homeWalletDetails.hwdListTxt2',
             cnt: this.block
           },
           {
             id: '03',
-            title: 'Creation time',
+            title: 'homeWalletDetails.hwdListTxt3',
             cnt: this.time
           },
           {
             id: '04',
-            title: 'From',
+            title: 'homeWalletDetails.hwdListTxt4',
             cnt: this.beneficiary
           },
           {
             id: '05',
-            title: 'To',
+            title: 'homeWalletDetails.hwdListTxt5',
             cnt: this.party
           },
           {
             id: '06',
-            title: 'Value',
+            title: 'homeWalletDetails.hwdListTxt6',
             cnt: this.amount + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
           },
           {
             id: '07',
-            title: 'Fee',
+            title: 'homeWalletDetails.hwdListTxt7',
             cnt: this.fee + ' BIU'
           }
       ]

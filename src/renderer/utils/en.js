@@ -1,10 +1,10 @@
 export default {
   login: {
-    loginCreate1: 'Create',
-    loginCreate2: 'New Wallet',
-    loginImport1: 'Import',
-    loginImport2: 'Wallet',
-    loginCreated: 'Created!',
+    loginCreate1: '创建钱包',
+    loginCreate2: '',
+    loginImport1: '导入钱包',
+    loginImport2: '',
+    loginCreated: '备份钱包',
 
     loginImportBtn: '导入钱包',
     loginFooter1: '没有钱包？',
@@ -22,7 +22,7 @@ export default {
 
     importSelectTit: '请选择Keystore文件',
     importSelectTxt1: '请选择Keystore文件',
-    importSelectTxt2: '你的钱包加密了！请输入正确的密码.',
+    importSelectTxt2: '该钱包已加密',
 
     importKey: '私钥',
     importKeystore: 'KeyStore文件',
@@ -34,8 +34,8 @@ export default {
     walletNameIpt: '请输入钱包名称',
     walletPass1: '钱包密码',
     walletPass1Ipt: '请输入钱包密码',
-    walletName2: '确认密码',
-    walletName2Ipt: '请再次确认密码',
+    walletPass2: '确认密码',
+    walletPass2Ipt: '请再次确认密码',
 
     walletCode: '邀请码',
     walletCodeIpt: '请输入邀请码',
@@ -53,6 +53,7 @@ export default {
     nameNull: '请输入钱包名称.',
 
     privateKeyError: '无效的私钥.',
+    privateKeyError2: '请输入有效的私钥',
     phraseError: '无效的助记词.',
 
     imporantExists: '当前钱包已存在或已导入。.'
@@ -83,6 +84,7 @@ export default {
     hwBiuInsufficient: "BIU 不足",
 
     hwNameNull: '钱包名称不能为空或只有空格.',
+    hwUpdateNameSuccess: '更改钱包名称成功。',
 
     hwDeleteSuccess: '删除钱包成功！',
   },
@@ -94,6 +96,7 @@ export default {
     hwmKeystoreIpt: '请输入新密码',
 
     hwmDeleteTit: '确认要删除钱包吗？请确认您已备份！',
+    hwmDeleteTit2: '当前钱包正在挖矿，您不能删除！',
     hwmDeleteBtn: '删除',
 
     hwmReceiptTxt1: '接收地址',
@@ -104,7 +107,10 @@ export default {
     hwmSentTips: '您正在向以下地址转账，请确认交易',
     hwmSentTxt1: '发送地址',
     hwmSentTxt2: '接收地址',
-    hwmSentTxt2Error: '地址是以0x开头的42位字符.',
+    hwmSentAddressIpt: '接收地址',
+    hwmSentTxt2Error: '地址是以0x开头的42位字符。',
+    hwmSentTxt2Error2: '地址无效。',
+    hwmSentTxt2Error2: '同一地址不能转。',
     hwmSentTxt3: '转账数量',
     hwmSentTxt3Error: '转账金额必须小于余额.',
     hwmSentTxt3Amount: '可用',
@@ -112,6 +118,10 @@ export default {
     hwmSentTxt4: '手续费',
     hwmSentSilder1: '慢',
     hwmSentSilder2: '快',
+    hwmSentNetwork: '没有网络连接。',
+    hwmSentFeeErrorText: '转账手续费不能大于BIU余额',
+    hwmSentFailure: '转账失败',
+    hwmSentSuccess: '提交成功',
   },
 
   homeWalletDetails: {
@@ -151,12 +161,12 @@ export default {
     hsTxt2: '跟随系统',
 
     hsTit2: '切换网络',
-    hsTxt2: '当前连接网络',
-    hsTxt3: '测试网',
-    hsTxt4: '主网',
+    hsTxt3: '当前连接网络',
+    hsTxt4: '测试网',
+    hsTxt5: '主网',
 
     hsTit3: '版本',
-    hsTxt5: '版本信息',
+    hsTxt6: '版本信息',
 
     hsNetwork1: '您将切换到 ',
     hsNetwork2: ', 这个操作会重启客户端并更新钱包数据，请确保您的钱包信息已备份',
@@ -167,6 +177,7 @@ export default {
     hdEnteryTxt1: '挖矿钱包',
     hdEnteryTxt2: '抵押数量',
     hdEnteryTxt3: '10,000 BIUT起，抵押数量被冻结一年，抵押数量越多，挖到BIU的收益越高哦！',
+    hdEnteryTxt4: '抵押数量会被冻结一年，抵押数量越多，挖到BIU的收益越高哦！',
     
     hdHeadListTxt: '进入挖矿页面，等待开启挖矿',
 
@@ -229,6 +240,9 @@ export default {
     hdMaskFirstTit: 'Start Mining',
     hdMaskFirstBtn: 'Start invitation mining',
 
+    hdMaskBeginTxt1: '是否启用 ',
+    hdMaskBeginTxt2: ' 开启挖矿',
+
     hdMaskStartTit: 'You will start mining with',
     hdMaskStartTxt1: 'Increase the number of frozen.',
     hdMaskStartTxt2: 'Higer of the Mortgage amount, and higher the profit of BIU token',
@@ -240,7 +254,7 @@ export default {
     hdMaskNetworkContinue: 'Continue',
     hdMaskNetworkReconnecting: 'Reconnecting',
     hdMaskNetworkTxt1: "No connected peer. You can exit the application and check your network",
-    hdMaskNetworkTxt1: "No network connection. You can exit the application and check your network",
+    hdMaskNetworkTxt2: "No network connection. You can exit the application and check your network",
 
     hdMaskRecordTit: 'Lock record',
     hdMaskRecordListTxt1: 'LOCK TIME',
@@ -257,6 +271,7 @@ export default {
 
   homeInvitation: {
     hiTit: '我的等级',
+    hiShare: '一键分享',
 
     hiTxt: '金牌',
 
@@ -268,23 +283,32 @@ export default {
     hiListTxt2: '邀请时间',
     hiListTxt3: '已获得奖励（BIUT）',
     hiListTxt4: '操作',
+    hiListBtn: '查看详情',
 
+    hiListSearchNull: '没有搜索结果',
   },
 
   homeInvitationMask: {
     hiMaskRulesTit: '查看规则',
     hiMaskRulesTxt: '每次邀请成功就会奖励BIUT，请注意查收哦.',
     hiMaskRulesListTxt1: '级别',
-    hiMaskRulesListTxt1: '人数',
+    hiMaskRulesListTxt2: '人数',
     hiMaskRulesListLevel1: '铜牌合伙人',
     hiMaskRulesListLevel2: '银牌合伙人',
     hiMaskRulesListLevel3: '金牌合伙人',
     hiMaskRulesListLevel4: '超级合伙人',
+    hiMaskRulesListLevel4Txt: '1000以上',
 
     hiMaskDetailsTit: '查看明细',
     hiMaskDetailsTxt: '总收益 (BIUT)',
     hiMaskDetailsListTxt1: '时间',
     hiMaskDetailsListTxt2: '奖励 (BUT)',
+
+    hiMaskShareTit1: 'BIUT- PC矿工POW挖矿',
+    hiMaskShareTit2: '邀请码',
+
+    hiMaskShareTxt1: '复制链接',
+    hiMaskShareTxt2: '用浏览器打开链接查看',
   },
 
   publicBtn: {
@@ -294,7 +318,8 @@ export default {
     mortgageBtn1: '抵押',
     mortgageBtn2: '抵押更多',
     openBtn: '开启挖矿',
-
+    stopBtn: '停止挖矿',
+    resubmitBtn: '重新提交',
   },
   page: {
     pageTotal: '条记录',

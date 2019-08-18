@@ -1,10 +1,10 @@
 <template>
   <section class="container">
     <ul class="dig-list">
-      <li style="width: 24%;">AGE</li>
-      <li style="width: 18%;">REWARD</li>
-      <li style="width: 18%;">BLOCKS</li>
-      <li style="width: 40%;">BLOCK HASH</li>
+      <li style="width: 24%;">{{ $t('homeDig.hdNavProfitListTxt1') }}</li>
+      <li style="width: 18%;">{{ $t('homeDig.hdNavProfitListTxt2') }}</li>
+      <li style="width: 18%;">{{ $t('homeDig.hdNavProfitListTxt3') }}</li>
+      <li style="width: 40%;">{{ $t('homeDig.hdNavProfitListTxt4') }}</li>
     </ul>
     <ul v-for="(item, index) in digLists" v-if ="index < 4">
       <li style="width: 24%;">{{ item.age }}</li>
@@ -13,7 +13,7 @@
       <li style="width: 40%;color: #388ED9;">{{ item.blockhash.replace(/(.{10}).+(.{12})/,'$1......$2') }}</li>
     </ul>
     <section class="dig-body">
-     <h4 v-show="digListShow">No mining records yet</h4>
+     <h4 v-show="digListShow">{{ $t('homeDig.hdNavProfitListNull') }}</h4>
     </section>
   </section>
 </template>

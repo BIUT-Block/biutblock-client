@@ -1,42 +1,43 @@
 <template>
   <main class="mask">
-
     <section class="rules-content" v-show="pagesIdx == 1">
       <section class="public-title">
-        <h2>View rules</h2>
+        <h2>{{ $t('homeInvitationMask.hiMaskRulesTit') }}</h2>
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
-      <p>Every time the invitation is successful, it will reward BIUT, please check it.</p>
+      <p>{{ $t('homeInvitationMask.hiMaskRulesTxt') }}</p>
       <ul>
         <li>
           <span> </span>
-          <span>Level</span>
-          <span>Number of people</span>
+          <span>{{ $t('homeInvitationMask.hiMaskRulesListTxt1') }}</span>
+          <span>{{ $t('homeInvitationMask.hiMaskRulesListTxt2') }}</span>
         </li>
         <li v-for="(item, index) in itemList" :key="index">
           <span><img :src="item.rulesImg" alt=""></span>
-          <span>{{ item.rulesLevel }}</span>
-          <span>{{ item.rulesNumber }}</span>
+          <span>{{ $t(item.rulesLevel) }}</span>
+          <span>{{ $t(item.rulesNumber) }}</span>
         </li>
       </ul>
     </section>
 
     <section class="details-content" v-show="pagesIdx == 2">
       <section class="public-title">
-        <h2>Reward details</h2>
+        <h2>{{ $t('homeInvitationMask.hiMaskDetailsTit') }}</h2>
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
 
       <section class="details-list">
-        <p class="details-list-tit">address</p>
+        <p class="details-list-tit">{{ $t('homeInvitation.hiListTxt1') }}</p>
         <p>
           <span>{{ maskAddress }}</span>
-          <span class="details-list-level">{{ maskLevel }}</span>
+          <span class="details-list-level">
+            {{ userLevel }}
+          </span>
         </p>
       </section>
 
       <section class="details-list details-list-top">
-        <p class="details-list-tit">Total revenue (BIUT):</p>
+        <p class="details-list-tit">{{ $t('homeInvitationMask.hiMaskDetailsTxt') }}:</p>
         <p>
           {{ maskMoney }}
         </p>
@@ -44,8 +45,8 @@
 
       <ul>
         <li>
-          <span>Time</span>
-          <span>Reward (BUT)</span>
+          <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt1') }}</span>
+          <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt2') }}</span>
         </li>
         <li v-for="(item, index) in detailsLists" :key="index">
           <span>{{ item.detailsTime }}</span>
@@ -84,6 +85,32 @@ export default {
   computed: {
     detailsLists () {
       return Array(5).fill(this.detailsList[0]) 
+    },
+
+    userLevel () {
+      let level = this.maskLevel
+      let locale = this.$i18n.locale
+      if (locale === "en") {
+        if (level == 1) {
+          return 'level1'
+        } else if (level == 2) {
+          return 'level2'
+        } else if (level == 3) {
+          return 'level3'
+        } else {
+          return 'level4'
+        }
+      } else {
+        if (level == 1) {
+          return '一级'
+        } else if (level == 2) {
+          return '二级'
+        } else if (level == 3) {
+          return '三级'
+        } else {
+          return '四级'
+        }
+      }
     }
   },
   data () {
@@ -93,7 +120,7 @@ export default {
         {
           id: '1',
           rulesImg: level1,
-          rulesLevel: 'Bronze partner',
+          rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel1',
           rulesNumber: '1-9',
           rulesReward1: '2%',
           rulesReward2: '1%'
@@ -101,7 +128,7 @@ export default {
         {
           id: '2',
           rulesImg: level2,
-          rulesLevel: 'Silver partner',
+          rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel2',
           rulesNumber: '10-99',
           rulesReward1: '4%',
           rulesReward2: '2%'
@@ -109,7 +136,7 @@ export default {
         {
           id: '3',
           rulesImg: level3,
-          rulesLevel: 'Gold partner',
+          rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel3',
           rulesNumber: '100-999',
           rulesReward1: '7%',
           rulesReward2: '3%'
@@ -117,8 +144,8 @@ export default {
         {
           id: '4',
           rulesImg: level4,
-          rulesLevel: 'Super partner',
-          rulesNumber: 'More than 1000',
+          rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel4',
+          rulesNumber: 'homeInvitationMask.hiMaskRulesListLevel4Txt',
           rulesReward1: '10%',
           rulesReward2: '4%'
         }

@@ -1,18 +1,18 @@
 <template>
   <section class="dig-body-title">
-    <h3>Mining Record</h3>
+    <h3>{{ $t('homeDig.hdNavProfitListTit1') }}</h3>
     <section class="dig-body-title-list">
       <section>
         <span></span>
-        <span>Number Of Mining：</span>
+        <span>{{ $t('homeDig.hdNavProfitListTit2') }}：</span>
         <span>{{ getPointNum (this.number, 8) }}</span>
       </section>
       <section>
         <span></span>
-        <span>Income of Mining：</span>
+        <span>{{ $t('homeDig.hdNavProfitListTit3') }}：</span>
         <span>{{ getPointNum (this.income, 8) }}  BIU</span>
       </section>
-      <section class="dig-more" v-show="digTitle" @click="digMore">More</section>
+      <section class="dig-more" v-show="digTitle" @click="digMore">{{ $t('homeDig.hdNavRecordMore') }}</section>
     </section>
   </section>
 </template>

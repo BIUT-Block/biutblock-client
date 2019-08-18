@@ -2,11 +2,11 @@
   <section>
     <ul>
       <li>
-        <span>LOCK  RECORD</span>
-        <span>LOCKED AMOUNT (BIUT)</span>
+        <span>{{ $t('homeDig.hdNavRecordListTxt1') }}</span>
+        <span>{{ $t('homeDig.hdNavRecordListTxt2') }}</span>
         <p>
-          UNLOCK TIME
-          <span @click="maskShow = true" v-show="itemList.length > 0">More</span>
+          {{ $t('homeDig.hdNavRecordListTxt3') }}
+          <span @click="maskShow = true" v-show="itemList.length > 0">{{ $t('homeDig.hdNavRecordMore') }}</span>
         </p>
       </li>
       <li v-for="(item, index) in itemList" v-if="itemList.length > 0 && index < 5" :key="index" v-show="itemList.length > 0">
@@ -17,7 +17,7 @@
     </ul>
     <section class="list-null" v-show="itemList.length === 0">
       <img src="../../../assets/images/wallet-null.png" alt="">
-      <p>No record</p>
+      <p>{{ $t('homeDig.hdNavRecordListNull') }}</p>
     </section>
 
     <record-mask @close = 'closeMask' :itemList="itemList" v-show="maskShow"/>

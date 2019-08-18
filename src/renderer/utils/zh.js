@@ -22,7 +22,7 @@ export default {
 
     importSelectTit: 'Select your Keystore',
     importSelectTxt1: 'Select Keystore',
-    importSelectTxt2: 'Your wallet is encrypted.Good! Please enter the password.',
+    importSelectTxt2: 'Your wallet is encrypted',
 
     importKey: 'Private Key',
     importKeystore: 'Keystore',
@@ -34,8 +34,8 @@ export default {
     walletNameIpt: 'Wallet Name',
     walletPass1: 'PASSWORD',
     walletPass1Ipt: 'password',
-    walletName2: 'CONFIRM PASSWORD',
-    walletName2Ipt: 'Confirm Password',
+    walletPass2: 'CONFIRM PASSWORD',
+    walletPass2Ipt: 'Confirm Password',
 
     walletCode: 'INVITATION CODE',
     walletCodeIpt: 'Enter invitation code',
@@ -53,6 +53,7 @@ export default {
     nameNull: 'Please input wallet name.',
 
     privateKeyError: 'Private Error.',
+    privateKeyError2: 'Input value is not valid.',
     phraseError: 'Phrase error.',
 
     imporantExists: 'Wallet already exists or imported.'
@@ -83,6 +84,7 @@ export default {
     hwBiuInsufficient: "BIU isn't enough to sent",
 
     hwNameNull: 'Wallet name cannot be empty or only with space.',
+    hwUpdateNameSuccess: 'Change wallet name success.',
 
     hwDeleteSuccess: 'Delete wallet successfully',
   },
@@ -94,6 +96,7 @@ export default {
     hwmKeystoreIpt: 'Enter your new password',
 
     hwmDeleteTit: 'Confirm to delete your wallet? Please make sure you have backed up your wallet.',
+    hwmDeleteTit2: 'The wallet is bind to mining. You can not remove it.',
     hwmDeleteBtn: 'Delete',
 
     hwmReceiptTxt1: 'Account',
@@ -104,15 +107,22 @@ export default {
     hwmSentTips: 'You are sending assets to the following address, please confirm the operation.',
     hwmSentTxt1: 'FROM',
     hwmSentTxt2: 'TO',
+    hwmSentAddressIpt: 'Receive Address',
     hwmSentTxt2Error: 'Addresses are generally 42-bit characters beginning with 0x.',
+    hwmSentTxt2Error2: 'This is not a valid address.',
+    hwmSentTxt2Error3: 'The same address cannot be transferred.',
     hwmSentTxt3: 'AMOUNT',
     hwmSentTxt3Error: 'Transfer amount must be less than balance.',
     hwmSentTxt3Amount: 'Available',
     hwmSentTxt3All: 'All',
     hwmSentTxt4: 'FEE',
     hwmSentSilder1: 'Slow',
-
     hwmSentSilder2: 'Fast',
+    hwmSentNetwork: 'No network connection.',
+
+    hwmSentFeeErrorText: 'Fee cannot be greater than BIU balance.',
+    hwmSentFailure: 'Submission Failed.',
+    hwmSentSuccess: 'Submitted successfully.',
   },
 
   homeWalletDetails: {
@@ -152,12 +162,12 @@ export default {
     hsTxt2: 'Follow system',
 
     hsTit2: 'Switching Network',
-    hsTxt2: 'Currently connected network',
-    hsTxt3: 'Test Network',
-    hsTxt4: 'Main Network',
+    hsTxt3: 'Currently connected network',
+    hsTxt4: 'Test Network',
+    hsTxt5: 'Main Network',
 
     hsTit3: 'Version',
-    hsTxt5: 'Version Information',
+    hsTxt6: 'Version Information',
 
     hsNetwork1: 'You will switch to the ',
     hsNetwork2: ', this operation will restart the client and update the wallet data, please confirm that the wallet information has been saved!',
@@ -168,8 +178,9 @@ export default {
     hdEnteryTxt1: 'Mining Wallet',
     hdEnteryTxt2: 'Mortgage amount',
     hdEnteryTxt3: 'Not less than 10,000 BIUT, This BIUT will be locked for one year. The more BIUT locked, the greater the chance of digging BIU!',
+    hdEnteryTxt4: 'This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!',
     
-    hdHeadListTxt: 'Enter the mining page, and wait for mining',
+    hdHeadListTxt: 'Enter the mining page, and wait for mining.',
 
     hdNavProfit: 'Mining Profit',
     hdNavProfitListNull: 'No mining records yet',
@@ -230,6 +241,9 @@ export default {
     hdMaskFirstTit: 'Start Mining',
     hdMaskFirstBtn: 'Start invitation mining',
 
+    hdMaskBeginTxt1: 'Whether to enable',
+    hdMaskBeginTxt2: 'to open mining',
+
     hdMaskStartTit: 'You will start mining with',
     hdMaskStartTxt1: 'Increase the number of frozen.',
     hdMaskStartTxt2: 'Higer of the Mortgage amount, and higher the profit of BIU token',
@@ -241,7 +255,7 @@ export default {
     hdMaskNetworkContinue: 'Continue',
     hdMaskNetworkReconnecting: 'Reconnecting',
     hdMaskNetworkTxt1: "No connected peer. You can exit the application and check your network",
-    hdMaskNetworkTxt1: "No network connection. You can exit the application and check your network",
+    hdMaskNetworkTxt2: "No network connection. You can exit the application and check your network",
 
     hdMaskRecordTit: 'Lock record',
     hdMaskRecordListTxt1: 'LOCK TIME',
@@ -258,6 +272,7 @@ export default {
 
   homeInvitation: {
     hiTit: 'My Level',
+    hiShare: 'Share',
 
     hiTxt: 'Gold medal',
 
@@ -269,23 +284,33 @@ export default {
     hiListTxt2: 'Invitation time',
     hiListTxt3: 'Received a reward (BIUT)',
     hiListTxt4: 'Operation',
+    hiListBtn: 'View details',
 
+    hiListSearchNull: 'No search results yet',
   },
 
   homeInvitationMask: {
     hiMaskRulesTit: 'View rules',
     hiMaskRulesTxt: 'Every time the invitation is successful, it will reward BIUT, please check it.',
     hiMaskRulesListTxt1: 'Level',
-    hiMaskRulesListTxt1: 'Number of people',
+    hiMaskRulesListTxt2: 'Number of people',
     hiMaskRulesListLevel1: 'Bronze partner',
     hiMaskRulesListLevel2: 'Silver partner',
     hiMaskRulesListLevel3: 'Gold partner',
     hiMaskRulesListLevel4: 'Super partner',
+    hiMaskRulesListLevel4Txt: 'More than 1000',
 
     hiMaskDetailsTit: 'Reward details',
     hiMaskDetailsTxt: 'Total revenue (BIUT)',
     hiMaskDetailsListTxt1: 'Time',
     hiMaskDetailsListTxt2: 'Reward (BUT)',
+
+    hiMaskShareTit1: 'BIUT-PC miner POW mining',  
+    
+    hiMaskShareTit2: 'invitation code',
+
+    hiMaskShareTxt1: 'Copy Link',
+    hiMaskShareTxt2: 'Open the link with a browser to view',
   },
 
   publicBtn: {
@@ -295,17 +320,19 @@ export default {
     mortgageBtn1: 'Mortgage',
     mortgageBtn2: 'Mortgage more',
     openBtn: 'Open mining',
+    stopBtn: 'Stop mining',
+    resubmitBtn: 'Resubmit',
 
   },
   page: {
     pageTotal: 'records in total',
     pageNext: 'Next',
     pagePrev: 'Previous',
-    addMore: 'Click to load more'
+    clickMore: 'Click to load more'
   },
 
   tips: {
     copySuccess: "Copy success",
-    copyFailure: "Copy the failure"
+    copyFailure: "Copy failure"
   }
 }

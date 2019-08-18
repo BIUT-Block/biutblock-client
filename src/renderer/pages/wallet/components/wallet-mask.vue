@@ -15,13 +15,13 @@
         <section class="wallet-mask-sent" v-show="maskPages == 4">
           <!-- 填写转账信息 --> 
           <section v-show="sentPages == 1">
-            <h3>Sent</h3>
-            <p>FROM</p>
+            <h3>{{ $t('homeWallet.hwBtn2') }}</h3>
+            <p>{{ $t('homeWalletMask.hwmSentTxt1') }}</p>
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-            <p>TO</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt2') }}</p>
             <section class="wallet-mask-sent-to-address">
               <input type="text" 
-                placeholder="Receive Address" 
+                :placeholder="$t('homeWalletMask.hwmSentAddressIpt')" 
                 v-model="sentAddress" 
                 maxlength="42"
                 @input="inputAddress" />
@@ -29,11 +29,11 @@
             </section>
             <wallet-tips :tips="addressError" v-show="addresErrorShow"/>
 
-            <p>AMOUNT</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt3') }}</p>
             <section class="wallet-mask-sent-amount">
               <input type="numer" 
                 maxlength="19"
-                placeholder="Amount" 
+                :placeholder="$t('homeWalletMask.hwmReceiptTxt2')"
                 v-model="sentTradingAmount" 
                 @input="clearAmount"
                 onpaste="return false"/>
@@ -55,13 +55,13 @@
             </section>
             
             <section class="all-amount-list">
-              <span>Available：</span>
+              <span>{{ $t('homeWalletMask.hwmSentTxt3Amount') }}：</span>
               <span>{{tradingIdx === 0 ? allAmount : allfeeVal}} {{tradingText}}</span>
-              <span @click="sentAllAmount">All</span>
+              <span @click="sentAllAmount">{{ $t('homeWalletMask.hwmSentTxt3All') }}</span>
             </section>
             <wallet-tips :tips="moneyShowText" v-if="moneyShow"/>
 
-          <p class="trading-title">FEE</p>
+          <p class="trading-title">{{ $t('homeWalletMask.hwmSentTxt4') }}</p>
           <section class="transfer-slider">
             <el-slider v-model="feeVal"
               :show-tooltip="false"
@@ -69,52 +69,52 @@
               :max="maxFee"
               :min="minFee"></el-slider>
             <section>
-              <span :class="slowTips ? 'slow-color': ''">Slow</span>
+              <span :class="slowTips ? 'slow-color': ''">{{ $t('homeWalletMask.hwmSentSilder1') }}</span>
               <span>{{feeVal}} BIU</span>
-              <span :class="fastTips ? 'fast-color' : ''">Fast</span>
+              <span :class="fastTips ? 'fast-color' : ''">{{ $t('homeWalletMask.hwmSentSilder2') }}</span>
             </section>
           </section>
           
           <wallet-tips :tips="feeErrorText" v-if="feeValError"/>
 
-          <button type="button" @click="clostMask">Cancel</button>
+          <button type="button" @click="clostMask"></button>
           <button type="button"
               :disabled="!sentActive"
               :class="sentActive ? 'passCorrect' : ''"
-              @click="sentConfirm">Sent</button>
+              @click="sentConfirm">{{ $t('homeWallet.hwBtn2') }}</button>
           </section>
 
           <!-- 确认转账 -->
           <section v-show="sentPages == 2" class="wallet-mask-sent-confirm">
             <h3>{{ confirmTitle }}</h3>
             <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
-            <p>FROM</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt1') }}</p>
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-            <p>TO</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt2') }}</p>
             <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
-            <p>AMOUNT</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt3') }}</p>
             <span class="wallet-mask-sent-from-address">{{sentTradingAmount}} {{ tradingText }}</span>
-            <p>FEE</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt4') }}</p>
             <span class="wallet-mask-sent-from-address">{{feeVal}} BIU</span>
 
             <section v-show="!networkError">
-              <button type="button" @click="backSent">Back</button>
-              <button type="button" class="passCorrect" @click="sent">Confirm</button>
+              <button type="button" @click="backSent">{{ $t('publicBtn.backBtn') }}</button>
+              <button type="button" class="passCorrect" @click="sent">{{ $t('publicBtn.confirmBtn') }}</button>
             </section>
 
             <section class="network-error" v-show="networkError">
               <wallet-tips :tips="networkErrorText" v-show="networkError"/>
-              <button type="button" @click="backSent">Resubmit</button>
+              <button type="button" @click="backSent">{{ $t('publicBtn.resubmitBtn') }}</button>
             </section>
           </section>
         </section>
 
         <!-- 二维码 maskPages = 5 receive -->
         <section class="wallet-mask-receive" v-show="maskPages == 5">
-          <h3>Receive</h3>
-          <p>Account</p>
+          <h3>{{ $t('homeWallet.hwBtn1') }}</h3>
+          <p>{{ $t('homeWalletMask.hwmReceiptTxt1') }}</p>
           <span>0x{{selectedWallet.walletAddress}}</span>
-          <p>Amount</p>
+          <p>{{ $t('homeWalletMask.hwmReceiptTxt2') }}</p>
           <section>
             <input type="numer" 
               maxlength="19"
@@ -136,26 +136,27 @@
           </section>
           <wallet-tips :tips="receiveError" />
           <qrcode :value="qrcodeWalletAddress" :options="{ size: 93 }"></qrcode>
-          <span>Your address(QR Code)</span>
+          <span>{{ $t('homeWalletMask.hwmReceiptTxt3') }}</span>
         </section>
 
         <!-- 导出私钥 maskPages = 0 Export Private key -->
         <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
-          <h3>Export Private key</h3>
+          <h3>{{ $t('homeWallet.hwSet1') }}</h3>
           <wallet-tips :tips="privateKey" />
           <section id="privateKey">
             {{selectedWallet.privateKey}}
           </section>
-          <span class="priivate-key-button copyButton" @click="copyCnt" 
+          <p class="priivate-key-button copyButton" 
+              @click="copyCnt" 
               data-clipboard-target="#privateKey"
-              :class="copySuccess ? 'copySuccessBg' : ''">
-            {{ copyButtonText }}
-          </span>
+              :class="copyTimeShow ? 'copySuccessBg' : ''">
+            {{ $t(copyButtonText) }} <span v-show="copyTimeShow">（{{ copyTimeShowTxt }}）</span>
+          </p>
         </section>
 
         <!-- 导出keyStore文件 maskPages = 1  Export Keystore -->
         <section class="wallet-mask-keystroe" v-show="maskPages == 1">
-          <h3>Export Keystore</h3>
+          <h3>{{ $t('homeWallet.hwSet2') }}</h3>
           <wallet-input-pass
             placeholder="Enter your new password"
             maxlength="30"
@@ -167,33 +168,32 @@
                 :disabled="!keystroeActive"
                 :class="keystroeActive ? 'keystroeActive' : ''"
                 @click="importantKeystroe">
-              Confirm
+              {{ $t('publicBtn.confirmBtn') }}
           </span>
         </section>
 
         <!-- 导出助记词Export maskPages = 2 Phrase -->
         <section class="wallet-mask-phrase" v-show="maskPages == 2">
-          <h3>Export Phrase</h3>
+          <h3>{{ $t('homeWallet.hwSet3') }}</h3>
           <ul>
             <li>{{selectedWallet.englishWords}}</li>
           </ul>
-          <span class="wallet-button" @click="importantPhrase">Confirm</span>
+          <span class="wallet-button" @click="importantPhrase">{{ $t('publicBtn.confirmBtn') }}</span>
         </section>
 
         <!-- 删除钱包 maskPages = 3 delete -->
         <section class="wallet-mask-delete" v-show="maskPages == 3">
           <p>
-            Confirm to delete your wallet? Please make sure you have backed up
-            your wallet.
+            {{ $t('homeWalletMask.hwmDeleteTit') }}
           </p>
-          <span class="wallet-button" @click="deleteWallet">Delete</span>
+          <span class="wallet-button" @click="deleteWallet">{{ $t('homeWalletMask.hwmDeleteBtn') }}</span>
         </section>
 
         <section class="wallet-mask-delete" v-show="maskPages == 6">
           <p>
-            The wallet is bind to mining. You can not remove it.
+            {{ $t('homeWalletMask.hwmDeleteTit2') }}
           </p>
-          <span class="wallet-button" @click="clostMask">Confirm</span>
+          <span class="wallet-button" @click="clostMask">{{ $t('publicBtn.confirmBtn') }}</span>
         </section>
       </section>
     </section>
@@ -230,13 +230,13 @@ export default {
   data() {
     return {
       qrcodeWalletAddress: '',//二维码内容
-      sessionAddress: 'You are sending assets to the following address, please confirm the operation.',
-      addressError: 'Addresses are generally 42-bit characters beginning with 0x.',
+      sessionAddress: 'homeWalletMask.hwmSentTips',
+      addressError: 'homeWalletMask.hwmSentTxt2Error',
       amountError: '',
       receiveError: '',
-      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
-      privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
-      walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
+      passFormat: 'input.passFormatTips',
+      privateKey: 'homeWalletMask.hwmKeyTit',
+      walletAddress: '',
       walletNewPass: '',
       
       sentAddress: '',//转账地址
@@ -245,18 +245,19 @@ export default {
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       //allAmount: this.balance,//总金额 SEC
       moneyShow: false,//金额错误
-      moneyShowText: 'Transfer amount must be less than balance.',//金额错误
-      confirmTitle: 'Confirm The Following information.', //没网络的时候 Submission Failed
+      moneyShowText: 'homeWalletMask.hwmSentTxt3Error',//金额错误
+      confirmTitle: 'homeWalletMask.hwmSentTit1', //没网络的时候 Submission Failed
       networkError: false, //没有网络的时候 设置 成true
-      networkErrorText: 'No network connection.',
+      networkErrorText: 'homeWalletMask.hwmSentNetwork',
       addresErrorShow: false,//地址错误
 
       translucentShow: false, //弹窗
-      translucentText: 'Copy success',
+      translucentText: 'tips.copySuccess',
 
-      copyButtonText: 'copy',
-      copySuccess: false,
+      copyButtonText: 'homeWalletMask.hwmKeyCopy',
       copyTime: 3,
+      copyTimeShow: false,
+      copyTimeShowTxt: 3,
       receiveAmount: '',//二维码收款金额
       amountPlaceHolder: `Maximum input of ${this.balance}`,
 
@@ -285,7 +286,7 @@ export default {
       stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
-      feeErrorText: 'Fee cannot be greater than BIU balance.',
+      feeErrorText: 'homeWalletMask.hwmSentFeeErrorText',
       feeValError: false
     }
   },
@@ -314,10 +315,7 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than BIU balance.'
-        this.feeValError = true
-      } else if (this.feeVal === 0) {
-        this.feeErrorText = 'Fee Cannot be zero.'
+        this.feeErrorText = 'homeWalletMask.hwmSentFeeErrorText'
         this.feeValError = true
       } else {
         this.feeValError = false
@@ -325,15 +323,15 @@ export default {
 
       if (address.length > 0 && address.length < 42) {
         this.addresErrorShow = true
-        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
+        this.addressError = 'homeWalletMask.hwmSentTxt2Error'
         return false
       } else if (!(addressReg.test(address)) && address.length == 42) {
         this.addresErrorShow = true
-        this.addressError = 'This is not a valid address.'
+        this.addressError = 'homeWalletMask.hwmSentTxt2Error2'
         return false
       } else if (addressReg.test(address) && address == walletAddress) {
         this.addresErrorShow = true
-        this.addressError = 'The same address cannot be transferred.'
+        this.addressError = 'homeWalletMask.hwmSentTxt2Error3'
         return false
       } else {
         this.addresErrorShow = false
@@ -496,7 +494,7 @@ export default {
     sentConfirm () {
       this.sentPages = 2
       if (!navigator.onLine) {
-        this.confirmTitle = 'Submission Failed'
+        this.confirmTitle = 'homeWalletMask.hwmSentFailure'
         this.networkError = true
         return 
       }
@@ -543,7 +541,7 @@ export default {
     //转账
     sent () {
       if (!navigator.onLine) {
-        this.confirmTitle = 'Submission Failed.'
+        this.confirmTitle = 'homeWalletMask.hwmSentFailure'
         this.networkError = true
         return 
       }
@@ -551,12 +549,12 @@ export default {
       let sendToAddress = ''
 
       if (!this.isAddress()) {
-        this.addressError = "Invalid address formatt."
+        this.addressError = "homeWalletMask.hwmSentTxt2Error2"
         return
       }
 
       if (this.sentAddress === this.selectedWallet.walletAddress || this.sentAddress.replace("0x", "") === this.selectedWallet.walletAddress) {
-        this.addressError = "You can not tranfer to yourself."
+        this.addressError = "homeWalletMask.hwmSentTxt2Error3"
         return
       }
 
@@ -603,7 +601,7 @@ export default {
 
       this.clostMask()
       this.translucentShow = true
-      this.translucentText = "Submitted successfully"
+      this.translucentText = "homeWalletMask.hwmSentSuccess"
       setTimeout(() => {
         this.translucentShow = false
       }, 3000)
@@ -670,28 +668,31 @@ export default {
     //复制私钥
     copyCnt () {
       var clipboard = new Clipboard('.copyButton')
-      this.copySuccess = true
       clipboard.on('success', e => {
           clipboard.destroy()
+          this.copyButtonText = "tips.copySuccess"
+          this.copyTimeShow = true
           let clock = window.setInterval(() => {
             var x = this.copyTime--
-            this.copyButtonText = "copy（"+ x +"）"
+            this.copyTimeShowTxt = x
             if(this.copyTime < 0){ // = 0 就停止
               this.copyTime = 3  //恢复默认值
-              this.copySuccess = false
-              this.copyButtonText = "Copy"
+              this.copyTimeShow = false
+              this.copyButtonText = "homeWalletMask.hwmKeyCopy"
               window.clearInterval(clock) //清空计时器
             }
           },1000)
       })
       clipboard.on('error', e => {
+          this.copyButtonText = "tips.copyFailure"
+          this.copyTimeShow = true
           let clock = window.setInterval(() => {
             var x = this.copyTime--
-            this.copyButtonText = "Copy the failure("+ x +")"
+            this.copyTimeShowTxt = x
             if(this.copyTime < 0){ // = 0 就停止
               this.copyTime = 5  //恢复默认值
-              this.copySuccess = false
-              this.copyButtonText = "Copy"
+               this.copyTimeShow = false
+              this.copyButtonText = "homeWalletMask.hwmKeyCopy"
               window.clearInterval(clock) //清空计时器
             }
           },1000)

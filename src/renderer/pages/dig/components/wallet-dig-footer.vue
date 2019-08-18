@@ -1,11 +1,11 @@
 <template>
   <ul>
     <li>
-      <span>Whole Network Mining：</span>
+      <span>{{ $t('homeDig.hdFootTit1') }}：</span>
       <span>{{totalMining}} BIU</span>
     </li>
     <li>
-      <span>Blocks：</span>
+      <span>{{ $t('homeDig.hdFootTit2') }}：</span>
       <span>{{totalBlockHeight}}</span>
     </li>
     <li>
@@ -13,7 +13,7 @@
       <span>{{timeOfLastBlock}}</span>
     </li>
     <li>
-      <span>Mined by：</span>
+      <span>{{ $t('homeDig.hdFootTit3') }}：</span>
       <span>
         {{ textText }}
       </span>

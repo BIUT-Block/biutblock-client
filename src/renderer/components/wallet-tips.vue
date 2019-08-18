@@ -1,5 +1,5 @@
 <template>
-  <span>{{tips}}</span>
+  <span>{{ $t(tips) }}</span>
 </template>
 
 <script>

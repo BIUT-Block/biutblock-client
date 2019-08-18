@@ -1,7 +1,7 @@
 <template>
   <section class="button">
     <img :src="imgUrl" alt="">
-    <p>{{this.text}}</p>
+    <p>{{ $t(text) }}</p>
   </section>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <section>
-    <p>{{this.title}}</p>
-    <p>{{this.text || nodeText}}</p>
+    <p>{{ $t(title) }}</p>
+    <p>{{ $t(text) || nodeText}}</p>
   </section>
 </template>
 

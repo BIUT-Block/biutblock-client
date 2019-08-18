@@ -1,12 +1,12 @@
 <template>
   <main class="pages-list">
     <p>
-      {{ total }} records in total
+      {{ total }} {{ $t('page.pageTotal') }}
     </p>
     <section>
-      <span @click="prev">Previous</span>
+      <span @click="prev">{{ $t('page.pagePrev') }}</span>
       <input type="text" v-model="pagesIpt" placeholder="0" @blur="goPages" /> / {{ total }}
-      <span @click="next">Next</span>
+      <span @click="next">{{ $t('page.pageNext') }}</span>
     </section>
   </main>
 </template>

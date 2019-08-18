@@ -1,6 +1,6 @@
 <template>
   <section>
-    {{ this.text }}
+    {{ $t(text) }}
   </section>
 </template>
 

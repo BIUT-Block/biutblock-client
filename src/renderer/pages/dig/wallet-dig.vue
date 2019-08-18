@@ -1,30 +1,32 @@
 <template>
   <main class="wallet-dig-container">
     <section class="dig-enter" v-show="digPage">
-      <h2>PC-Miner</h2>
+      <h2>{{ $t('homeDig.hdEnteryTit') }}</h2>
 
       <section class="mining-wallet">
-        <p class="mining-tit">Mining Wallet</p>
+        <p class="mining-tit">{{ $t('homeDig.hdEnteryTxt1') }}</p>
         <p class="mining-address">0x{{ selectedWalletAddress }}</p>
         <p class="flex-between">
-          <span>Available：</span>
+          <span>{{ $t('homeWallet.hwBiutTxt1') }}：</span>
           <span>{{ availableMoney | currency("") }}</span>
         </p>
         <p class="flex-between">
-          <span>Guarantee：</span>
+          <span>{{ $t('homeWallet.hwBiutTxt2') }}：</span>
           <span>{{ freezeMoney | currency("") }}</span>
         </p>
-        <p class="mining-txt">Mortgage amount <span style="color: #EE1C39;">*</span></p>
+        <p class="mining-txt">{{ $t('homeDig.hdEnteryTxt2') }} <span style="color: #EE1C39;">*</span></p>
         <section class="flex-between mining-list">
           <input type="text" placeholder="10,000.00"  v-model="mortgageAmount"/>
           <span>BIUT</span>
         </section>
         
-        <p class="mining-tips">Not less than 10,000 BIUT, This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!</p>
+        <p class="mining-tips">{{ $t('homeDig.hdEnteryTxt3') }}</p>
         <button type="button" 
           :disabled="!mortgageActive"
           :class="mortgageActive ? 'passCorrect' : ''"
-          @click="onMortgage">Mortgage</button>
+          @click="onMortgage">
+            {{ $t('publicBtn.mortgageBtn1') }}
+          </button>
       </section>
    
     </section>  
@@ -33,50 +35,26 @@
       <!-- 挖矿头部 -->
       <section class="dig-header">
         <section class="dig-header-check">
-          <h3>PC-Miner</h3>
+          <h3>{{ $t('homeDig.hdEnteryTit') }}</h3>
           <section class="minging-list">
             <span>
               {{ miningWallet }}
             </span>
             0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}
           </section>
-          <!-- <section class="exclamation-list">
-            <span>Mining Wallet</span>
-            <img src="../../assets/images/exclamationImg.png" alt="" @mousemove="tipsShow=true" @mouseout="tipsShow=false" />
-          </section>
 
-          <section class="button-list">
-            <ul>
-              <li ref="walletListImg">
-                0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}
-              </li>
-            </ul>
-            <wallet-button type="button" 
-                :text="digButton"
-                :disabled="!checkedWallet"
-                :class="[miningIn ? 'miningIn' : '', checkedWallet ? 'passCorrect' : '']"
-                @click.native="beginDigMask"/>
-          </section> -->
-
-          <h4 class="available-text">Available：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
-          <h4 class="guarantee-text">Guarantee：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
+          <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
+          <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <section class="dig-button-list">
-            <button type="button" @click="beginDigMask">Open mining</button>
-            <button type="button" @click="beginDigMask2">Mortgage more</button>
+            <button type="button" :class="openPool ? 'sotpPool' : ''" @click="beginDigMask(1)">{{ $t('publicBtn.openBtn') }}</button>
+            <button type="button" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
           </section>
-          <!-- <transition name="fade">
-            <section class="dig-tips" v-show="tipsShow">
-              <p class="dig-tips-txt">
-                Note：Inviting mining, the wallet amount must be  more than 10,000 BIUT balances.
-              </p>
-            </section>
-          </transition> -->
 
         </section>
 
         <section class="dig-header-list">
           <ul>
-            <li v-for="text in processTexts">·&nbsp;&nbsp;&nbsp;&nbsp;{{text}}</li>
+            <li v-for="text in processTexts">·&nbsp;&nbsp;&nbsp;&nbsp;{{ $t(text) }}</li>
           </ul>
         </section>
       </section>
@@ -87,20 +65,10 @@
         <!-- tab列表 -->
         <section class="tab-list">
           <ul>
-            <li @click="tabPage(1)" :class="pageIdx == 1 ? 'checkColor' : ''">Mining Profit</li>
-            <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">Lock Record</li>
-            <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">Mining Pool</li>
+            <li @click="tabPage(1)" :class="pageIdx == 1 ? 'checkColor' : ''">{{ $t('homeDig.hdNavProfit') }}</li>
+            <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">{{ $t('homeDig.hdNavRecord') }}</li>
+            <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">{{ $t('homeDig.hdNavPool') }}</li>
           </ul>
-          <!-- <section v-show="codeShow">
-            <p>
-              My invitation code：
-              <span id="invitationCode">{{ invitationCode }}</span>
-            </p>
-            <img src="../../assets/images/copy.png" alt=""  
-              @click="copyCode"  
-              data-clipboard-target="#invitationCode" 
-              class="copyButton"/>
-          </section> -->
         </section>
 
         <!-- 挖矿收益 -->
@@ -211,13 +179,11 @@ export default {
   props: {},
   data () {
     return {
-      digPage: true,// 第一次进入的时候  后面进入成 false
+      digPage: false,// 第一次进入的时候  后面进入成 false
       mortgageAmount: '',//输入开启挖矿冻结金额
-      digButton: "Open mining",
+      digButton: "public.openBtn",
       digNumber: 0,
       digIncome: '0',
-      //checkWallet: false,
-      checkedWallet: false,
       wallets: [],
       selectedPrivateKey: '',
       selectedWallet: '',
@@ -229,7 +195,9 @@ export default {
       //disabledButton: false,//默认不可点击
       //digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
 
-      miningWallet: 'Mining Wallet',
+      openPool: false,//挖矿按钮的状态改变
+
+      miningWallet: 'Mining Wallet', //挖矿钱包名称
       isSynced: false,
       chainHeight: '0',
       minedByAddress: '',
@@ -240,7 +208,7 @@ export default {
       getSyncStatusJob: '',
       getTimeLockJob: '',
       checkNodeJob: '',
-      processTexts: ['Enter the mining page, and wait for mining.'],
+      processTexts: ['homeDig.hdHeadListTxt'],
       moreList: [],
       tipsShow: false,
       
@@ -253,8 +221,9 @@ export default {
       
       translucentShow: false,
       navigatorPost: false,// 监听网络请求
-      translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
-      networkErrorText: 'No connection to network. Continue or exit?',
+      //translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
+      translucentText: '',
+      networkErrorText: 'homeDigMask.hdMaskNetworkTit',
       networkCheckJob: '',
 
       makePages: 0,//默认是首次开启挖矿 0 - 开启挖矿 2 - 断网  3 - 追加更多
@@ -318,14 +287,11 @@ export default {
     this._getLatestBlockInfo((balance) => {
       if (balance < 10) {
         this.stopMining()
-        this.digButton = "Open mining"
+        this.digButton = "publicBtn.openBtn"
         this.maskShow = false
-        this.checkedWallet = false
         //this.noCursor = false
         this.miningIn = false
       }
-
-
     })
     this._getTotalReward()
 
@@ -346,26 +312,6 @@ export default {
     }
   },
   methods: {
-    //复制邀请码
-    copyCode() {
-      var clipboard = new Clipboard('.copyButton')
-      this.translucentShow = true
-      clipboard.on('success', e => {
-        clipboard.destroy()
-        this.translucentText = 'Copy success'
-        setTimeout(() => {
-          this.translucentShow = false
-        }, 3000)
-      })
-      clipboard.on('error', e => {
-        this.translucentText = 'Copy  fail'
-        setTimeout(() => {
-          this.translucentShow = false
-        }, 3)
-        clipboard.destroy()
-      })
-    },
-
     // tab切换
     tabPage (idx) {
       this.pageIdx = idx
@@ -401,65 +347,23 @@ export default {
       this._startUpdateHistoryJob()
     },
 
-    //点击其他的地方关闭钱包选择
-    // closeWalletList (event) {
-    //   let menuList = this.$refs.walletListImg
-    //   if (menuList && !menuList.contains(event.target) && this.checkWallet) {
-    //     this.checkWallet = false;
-    //   }
-    // },
 
-    //选择挖矿钱包
-    // downCheckWallet () {
-    //   if (this.digButton == "Open mining" && this.checkWallet) {
-    //     this.checkWallet = !this.checkWallet
-    //   } else if (this.digButton == "Open mining") {
-    //     this.checkWallet = true
-    //   } else {
-    //     this.checkWallet = false
-    //   }
-    // },
 
     _setButton () {
       if (this.miningIn) {
-        this.digButton = "Stop Mining"
-        this.checkedWallet = false
+        this.digButton = "publicBtn.stopBtn"
+        this.openPool = true
       } else {
-        this.digButton = "Open mining"
-        this.checkedWallet = true
+        this.digButton = "publicBtn.openBtn"
+        this.openPool = false
       }
     },
-
-    //选择钱包
-    // checkDigWallet (wallet) {
-    //   let miningStatus = window.sessionStorage.getItem('miningStatus')
-    //   if (miningStatus) {
-    //     miningStatus = JSON.parse(miningStatus)
-    //     if (miningStatus.miningIn && wallet.walletAddress !== miningStatus.wallet.walletAddress) {
-    //       this.mineStatusError = true
-    //       return
-    //     }
-    //   }
-    //   window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
-    //   this.selectedWallet = wallet
-    //   this.selectedWalletName = wallet.walletName
-    //   this.selectedWalletAddress = wallet.walletAddress
-    //   this.selectedPrivateKey = wallet.privateKey
-    //   this._startUpdateHistoryJob()
-    //   this.checkWallet = false
-    //   this.checkedWallet = true
-    //   this.disabledButton = false
-    // },
-
-    // onCloseMessage () {
-    //   this.mineStatusError = false
-    // },
 
     onContinue () {
       this.maskShow = false
       this.makePages = 0
       this.translucentShow = true
-      this.translucentText = 'Reconnecting'
+      this.translucentText = 'homeDigMask.hdMaskNetworkReconnecting'
       setTimeout(() => {
         this.translucentShow = false
       }, 3000)
@@ -588,7 +492,7 @@ export default {
         if (response.result.message === 0) {
           this.maskShow = true
           this.makePages = 2
-          this.networkErrorText = 'No connected peer. You can exit the application and check your network'
+          this.networkErrorText = 'homeDigMask.hdMaskNetworkTxt1'
         }
       })
     },
@@ -597,7 +501,7 @@ export default {
       if (!WalletsHandler.checkNetworkStatus()) {
         this.maskShow = true
         this.makePages = 2
-        this.networkErrorText = 'No network connection. You can exit the application and check your network'
+        this.networkErrorText = 'homeDigMask.hdMaskNetworkTxt2'
       }
     },
 
@@ -624,11 +528,9 @@ export default {
 
             if (contractInfoOwner.status === 'success') {
               this.orePoolPage = 4
-              this.checkedWallet = true
               this._calcMiningPool(benifs)
               this._insertLockHistory(benifs)
             } else {
-              this.checkedWallet = false
               this.orePoolPage = 2
             }
           })
@@ -654,11 +556,9 @@ export default {
 
             if (contractInfo.status === 'success') {
               this.orePoolPage = 4
-              this.checkedWallet = true
               this._calcMiningPool(benifs)
               this._insertLockHistory(benifs)
             } else {
-              this.checkedWallet = false
               this.orePoolPage = 2
             }
           } else {
@@ -790,77 +690,48 @@ export default {
     },
 
     //开启挖矿弹窗显示
-    beginDigMask () {
+    beginDigMask (idx) {
 
       /**
        * 判断是否是第一次挖矿
        * 
-       * makePages: 0,//默认是首次开启挖矿 0 - 首次挖矿  2 - 断网 3 - 追加更多
+       * idx 1 开启挖矿  2 追加更多 
+       * 
+       * makePages: 0,//开启挖矿 0 - 首次挖矿  2 - 断网 3 - 追加更多
        */
-      if (this.digButton === 'Stop mining') {
-        this.digButton = 'Open mining'
-        this.stopMining()
-      } else {
-        this.maskShow = true
-        this.digButton = 'Stop mining'
-        if (window.onoffline) {
-          this.makePages = 2
+      if (idx === 1) {
+        //开启挖矿改变状态
+        if (this.digButton === 'Stop mining' || this.digButton === '停止挖矿') {
+          this.digButton = 'publicBtn.openBtn'
+          this.openPool = false
+          this.stopMining()
         } else {
-          this.makePages = 0
+          this.maskShow = true
+          if (window.onoffline) {
+            this.makePages = 2
+          } else {
+            this.makePages = 0
+          }
         }
+      } else if (idx === 2) {
+        this.makePages = 3
+        this.maskShow = true
+      } else {
+        his.makePages = 2
+        this.maskShow = true
       }
-      
-    },
-
-    beginDigMask2 () {
-      let balance = this.digBalance
-      this.makePages = 3
-      this.maskShow = true
     },
 
     onBeginMining () {
       this.startMining()
+
+      this.openPool = true
+      this.digButton = 'publicBtn.mortgageBtn2'
     },
 
     onAddMoreMortgage (mortgage) {
       this._addMoreMortgage(mortgage)
     },
-
-    //开启挖矿
-    // beginDig () {
-    //   let balance = this.digBalance
-    //   if (this.digButton === "Open mining") {
-    //     this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
-    //     this.maskShow = true
-    //   } else {
-    //     this.digButton = "Stop Mining"
-    //     this.maskText = "Confirm to Stop Mining?"
-    //     this.maskShow = true  
-    //   }
-    // },
-
-    // _confirm () {
-    //   alert("开启挖矿")
-    //   this.maskShow = false
-    //   // if (this.digButton === "Open mining") {
-    //   //   if (!WalletsHandler.checkNetworkStatus()) {
-    //   //     this.processTexts.push('No network connection.')
-    //   //     return
-    //   //   }
-    //   //   this.digButton = "Stop Mining"
-    //   //   this.moreList = []
-    //   //   this.startMining()
-    //   //   this.maskShow = false
-    //   //   this.checkedWallet = false
-    //   //   this.noCursor = true
-    //   // } else {
-    //   //   this.digButton = "Open mining"
-    //   //   this.stopMining()
-    //   //   this.maskShow = false
-    //   //   this.checkedWallet = true
-    //   //   this.noCursor = false
-    //   // }
-    // },
 
     saveMingingStatus () {
       let status = {
@@ -951,6 +822,7 @@ export default {
         this.miningIn = true
         this.saveMingingStatus()
       })
+      
       this.$JsonRPCClient.switchToExternalServer()
       this._startUpdateLastBlockInfoJob()
     }
@@ -1040,7 +912,7 @@ export default {
   .dig-footer {padding: 0 22px 0 32px;color: #839299;height: 45px;
     border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
 
-  .miningIn {background:linear-gradient(90deg,#ee1c39 0%,#d91949 100%)!important;}
+  .sotpPool {background:linear-gradient(90deg,#ee1c39 0%,#d91949 100%)!important;}
 
   .checkColor {color: #29D893!important;border-bottom:2px solid #29d893;}
 

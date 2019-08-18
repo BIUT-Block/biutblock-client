@@ -16,6 +16,7 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-
   border-radius: 4px;}
 
 .border-red {border-bottom: 1px solid #EE1C39!important;}
+.border-red1 {border: 1px solid #EE1C39!important;}
 
 .passCorrect {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%)!important;}
 
@@ -34,3 +35,4 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-
 
 .flex {display: flex;}
 .flex-between {display: flex;align-items: center;justify-content: space-between;}
+.flex-center {display: flex;align-items: center;justify-content: center;}
