@@ -20,7 +20,7 @@
           </li>
         </ul>
         <section class="wallet-index-version">
-          <span>{{networkContent}}</span>
+          <span>{{ $t(networkContent) }}</span>
           <span>V {{versionNumber}}</span>
         </section>
       </aside>
@@ -50,10 +50,17 @@
             <!-- 切换语言 maskPages == 0 -->
             <section class="setting-mask-body-right-language" v-show="maskPages == 0">
               <p>{{ $t('homeSet.hsTxt1') }}</p>
-              <section>
-                <span>{{ $t('homeSet.hsTxt2') }}</span>
+              <section @click="languageMethon">
+                <span>{{ languageTxt }}</span>
                 <img src="../assets/images/moreDown.png" alt="">
               </section>
+
+              <ul class="language-list" v-show="languageShow">
+                <li v-for="(item, index) in languageList" class="flex-between" @click="languageTab(index, item.txt)">
+                  <span :class="languageIdx === index ? 'language-active' : ''">{{ item.txt }}</span>
+                  <img v-show="languageIdx === index" src="../assets/images/amountChecked.png" alt="">
+                </li>
+              </ul>
             </section>
 
             <!-- 切换正式与测试网络 maskPages == 1 -->
@@ -157,12 +164,25 @@ export default {
           cnt: "homeSet.hsTit3"
         }
       ],
+      languageList: [
+        {
+          id: '0',
+          txt: '中文'
+        },
+        {
+          id: '0',
+          txt: 'English'
+        }
+      ],
+      languageTxt: '中文',
+      languageIdx: 0,
+      languageShow: false,
       versionNumber: '',
       maskPages: 0, //setting
       settingIdex: 0,
       networkIdx: 1,
       newNetworkIdx: 1,//默认新的网络下标为0
-      networkContent: 'Test Net',
+      networkContent: 'homeSet.hsText',
       tabNetworkContent: '',
       agreement,
       agreements,
@@ -223,10 +243,10 @@ export default {
     this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
     if (process.env.netType === 'test') {
       this.networkIdx = 1
-      this.networkContent = 'Test Net'
+      this.networkContent = 'homeSet.hsText'
     } else {
       this.networkIdx = 2
-      this.networkContent = 'Main Net'
+      this.networkContent = 'homeSet.hsMain'
     }
   },
   mounted () {
@@ -272,9 +292,9 @@ export default {
         this.maskIndexShow = true
         this.newNetworkIdx = index //从新创建一个下标判断
         if (index == 1) {
-          this.tabNetworkContent = "Test Net"
+          this.tabNetworkContent = "homeSet.hsText"
         } else {
-          this.tabNetworkContent = "Main Net"
+          this.tabNetworkContent = "homeSet.hsMain"
         }
       }
     },
@@ -285,13 +305,13 @@ export default {
       let settingPath = remote.app.getPath('appData') + '/' + packageJSON.name + '/BIUT_Wallet_setting.json'
       this.networkIdx = index //赋值给旧的网络切换下标
       if (index === 1 ) {
-        this.networkContent = "Test Net"
+        this.networkContent = "homeSet.hsText"
         window.localStorage.setItem('secTest', true)
         fs.writeFileSync(settingPath, JSON.stringify({
           netType: "test"
         }))
       } else {
-        this.networkContent = "Main Net"
+        this.networkContent = "homeSet.hsMain"
         window.localStorage.setItem('secTest', false)
         fs.writeFileSync(settingPath, JSON.stringify({
           netType: "main"
@@ -307,7 +327,23 @@ export default {
         this.idx = sessionStorage.getItem("asideIdx")
       })
     },
-      
+
+    languageTab (idx, txt) {
+      this.languageTxt = txt
+      this.languageIdx = idx
+      this.languageShow = false
+
+      if (idx === 0) {
+        this.$i18n.locale = 'zh'
+      } else {
+        this.$i18n.locale = 'en'
+      }
+    },
+
+    languageMethon () {
+      this.languageShow = !this.languageShow
+    },
+    
     _closeSyncBusy () {
       this.syncBusy = false
     }
@@ -346,10 +382,9 @@ export default {
   .setting-mask-body-right-network {padding: 28px 0 0 18px;font-size: 14px;}
   .setting-mask-body-right-language p,.setting-mask-body-right-version p,
   .setting-mask-body-right-network p {color: #839299;font-weight: 500;font-family: Lato-Medium;}
-  .setting-mask-body-right-language section {display: flex;align-items: center;font-weight: 400;
+  .setting-mask-body-right-language section {display: flex;align-items: center;font-weight: 400;box-sizing: border-box;
     color: #252F33;height: 32px;border-bottom: 1px solid #E5E5E5;width: 215px;margin-top: 8px;
-    justify-content: space-between;}
-  .setting-mask-body-right-language:hover {cursor: no-drop;} 
+    justify-content: space-between;cursor: pointer;}
 
   .setting-mask-body-right-network section {color: #252F33;font-weight: 400;margin-top: 18px;}
   .setting-mask-body-right-network section img {margin-right: 10px;vertical-align: top;width: 14px;height: 14px;}
@@ -374,5 +409,13 @@ export default {
 
 
   .drop {cursor: no-drop!important;}
-  
+
+
+  .language-list {flex-direction: column;width:216px;
+    background:rgba(255,255,255,1);
+    box-shadow:0px 1px 6px rgba(37,47,51,0.16);
+    opacity:1;
+    border-radius:4px;}
+  .language-list li {padding: 0 20px;cursor: pointer;height: 46px;}
+  .language-active {color: #29D893;}
 </style>

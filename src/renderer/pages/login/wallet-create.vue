@@ -779,7 +779,7 @@ export default {
   .wallet-import button {width: 190px!important;margin-top: 48px;}
   .wallet-import .go-create {color: #576066;padding-top: 28px;}
   .wallet-import .go-create span {color: #29D893;}
-  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 58px;color: #252F33;box-sizing: border-box;
+  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 108px;color: #252F33;box-sizing: border-box;
     padding: 24px;outline: none;resize: none;flex: 1;margin-top: 20px;font-size: 14px;overflow: auto;
     font-family: Lato-Regular;}
   .wallet-import textarea::-webkit-scrollbar {display: none;}
