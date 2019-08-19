@@ -25,7 +25,7 @@ export default {
     importSelectTxt2: '该钱包已加密',
 
     importKey: '私钥',
-    importKeystore: 'KeyStore文件',
+    importKeystore: 'Keystore文件',
     importPhrase: '助记词',
   },
 
@@ -53,10 +53,10 @@ export default {
     nameNull: '请输入钱包名称.',
 
     privateKeyError: '无效的私钥.',
-    privateKeyError2: '请输入有效的私钥',
+    privateKeyError2: '输入值无效',
     phraseError: '无效的助记词.',
 
-    imporantExists: '当前钱包已存在或已导入。.'
+    imporantExists: '当前钱包已存在或已导入'
   },
 
   homeLeftNav: {

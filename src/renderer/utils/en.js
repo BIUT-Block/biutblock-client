@@ -75,7 +75,7 @@ export default {
 
     hwBiut: 'BIUT Balance',
     hwBiutTxt1: 'Available',
-    hwBiutTxt2: 'Guarantee',
+    hwBiutTxt2: 'Frozen',
     hwBiu: 'BIU Balance',
 
     hwListTit: 'Transaction Record',
@@ -250,7 +250,7 @@ export default {
     hdMaskStartTit: 'You will start mining with',
     hdMaskStartTxt1: 'Increase the number of frozen.',
     hdMaskStartTxt2: 'Higer of the Mortgage amount, and higher the profit of BIU token',
-    hdMaskStartTxt3: 'Guarantee Amount',
+    hdMaskStartTxt3: 'Frozen Amount',
     hdMaskStartBtn: 'Open mining',
 
     hdMaskNetworkTit: 'No connection to network. Continue or exit?',

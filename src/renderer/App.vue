@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="changeLanguage ? 'en' : ''">
     <router-view></router-view>
   </div>
 </template>
@@ -13,8 +13,17 @@
   
   export default {
     name: 'wallet',
+    data () {
+      return {
+        changeLanguage: false
+      }
+    },
     components: {
-    }
+    
+    },
+    watch: {
+      
+    },
   }
 </script>
 

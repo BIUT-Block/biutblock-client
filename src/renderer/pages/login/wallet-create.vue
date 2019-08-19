@@ -20,7 +20,7 @@
         :placeholder="$t('input.walletNameIpt')" 
         maxlength="14"
         v-model="walletName"
-        :disable="walletNameDisable"
+        :readonly="walletNameDisable"
         @input="inputName"></wallet-input>
       
       <wallet-title :title="walletPassText1" :choose="true"/>
@@ -101,7 +101,7 @@
           :placeholder="$t('input.walletNameIpt')" 
           maxlength="14" 
           v-model="walletNameImport1"
-          :disable="walletNameDisable"
+          :readonly="walletNameDisable"
           @input="inputName1"></wallet-input>
         <textarea
             :placeholder="$t('input.walletPrivateKey')" 
@@ -149,7 +149,7 @@
           :placeholder="$t('input.walletNameIpt')" 
           maxlength="14" 
           v-model="walletNameImport2"
-          :disable="walletNameDisable"
+          :readonly="walletNameDisable"
           @input="inputName2"></wallet-input>
         <textarea
           :placeholder="$t('input.walletPhrase')"
@@ -317,9 +317,10 @@ export default {
       this.createClose = true
     } else {
       this.createClose = false
-      this.walletName = '挖矿钱包'
-      this.walletNameImport1 = '挖矿钱包'
-      this.walletNameImport2 = '挖矿钱包'
+      this.walletName = 'Mining Wallet'
+      this.walletNameImport1 = 'Mining Wallet'
+      this.walletNameImport2 = 'Mining Wallet'
+      this.walletNameDisable = true
     }
     this.versionNumber = pkg.version
     // if (createId !== 1) {
@@ -423,6 +424,7 @@ export default {
     createWallet() {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode}, (body) => {
+        console.log(body)
         if (body && body.status) {
           this.parentWallet = body.doc[0]
           let wordsArray = this.keys.englishWords.split(' ')
@@ -449,7 +451,7 @@ export default {
           this.createTitle2 = 'login.loginCreated'
         } else {
           this.walletCodeError = true
-          this.walletCodeErrorText = body.message
+          this.walletCodeErrorText = 'input.walletCodeError'
         }
       })
     },
@@ -486,10 +488,10 @@ export default {
         this.createClose = false
         this.createTitle1 = 'login.loginCreate1'
         this.createTitle2 = 'login.loginCreate2'
-        this.walletNameImport1 = '挖矿钱包'
+        this.walletNameImport1 = 'Mining Wallet'
         this.walletPrivateKey = ''
         this.showPass = false
-        this.walletNameImport2 = '挖矿钱包'
+        this.walletNameImport2 = 'Mining Wallet'
         this.walletPhrase = ''
         this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
@@ -498,7 +500,7 @@ export default {
         this.radioIndex = 1
         this.agreedId = false
         this.radioImg = agreement
-        this.walletName = '挖矿钱包'
+        this.walletName = 'Mining Wallet'
         this.walletNameDisable = true
         this.walletPass1 = ''
         this.walletPass2 = ''
@@ -564,7 +566,7 @@ export default {
         walletsHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
           window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
           if (this.createId === 1) {
-            wallets[selectedPrivateKey].walletName = '挖矿钱包'
+            wallets[selectedPrivateKey].walletName = 'Mining Wallet'
           }
           this._findOutWallet(wallets, selectedPrivateKey, 'keystore')
             //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})

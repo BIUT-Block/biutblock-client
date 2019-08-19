@@ -52,7 +52,7 @@
         <p class="first-dig-txt-all">
           {{ $t('homeWallet.hwBiutTxt1') }}：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allAmountMortgage">All</span>
         </p>
-        <p class="first-dig-txt-tips">{{ $t('homeDigMask.hdEnteryTxt4') }}</p>
+        <p class="first-dig-txt-tips">{{ $t('homeDig.hdEnteryTxt4') }}</p>
         
         <button type="button" 
           class="confrimBtn" 
