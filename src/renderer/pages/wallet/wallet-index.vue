@@ -449,7 +449,7 @@ export default {
         this.walletBalance = balanceSEC.toString()
         if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
           this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {   
-            if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
+            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
               let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
                 this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
@@ -459,7 +459,7 @@ export default {
             this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
             this.availableMoney = this.walletBalance
             this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
-              if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
+              if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
                 let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
                 for (let i = 0; i < benifitAddress.length; i++) {
                   this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
@@ -478,7 +478,7 @@ export default {
           }
           this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
             this.freezeMoney = 0
-            if (contractInfo.timeLock && Object.keys(contractInfo.timeLock).length > 0) {
+            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
               let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
                 this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
