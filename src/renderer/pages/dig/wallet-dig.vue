@@ -670,7 +670,7 @@ export default {
         365 * 24 * 3600 * 1000, transferTimeLock,
         (response) => {
           this._getTimeLockHistory()
-          this._getWalletBalance()
+          this._getWalletBalance(this.selectedWalletAddress)
           this.selectedWallet.mortgageValue = (Number(this.selectedWallet.mortgageValue) + Number(this.mortgageAmount)).toString()
           dataCenterHandler.updateWallet({
             address: this.selectedWalletAddress,
