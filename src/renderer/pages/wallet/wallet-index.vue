@@ -18,7 +18,7 @@
             <section class="header-left">
               <img src="../../assets/images/menu.png" alt="" @click="tabMenuList" id='menuListImg'>
               <section class="wallet-content-header-left-update"
-                      :class="inputActive?'input-active':''"
+                      :class="[inputActive?'input-active':'', changeActive ? 'load' : '']"
                       @click="updateName">
                 <span v-show="inputReadonly">{{ oldWalletName }}</span>
                 <input type="text" 
@@ -229,6 +229,13 @@ export default {
       } else {
         return false
       }
+    },
+
+    changeActive () {
+      let name = this.walletName
+      if (name === "Mining Wallet" || name === "挖矿钱包") {
+        return true
+      }
     }
   },
   created () {
@@ -255,11 +262,16 @@ export default {
     lookMask (index) {
       // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
       if (index === 3) {
-        let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
-        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
-          this.maskPages = 6
+        let a = (this.walletName === "Mining Wallet") || (this.walletName === "挖矿钱包")
+        if (a) {
+          return
         } else {
-          this.maskPages = index
+          let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
+          if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
+            this.maskPages = 6
+          } else {
+            this.maskPages = index
+          }
         }
       } else if (index === 4) {
         /**
@@ -647,4 +659,6 @@ export default {
 
   .wallet-padidng-bottom {padding-bottom: 16px;}
   .noMore {text-align: center;color: #576066;padding: 15px 0;}
+
+  .load {pointer-events: none;}
 </style>

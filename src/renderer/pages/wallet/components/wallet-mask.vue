@@ -77,7 +77,7 @@
           
           <wallet-tips :tips="feeErrorText" v-if="feeValError"/>
 
-          <button type="button" @click="clostMask"></button>
+          <button type="button" @click="clostMask">{{ $t('publicBtn.cancelBtn') }}</button>
           <button type="button"
               :disabled="!sentActive"
               :class="sentActive ? 'passCorrect' : ''"

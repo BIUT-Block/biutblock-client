@@ -46,8 +46,8 @@
           <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
           <section class="dig-button-list">
-            <button type="button" :class="openPool ? 'sotpPool' : ''" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
-            <button type="button" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
+            <button type="button" :class="[openPool ? 'sotpPool' : '', openActive ? 'passCorrect' : '']" :disabled="!openActive" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
+            <button type="button" :class="appendAcitve ? 'appendAcitve' : ''" :disabled="!appendAcitve" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
           </section>
 
         </section>
@@ -250,10 +250,20 @@ export default {
       return this.itemList
     },
 
+    //是否可点击追加按钮
+    appendAcitve () {
+      return this.availableMoney > 0 ? true : false
+    },
+
+    //是否可点击开启挖矿按钮
+    openActive () {
+      return this.freezeMoney > 0 && navigator.onLine  ? true : false
+    },
+
     //是否可点击开启挖矿
     mortgageActive () {
-      return this.mortgageAmount >= 10000 
-        && this.availableMoney >= 10000 
+      return this.mortgageAmount >= 10000
+        && this.availableMoney >= 10000
         && this.mortgageAmount <= this.availableMoney ? true : false
     }
   },
@@ -867,9 +877,11 @@ export default {
     height:48px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);border-radius:4px;}
 
   .dig-button-list {display: flex;padding-top: 14px;}
-  .dig-button-list button {width:120px;height:32px;background:linear-gradient(90deg,#29d893 0%,#0cc5b7 100%);border-radius:4px;
+  .dig-button-list button {width:120px;height:32px;background:#D8D8D8;border-radius:4px;
     border: 0;color: #fff;font-size: 13px;}
-  .dig-button-list button:last-child {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);margin-left: 16px;}
+  .dig-button-list button:last-child {margin-left: 16px;}
+
+ .appendAcitve {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%)!important;}
 
   .exclamation-list {display: flex;align-items: center;padding: 22px 0 12px;font-family: Lato-Medium;color: #99A1A6;}
   .exclamation-list img {margin-left: 10px;cursor: pointer;}

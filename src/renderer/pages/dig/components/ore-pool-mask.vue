@@ -10,7 +10,7 @@
         <p class="pool-txt1">{{ $t('homeDigMask.hdMaskPoolTxt1') }}</p>
         <section class="flexBetween">
           <p class="pool-txt2">{{ $t('homeDigMask.hdMaskPoolTxt2') }}<span class="color-red">*</span></p>
-          <p class="color-red" v-show="nameError">{{ $t('homeDigMask.hdMaskPoolTxt4') }}</p>
+          <p class="color-red" v-show="nameError">{{ $t('homeDigMask.hdMaskPoolTxt3') }}</p>
         </section>
         
         <section class="ipt-list flexBetween" :class="nameError ? 'border-red' : ''">
@@ -50,7 +50,7 @@ export default {
   computed: {
     updateIpt () {
       let name = this.poolName.trim()
-      if (name > 0 && this.poolNameIpt()) {
+      if (name.length > 6 && this.poolNameIpt()) {
         return true
       }
     }
@@ -59,11 +59,13 @@ export default {
     clearIpt () {
       this.poolName = ''
       this.clearImg = false
+      this.nameError = false
     },
 
     cloasMask () {
       this.$emit('close')
       this.clearIpt()
+      this.nameError = false
     },
 
     submitFrom() {
@@ -95,7 +97,7 @@ export default {
         })
       })
 
-      alert("点击了提交按钮")
+      //alert("点击了提交按钮")
       this.cloasMask()
     },
 
@@ -157,6 +159,7 @@ export default {
   .pool-txt2 {color: #99A1A6;font-size: 16px;font-family: Lato-Bold;}
 
   input,button {font-family: Lato-Regular;}
+  
   button {width:372px;height:48px;background:#d8d8d8;border-radius:4px;border: 0;color: #F7FBFA;font-size: 14px;
     margin-top: 32px;}
 
