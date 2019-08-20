@@ -1,6 +1,6 @@
 <template>
   <section>
-    <ul class="test">
+    <ul class="list-node-head">
       <li>{{ $t('homeNode.hnListTxt1') }}</li>
       <li>{{ $t('homeNode.hnListTxt2') }}</li>
       <li>{{ $t('homeNode.hnListTxt3') }}</li>
@@ -65,6 +65,7 @@ export default {
   section ul {height: 40px;border-bottom: 1px solid rgba(229,229,229,1);color: #252F33;
     display: flex;align-items: center;}
   section ul li{width: 25%;}
-  .test {border-bottom: 2px solid rgba(229,229,229,1);font-family: Lato-Bold;
-    color: #839299;margin-right: 32px;}
+  .list-node-head {border-bottom: 2px solid rgba(229,229,229,1);font-family: Lato-Bold;color: #839299;margin-right: 32px;}
+
+  .en .list-node-head {font-family: Source-Medium;color: #99A1A6;font-weight: 500;}
 </style>

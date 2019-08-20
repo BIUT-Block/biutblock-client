@@ -20,7 +20,7 @@
       </ul>
 
       <wallet-pages 
-        :total="total"
+        :total= itemList.length
         @next="nextPage"
         @prev="prevPage"
         @goPage="goPage" />
@@ -69,11 +69,12 @@ export default {
 <style scoped>
   .record-mask {width: 716px;padding: 30px 32px 0;flex-direction: column;}
   .record-head {position: relative;}
-  .record-head h2 {margin: 0;padding-bottom: 20px;}
+  .record-head h2 {margin: 0;padding-bottom: 24px;font-family: Montserrat-SemiBold;font-size: 24px;color: #252F33;}
+  .en .record-head h2 {font-family: Source-Medium;font-size: 22px;}
   .record-head img {position: absolute;top: -10px;right: -12px;cursor: pointer;}
 
-  ul {padding-bottom: 20px;}
-  ul li {height: 42px;line-height: 42px;color: #252F33;font-size: 13px;display: flex;align-items: center;}
+  ul {padding-bottom: 20px;height: 394px;}
+  ul li {height: 42px;line-height: 42px;color: #252F33;font-size: 13px;display: flex;align-items: center;font-family: Lato-Regular;}
 
   ul li span:first-child {width: 30%;display: inline-block;padding-left: 20px;}
   ul li span:nth-child(2) {width: 40%;display: inline-block;color: #0B7FE6;}
@@ -84,4 +85,5 @@ export default {
 
   ul li:first-child,ul li:first-child span:nth-child(2) {color: #99A1A6;}
   ul li:first-child {font-family: Lato-Bold;}
+  .en ul li:first-child {font-family: Source-Medium;}
 </style>

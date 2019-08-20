@@ -136,4 +136,7 @@ export default {
     padding: 24px 0 24px 32px;}
   .node-body h3 {font-size: 14px;color: #839299;font-weight: 600;margin: 0;
     font-family: Montserrat-SemiBold;background: #fff;padding-bottom: 16px;}
+
+  .en .node-body h3,.en .node-header h3 {font-family: Source-Medium;color: #42535B;font-weight: 500;}
+  .en .node-header h3 {color: #252F33;}
 </style>

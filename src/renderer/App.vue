@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="changeLanguage ? 'en' : ''">
+  <div id="app" class="home-app" :class="changeLanguage ? 'en' : ''">
     <router-view></router-view>
   </div>
 </template>
@@ -15,7 +15,14 @@
     name: 'wallet',
     data () {
       return {
-        changeLanguage: false
+        
+      }
+    },
+    computed: {
+      changeLanguage () {
+        if (this.$i18n.locale == "zh") {
+          return true
+        }
       }
     },
     components: {
@@ -26,4 +33,8 @@
     },
   }
 </script>
+<style scoped>
+  .home-app {font-family: Lato-Regular;}
+  .en {font-family: Source-Regular;}
+</style>
 

@@ -112,7 +112,9 @@ export default {
   main {padding-top: 20px;}
   header {padding: 0 32px;}
   header button {border: 0;margin-left: 0!important;}
+  .en header button {font-family: Source-Medium;font-size: 13px;}
   h2 {margin: 0;color: #252F33;font-size: 18px;font-family: Montserrat-SemiBold;}
+  .en h2 {color: #576066;font-family: Source-Medium;font-weight: 500;}
 
 
   .header-list {display: flex;align-items: center;padding: 20px 32px 16px;height: 64px;}
@@ -122,7 +124,9 @@ export default {
 
   .header-text {flex: 1;}
   .header-text h3 {margin: 0;font-family: Lato-Bold;}
+  .en .header-text h3 {font-family: Source-Medium;font-weight: 500;color: #576066;}
   .header-text .header-txt {padding-top: 6px;}
+  .en .header-text .header-txt {color: #6D7880;}
 
   .look-list {display: flex;align-items: center;justify-content: space-between;width: 100%;}
 

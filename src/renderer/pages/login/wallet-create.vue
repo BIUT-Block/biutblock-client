@@ -167,6 +167,11 @@
     </section>
     <!-- 钱包版本号 -->
     <span class="wallet-version"> V {{ versionNumber }}</span>
+
+    <!-- 钱包已存在弹窗 -->
+    <login-mask 
+      v-show="loginMaskShow"
+      @close="closeMask"/>
   </main>
 </template>
 
@@ -176,7 +181,8 @@ import walletButton from '../../components/wallet-button'
 import walletInput from '../../components/wallet-input'
 import walletInputPass from '../../components/wallet-input-pass'
 import walletTips from '../../components/wallet-tips'
-import phraseList from './components/phraseList'
+import phraseList from './components/phrase-list'
+import loginMask from './components/login-mask'
 import walletNav from '../../components/wallet-nav'
 import agreement from '../../assets/images/agreement.png'
 import agreements from '../../assets/images/agreements.png'
@@ -198,7 +204,8 @@ export default {
     walletTips,
     phraseList,
     walletNav,
-    walletTranslucent
+    walletTranslucent,
+    loginMask // 钱包已存在弹窗
   },
   props: {},
   data () {
@@ -218,6 +225,8 @@ export default {
       walletCode: '',//邀请码输入框
       walletCodeError: false,//邀请码错误是否显示
       walletCodeErrorText: 'input.walletCodeError',//邀请码错误提示语
+
+      loginMaskShow: false,//钱包存在弹窗
 
       walletButtonText: 'login.loginBtn1',
       passFormat: 'input.passFormatTips',
@@ -424,7 +433,6 @@ export default {
     createWallet() {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode}, (body) => {
-        console.log(body)
         if (body && body.status) {
           this.parentWallet = body.doc[0]
           let wordsArray = this.keys.englishWords.split(' ')
@@ -591,7 +599,8 @@ export default {
 
     _findOutWallet (wallets, privateKey, from) {
       if (wallets === 'error') {
-        this._showImportError(from, 'input.privateKeyError2')
+        //this._showImportError(from, 'input.privateKeyError2')
+        this.loginMaskShow = true
         return
       }
       dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
@@ -692,6 +701,10 @@ export default {
       // this.walletPrivateKey = ''
       // this.walletPhrase = ''
       this.tabIndex = index
+    },
+
+    closeMask () {
+      this.loginMaskShow = false
     }
   },
   watch: {
@@ -738,13 +751,15 @@ export default {
   main aside {background: url('../../assets/images/loginBackground.png') no-repeat center;
     background-size: 100% 100%;width: 372px;}
   main aside img {margin: 32px 0 0 24px;}
-  main aside h2 {color: #fff;font-size: 32px;margin: 0;padding-left: 64px;
-    font-family: 'Montserrat-SemiBold';}
+  main aside h2 {color: #fff;font-size: 32px;margin: 0;padding-left: 64px;font-family: Montserrat-SemiBold;}
+  .en main aside h2 {font-family: Source-Medium;}
+
   main aside .titleTop {margin-top: 155px;}
   main aside span {display: block;width:43px;height:10px;background:rgba(255,255,255,1);
     margin-top: 16px;margin-left: 64px;}
   
   main .wallet-version {position: absolute;right: 28px;bottom: 24px;color: #839299;}
+  .en main .wallet-version {font-family: Lato-Regular;}
   main .closeImg {width: 24px;height: 24px;position: absolute;top: 20px;right: 20px;}
   main .wallet-nav {position: absolute;top: 0;right: 0;height: 30px;left: 351px;
     border-bottom: 1px solid #E5E5E5;text-align: right;}
@@ -761,6 +776,7 @@ export default {
   .wallet-backup {padding: 120px 68px 0;flex: 1;}
   .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;}
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
+  .en .wallet-backup .backup-title label{font-family: Source-Regular;}
   .wallet-backup .private-key-title {padding-top: 17px;}
   .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
     margin-top: 10px;padding: 11px 18px;word-break: break-all;line-height: 1.4;}
@@ -795,6 +811,7 @@ export default {
   
   /* 导入钱包 -- keyStore导入 */
   .wallet-import-keystore p {font-size: 14px;color: #839299;font-family: Lato-Bold;}
+  .en .wallet-import-keystore p {font-family: Source-Medium;}
   .wallet-import-keystore .wallet-import-keystore-title {margin: 32px 0 12px;}
   .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;padding-left: 16px;
     color: #42535B;font-size: 14px;margin-bottom: 20px;text-align: center;height: 36px;line-height: 36px;

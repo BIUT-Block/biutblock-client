@@ -186,17 +186,21 @@ export default {
 <style scoped>
   .public-title {display: flex;align-items: center;justify-content: space-between;position: relative;}
   .public-title h2 {margin: 0;font-size: 24px;color: #252F33;padding: 30px 0 28px;font-family: Montserrat-SemiBold;}
+  .en .public-title h2 {font-family: Source-Medium;font-weight: 500;}
   .public-title img {cursor: pointer;position: absolute;right: -16px;top: 16px;}
 
   .rules-content {width: 332px;background: #fff;padding: 0 32px 36px;border-radius: 4px;}
   .rules-content p {padding-bottom: 14px;color: #99A1A6;font-size: 14px;}
+  .en .rules-content p {font-size: 12px;color: #6D7880;}
   .rules-content ul li {display: flex;align-items: center;border-bottom:1px solid #e6e6e6;height: 42px;
     color: #252F33;font-size: 13px;}
+  .en .rules-content ul li {color: #42535B;}
   .rules-content ul li:first-child {color: #99A1A6;background:#f7fbfa;border: 0;font-family: Lato-Medium;}
-  .rules-content ul li span:nth-child(2) {margin: 0 49px 0 20px;width: 100px;}
-  .rules-content ul li span:last-child {width: 95px;text-align: center;}
-  .rules-content ul li:first-child span:nth-child(2) {margin: 0 93px 0 44px;}
-  .rules-content ul li:first-child span:last-child {width: 100%;text-align: left;}
+  .rules-content ul li:first-child {font-family: Source-Medium;}
+  .rules-content ul li span:nth-child(2) {margin-left: 20px;width: 100px;}
+  .rules-content ul li span:last-child {width: 200px;text-align: center;}
+  .rules-content ul li:first-child span:nth-child(2) {margin-left: 44px;}
+  .rules-content ul li:first-child span:last-child {width: 200px;text-align: center;display: inline-block;}
 
 
   .details-content {width: 492px;background: #fff;padding: 0 32px 0;border-radius: 4px;}
@@ -205,6 +209,7 @@ export default {
   .details-content ul li {display: flex;align-items: center;padding-left: 20px;color: #252F33;font-size: 14px;height: 42px;
     box-sizing: border-box;border-bottom: 1px solid #E6E6E6;font-family: Lato-Medium;}
   .details-content ul li:first-child {height:42px;background:#f7fbfa;padding: 0 0 0 20px;color: #99A1A6;border: 0;}
+  .en .details-content ul li:first-child {font-family: Source-Medium;}
   .details-content ul li span:first-child {margin-right: 108px;}
   .details-content ul li:first-child span:first-child {margin-right: 192px;}
   

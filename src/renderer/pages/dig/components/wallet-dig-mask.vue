@@ -162,7 +162,9 @@ export default {
 
 <style scoped>
   .dig-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;width: 372px;padding: 30px 32px 32px;}
+  .en .dig-mask {color: #99A1A6;}
   h2 {margin: 0;font-family: Montserrat-SemiBold;color: #252F33;font-size: 24px;}
+  .en h2 {font-family: Source-Medium;font-size: 22px;font-weight: 500;}
   .color-red {color: #EE1C39;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
   
@@ -180,6 +182,7 @@ export default {
   .ipt-list section {display: flex;align-items: center;}
   .ipt-list img,.ipt-list section span {margin-left: 8px;cursor: pointer;}
   .first-dig-txt {padding-top: 36px;font-size: 16px;font-family: Lato-Bold;color: #99A1A6;}
+  .en .first-dig-txt {font-family: Source-Medium;}
   .first-dig-txt-all {padding: 8px 0 12px;font-size: 12px;}
   .first-dig-txt-all span {color: #29D893;padding-left: 8px;cursor: pointer;}
   .first-dig-txt-tips {line-height: 1.2;padding-bottom: 28px;}

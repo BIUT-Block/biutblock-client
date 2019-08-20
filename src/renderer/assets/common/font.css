@@ -41,3 +41,28 @@
   font-style: normal;
 }
 
+@font-face {  
+  font-family: 'Source-Regular';
+  src: url('./source/SOURCEHANSANSCN-REGULAR.ttf');
+  font-weight: normal;  
+  font-style: normal;
+}
+@font-face {  
+  font-family: 'Source-Bold';
+  src: url('./source/SOURCEHANSANSCN-BOLD.ttf');
+  font-weight: normal;  
+  font-style: normal;
+}
+@font-face {  
+  font-family: 'Source-Light';
+  src: url('./source//SOURCEHANSANSCN-LIGHT.ttf');
+  font-weight: normal;  
+  font-style: normal;
+}
+@font-face {  
+  font-family: 'Source-Medium';
+  src: url('./source/SOURCEHANSANSCN-MEDIUM.ttf');
+  font-weight: normal;  
+  font-style: normal;
+}
+

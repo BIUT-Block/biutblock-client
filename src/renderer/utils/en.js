@@ -29,6 +29,10 @@ export default {
     importPhrase: 'Phrase',
   },
 
+  loginMask: {
+    lgTxt: 'Unable to import, wallet address unbound invitation code.'
+  },
+
   input: {
     walletName: 'WALLET NAME',
     walletNameIpt: 'Wallet Name',
@@ -229,6 +233,10 @@ export default {
     hdFootTit1: 'Whole Network Mining',
     hdFootTit2: 'Blocks',
     hdFootTit3: 'Mined by',
+
+    hdFootTimeTxt1: 'seconds ago',
+    hdFootTimeTxt2: 'minutes ago',
+    hdFootTimeTxt3: 'hours ago',
   },
 
   homeDigMore: {
@@ -238,6 +246,7 @@ export default {
 
   homeDigMask: {
     hdMaskMortgageTit: 'Mortgage',
+    hdMaskLoading: 'Loading...',
     hdMaskMortgageTxt1: 'Mortgage amount',
     hdMaskMortgageTxt2: 'This BIUT will be locked for one year. The more BIUT locked, the greater the chance of digging BIU!',
 
@@ -325,7 +334,7 @@ export default {
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',
-
+    knowBtn: 'Know the'
   },
   page: {
     pageTotal: 'records in total',

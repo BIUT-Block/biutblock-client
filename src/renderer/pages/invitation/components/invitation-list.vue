@@ -134,10 +134,12 @@ export default {
     height: calc(100% - 146px);}
   header {display: flex;align-items: center;justify-content: space-between;margin: 20px 0 6px;}
   h2 {margin: 0;color: #252F33;font-size: 16px;font-family: Lato-Bold;}
+  .en h2 {font-weight: 500;font-family: Source-Medium;color: #576066;}
 
   .ipt-list {width:232px;height:32px;border:1px solid #e6e6e6;border-radius:4px;display: flex;
     align-items: center;justify-content: space-between;padding: 0 15px;}
   .ipt-list input {flex: 1;border: 0;color: #252F33;font-family: Lato-Regular;}
+  .en .ipt-list input {font-family: Source-Medium;}
   .ipt-list .clear-img,.ipt-list .search-img {margin-left: 8px;cursor: pointer;}
 
   .img-list {display: flex;align-items: center;}
@@ -145,6 +147,8 @@ export default {
   ul li {display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;padding: 6px 0 6px 12px;}
   ul li:first-child {color: #99A1A6;font-family: Lato-Bold;border-radius: 4px;border: 0;height: 36px;padding: 0 0 0 12px;
     font-size: 13px;background:#f7fbfa;}
+  .en ul li:first-child {font-family: Source-Medium;}
+  .en .ul li {color: #252F33;font-family: Lato-Regular;}
   ul li span:first-child {width: 38%;}
   ul li span:nth-child(2) {width: 25%;}
   ul li span:nth-child(3) {width: 23%;}

@@ -180,6 +180,7 @@ export default {
   data () {
     return {
       digPage: false,// 第一次进入的时候  后面进入成 false
+      loading: true, //进入的时候弹窗加载
       mortgageAmount: '',//输入开启挖矿冻结金额
       digButton: "publicBtn.openBtn",
       digNumber: 0,
@@ -850,8 +851,8 @@ export default {
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
     color:#252f33;padding-bottom: 26px;}
   .minging-list {padding-bottom: 10px;color: #252F33;font-size: 14px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;
-    width: 246px;}
-  .minging-list span {color: #99A1A6;margin-right: 12px;}
+    width: 246px;font-family: Lato-Bold;}
+  .minging-list span {color: #99A1A6;margin-right: 12px;font-family: Source-Regular;}
   .available-text,.guarantee-text {margin: 0;color:#576066;font-weight: normal;}
   .available-text span,.guarantee-text span {font-family: Lato-Medium;}
   .available-text {color: #29D893;padding-top: 10px;}
@@ -861,19 +862,22 @@ export default {
     display: flex;justify-content: space-between;box-shadow: 0px 0px 3px rgba(0,0,0,0.16);
     border-radius: 4px 4px 0 0;flex: 1;}
 
-  .dig-enter h2 {margin: 140px 0 0 150px;width: 89px;height: 20px;padding-bottom: 10px;
+  .dig-enter h2 {margin: 140px 0 0 150px;width: 90px;height: 20px;padding-bottom: 10px;font-family: Source-Bold;
     border-bottom: 7px solid #29D893;font-size: 20px;color: #252F33;}
   
   .mining-wallet {width: 290px;color: #6D7880;font-size: 12px;}
-  .mining-wallet .mining-tit {padding-bottom: 8px;}
-  .mining-wallet .mining-txt {padding-top: 36px;color: #6D7880;font-size: 14px;}
+  .mining-wallet .mining-tit {padding-bottom: 8px;font-family: Lato-Regular;}
+  .en .mining-wallet .mining-tit {font-family: Source-Regular;}
+  .mining-wallet .mining-txt {padding-top: 36px;color: #6D7880;font-size: 14px;font-family: Lato-Medium;}
+  .en .mining-wallet .mining-txt {font-family: Source-Medium;}
+
   .mining-wallet .mining-address {color: #252F33;font-size: 14px;line-height: 1.6;word-wrap: break-word;}
-  .mining-wallet .mining-tips {line-height: 1.5;word-wrap: break-word;padding-top: 16px;}
-  .mining-wallet .flex-between {padding-bottom: 10px;border-bottom: 1px solid #E6E6E6;padding-top: 12px;}
+  .mining-wallet .mining-tips {line-height: 1.5;word-wrap: break-word;padding-top: 16px;color: #99A1A6;}
+  .mining-wallet .flex-between {padding-bottom: 10px;border-bottom: 1px solid #E6E6E6;padding-top: 12px;font-family: Lato-Regular;}
   .mining-wallet .mining-list {padding: 0;height: 34px;}
 
   .dig-enter input {border: 0;flex: 1;}
-  .dig-enter button {width:291px;border: 0;color: #fff;font-size: 14px;margin-top: 44px;
+  .dig-enter button {width:291px;border: 0;color: #fff;font-size: 14px;margin-top: 44px;font-family: Lato-Regular;
     height:48px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);border-radius:4px;}
 
   .dig-button-list {display: flex;padding-top: 14px;}
@@ -910,6 +914,7 @@ export default {
   .dig-body ul {display: flex;align-items: center;padding: 0 32px;}
   .dig-body ul li {cursor: pointer;color: #99A1A6;font-size: 14px;margin-left: 32px;height: 56px;box-sizing: border-box;
     line-height: 56px;}
+  .en .dig-body ul li {font-family: Source-Medium;}
   .dig-body ul li:first-child {margin-left: 0;}
 
   .Lock-record,.ore-pool,.dig-earnings {flex: 1;box-sizing: border-box;padding: 20px 32px 0;}
@@ -937,4 +942,5 @@ export default {
   .fade-enter, .fade-leave-to {
     opacity: 0;
   }
+
 </style>

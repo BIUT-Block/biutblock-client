@@ -12,7 +12,7 @@
           @click="clostMask"
         />
         <!-- 转账 maskPages = 4 Sent -->
-        <section class="wallet-mask-sent" v-show="maskPages == 4">
+        <section class="wallet-mask-sent" :class="sentPages == 2 ? 'wallet-mask-sent-confirm' : ''" v-show="maskPages == 4">
           <!-- 填写转账信息 --> 
           <section v-show="sentPages == 1">
             <h3>{{ $t('homeWallet.hwBtn2') }}</h3>
@@ -86,7 +86,7 @@
 
           <!-- 确认转账 -->
           <section v-show="sentPages == 2" class="wallet-mask-sent-confirm">
-            <h3>{{ confirmTitle }}</h3>
+            <h3>{{ $t(confirmTitle) }}</h3>
             <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
             <p>{{ $t('homeWalletMask.hwmSentTxt1') }}</p>
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
@@ -158,7 +158,7 @@
         <section class="wallet-mask-keystroe" v-show="maskPages == 1">
           <h3>{{ $t('homeWallet.hwSet2') }}</h3>
           <wallet-input-pass
-            placeholder="Enter your new password"
+            :placeholder="$t('homeWalletMask.hwmKeystoreIpt')"
             maxlength="30"
             v-model="walletNewPass"
             @input="inputContent"></wallet-input-pass>
@@ -767,16 +767,19 @@ export default {
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
   .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;height: 516px;padding: 28px 32px 0;}
+  .en .wallet-mask-sent-confirm {height: 458px;}
+
   .wallet-mask-sent img {width: 16px;height: 16px;}
   .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
     font-family: Montserrat-SemiBold;}
   .wallet-mask-sent p {font-family: Lato-Bold;font-size: 16px;color: #839299;padding-top: 24px;}
+  .en .wallet-mask-sent p {font-family: Source-Medium;}
 
   .wallet-mask-sent .wallet-mask-sent-confirm p {padding-top: 20px;}
   .wallet-mask-sent .wallet-mask-sent-confirm h3 {padding-bottom: 22px;}
-  .wallet-mask-sent-from-address {display: block;padding-top: 12px;font-family: Lato-Medium;}
+  .wallet-mask-sent-from-address {display: block;padding-top: 12px;font-family: Lato-Medium;color: #252F33;}
   .wallet-mask-sent-to-address,.wallet-mask-sent-amount {display: flex;align-items: center;height: 36px;border-bottom:1px solid rgba(229,229,229,1);}
-  .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;}
+  .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;font-family: Lato-Medium;color: #252F33;}
   .wallet-mask-sent-amount section {display: flex;align-items: center;}
   .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;}
   .wallet-mask-sent-amount section span:hover {cursor: pointer;}
@@ -792,7 +795,8 @@ export default {
   .wallet-mask-sent button {margin-top: 40px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
     border: 0;background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
   .wallet-mask-sent button:last-child {margin-left: 8px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
-  
+  .en .wallet-mask-sent button {font-family: Source-Regular;}
+
   .wallet-mask-sent .trading-title {color: #839299;font-size: 16px;padding: 24px 0 10px;}
   .transfer-slider section {display: flex;justify-content: space-between;align-items: center;font-size: 14px;}
   .transfer-slider section span:first-child,.transfer-slider section span:last-child {color: #839299;}
@@ -802,14 +806,18 @@ export default {
   .transfer-slider >>> .el-slider__button-wrapper {width: 24px;height: 24px;top: -12px;}
 
   .all-amount-list {color: #839299;font-size: 14px;padding-top: 8px;}
+  .en .all-amount-list {color: #99A1A6;}
   .all-amount-list span:last-child {color: #29D893;margin-left: 10px;}
   .all-amount-list span:last-child:hover {cursor: pointer;}
 
   .wallet-mask-receive {padding: 36px 32px 28px;}
   .wallet-mask-receive h3 {color: #252F33;font-size: 28px;margin: 0;padding-bottom: 28px;font-family: Montserrat-SemiBold;}
+  .en .wallet-mask-receive h3,.en .wallet-mask-sent h3,.en .wallet-mask-sent h3 {font-family: Source-Medium;font-weight: 500;color: #42535B;font-size: 22px;}
   .wallet-mask-receive p {color: #839299;font-size: 14px;margin: 0;padding-top: 24px;}
+  .en .wallet-mask-receive p {font-size: 16px;font-family: Source-Medium;}
   .wallet-mask-receive span {color: #252F33;font-size: 14px;padding-top: 10px;display: block;
     font-weight: 500;font-family: Lato-Medium;}
+  .en .wallet-mask-receive span {color: #787F81;font-size: 14px;font-family: Source-Regular;}
   .wallet-mask-receive span:last-child {padding-top: 0;font-size: 12px;font-weight: 400;}
   .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;
     color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
@@ -841,6 +849,10 @@ export default {
   .wallet-mask-phrase,.wallet-mask-keystroe {padding: 32px 32px 16px;text-align: right;}
   .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-priivate-key  h3 
     {font-size: 18px;font-family: Montserrat-SemiBold;color: #576066;margin: 0;padding-bottom: 12px;text-align: left;}
+
+  .en .wallet-mask-phrase h3,.en .wallet-mask-keystroe h3,.en .wallet-mask-priivate-key  h3 {font-family: Source-Medium;font-weight: 500;
+    color: #42535B;}
+
   .wallet-mask-phrase ul {display: flex;flex-wrap: wrap;}
   .wallet-mask-phrase ul li {padding: 8px 6px;background:rgba(242,242,242,1);border-radius: 4px;text-align: left;
     color: #42535B;font-size: 14px;margin-top: 12px;line-height: 1.5;}

@@ -100,7 +100,7 @@
           <img src="../assets/images/closeMask.png" alt="" title="close" @click="maskIndexShow = false">
         </section>
         <p>
-          {{ $t('homeSet.hsNetwork1') }} {{ tabNetworkContent }} {{ $t('homeSet.hsNetwork2') }}
+          {{ $t('homeSet.hsNetwork1') }}{{ $t(tabNetworkContent) }} {{ $t('homeSet.hsNetwork2') }}
         </p>
         <section>
           <span @click="maskIndexShow = false">{{ $t('publicBtn.cancelBtn') }}</span>
@@ -366,8 +366,10 @@ export default {
   .wallet-index .wallet-index-content aside .wallet-index-version span {display: block;}
   .wallet-index .wallet-index-content aside .wallet-index-version span:first-child {margin-bottom: 4px;font-weight: bold;}
   .wallet-index .wallet-index-content aside .wallet-index-version span:last-child {font-family: Lato-Light;}
+  .en .wallet-index .wallet-index-content aside .wallet-index-version span:last-child {font-family: Lato-Regular;}
 
   .wallet-index .wallet-index-content .wallet-index-content-home {flex: 1;}
+  
   
   .active-nav::after {border-bottom: 7px solid transparent;border-top: 7px solid transparent;
     border-right: 7px solid #EDF2F1;content: "";position: absolute;width: 0;right: 0;bottom: 2px;}
@@ -375,6 +377,7 @@ export default {
   .setting-mask-header {display: flex;justify-content: space-between;align-items: center;height: 54px;
     border-bottom: 1px solid #E5E5E5;padding: 0 24px 0 32px;}
   .setting-mask-header h3 {font-size: 18px;margin: 0;color: #252F33;font-family: Lato-Bold;}
+  .en .setting-mask-header h3 {font-family: Source-Medium;font-weight: 500;}
   .setting-mask-header img {width: 16px;height: 16px;}
 
   .setting-mask-body {height: 334px;display: flex;}
@@ -382,11 +385,16 @@ export default {
   .setting-mask-body-right-network {padding: 28px 0 0 18px;font-size: 14px;}
   .setting-mask-body-right-language p,.setting-mask-body-right-version p,
   .setting-mask-body-right-network p {color: #839299;font-weight: 500;font-family: Lato-Medium;}
+
+  .en .setting-mask-body-right-language p,.en .setting-mask-body-right-version p,
+  .en .setting-mask-body-right-network p {font-weight: 500;font-family: Source-Regular;}
+
   .setting-mask-body-right-language section {display: flex;align-items: center;font-weight: 400;box-sizing: border-box;
     color: #252F33;height: 32px;border-bottom: 1px solid #E5E5E5;width: 215px;margin-top: 8px;
     justify-content: space-between;cursor: pointer;}
 
   .setting-mask-body-right-network section {color: #252F33;font-weight: 400;margin-top: 18px;}
+  .en .setting-mask-body-right-network section {color: #42535B;}
   .setting-mask-body-right-network section img {margin-right: 10px;vertical-align: top;width: 14px;height: 14px;}
   .setting-mask-body-right-network section:last-child {margin-top: 10px;}
   
@@ -394,7 +402,9 @@ export default {
 
   .setting-mask-body-left {width: 137px;height: 308px;border-right:1px solid #E5E5E5;
     padding: 26px 0 0 32px;}
+  .en  .setting-mask-body-left {color: #99A1A6;}
   .setting-mask-body-left ul li {display: block;margin-top: 36px;}
+  .en .setting-mask-body-left ul li {font-size: 14px;}
   .setting-mask-body-left ul li:first-child {margin-top: 0;}
   .setting-mask-body-left ul .check-li {color: #29D893;border-right: 4px solid #29D893;margin-right: -2px;}
 

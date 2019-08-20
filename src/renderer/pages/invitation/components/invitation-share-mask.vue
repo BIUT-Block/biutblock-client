@@ -129,6 +129,7 @@ h3 {
   font-size: 16px;
   line-height: 1.5;
 }
+.en h2,h3 {font-family: Source-Medium;font-weight: 500;}
 
 button {
   width: 226px;
@@ -143,6 +144,8 @@ button {
   );
   border-radius: 4px;
 }
+.en button {font-family: Source-Regular;}
+
 .share-address {
   height: 32px;
 }

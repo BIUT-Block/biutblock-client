@@ -4,12 +4,11 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 import store from './store'
+import 'element-ui/lib/theme-chalk/index.css'
 
 import 'normalize.css'
 import './assets/css/public.css'
 import './assets/common/font.css'
-
-import 'element-ui/lib/theme-chalk/index.css'
 
 import i18n from './utils/index'
 

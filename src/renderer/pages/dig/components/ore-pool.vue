@@ -15,13 +15,13 @@
     <!-- 申请中 -->
     <section class="ore-pool-apply" v-show="pages == 2">
       <img src="../../../assets/images/ongoingImg.png" alt="" />
-      <p v-show="poolApplyShow">
+      <p v-show="!poolApplyShow">
         You have applied for starting the mining pool(
         <span>{{ poolName }} </span>),please wait for 3~5 days.
       </p>
-      <section v-show="!poolApplyShow">
+      <section v-show="poolApplyShow">
         <p>已申请开通矿池，请等待系统审核哦</p>
-        <span>{{ poolName }}123</span>
+        <span>{{ poolName }}</span>
       </section>
     </section>
 
@@ -53,7 +53,7 @@
     <!-- 申请成功 -->
     <section class="ore-pool-success" v-show="pages == 4">
       <section class="header-success-list">
-        <p>{{ poolName }} {{ $t('homeDig.hdNavPoolSuccessTit1') }} </p>
+        <p>{{ $t('homeDig.hdNavPoolSuccessTit1') }}：{{ poolName }}  </p>
         <p>{{ $t('homeDig.hdNavPoolSuccessTit2') }}：{{ poolApplyTime }}</p>
       </section>
       <ul>
@@ -115,15 +115,15 @@ export default {
       applySuccess4,
       maskShow: false,
 
-      poolApplyShow: false
+      poolApplyShow: true
     }
   },
   updated() {
     let locale = this.$i18n.locale
     if (locale === "en") {
-      this.poolApplyShow = true
-    } else {
       this.poolApplyShow = false
+    } else {
+      this.poolApplyShow = true
     }
   },
   computed: {
@@ -210,7 +210,8 @@ export default {
 
 
   .ore-pool-success {height: 100%;}
-  .header-success-list {display: flex;align-items: center;justify-content: space-between;}
+  .header-success-list {display: flex;align-items: center;justify-content: space-between;font-family: Lato-Regular;}
+  .en .header-success-list {font-family: Source-Medium;}
   .header-success-list p:first-child {color: #252F33;font-size: 13px;}
   .header-success-list p:last-child {color: #99A1A6;}
   
@@ -218,7 +219,8 @@ export default {
   .ore-pool-success ul li {display: flex;flex-direction: column;flex: 1;align-items: center;height: auto;margin: 0;
     border-right: 1px solid #E6E6E6;height: 112px;}
   .ore-pool-success ul li:last-child {border: 0;}
-  .ore-pool-success ul li .pool-tit {padding: 14px 0 12px;font-size: 13px;}
+  .ore-pool-success ul li .pool-tit {padding: 14px 0 12px;font-size: 13px;font-family: Lato-Regular;}
+  .en .ore-pool-success ul li .pool-tit {font-family: Source-Regular;}
   .ore-pool-success ul li .pool-txt {font-size: 18px;color: #252F33;font-family: Lato-Medium;}
 
   .ore-pool-success ul li:first-child .pool-tit {color: #98A9D2;}

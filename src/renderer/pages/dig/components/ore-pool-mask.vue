@@ -146,6 +146,7 @@ export default {
   .pool-mask {width: 372px;padding: 30px 32px 28px;}
   .record-head {position: relative;}
   .record-head h2 {margin: 0;font-size: 24px;font-family: Montserrat-SemiBold;}
+  .en .record-head h2 {font-size: 20px;font-family: Source-Medium;font-weight: 500;}
   .record-head img {position: absolute;top: -10px;right: -12px;cursor: pointer;}
 
   .flexBetween {display: flex;align-items: center;justify-content: space-between;}
@@ -155,10 +156,13 @@ export default {
   .ipt-list section {display: flex;align-items: center;}
   .ipt-list img,.ipt-list section span {margin-left: 8px;cursor: pointer;}
 
-  .pool-txt1 {color: #99A1A6;line-height: 1.2;padding: 32px 0 16px;}
+  .pool-txt1 {color: #99A1A6;line-height: 1.2;padding: 32px 0 16px;font-family: Lato-Regular;}
+  .en .pool-txt1 {font-family: Source-Regular;}
   .pool-txt2 {color: #99A1A6;font-size: 16px;font-family: Lato-Bold;}
+  .en .pool-txt2 {font-family: Source-Medium;}
 
   input,button {font-family: Lato-Regular;}
+  .en input,.en button {font-family: Source-Regular;}
   
   button {width:372px;height:48px;background:#d8d8d8;border-radius:4px;border: 0;color: #F7FBFA;font-size: 14px;
     margin-top: 32px;}

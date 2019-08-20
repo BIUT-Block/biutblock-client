@@ -606,6 +606,7 @@ export default {
   .input-active {border-color:rgba(229,229,229,1);}
   .wallet-content-header-left-update span {display: inline-block;height: 24px;line-height: 24px;font-family: Montserrat-SemiBold;
     font-size: 16px;}
+  .en .wallet-content-header-left-update span {font-family: Source-Medium;color: #42535B;}
   .wallet-content-header-left-update span:hover {background: #F2F2F2;cursor: pointer;}
 
   /* 按钮列表 */
@@ -648,10 +649,13 @@ export default {
 
   .wallet-content-body .wallet-content-body-title {padding: 18px 0 12px;color: #839299;background: #fff;
     font-size: 13px;font-family: Montserrat-Regular;margin: 0 32px;}
+  .en .wallet-content-body .wallet-content-body-title {color: #99A1A6;font-size: 14px;}
 
   .wallet-content-body .wallet-content-body-mull {text-align: center;width: 100%;margin-top: 97px;}
   .wallet-content-body .wallet-content-body-mull img {width: 71px;height: 71px;}
   .wallet-content-body .wallet-content-body-mull p {color: #999999;font-family: Lato-Bold;margin-top: 14px;}
+  
+  .en .wallet-content-body .wallet-content-body-title,.en .wallet-content-body .wallet-content-body-mull p {font-family: Source-Regular;}
 
   .moreList {background: #fff;height: 50px;
     display: flex;align-items: center;justify-content: center;color: #576066;z-index: 9;}

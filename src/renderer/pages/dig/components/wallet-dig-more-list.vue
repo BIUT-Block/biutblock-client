@@ -56,9 +56,10 @@ export default {
   section .more-list {overflow: auto;flex: 1;height: 302px;padding: 0 32px;}
   section .more-list ul {overflow: auto}
   section .list-header {padding: 0 32px;}
-  section .list-header li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid rgba(229,229,229,1);}
-  section ul li {float: left;height: 42px;display: flex;align-items: center;color: #252F33;
-    border-bottom:1px solid rgba(229,229,229,1);word-break: break-all;}
+  section .list-header li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid #e5e5e5;}
+  .en section .list-header li {font-family: Source-Medium;}
+  section ul li {float: left;height: 42px;display: flex;align-items: center;color: #252F33;border-bottom:1px solid #e5e5e5;
+    word-break: break-all;}
 
  .more-list::-webkit-scrollbar { width: 2px; height: 2px;}
  .more-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}

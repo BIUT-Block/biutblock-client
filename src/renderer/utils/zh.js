@@ -28,6 +28,10 @@ export default {
     importKeystore: 'Keystore文件',
     importPhrase: '助记词',
   },
+  
+  loginMask: {
+    lgTxt: '无法导入，钱包地址未绑定邀请码。'
+  },
 
   input: {
     walletName: '钱包名称',
@@ -108,9 +112,9 @@ export default {
     hwmSentTxt1: '发送地址',
     hwmSentTxt2: '接收地址',
     hwmSentAddressIpt: '接收地址',
-    hwmSentTxt2Error: '地址是以0x开头的42位字符。',
-    hwmSentTxt2Error2: '地址无效。',
-    hwmSentTxt2Error2: '同一地址不能转。',
+    hwmSentTxt2Error: '地址是以0x开头的42位字符',
+    hwmSentTxt2Error2: '地址无效',
+    hwmSentTxt2Error3: '同一个钱包不能转账',
     hwmSentTxt3: '转账数量',
     hwmSentTxt3Error: '转账金额必须小于余额.',
     hwmSentTxt3Amount: '可用',
@@ -228,6 +232,10 @@ export default {
     hdFootTit1: '全网挖矿收益',
     hdFootTit2: '区块高度',
     hdFootTit3: '矿工',
+
+    hdFootTimeTxt1: '秒前',
+    hdFootTimeTxt2: '分钟前',
+    hdFootTimeTxt3: '小时前',
   },
 
   homeDigMore: {
@@ -237,6 +245,7 @@ export default {
 
   homeDigMask: {
     hdMaskMortgageTit: '抵押',
+    hdMaskLoading: '加载中...',
     hdMaskMortgageTxt1: '抵押数量',
     hdMaskMortgageTxt2: '抵押数量会被冻结一年，抵押数量越多，挖到BIU的收益越高哦！',
 
@@ -323,6 +332,7 @@ export default {
     openBtn: '开启挖矿',
     stopBtn: '停止挖矿',
     resubmitBtn: '重新提交',
+    knowBtn: '知道了'
   },
   page: {
     pageTotal: '条记录',
