@@ -128,7 +128,7 @@ export default {
   },
   computed: {
     orePoolTrue () {
-      if (this.availableMoney >= 500000) {//
+      if (this.freezeMoney >= 500000) {//
         this.orePoolTxt = 'homeDig.hdNavPoolBtn2'
         this.conditionsTips = "homeDig.hdNavPoolTxt2"
         return true
