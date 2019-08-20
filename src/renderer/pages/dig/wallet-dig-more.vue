@@ -142,7 +142,7 @@ export default {
 
     //返回挖矿页面
     returnDig () {
-      this.$router.push({ path: '/walletDig', query: {wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey} })
+      this.$router.push({ path: '/walletDig', query: {wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey, firstKey: this.selectedPrivateKey} })
     }
   },
 }

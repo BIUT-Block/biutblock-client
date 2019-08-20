@@ -44,9 +44,14 @@
 
 <script>
 import walletPages from '../../../components/wallet-pages'
+const dataCenterHandler = require('../../../lib/DataCenterHandler')
+const walletsHandler = require('../../../lib/WalletsHandler')
+const moment = require('moment-timezone')
 export default {
   name: '',
-  props: {},
+  props: {
+    walletAddress: String
+  },
   components: {
     walletPages
   },
@@ -57,20 +62,30 @@ export default {
       total: 50,//总记录数
       searchIpt: '',//input搜索内容
       itemList: [
-        {
-          id: '1',
-          itemAddress: '0xc4be3c8093fd7acdcdf415331040fc974f8b2ad5',
-          itemTime:'2019/07/21 13:50:46 GMT+8',
-          itemMoney: '1234',
-        }
       ]
     }
   },
   computed: {
     // 列表数据
     itemLists () {
-      return Array(6).fill(this.itemList[0])
+      return this.itemList
     }
+  },
+  created () {
+    dataCenterHandler.getRelatedMiners({
+      address: this.walletAddress
+    }, (body) => {
+      if (body.length > 0) {
+        for (let i = 0; i < body.length; i++) {
+          this.itemList.push({
+            id: '1',
+            itemAddress: body[i].address,
+            itemTime: body[i].insertAt ? WalletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+            itemMoney: ''
+          })
+        }
+      }
+    })
   },
   methods: {
     //搜索

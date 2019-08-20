@@ -6,7 +6,8 @@
         :progress="userprogress"
         @rules = "rules"/>
 
-      <invitation-list 
+      <invitation-list
+        :walletAddress="walletAddress"
         @details = "details"/>
 
       <invitation-mask 
@@ -24,6 +25,7 @@
 import invitationHeader from './components/invitation-header'
 import invitationList from './components/invitation-list'
 import invitationMask from './components/invitation-mask'
+const dataCenterHandler = require('../../lib/DataCenterHandler')
 export default {
   name: '',
   components: {
@@ -38,7 +40,7 @@ export default {
       idx: 1,
       userLevel: 1, //用户等级 invitation-header 里面需要的参数判断显示 1 - Bronze partner  2 - Silver partner 3 - Gold partner  4 - Super partner
       userprogress: 2, //进度条升级
-
+      walletAddress: '',
       maskMoney: "-",
       maskAddress: '-'
     }
@@ -47,7 +49,7 @@ export default {
 
   },
   created () {
-
+    this.walletAddress = this.$route.query.selectedWalletAddress
   },
   mounted () {
 
