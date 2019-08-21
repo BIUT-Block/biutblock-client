@@ -7,7 +7,7 @@
       <h2>{{ $t("homeInvitationMask.hiMaskShareTit1") }}</h2>
       <h3>{{ $t("homeInvitationMask.hiMaskShareTit2") }}</h3>
 
-      <qrcode :value="qrcodeWalletAddress" :options="{ size: 128 }"></qrcode>
+      <qrcode :value="invitationCode" :options="{ size: 128 }"></qrcode>
 
       <p class="share-txt1">{{ $t("homeWallet.hwCode") }}</p>
 

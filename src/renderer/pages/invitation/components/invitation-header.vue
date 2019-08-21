@@ -39,6 +39,7 @@ import level3 from '../../../assets/images/levels3.png'
 import level4 from '../../../assets/images/levels4.png'
 
 import shareMask from './invitation-share-mask'
+const dataCenterHandler = require('../../../lib/DataCenterHandler')
 export default {
   name: '',
   components: {
@@ -46,7 +47,9 @@ export default {
   },  
   props: {
     level: Number,
-    progress: Number
+    progress: Number,
+    walletAddress: String,
+    invitationCode: String
   },
   data () {
     return {
@@ -54,8 +57,7 @@ export default {
       level2,
       level3,
       level4,
-      shareShow: false,
-      invitationCode: '1234654' //邀请码
+      shareShow: false
     }
   },
   computed: {
@@ -72,11 +74,11 @@ export default {
     },
 
     headerLevel () {
-      if (this.level == 1) {
+      if (this.level === 1) {
         return 'homeInvitationMask.hiMaskRulesListLevel1'
-      } else if (this.level == 2) {
+      } else if (this.level === 2) {
         return 'homeInvitationMask.hiMaskRulesListLevel2'
-      } else if (this.level == 3) {
+      } else if (this.level === 3) {
         return 'homeInvitationMask.hiMaskRulesListLevel3'
       } else {
         return 'homeInvitationMask.hiMaskRulesListLevel4'
@@ -84,16 +86,19 @@ export default {
     },
 
     levelNumber () {
-      if (this.level == 1) {
-        return 9
-      } else if (this.level == 2) {
-        return 99
-      } else if (this.level == 3) {
-        return 999
+      if (this.level === 1) {
+        return 10
+      } else if (this.level === 2) {
+        return 32
+      } else if (this.level === 3) {
+        return 64
       } else {
-        return 1000
+        return 100
       }
     }
+  },
+  created () {
+    
   },
   methods: {
     //查看规则

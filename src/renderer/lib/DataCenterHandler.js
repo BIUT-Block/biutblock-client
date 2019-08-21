@@ -55,6 +55,17 @@ const DataCenterHandler = {
 		}, (err, res, body) => {
 			callback(body)
 		})
+	},
+
+	getMinerLevel: function (params, callback) {
+		request({
+			url: `${dataCenterUrl}getminertype`,
+			method: 'POST',
+			body: params,
+			json: true
+		}, (err, res, body)  => {
+			callback(body)
+		})
 	}
 }
 

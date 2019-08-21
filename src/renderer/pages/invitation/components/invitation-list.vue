@@ -35,6 +35,7 @@
     <!-- 分页 -->
     <wallet-pages 
       :total="total"
+      :pageSum="pageSum"
       @next="nextPage"
       @prev="prevPage"
       @goPage="goPage"
@@ -44,8 +45,9 @@
 
 <script>
 import walletPages from '../../../components/wallet-pages'
+import walletsHandler from '../../../lib/WalletsHandler'
 const dataCenterHandler = require('../../../lib/DataCenterHandler')
-const walletsHandler = require('../../../lib/WalletsHandler')
+
 const moment = require('moment-timezone')
 export default {
   name: '',
@@ -58,17 +60,19 @@ export default {
   data() {
     return {
       clearBtn: false,
+      pageSum: 0,
       dataNull: false,
-      total: 50,//总记录数
+      total: 0,//总记录数
+      beginPos: 0,
+      endpos: 0,
       searchIpt: '',//input搜索内容
-      itemList: [
-      ]
+      itemList: []
     }
   },
   computed: {
     // 列表数据
     itemLists () {
-      return this.itemList
+      return this.itemList.slice(this.beginPos, this.endpos)
     }
   },
   created () {
@@ -80,10 +84,11 @@ export default {
           this.itemList.push({
             id: '1',
             itemAddress: body[i].address,
-            itemTime: body[i].insertAt ? WalletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+            itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
             itemMoney: ''
           })
         }
+        this.total = this.itemList.length
       }
     })
   },
@@ -117,18 +122,28 @@ export default {
     },
 
     //下一页
-    nextPage () {
-      alert("下一页")
+    nextPage (skip) {
+      this.beginPos = (skip - 1) * 50
+      this.endpos = skip * 50
     },
 
     //上一页
-    prevPage () {
-      alert("上一页")
+    prevPage (skip) {
+      this.beginPos = (skip - 1) * 50
+      this.endpos = skip * 50
     },
 
     //失去焦点跳转到指定的页面
     goPage (e) {
       alert("失去焦点跳转页面" + e)
+    },
+
+    calcPageSum () {
+      if (this.itemList.length > 50) {
+        pageSum = Math.round(this.itemList.length / 50)
+      } else {
+        pageSum = 1
+      }
     }
   },
   watch: {

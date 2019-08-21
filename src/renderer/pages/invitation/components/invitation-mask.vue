@@ -58,7 +58,7 @@
       <wallet-pages 
         class="page-container"
         :total="total"
-        @next="nexPage"
+        @next="nextPage"
         @prev="prevPage"
         @goPage="goPage" />
     </section>
@@ -76,7 +76,7 @@ export default {
   props: {
     pagesIdx: Number,
     maskAddress: String,
-    maskLevel: String,
+    maskLevel: Number,
     maskMoney: String
   },
   components: {

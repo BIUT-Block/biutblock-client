@@ -5,7 +5,7 @@
     </p>
     <section>
       <span @click="prev">{{ $t('page.pagePrev') }}</span>
-      <input type="text" v-model="pagesIpt" placeholder="0" @blur="goPages" /> / {{ total }}
+      <input type="text" v-model="pagesIpt" placeholder="0" @blur="goPages" /> / {{ pageSum }}
       <span @click="next">{{ $t('page.pageNext') }}</span>
     </section>
   </main>
@@ -15,20 +15,26 @@
 export default {
   name: '',
   props: {
-    total: Number
+    total: Number,
+    pageSum: Number
   },
   data () {
     return {
-      pagesIpt: ''
+      pagesIpt: 0,
     }
+  },
+  created () {
+
   },
   methods: {
     prev () {
-      this.$emit('prev')
+      this.pagesIpt = this.pagesIpt > 2 ? this.pagesIpt - 1 : this.pagesIpt
+      this.$emit('prev', this.pagesIpt)
     },
 
     next () {
-      this.$emit('next')
+      this.pagesIpt = this.pagesIpt < this.pageSum ? this.pagesIpt + 1 : this.pageSum
+      this.$emit('next', this.pagesIpt)
     },
 
     goPages () {

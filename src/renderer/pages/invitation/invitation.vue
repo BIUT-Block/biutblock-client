@@ -4,6 +4,8 @@
       <invitation-header
         :level="userLevel"
         :progress="userprogress"
+        :walletAddress="walletAddress"
+        :invitationCode="invitationCode"
         @rules = "rules"/>
 
       <invitation-list
@@ -42,14 +44,39 @@ export default {
       userprogress: 2, //进度条升级
       walletAddress: '',
       maskMoney: "-",
-      maskAddress: '-'
+      maskAddress: '-',
+      invitationCode: ''
     }
   },
   computed: {
 
   },
   created () {
-    this.walletAddress = this.$route.query.selectedWalletAddress
+    let privateKey = this.$route.query.firstKey
+    this.walletAddress = this.$route.query.wallets[privateKey].walletAddress
+    this.invitationCode = this.$route.query.wallets[privateKey].ownInvitationCode
+
+    dataCenterHandler.getMinerLevel({
+      address: this.walletAddress
+    }, (body) => {
+      if (body.status) {
+        this.userprogress = body.amount || 0
+        switch (body.minerType) {
+          case '1':
+            this.userLevel = 4
+            break
+          case '2':
+            this.userLevel = 3
+            break
+          case '3':
+            this.userLevel = 2
+            break
+          case '4':
+            this.userLevel = 1
+            break
+        }
+      }
+    })
   },
   mounted () {
 

@@ -292,7 +292,7 @@ export default {
         this.getNonce(walletAddress, (nonce) => {
           transferData.nonce = nonce
           let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transferData)
-          this._sendTransactions(this.client, walletAddress, signedTransfer, fnAfterTransactionSEC, fnAfterTransactionSEN)
+          this._sendTransactions(this.clientSEN, walletAddress, signedTransfer, fnAfterTransactionSEC, fnAfterTransactionSEN)
         })
       },
 
