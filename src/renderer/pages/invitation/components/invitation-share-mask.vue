@@ -1,6 +1,6 @@
 <template>
   <section class="share-mask">
-    <section class="share-content">
+    <section class="share-content" v-show="sharePage === 0">
       <figure>
         <img src="../../../assets/images/closeMask.png" alt="" @click="close" />
       </figure>
@@ -25,6 +25,19 @@
 
       <p class="share-txt2">{{ $t("homeInvitationMask.hiMaskShareTxt2") }}</p>
     </section>
+
+    <section class="share-content2"  v-show="sharePage === 1">
+      <figure>
+        <img src="../../../assets/images/closeMask.png" alt="" @click="close" />
+      </figure>
+      
+      <p class="share-txt2">{{ $t("homeInvitationMask.hiMaskShareTxt3") }}</p>
+
+      <section>
+        <button type="button" @click="close">{{ $t("publicBtn.myKnowBtn") }}</button>
+        <button type="button" @click="goShare">{{ $t("publicBtn.myGoShowBtn") }}</button>
+      </section>
+    </section>
   </section>
 </template>
 
@@ -38,6 +51,7 @@ export default {
   },
   props: {
     invitationCode: String,
+    sharePage: Number
   },
   data() {
     return {
@@ -54,6 +68,10 @@ export default {
   methods: {
     close() {
       this.$emit('close')
+    },
+
+    goShare () {
+      this.close ()
     },
 
     //复制私钥
@@ -187,5 +205,47 @@ canvas {
     rgba(165, 165, 165, 1) 100%
   ) !important;
   pointer-events: none;
+}
+
+.share-content2 {
+  width:408px;
+  height:136px;
+  background: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+  border-radius: 4px;
+  padding: 16px 20px 20px;
+}
+.share-content2 figure {
+  padding-right: 0;
+}
+.share-content2 p {
+  color: #6D7880;
+  font-size: 14px;
+}
+.share-content2 section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 55px;
+}
+.share-content2 section button {
+  width:96px;
+  height:32px;
+  border:1px solid rgba(230,230,230,1);
+  background:#fff;
+  border-radius:4px;
+  color: #99A1A6;
+  font-size: 13px;
+}
+.share-content2 section button:last-child {
+  width:96px;
+  height:32px;
+  border: 0;
+  background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
+  opacity:1;
+  border-radius:4px;
+  color: #fff;
+  font-size: 13px;
+  margin-left: 8px;
 }
 </style>

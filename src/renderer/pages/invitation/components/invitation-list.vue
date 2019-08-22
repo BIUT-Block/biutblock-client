@@ -18,13 +18,13 @@
         <span>{{ $t('homeInvitation.hiListTxt3') }}</span>
         <span>{{ $t('homeInvitation.hiListTxt4') }}</span>
       </li>
-      <li v-for="(item, index) in itemLists" :key="index" v-show="!dataNull">
+      <li v-for="(item, index) in itemLists" :key="index" v-show="itemLists.length > 0">
         <span>{{ item.itemAddress }}</span>
         <span>{{ item.itemTime }}</span>
         <span>{{ item.itemMoney }}</span>
         <span class="look-details" @click='lookDetails(""+ index +"")'>{{ $t('homeInvitation.hiListBtn') }}</span>
       </li>
-      <section class="list-none" v-show="dataNull">
+      <section class="list-none" v-show="itemLists.length === 0">
         <section>
           <img src="../../../assets/images/wallet-null.png" alt="">
           <p>{{ $t('homeInvitation.hiListSearchNull') }}</p>
@@ -39,7 +39,7 @@
       @next="nextPage"
       @prev="prevPage"
       @goPage="goPage"
-      v-show="!dataNull" />
+      v-show="itemLists.length > 0" />
   </main>
 </template>
 
@@ -61,7 +61,6 @@ export default {
     return {
       clearBtn: false,
       pageSum: 0,
-      dataNull: false,
       total: 0,//总记录数
       beginPos: 0,
       endpos: 0,

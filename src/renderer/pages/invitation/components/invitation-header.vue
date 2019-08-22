@@ -2,7 +2,7 @@
   <main>
     <header class="flex-between">
       <h2>{{ $t('homeInvitation.hiTit') }}</h2>
-      <button type="button" class="rules-btn" @click="shareShow = true">{{ $t('homeInvitation.hiShare') }}</button>
+      <button type="button" class="rules-btn" @click="shareMethod">{{ $t('homeInvitation.hiShare') }}</button>
     </header>
 
     <section class="header-list">
@@ -27,6 +27,7 @@
     <!-- 分享弹窗 -->
     <share-mask 
       :invitationCode="invitationCode"
+      :sharePage="sharePage"
       v-show="shareShow"
       @close = 'closeMask'/>
   </main>
@@ -57,7 +58,8 @@ export default {
       level2,
       level3,
       level4,
-      shareShow: false
+      shareShow: false,
+      sharePage: 0 // 0 可以显示分享弹窗 1 提示开启冻结
     }
   },
   computed: {
@@ -108,6 +110,18 @@ export default {
     
     closeMask () {
       this.shareShow = false
+      this.sharePage = 0
+    },
+
+    //分享弹窗
+    shareMethod () {
+      /**
+       * 判断是否有抵押
+       * 0 有抵押  1 没有抵押
+       * 
+       */
+      this.shareShow = true 
+      this.sharePage = 0 
     }
   },
 }

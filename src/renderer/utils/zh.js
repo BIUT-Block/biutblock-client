@@ -321,6 +321,8 @@ export default {
 
     hiMaskShareTxt1: '复制链接',
     hiMaskShareTxt2: '用浏览器打开链接查看',
+
+    hiMaskShareTxt3: '在挖矿页面锁仓一万个BIUT，即可进行一键分享哦！',
   },
 
   publicBtn: {
@@ -332,7 +334,10 @@ export default {
     openBtn: '开启挖矿',
     stopBtn: '停止挖矿',
     resubmitBtn: '重新提交',
-    knowBtn: '知道了'
+    knowBtn: '知道了',
+
+    myKnowBtn: '我知道了',
+    myGoShowBtn: '马上开启分享',
   },
   page: {
     pageTotal: '条记录',

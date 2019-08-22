@@ -310,7 +310,7 @@ export default {
     hiMaskRulesListLevel2: 'Silver partner',
     hiMaskRulesListLevel3: 'Gold partner',
     hiMaskRulesListLevel4: 'Super partner',
-    hiMaskRulesListLevel4Txt: 'More than 1000',
+    hiMaskRulesListLevel4Txt: 'More than 64',
 
     hiMaskDetailsTit: 'Reward details',
     hiMaskDetailsTxt: 'Total revenue (BIUT)',
@@ -323,6 +323,8 @@ export default {
 
     hiMaskShareTxt1: 'Copy Link',
     hiMaskShareTxt2: 'Open the link with a browser to view',
+
+    hiMaskShareTxt3: 'Lock 10,000 BIUT on the mining page and share with one click!',
   },
 
   publicBtn: {
@@ -334,7 +336,10 @@ export default {
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',
-    knowBtn: 'Know the'
+    knowBtn: 'Know the',
+
+    myKnowBtn: 'I know the',
+    myGoShowBtn: 'Start share',
   },
   page: {
     pageTotal: 'records in total',
