@@ -40,7 +40,7 @@
           <input
             type="text"
             placeholder="10000.0"
-            maxlength="16"
+            maxlength="19"
             v-model="mortgageIpt"
             @input="clearMortgage"
             onpaste="return false" />
@@ -89,7 +89,18 @@ export default {
   computed: {
     mortgageActive () {
       let ipt1 = this.mortgageIpt
-      return ipt1 > 0 && ipt1 < this.availableMoney ? true : false
+      if (this.mortgageIpt.length > 10 && this.mortgageIpt.indexOf(".") < 0) {
+        //只能输入10位整数
+        this.mortgageIpt = String(this.mortgageIpt).substring(0,10)
+      } else if (this.mortgageIpt.indexOf(".") == 0) {
+        this.mortgageIpt = String(this.mortgageIpt).substring(0,9)
+      } else {
+        this.mortgageIpt =  this.mortgageIpt.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        this.mortgageIpt =  this.mortgageIpt.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        this.mortgageIpt =  this.mortgageIpt.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+        this.mortgageIpt =  this.mortgageIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      }
+      return ipt1 > 0 && Number(ipt1) <= Number(this.availableMoney) ? true : false
     }
   },
   methods: {

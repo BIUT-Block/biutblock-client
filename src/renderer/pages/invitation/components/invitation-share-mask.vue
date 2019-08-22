@@ -7,7 +7,7 @@
       <h2>{{ $t("homeInvitationMask.hiMaskShareTit1") }}</h2>
       <h3>{{ $t("homeInvitationMask.hiMaskShareTit2") }}</h3>
 
-      <qrcode :value="invitationCode" :options="{ size: 128 }"></qrcode>
+      <qrcode :value="qrcodeWalletLink" :options="{ size: 128 }"></qrcode>
 
       <p class="share-txt1">{{ $t("homeWallet.hwCode") }}</p>
 
@@ -18,8 +18,7 @@
         class="copyButton"
         :class="copyTimeShow ? 'copySuccessBg' : ''"
         data-clipboard-target="#address"
-        @click="copyLink"
-      >
+        @click="copyLink">
         {{ $t(copyButtonText) }}
         <span v-show="copyTimeShow">（{{ copyTimeShowTxt }}）</span>
       </button>
@@ -43,11 +42,14 @@ export default {
   data() {
     return {
       copyButtonText: 'homeInvitationMask.hiMaskShareTxt1',
-      qrcodeWalletLink: '123',
+      qrcodeWalletLink: '',
       copyTimeShow: false,
       copyTime: 3,
       copyTimeShowTxt: 3,
     }
+  },
+  mounted(){
+    this.qrcodeWalletLink = "http://mining.biut.io/?code=" + this.invitationCode
   },
   methods: {
     close() {

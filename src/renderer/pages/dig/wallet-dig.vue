@@ -16,7 +16,7 @@
         </p>
         <p class="mining-txt">{{ $t('homeDig.hdEnteryTxt2') }} <span style="color: #EE1C39;">*</span></p>
         <section class="flex-between mining-list">
-          <input type="text" placeholder="10,000.00"  v-model="mortgageAmount"/>
+          <input type="text" placeholder="10,000.00" maxlength="19"  v-model="mortgageAmount" onpaste="return false"/>
           <span>BIUT</span>
         </section>
         
@@ -263,9 +263,20 @@ export default {
 
     //是否可点击开启挖矿
     mortgageActive () {
+     if (this.mortgageAmount.length > 10 && this.mortgageAmount.indexOf(".") < 0) {
+        //只能输入10位整数
+        this.mortgageAmount = String(this.mortgageAmount).substring(0,10)
+      } else if (this.mortgageAmount.indexOf(".") == 0) {
+        this.mortgageAmount = String(this.mortgageAmount).substring(0,9)
+      } else {
+        this.mortgageAmount =  this.mortgageAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        this.mortgageAmount =  this.mortgageAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        this.mortgageAmount =  this.mortgageAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+        this.mortgageAmount =  this.mortgageAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      }
       return this.mortgageAmount >= 10000
         && this.availableMoney >= 10000
-        && this.mortgageAmount <= this.availableMoney ? true : false
+        && Number(this.mortgageAmount) <= Number(this.availableMoney) ? true : false
     }
   },
   created () {
