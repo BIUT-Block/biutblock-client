@@ -625,11 +625,15 @@ export default {
     },
 
     showInvitation1() {
-      this.showInvitation = true
+      if (Number(this.freezeMoney) > 0) {
+        this.showInvitation = true
+      }
     },
 
     showInvitation2() {
-      this.showInvitation = false
+      if (Number(this.freezMoney) > 0) {
+        this.showInvitation = false
+      }
     }
   },
   watch: {

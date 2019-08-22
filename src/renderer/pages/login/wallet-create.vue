@@ -433,7 +433,7 @@ export default {
     createWallet() {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode}, (body) => {
-        if (body && body.status) {
+        if (body && body.status && body.doc[0].role !== 'Owner') {
           this.parentWallet = body.doc[0]
           let wordsArray = this.keys.englishWords.split(' ')
           let keyDataJSON = {}
