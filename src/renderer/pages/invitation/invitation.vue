@@ -41,7 +41,7 @@ export default {
       maskShow: false,
       idx: 1,
       userLevel: 1, //用户等级 invitation-header 里面需要的参数判断显示 1 - Bronze partner  2 - Silver partner 3 - Gold partner  4 - Super partner
-      userprogress: 2, //进度条升级
+      userprogress: 0, //进度条升级
       walletAddress: '',
       maskMoney: "-",
       maskAddress: '-',

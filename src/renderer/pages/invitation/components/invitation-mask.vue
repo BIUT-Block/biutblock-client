@@ -129,7 +129,7 @@ export default {
           id: '2',
           rulesImg: level2,
           rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel2',
-          rulesNumber: '10-99',
+          rulesNumber: '10-32',
           rulesReward1: '4%',
           rulesReward2: '2%'
         },
@@ -137,7 +137,7 @@ export default {
           id: '3',
           rulesImg: level3,
           rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel3',
-          rulesNumber: '100-999',
+          rulesNumber: '32-64',
           rulesReward1: '7%',
           rulesReward2: '3%'
         },

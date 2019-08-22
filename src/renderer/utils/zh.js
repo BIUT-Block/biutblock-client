@@ -309,7 +309,7 @@ export default {
     hiMaskRulesListLevel2: '银牌合伙人',
     hiMaskRulesListLevel3: '金牌合伙人',
     hiMaskRulesListLevel4: '超级合伙人',
-    hiMaskRulesListLevel4Txt: '1000以上',
+    hiMaskRulesListLevel4Txt: '64以上',
 
     hiMaskDetailsTit: '查看明细',
     hiMaskDetailsTxt: '总收益 (BIUT)',

@@ -478,8 +478,8 @@ export default {
                 }
               }
               this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-              this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
               this.availableMoney = this.walletBalance
+              this.walletBalance = this._checkValueFormat((Number(balanceSEC) + Number(this.freezeMoney)).toString()).toString()
             })
           })
         } else {
@@ -497,8 +497,8 @@ export default {
               }
             }
             this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
             this.availableMoney = this.walletBalance
+            this.walletBalance = this._checkValueFormat((Number(balanceSEC) + Number(this.freezeMoney)).toString()).toString()
           })
         }
       }, (balanceSEN) => {
