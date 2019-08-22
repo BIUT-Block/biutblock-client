@@ -403,6 +403,18 @@ export default {
         })
       },
 
+      getContractInfoSync: function (contractAddress) {
+        return new Promise((resolve, reject) => {
+          this.client.request('sec_getContractInfo', [contractAddress], (err, response) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(response.result.contractInfo)
+            }
+          })
+        })
+      },
+
       createContractTransaction: function (walletAddress, privateKey, contractName, transfer, fnAfterCreate) {
         // let sourceCode = fs.readFileSync('./smart_contract_test.js').toString('base64')
         let contractAddress = WalletsHandler.generateContractAddress(privateKey)

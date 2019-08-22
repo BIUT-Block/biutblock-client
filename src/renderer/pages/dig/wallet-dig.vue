@@ -447,53 +447,40 @@ export default {
       }, 3 * 60 * 1000)
     },
 
-    _getWalletBalance (walletAddress) {
-      let contractAddress = ''
+    _getWalletBalance(walletAddress) {
+      let poolAddress = []
       this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        this.walletBalance = balanceSEC.toString()
-        if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
-          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {
-            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-              for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
-              }
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
-            this.availableMoney = this.walletBalance
-            this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
-              if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-                let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-                for (let i = 0; i < benifitAddress.length; i++) {
-                  this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
-                }
-              }
-              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString()).toString()
-              this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
-              this.availableMoney = this.walletBalance
-            })
-          })
-        } else {
-          if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress === '') {
-            contractAddress = this.selectedWallet.mortgagePoolAddress
-          } else if (this.selectedWallet.mortgagePoolAddress === '' && this.selectedWallet.ownPoolAddress !== '') {
-            contractAddress = this.selectedWallet.ownPoolAddress
-          }
-          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-            this.freezeMoney = 0
-            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-              for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
-              }
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString()).toString()
-            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
-            this.availableMoney = this.walletBalance
+//        this.walletBalance = balanceSEC.toString()
+        let freezMoney = 0
+        let walletBalance = 0
+        let availableMoney = balanceSEC
+        if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
+          this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
+            poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           })
         }
+        if (this.selectedWallet.ownPoolAddress.length > 0) {
+          for (let ownpool of this.selectedWallet.ownPoolAddress) {
+            poolAddress.push(this.$JsonRPCClient.getContractInfoSync(ownpool))
+          }
+        }
+
+        Promise.all(poolAddress).then((contractInfos) => {
+          for (let contract of contractInfos) {
+            let timeLock = contract.timeLock || {}
+            if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
+              let benifitAddress = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                freezeMoney = freezeMoney + Number(benifitAddress[i].lockAmount)
+              }
+            } 
+          }
+          walletBalance = freezMoney + availableMoney
+          this.freezMoney = this._checkValueFormat(freezeMoney.toString())
+          this.walletBalance = this._checkValueFormat(walletBalance.toString())
+          this.availableMoney = this._checkValueFormat(availableMoney.toString())
+        })
       }, (balanceSEN) => {
         this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
       })
@@ -528,66 +515,41 @@ export default {
     },
 
     _getTimeLockHistory () {
-      let contractAddress = ''
       let benifs = []
-      if (this.selectedWallet.ownPoolAddress !== '' && this.selectedWallet.mortgagePoolAddress !== '') {
-        this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfoMortgage) => {
-          if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-            benifs.push(contractInfoMortgage.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
-          }
-          //benifs.push(contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
-          this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfoOwner) => {
-            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-              benifs.push(contractInfoOwner.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
-            }
-            if (benifs.length > 0) {
-              this.digPage = false
-            }
-            this.poolApplyMoney = contractInfoOwner.totalSupply
-            this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfoOwner.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-            let tokenName = contractInfoOwner.tokenName
-            this.poolName = tokenName.split('-')[2]
-
-            if (contractInfoOwner.status === 'success') {
-              this.orePoolPage = 4
-              this._calcMiningPool(benifs)
-              this._insertLockHistory(benifs)
-            } else {
-              this.orePoolPage = 2
-            }
-          })
-        })
-      } else {
-        if (this.selectedWallet.ownPoolAddress !== '' && this.selectedWallet.mortgagePoolAddress === '') {
-          contractAddress = this.selectedWallet.ownPoolAddress
-        } else if (this.selectedWallet.ownPoolAddress === '' && this.selectedWallet.mortgagePoolAddress !== '') {
-          contractAddress = this.selectedWallet.mortgagePoolAddress
-        }
-        this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-          if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress) ) {
-            benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-          }
-          if (benifs.length > 0) {
-            this.digPage = false
-          }
-          if (this.selectedWallet.role === 'Owner') {
-            this.poolApplyMoney = contractInfo.totalSupply
-            this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-            let tokenName = contractInfo.tokenName
-            this.poolName = tokenName.split('-')[2]
-
-            if (contractInfo.status === 'success') {
-              this.orePoolPage = 4
-              this._calcMiningPool(benifs)
-              this._insertLockHistory(benifs)
-            } else {
-              this.orePoolPage = 2
-            }
-          } else {
-            this._insertLockHistory(benifs)
-          }
+      if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
+        this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
+          poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
         })
       }
+      if (this.selectedWallet.ownPoolAddress !== '') {
+        poolAddress.push(ownPoolAddress) 
+      }
+      Promise.all(poolAddress).then((contractInfos) => {
+        for (let contract of contractInfos) {
+          let timeLock = contract.timeLock || {}
+          if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
+            benifs.push(timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
+          } 
+        }
+        this.digPage = false
+      })
+      this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
+        let benifs = []
+        if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress) ) {
+          benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+        }
+        this.poolApplyMoney = contractInfo.totalSupply
+        this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+        let tokenName = contractInfo.tokenName
+        this.poolName = tokenName.split('-')[2]
+        if (contractInfo.status === 'success') {
+          this.orePoolPage = 4
+          this._calcMiningPool(benifs)
+          this._insertLockHistory(benifs)
+        } else {
+          this.orePoolPage = 2
+        }
+      })
     },
 
     _insertLockHistory (benifs) {
@@ -681,7 +643,7 @@ export default {
       let transferTimeLock = {
         timestamp: new Date().getTime(),
         walletAddress: this.selectedWalletAddress,
-        sendToAddress: this.selectedWallet.mortgagePoolAddress,
+        sendToAddress: this.selectedWallet.mortgagePoolAddress[0],
         amount: mortgage,
         gasLimit: '0',
         gasPrice: '0',

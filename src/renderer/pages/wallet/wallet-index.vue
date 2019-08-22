@@ -491,6 +491,11 @@ export default {
       window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
       this._resetSkipTotal()
       this.selectedWallet = selectedWallet
+      if (this.selectedWallet.role === 'Owner') {
+        this.showInvitation = true
+      } else {
+        this.showInvitation = false
+      }
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
       console.log(this.selectedWalletData)
       this.selectedPrivateKey = selectedWallet.privateKey
@@ -515,52 +520,38 @@ export default {
     },
 
     _getWalletBalance(walletAddress) {
-      let contractAddress = ''
+      let poolAddress = []
       this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        this.walletBalance = balanceSEC.toString()
-        if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress !== '') {
-          this.$JsonRPCClient.getContractInfo(this.selectedWallet.mortgagePoolAddress, (contractInfo) => {
-            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-              for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
-              }
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-            this.walletBalance = this._checkValueFormat(balanceSEC.toString()).toString()
-            this.availableMoney = this.walletBalance
-            this.$JsonRPCClient.getContractInfo(this.selectedWallet.ownPoolAddress, (contractInfo) => {
-              if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-                let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-                for (let i = 0; i < benifitAddress.length; i++) {
-                  this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
-                }
-              }
-              this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-              this.availableMoney = this.walletBalance
-              this.walletBalance = this._checkValueFormat((Number(balanceSEC) + Number(this.freezeMoney)).toString()).toString()
-            })
-          })
-        } else {
-          if (this.selectedWallet.mortgagePoolAddress !== '' && this.selectedWallet.ownPoolAddress === '') {
-            contractAddress = this.selectedWallet.mortgagePoolAddress
-          } else if (this.selectedWallet.mortgagePoolAddress === '' && this.selectedWallet.ownPoolAddress !== '') {
-            contractAddress = this.selectedWallet.ownPoolAddress
-          }
-          this.$JsonRPCClient.getContractInfo(contractAddress, (contractInfo) => {
-            this.freezeMoney = 0
-            if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress)) {
-              let benifitAddress = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-              for (let i = 0; i < benifitAddress.length; i++) {
-                this.freezeMoney = this.freezeMoney + Number(benifitAddress[i].lockAmount)
-              }
-            }
-            this.freezeMoney = this._checkValueFormat(this.freezeMoney.toString())
-            this.availableMoney = this.walletBalance
-            this.walletBalance = this._checkValueFormat((Number(balanceSEC) + Number(this.freezeMoney)).toString()).toString()
+//        this.walletBalance = balanceSEC.toString()
+        let freezMoney = 0
+        let walletBalance = 0
+        let availableMoney = balanceSEC
+        if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
+          this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
+            poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           })
         }
+        if (this.selectedWallet.ownPoolAddress.length > 0) {
+          for (let ownpool of this.selectedWallet.ownPoolAddress) {
+            poolAddress.push(this.$JsonRPCClient.getContractInfoSync(ownpool))
+          }
+        }
+        Promise.all(poolAddress).then((contractInfos) => {
+          for (let contract of contractInfos) {
+            let timeLock = contract.timeLock || {}
+            if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
+              let benifitAddress = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                freezeMoney = freezeMoney + Number(benifitAddress[i].lockAmount)
+              }
+            } 
+          }
+          walletBalance = freezMoney + availableMoney
+          this.freezMoney = this._checkValueFormat(freezeMoney.toString())
+          this.walletBalance = this._checkValueFormat(walletBalance.toString())
+          this.availableMoney = this._checkValueFormat(availableMoney.toString())
+        })
       }, (balanceSEN) => {
         this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
       })
@@ -572,7 +563,7 @@ export default {
       if (splitValue.length > 1) {
         return Number(value).toFixed(Number(splitValue[1])).toString()
       } else {
-        return Number(value)
+        return Number(value).toString()
       }
     },
 
@@ -625,13 +616,13 @@ export default {
     },
 
     showInvitation1() {
-      if (Number(this.freezeMoney) > 0) {
+      if (Number(this.freezeMoney) > 0 && this.selectedWallet.role !== 'Owner') {
         this.showInvitation = true
       }
     },
 
     showInvitation2() {
-      if (Number(this.freezMoney) > 0) {
+      if (Number(this.freezMoney) > 0 && this.selectedWallet.role !== 'Owner') {
         this.showInvitation = false
       }
     }
