@@ -547,6 +547,9 @@ export default {
               }
             } 
           }
+          if (freezeMoney > 0) {
+            this.mortgageShow = false
+          } 
           walletBalance = freezeMoney + availableMoney
           this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
           this.walletBalance = this._checkValueFormat(walletBalance.toString())
