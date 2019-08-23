@@ -107,6 +107,8 @@
             :poolApplyMoney="poolApplyMoney"
             :poolApplyTime="poolApplyTime"
             :poolName="poolName"
+            :applyContract="applyContract"
+            :contractAddress="contractAddress[0]"
             @addContract="onAddContract" />
         </section>
 
@@ -241,6 +243,7 @@ export default {
       poolApplyTime: '',
       poolApplyMoney: 0,
       poolName: '',
+      applyContract: false,
       itemList: [],//锁仓记录
       orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
       codeShow: true //邀请码是否显示 
@@ -290,7 +293,7 @@ export default {
     }
     this.selectedWallet = wallets[this.selectedPrivateKey]
     if (this.selectedWallet.role === 'Miner') {
-      this.contractAddress =  wallets[this.selectedPrivateKey].mortgagePoolAddress
+      this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
       this.poolName = this.selectedWallet.walletName
       if (this.selectedWallet.mortgageValue === '0' ) {
         this.digPage = true
@@ -335,8 +338,14 @@ export default {
   },
   methods: {
     // tab切换
-    tabPage (idx) {
+   async tabPage (idx) {
       this.pageIdx = idx
+      if (idx === 3) {
+        let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
+        if (contractInfo.status === 'success' && contractInfo.hasOwnProperty("timeLock")) {
+          this.applyContract = true
+        }
+      }
     },
 
     initMiningStatus () {
@@ -395,15 +404,14 @@ export default {
       ipcRenderer.send('close')
     },
 
-    onAddContract (privateKey, contract) {
+    onAddContract (privateKey) {
       let wallet = this.selectedWallet
-      wallet.ownPoolAddress = contract
       wallet.role = 'Owner'
       wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
       this.orePoolPage = 2
       dataCenterHandler.updatePoolAddress({
         address: this.selectedWalletAddress,
-        ownPoolAddress: contract,
+        ownPoolAddress: this.contractAddress,
         mortgageValue: wallet.mortgageValue,
         role: 'Owner'
       }, (doc) => {
@@ -539,6 +547,8 @@ export default {
         } else {
           this.digPage = true
         }
+        this._calcMiningPool(benifs)
+        this._insertLockHistory(benifs)
       })
       this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
         if (contractInfo.timeLock) {
@@ -546,11 +556,9 @@ export default {
           this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
           let tokenName = contractInfo.tokenName
           this.poolName = tokenName.split('-')[2]
-          if (contractInfo.status === 'success') {
+          if (contractInfo.status === 'success' && this.selectedWallet.role === 'Owner') {
             this.orePoolPage = 4
-            this._calcMiningPool(benifs)
-            this._insertLockHistory(benifs)
-          } else {
+          } else if (contractInfo.status === 'pending' && this.selectedWallet.role === 'Miner') {
             this.orePoolPage = 2
           }
         }
@@ -561,12 +569,14 @@ export default {
       this.itemList = []
  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
-        this.itemList.push({
-          id: '1',
-          lockTime: WalletsHandler.formatDate(moment(benifit.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
-          lockMoney: benifit.lockAmount,
-          unlockTime: WalletsHandler.formatDate(moment(benifit.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-        })   
+        for (let item of benifit) {
+          this.itemList.push({
+            id: '1',
+            lockTime: WalletsHandler.formatDate(moment(item.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+            lockMoney: item.lockAmount,
+            unlockTime: WalletsHandler.formatDate(moment(item.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+          }) 
+        }  
       }
     },
 
@@ -639,16 +649,19 @@ export default {
       })
     },
 
-    onMortgage () {
+    async onMortgage () {
       let privateKey = this.selectedPrivateKey
-      this._addMoreMortgage(this.mortgageAmount)
+      let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
+      if (contractInfo.status === 'success') {
+        this._addMoreMortgage(this.mortgageAmount)
+      }
     },
 
     _addMoreMortgage (mortgage) {
       let transferTimeLock = {
         timestamp: new Date().getTime(),
         walletAddress: this.selectedWalletAddress,
-        sendToAddress: this.selectedWallet.mortgagePoolAddress[0],
+        sendToAddress: this.selectedWallet.ownPoolAddress[0],
         amount: mortgage,
         gasLimit: '0',
         gasPrice: '0',

@@ -70,6 +70,7 @@
        v-show="maskShow"
        :walletAddress="walletAddress"
        :privateKey="privateKey"
+       :contractAddress="contractAddress"
        @appendContract="appendContractAddress"
        @close="closeMask"/>
   </main>
@@ -89,6 +90,7 @@ export default {
     availableMoney: String,
     freezeMoney: String,
     walletAddress: String,
+    contractAddress: String,
     privateKey: String,
     hasContract: Boolean,
     poolList: Array,
@@ -98,7 +100,8 @@ export default {
     poolAllEarnings: Number,
     poolMyEarnings: Number,
     poolApplyTime: String,
-    poolApplyMoney: Number
+    poolApplyMoney: Number,
+    applyContract: Boolean
   },
   components: {
     poolMask
@@ -128,7 +131,7 @@ export default {
   },
   computed: {
     orePoolTrue () {
-      if (this.freezeMoney >= 500000) {//
+      if (this.availableMoney >= 500000 && this.applyContract) {//
         this.orePoolTxt = 'homeDig.hdNavPoolBtn2'
         this.conditionsTips = "homeDig.hdNavPoolTxt2"
         return true

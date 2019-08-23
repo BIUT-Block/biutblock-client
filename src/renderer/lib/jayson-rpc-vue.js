@@ -286,7 +286,6 @@ export default {
           let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transferData)
           this._sendTransactions(this.client, walletAddress, signedTransfer, fnAfterTransactionSEC, fnAfterTransactionSEN)
         })
-        
       },
       sendTransactionsSEN: function (walletAddress, privateKey, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
         this.getNonce(walletAddress, (nonce) => {
@@ -379,6 +378,18 @@ export default {
         })
       },
 
+      getNoncePromise: function (walletAddress) {
+        return new Promise((resolve, reject) => {
+          this.client.request('sec_getNonce', [walletAddress], (err, response) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(response.result.Nonce)
+            }
+          })
+        })
+      },
+
       getTimeLock: function (walletAddress, contractAddress, fnAfterGet) {
         let history = []
         this.client.request('sec_getTimeLock', [walletAddress, contractAddress], (err, response) => {
@@ -431,6 +442,27 @@ export default {
           this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
             if (err) return
             fnAfterCreate(contractAddress, response)
+          })
+        })
+      },
+
+      createContractTransactionPromise: function (privateKey, contractName, transfer) {
+        return new Promise((resolve, reject) => {
+          let contractAddress = WalletsHandler.generateContractAddress(privateKey)
+          let tokenName = `SEC-${contractAddress}-${contractName}`
+          transfer.inputData = JSON.stringify({
+            sourceCode: sourceCode,
+            totalSupply: 100000000,
+            tokenName: tokenName
+          })
+          transfer.sendToAddress = contractAddress
+          let signedTransfer = WalletsHandler.encryptTransaction(privateKey, transfer)
+          this.client.request('sec_createContractTransaction', [signedTransfer[0], tokenName], (err, response) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(contractAddress)
+            }
           })
         })
       },

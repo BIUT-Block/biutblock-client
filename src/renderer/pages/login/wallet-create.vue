@@ -277,7 +277,8 @@ export default {
       copyText: 'tips.copySuccess',//私钥复制
       copyShow: false,
       maskShow: false, //助记词导入钱包提示
-      navQuery: {}
+      navQuery: {},
+      contractAddress: ''
     }
   },
   computed: {
@@ -430,9 +431,20 @@ export default {
     },
 
     //创建钱包  需要传邀请码
-    createWallet() {
+    async createWallet() {
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
-      dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode}, (body) => {
+      let transfer = {
+        nonce: "1",
+        timestamp: new Date().getTime(),
+        walletAddress: this.keys.userAddress,
+        amount: '0',
+        gasLimit: '0',
+        gasPrice: '0',
+        txFee: '0',
+        chainName: 'SEC'
+      }
+      this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, 'Mine Pool', transfer)
+      dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode, contractAddress: this.contractAddress}, (body) => {
         if (body && body.status && body.doc[0].role !== 'Owner') {
           this.parentWallet = body.doc[0]
           let wordsArray = this.keys.englishWords.split(' ')
@@ -537,7 +549,7 @@ export default {
     },
 
     //备份助记词成功进入钱包主页
-    backupWallet () {  
+    backupWallet () {
       walletsHandler.backUpWalletIntoFile({
         walletName: this.walletName,
         privateKey: this.keys.privateKey,
@@ -546,9 +558,9 @@ export default {
         englishWords: this.keys.englishWords,
         invitationCode: this.parentWallet.invitationCode,
         ownInvitationCode: this.parentWallet.ownInvitationCode,
-        mortgagePoolAddress: this.parentWallet.role === 'Miner' ? this.parentWallet.mortgagePoolAddress : this.parentWallet.ownPoolAddress,
+        mortgagePoolAddress: this.parentWallet.role === 'Miner' ? [this.parentWallet.mortgagePoolAddress] : [this.parentWallet.ownPoolAddress],
         mortgageValue: '0',
-        ownPoolAddress: this.parentWallet.ownPoolAddress,
+        ownPoolAddress: [this.contractAddress],
         role: this.parentWallet.role
       }, (keyDataJSON) => {
         window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
