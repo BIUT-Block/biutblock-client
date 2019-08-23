@@ -452,7 +452,7 @@ export default {
       this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
 //        this.walletBalance = balanceSEC.toString()
-        let freezMoney = 0
+        let freezeMoney = 0
         let walletBalance = 0
         let availableMoney = balanceSEC
         if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
@@ -476,10 +476,10 @@ export default {
               }
             } 
           }
-          walletBalance = freezMoney + availableMoney
-          this.freezMoney = this._checkValueFormat(freezeMoney.toString())
-          this.walletBalance = this._checkValueFormat(walletBalance.toString())
-          this.availableMoney = this._checkValueFormat(availableMoney.toString())
+          walletBalance = freezeMoney + availableMoney
+          this.freezeMoney = this._checkValueFormat(freezeMoney.toString()).toString()
+          this.walletBalance = this._checkValueFormat(walletBalance.toString()).toString()
+          this.availableMoney = this._checkValueFormat(availableMoney.toString()).toString()
         })
       }, (balanceSEN) => {
         this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
@@ -516,13 +516,16 @@ export default {
 
     _getTimeLockHistory () {
       let benifs = []
+      let poolAddress = []
       if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
         this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
           poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
         })
       }
-      if (this.selectedWallet.ownPoolAddress !== '') {
-        poolAddress.push(ownPoolAddress) 
+      if (this.selectedWallet.ownPoolAddress.length > 0) {
+        this.selectedWallet.ownPoolAddress.forEach((pool) => {
+          poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
+        })
       }
       Promise.all(poolAddress).then((contractInfos) => {
         for (let contract of contractInfos) {
@@ -531,23 +534,25 @@ export default {
             benifs.push(timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
           } 
         }
-        this.digPage = false
+        if (benifs.length > 0) {
+          this.digPage = false
+        } else {
+          this.digPage = true
+        }
       })
       this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
-        let benifs = []
-        if (contractInfo.timeLock && contractInfo.timeLock.hasOwnProperty(this.selectedWallet.walletAddress) && contractInfo.timeLock[this.selectedWallet.walletAddress].hasOwnProperty(this.selectedWallet.walletAddress) ) {
-          benifs = contractInfo.timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-        }
-        this.poolApplyMoney = contractInfo.totalSupply
-        this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-        let tokenName = contractInfo.tokenName
-        this.poolName = tokenName.split('-')[2]
-        if (contractInfo.status === 'success') {
-          this.orePoolPage = 4
-          this._calcMiningPool(benifs)
-          this._insertLockHistory(benifs)
-        } else {
-          this.orePoolPage = 2
+        if (contractInfo.timeLock) {
+          this.poolApplyMoney = contractInfo.totalSupply
+          this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+          let tokenName = contractInfo.tokenName
+          this.poolName = tokenName.split('-')[2]
+          if (contractInfo.status === 'success') {
+            this.orePoolPage = 4
+            this._calcMiningPool(benifs)
+            this._insertLockHistory(benifs)
+          } else {
+            this.orePoolPage = 2
+          }
         }
       })
     },

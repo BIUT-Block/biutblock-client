@@ -46,7 +46,7 @@
               </section>
 
               <ul v-show="menuShow">
-                <li v-for="(item, index) in menuList" @click="lookMask(index)">
+                <li v-for="(item, index) in menuList" :key="index" @click="lookMask(index)">
                   {{ $t(item.text) }}
                 </li>
               </ul>
@@ -524,9 +524,9 @@ export default {
       this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
 //        this.walletBalance = balanceSEC.toString()
-        let freezMoney = 0
+        let freezeMoney = 0
         let walletBalance = 0
-        let availableMoney = balanceSEC
+        let availableMoney = Number(balanceSEC)
         if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
           this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
@@ -547,8 +547,8 @@ export default {
               }
             } 
           }
-          walletBalance = freezMoney + availableMoney
-          this.freezMoney = this._checkValueFormat(freezeMoney.toString())
+          walletBalance = freezeMoney + availableMoney
+          this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
           this.walletBalance = this._checkValueFormat(walletBalance.toString())
           this.availableMoney = this._checkValueFormat(availableMoney.toString())
         })
