@@ -91,6 +91,8 @@ export default {
     hwUpdateNameSuccess: 'Change wallet name success.',
 
     hwDeleteSuccess: 'Delete wallet successfully',
+
+    hwInvitationTips: 'Lock the bin BIUT on the mining page and unlock the invitation code!'
   },
 
   homeWalletMask: {
@@ -183,9 +185,9 @@ export default {
   homeDig: {
     hdEnteryTit: 'PC-Miner',
     hdEnteryTxt1: 'Mining Wallet',
-    hdEnteryTxt2: 'Mortgage amount',
-    hdEnteryTxt3: 'Not less than 10,000 BIUT, This BIUT will be locked for one year. The more BIUT locked, the greater the chance of digging BIU!',
-    hdEnteryTxt4: 'This BIUT will be locked  for one year. The more BIUT locked, the greater the chance of digging BIU!',
+    hdEnteryTxt2: 'Locked amount',
+    hdEnteryTxt3: '-Start from 10,000 BIUT, locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU.',
+    hdEnteryTxt4: 'Locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU',
     
     hdHeadListTxt: 'Enter the mining page, and wait for mining.',
 
@@ -245,10 +247,10 @@ export default {
   },
 
   homeDigMask: {
-    hdMaskMortgageTit: 'Mortgage',
+    hdMaskMortgageTit: 'Lock',
     hdMaskLoading: 'Loading...',
-    hdMaskMortgageTxt1: 'Mortgage amount',
-    hdMaskMortgageTxt2: 'This BIUT will be locked for one year. The more BIUT locked, the greater the chance of digging BIU!',
+    hdMaskMortgageTxt1: 'Locked amount',
+    hdMaskMortgageTxt2: 'Locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU.',
 
     hdMaskFirstTit: 'Start Mining',
     hdMaskFirstBtn: 'Start invitation mining',

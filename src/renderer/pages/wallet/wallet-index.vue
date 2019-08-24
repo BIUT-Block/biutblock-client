@@ -82,7 +82,7 @@
 
               <transition name="fade">
                 <section class="invitation-tips" v-show="showInvitation">
-                  在挖矿页面锁仓BIUT，即可解锁邀请码哦！
+                  {{ $t('') }}
                 </section>
               </transition>
             </section>
@@ -550,7 +550,7 @@ export default {
           if (freezeMoney > 0) {
             this.mortgageShow = false
           } 
-          walletBalance = freezeMoney + availableMoney
+          walletBalance = this.cal.accAdd(freezeMoney, availableMoney) //精度问题处理
           this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
           this.walletBalance = this._checkValueFormat(walletBalance.toString())
           this.availableMoney = this._checkValueFormat(availableMoney.toString())
@@ -619,15 +619,17 @@ export default {
     },
 
     showInvitation1() {
-      if (Number(this.freezeMoney) > 0 && this.selectedWallet.role !== 'Owner') {
-        this.showInvitation = true
-      }
+      // if (Number(this.freezeMoney) > 0 && this.selectedWallet.role !== 'Owner') {
+        
+      // }
+      this.showInvitation = true
     },
 
     showInvitation2() {
-      if (Number(this.freezMoney) > 0 && this.selectedWallet.role !== 'Owner') {
-        this.showInvitation = false
-      }
+      // if (Number(this.freezMoney) > 0 && this.selectedWallet.role !== 'Owner') {
+        
+      // }
+      this.showInvitation = false
     }
   },
   watch: {
@@ -711,17 +713,33 @@ export default {
 }
 .invitation-tips {
   position: absolute;
-  background: #000;
-  width: 174px;
+  right: 0;
+  color: #C9D1D4;
+  width: 220px;
+  font-size: 12px;
   height: 58px;
   top: 20px;
-  right: 0;
-  padding: 0 12px 0 14px;
-  color: #9fb4bc;
-  line-height: 1.5;
+  background:#42535b;
+  box-shadow: 0 10px 10px rgba(66,83,91,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 4px;
+  padding: 0 12px 0 14px;
+}
+.invitation-tips::after {
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #42535b;
+  content: "";
+  position: absolute;
+  width: 0;
+  top: -6px;
+  right: .8px;
+}
+.en .invitation-tips {
+  font-size: 14px;
+  width: 174px;
 }
 
 /* 修改名称 */

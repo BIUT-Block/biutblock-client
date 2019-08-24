@@ -13,6 +13,9 @@ import './assets/common/font.css'
 import i18n from './utils/index'
 
 import {currency} from './utils/currency'
+import cal from './utils/calculation'
+Vue.prototype.cal = cal
+
 Vue.filter("currency",currency)
 
 import Element from 'element-ui'
