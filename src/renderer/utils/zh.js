@@ -91,6 +91,8 @@ export default {
     hwUpdateNameSuccess: '更改钱包名称成功。',
 
     hwDeleteSuccess: '删除钱包成功！',
+
+    hwInvitationTips: '在挖矿页面锁仓BIUT，即可解锁邀请码哦！'
   },
 
   homeWalletMask: {
@@ -182,9 +184,9 @@ export default {
   homeDig: {
     hdEnteryTit: 'PC 矿工',
     hdEnteryTxt1: '挖矿钱包',
-    hdEnteryTxt2: '抵押数量',
-    hdEnteryTxt3: '10,000 BIUT起，抵押数量被冻结一年，抵押数量越多，挖到BIU的收益越高哦！',
-    hdEnteryTxt4: '抵押数量会被冻结一年，抵押数量越多，挖到BIU的收益越高哦！',
+    hdEnteryTxt2: '锁仓数量',
+    hdEnteryTxt3: '10,000 BIUT起，锁仓的biut会被冻结一年。锁仓数量越多，挖到BIU的收益越高哦！',
+    hdEnteryTxt4: '锁仓的biut会被冻结一年。锁仓数量越多，挖到BIU的收益越高哦！',
     
     hdHeadListTxt: '进入挖矿页面，等待开启挖矿',
 
@@ -244,10 +246,10 @@ export default {
   },
 
   homeDigMask: {
-    hdMaskMortgageTit: '抵押',
+    hdMaskMortgageTit: '锁仓',
     hdMaskLoading: '加载中...',
-    hdMaskMortgageTxt1: '抵押数量',
-    hdMaskMortgageTxt2: '抵押数量会被冻结一年，抵押数量越多，挖到BIU的收益越高哦！',
+    hdMaskMortgageTxt1: '锁仓数量',
+    hdMaskMortgageTxt2: '锁仓的biut会被冻结一年。锁仓数量越多，挖到BIU的收益越高哦！',
 
     hdMaskFirstTit: 'Start Mining',
     hdMaskFirstBtn: 'Start invitation mining',
