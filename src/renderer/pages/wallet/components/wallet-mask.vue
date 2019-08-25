@@ -611,7 +611,7 @@ export default {
     //导出keystroe文件
     importantKeystroe () {
       let keyDataJSON = {}
-      keyDataJSON[this.selectedWallet.walletAddress] = this.walletData
+      keyDataJSON[this.selectedWallet.privateKey] = this.walletData
       WalletHandler.saveKeyStore(`BIUT${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
       this.clostMask()
     },

@@ -338,10 +338,10 @@ export default {
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',
-    knowBtn: 'Know the',
+    knowBtn: 'OK',
 
     myKnowBtn: 'I know the',
-    myGoShowBtn: 'Start share',
+    myGoShowBtn: 'Start share'
   },
   page: {
     pageTotal: 'records in total',
@@ -351,7 +351,7 @@ export default {
   },
 
   tips: {
-    copySuccess: "Copy success",
-    copyFailure: "Copy failure"
+    copySuccess: 'Copy success',
+    copyFailure: 'Copy failure'
   }
 }
