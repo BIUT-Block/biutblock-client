@@ -191,6 +191,7 @@ import Clipboard from 'clipboard'
 import walletsHandler from '../../lib/WalletsHandler'
 
 const fs = require('fs')
+const random = require('string-random')
 const pkg = require('../../../../package.json')
 const dataCenterHandler = require('../../lib/DataCenterHandler')
 
@@ -444,7 +445,7 @@ export default {
         txFee: '0',
         chainName: 'SEC'
       }
-      this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, 'Mine Pool', transfer)
+      this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, random(6), transfer)
       dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode, contractAddress: this.contractAddress}, (body) => {
         if (body && body.status && body.doc[0].role !== 'Owner') {
           this.parentWallet = body.doc[0]
