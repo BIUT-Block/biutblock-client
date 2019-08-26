@@ -609,6 +609,7 @@ export default {
     },
 
     _findOutWallet (wallets, privateKey, from) {
+      console.log(wallets)
       if (wallets === 'error') {
         //this._showImportError(from, 'input.privateKeyError2')
         this.loginMaskShow = true

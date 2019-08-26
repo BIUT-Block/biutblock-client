@@ -20,7 +20,7 @@
         data-clipboard-target="#address"
         @click="copyLink">
         {{ $t(copyButtonText) }}
-        <span v-show="copyTimeShow">（{{ copyTimeShowTxt }}）</span>
+        <span v-show="copyTimeShow">（{{ copyTimeShowTxt }}s）</span>
       </button>
 
       <p class="share-txt2">{{ $t("homeInvitationMask.hiMaskShareTxt2") }}</p>
@@ -79,10 +79,10 @@ export default {
       var clipboard = new Clipboard('.copyButton')
       clipboard.on('success', e => {
         clipboard.destroy()
-        this.copyButtonText = "tips.copySuccess"
-        this.copyTimeShow = true
         let clock = window.setInterval(() => {
           var x = this.copyTime--
+          this.copyButtonText = "tips.copySuccess"
+          this.copyTimeShow = true
           this.copyTimeShowTxt = x
           if (this.copyTime < 0) { // = 0 就停止
             this.copyTime = 3  //恢复默认值

@@ -226,7 +226,9 @@ export default {
     hdNavPoolFailureTxt5: 'Refuse',
 
     hdNavPoolSuccessTit1: 'Mine Pool',
-    hdNavPoolSuccessTit2: 'Start time',
+    hdNavPoolSuccessTit2: 'Start Time',
+    hdNavPoolSuccessTit3: 'Current Address',
+    hdNavPoolSuccessTit4: 'Contract Address',
     hdNavPoolSuccessListTxt1: 'My pool assets',
     hdNavPoolSuccessListTxt2: 'Number of pool nodes',
     hdNavPoolSuccessListTxt3: 'Total pool profit',
@@ -239,6 +241,9 @@ export default {
     hdFootTimeTxt1: 'seconds ago',
     hdFootTimeTxt2: 'minutes ago',
     hdFootTimeTxt3: 'hours ago',
+
+
+    hdNavPoolRes: 'The mine pool has been opened. Please wait for the return result of the main network.'
   },
 
   homeDigMore: {
@@ -334,8 +339,9 @@ export default {
     cancelBtn: 'Cancel',
     confirmBtn: 'Confirm',
     backBtn: 'Back',
-    mortgageBtn1: 'Mortgage',
-    mortgageBtn2: 'Mortgage more',
+    mortgageBtn1: 'Locked',
+    mortgageBtn1s: 'Locking...',
+    mortgageBtn2: 'Locked amount',
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',

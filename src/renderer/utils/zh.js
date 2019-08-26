@@ -11,7 +11,7 @@ export default {
     loginFooter2: '点此创建钱包',
 
     loginBtn1: '创建钱包',
-    loginBtn2: '登陆',
+    loginBtn2: '登录',
     loginBtn3: '进入钱包',
 
     createdTips1: '',
@@ -182,7 +182,7 @@ export default {
   },
 
   homeDig: {
-    hdEnteryTit: 'PC 矿工',
+    hdEnteryTit: 'PC矿工',
     hdEnteryTxt1: '挖矿钱包',
     hdEnteryTxt2: '锁仓数量',
     hdEnteryTxt3: '10,000 BIUT起，锁仓的biut会被冻结一年。锁仓数量越多，挖到BIU的收益越高哦！',
@@ -226,6 +226,8 @@ export default {
 
     hdNavPoolSuccessTit1: '名称',
     hdNavPoolSuccessTit2: '矿池开通时间',
+    hdNavPoolSuccessTit3: '当前钱包地址',
+    hdNavPoolSuccessTit4: '智能合约地址',
     hdNavPoolSuccessListTxt1: '我的矿池资产',
     hdNavPoolSuccessListTxt2: '矿池节点数量',
     hdNavPoolSuccessListTxt3: '矿池总收益',
@@ -238,6 +240,8 @@ export default {
     hdFootTimeTxt1: '秒前',
     hdFootTimeTxt2: '分钟前',
     hdFootTimeTxt3: '小时前',
+
+    hdNavPoolRes: '已申请开通矿池，请等待主网返回结果'
   },
 
   homeDigMore: {
@@ -332,8 +336,9 @@ export default {
     cancelBtn: '取消',
     confirmBtn: '确定',
     backBtn: '返回',
-    mortgageBtn1: '抵押',
-    mortgageBtn2: '抵押更多',
+    mortgageBtn1: '锁仓',
+    mortgageBtn1s: '锁仓中...',
+    mortgageBtn2: '锁仓更多',
     openBtn: '开启挖矿',
     stopBtn: '停止挖矿',
     resubmitBtn: '重新提交',

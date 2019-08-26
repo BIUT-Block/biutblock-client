@@ -97,9 +97,9 @@
             <p>{{ $t('homeWalletMask.hwmSentTxt4') }}</p>
             <span class="wallet-mask-sent-from-address">{{feeVal}} BIU</span>
 
-            <section v-show="!networkError">
+            <section class="confirm-button-list" v-show="!networkError">
               <button type="button" @click="backSent">{{ $t('publicBtn.backBtn') }}</button>
-              <button type="button" class="passCorrect" @click="sent">{{ $t('publicBtn.confirmBtn') }}</button>
+              <button type="button" class="passCorrect" :disabled="sentDisabled" @click="sent">{{ $t('publicBtn.confirmBtn') }}</button>
             </section>
 
             <section class="network-error" v-show="networkError">
@@ -268,6 +268,7 @@ export default {
       tradingText: 'BIUT',
       tradingShow: false,
       imgUrl: amountChecked, //选中的图片
+      sentDisabled: false,
       itemList: [
         {
           id: '01',
@@ -487,6 +488,7 @@ export default {
       this.qrcodeIdx = 0
       this.tradingIdx = 0
       this.feeVal=0.02
+      this.sentDisabled = false
       this.$emit("changeClose","")
     },
 
@@ -540,9 +542,11 @@ export default {
 
     //转账
     sent () {
+      this.sentDisabled = true
       if (!navigator.onLine) {
         this.confirmTitle = 'homeWalletMask.hwmSentFailure'
         this.networkError = true
+        this.sentDisabled = false
         return 
       }
       
@@ -577,7 +581,7 @@ export default {
         }
 
         this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
-        this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
         }, (balance) => {
           this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
         })
@@ -891,4 +895,6 @@ export default {
 .fast-color {color: #F5A623!important;}
 
 .all-amount-list span:nth-child(2),.transfer-slider section span:nth-child(2) {font-family: Lato-Regular;}
+
+.confirm-button-list {display: flex;}
 </style>

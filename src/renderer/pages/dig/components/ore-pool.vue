@@ -14,15 +14,12 @@
 
     <!-- 申请中 -->
     <section class="ore-pool-apply" v-show="pages == 2">
-      <img src="../../../assets/images/ongoingImg.png" alt="" />
-      <p v-show="!poolApplyShow">
-        You have applied for starting the mining pool(
-        <span>{{ poolName }} </span>),please wait for 3~5 days.
-      </p>
-      <section v-show="poolApplyShow">
-        <p>已申请开通矿池，请等待系统审核哦</p>
-        <span>{{ poolName }}</span>
+      <section class="ore-pool-apply-list">
+        <p>{{ $t('homeDig.hdNavPoolSuccessTit1') }}：<span>{{ poolName }}</span></p>
+        <p>{{ $t('homeDig.hdNavPoolSuccessTit3') }}：<span>0x{{ walletAddress }}</span></p>
       </section>
+      
+      <p class="ore-pool-apply-tips">{{ $t('homeDig.hdNavPoolRes') }}</p>
     </section>
 
     <!-- 申请失败 -->
@@ -53,8 +50,14 @@
     <!-- 申请成功 -->
     <section class="ore-pool-success" v-show="pages == 4">
       <section class="header-success-list">
-        <p>{{ $t('homeDig.hdNavPoolSuccessTit1') }}：{{ poolName }}  </p>
-        <p>{{ $t('homeDig.hdNavPoolSuccessTit2') }}：{{ poolApplyTime }}</p>
+        <section class="success-list1">
+          <p>{{ $t('homeDig.hdNavPoolSuccessTit1') }}：<span>{{ poolName }}</span></p>
+          <p>{{ $t('homeDig.hdNavPoolSuccessTit2') }}：<span>{{ poolApplyTime }}</span></p>
+        </section>
+        <section class="success-list2">
+          <p>{{ $t('homeDig.hdNavPoolSuccessTit3') }}：<span>0x{{ walletAddress }}</span></p>
+          <p>{{ $t('homeDig.hdNavPoolSuccessTit4') }}：<span>0x{{ contractAddress }}</span></p>
+        </section>
       </section>
       <ul>
         <li v-for="(item, index) in successList" :key="index">
@@ -117,16 +120,6 @@ export default {
       applySuccess3,
       applySuccess4,
       maskShow: false,
-
-      poolApplyShow: true
-    }
-  },
-  updated() {
-    let locale = this.$i18n.locale
-    if (locale === "en") {
-      this.poolApplyShow = false
-    } else {
-      this.poolApplyShow = true
     }
   },
   computed: {
@@ -148,13 +141,13 @@ export default {
           id: 0,
           poolImg: this.applySuccess1,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt1',
-          poolTxt: this.poolAssets.toLocaleString('en-US') + " BIUT",
+          poolTxt: (this.poolAssets || 0).toLocaleString('en-US') + " BIUT",
         },
         {
           id: 1,
           poolImg: this.applySuccess2,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt2',
-          poolTxt: this.poolNode.toLocaleString('en-US') + " BIUT",
+          poolTxt: this.poolNode.toLocaleString('en-US'),
         },
         {
           id: 2,
@@ -193,14 +186,28 @@ export default {
 
 <style scoped>
   .ore-container {height: 100%;}
-  .ore-pool-conditions,.ore-pool-apply {height: 100%;display: flex;justify-content: center;align-items: center;flex-direction: column;}
+  .ore-pool-conditions {height: 100%;display: flex;justify-content: center;align-items: center;flex-direction: column;}
   .ore-pool-conditions p {padding-bottom: 40px;color: #99A1A6;font-size: 14px;width: 342px;text-align: center;line-height: 1.5;}
   .ore-pool-conditions button {width:210px;height:48px;background:#fff;border-radius:4px;color: #99A1A6;
     border: 1px solid #E6E6E6;box-sizing: border-box;}
   .ore-pool-conditions .orePoolTrue {color: #29D893;border-color: #29D893;}
+   
+  .ore-pool-apply {height: 100%;}
+  .ore-pool-apply-list {display: flex;align-items: center;justify-content: space-between;width: 100%;padding-top: 10px;font-size: 13px;}
 
-  .ore-pool-apply p,.ore-pool-apply section {padding-top: 32px;width: 410px;text-align: center;color: #99A1A6;font-size: 14px;line-height: 1.5;}
-  .ore-pool-apply section span {color: #252F33;font-family: Lato-Medium;}
+  .ore-pool-apply-list p:last-child span,.ore-pool-apply-list p:first-child span {font-family: Lato-Regular;}
+
+  .ore-pool-apply-list p:first-child {color: #6D7880;}
+  .en .ore-pool-apply-list p:first-child {font-family: Source-Medium;}
+
+  .en .ore-pool-apply-list p:last-child {font-family: Source-Regular;color: #99A1A6;}
+  .ore-pool-apply-list p:last-child span {color: #6D7880;}
+
+  .ore-pool-apply-tips {width: 281px;color: #F5A623;height:48px;background:#fbfaf7;border-radius:4px;
+    margin: 85px auto 0;display: flex;align-items: center;justify-content: center;padding: 0 25px 0 30px;font-family: Lato-Regular;
+    font-size: 14px;}
+  .en .ore-pool-apply-tips {font-size: 16px;font-family: Source-Regular;}
+
 
 
   .ore-pool-error {height: 100%;display: flex;justify-content: space-between;align-items: center;flex-direction: column;}
@@ -213,12 +220,19 @@ export default {
 
 
   .ore-pool-success {height: 100%;}
-  .header-success-list {display: flex;align-items: center;justify-content: space-between;font-family: Lato-Regular;}
+  .header-success-list {display: flex;align-items: center;justify-content: space-between;font-family: Lato-Regular;padding-top: 10px;}
   .en .header-success-list {font-family: Source-Medium;}
-  .header-success-list p:first-child {color: #252F33;font-size: 13px;}
-  .header-success-list p:last-child {color: #99A1A6;}
+
+  .success-list1 p:first-child,.success-list1 p:first-child span {color: #252F33!important;font-family: Lato-Regular;font-size: 13px;}
+
+
+  .success-list1 p:last-child {color: #99A1A6;font-size: 12px;}
+  .success-list2 p {color: #99A1A6;font-size: 13px;font-family: Lato-Regular;}
+  .success-list2 p span,.success-list1 p span {font-family: Lato-Regular;color: #6D7880;}
+  .en .success-list1 p,.en .success-list2 p {font-family: Source-Regular;}
+  .success-list1 p:first-child,.success-list2 p:first-child {margin-bottom: 8px;}
   
-  .ore-pool-success ul {display: flex;height: auto;border: 0;padding: 40px 0 0;}
+  .ore-pool-success ul {display: flex;height: auto;border: 0;padding: 46px 0 0;}
   .ore-pool-success ul li {display: flex;flex-direction: column;flex: 1;align-items: center;height: auto;margin: 0;
     border-right: 1px solid #E6E6E6;height: 112px;}
   .ore-pool-success ul li:last-child {border: 0;}

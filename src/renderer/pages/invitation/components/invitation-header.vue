@@ -45,14 +45,14 @@ export default {
   name: '',
   components: {
     shareMask
-  },  
+  },
   props: {
     level: Number,
     progress: Number,
     walletAddress: String,
     invitationCode: String
   },
-  data () {
+  data() {
     return {
       level1,
       level2,
@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    headerImg () {
+    headerImg() {
       if (this.level == 1) {
         return level1
       } else if (this.level == 2) {
@@ -75,7 +75,7 @@ export default {
       }
     },
 
-    headerLevel () {
+    headerLevel() {
       if (this.level === 1) {
         return 'homeInvitationMask.hiMaskRulesListLevel1'
       } else if (this.level === 2) {
@@ -87,7 +87,7 @@ export default {
       }
     },
 
-    levelNumber () {
+    levelNumber() {
       if (this.level === 1) {
         return 9
       } else if (this.level === 2) {
@@ -99,62 +99,147 @@ export default {
       }
     }
   },
-  created () {
-    
+  created() {
+
   },
   methods: {
     //查看规则
-    lookRules () {
+    lookRules() {
       this.$emit('rules')
     },
-    
-    closeMask () {
+
+    closeMask() {
       this.shareShow = false
       this.sharePage = 0
     },
 
     //分享弹窗
-    shareMethod () {
+    shareMethod() {
       /**
        * 判断是否有抵押
        * 0 有抵押  1 没有抵押
        * 
        */
+      let wallets = this.$route.query.wallets
+      let selectedPrivateKey = this.$route.query.firstKey
+      let selectedWallet = wallets[selectedPrivateKey]
       this.shareShow = true 
-      this.sharePage = 1 
+      if (selectedWallet.mortgageValue > 0) {
+        this.sharePage = 0
+      } else {
+        this.sharePage = 1
+      } 
     }
-  },
+  }
 }
 </script>
 
 <style scoped>
-  main {padding-top: 20px;}
-  header {padding: 0 32px;}
-  header button {border: 0;margin-left: 0!important;}
-  .en header button {font-family: Source-Medium;font-size: 13px;}
-  h2 {margin: 0;color: #252F33;font-size: 18px;font-family: Montserrat-SemiBold;}
-  .en h2 {color: #576066;font-family: Source-Medium;font-weight: 500;}
+main {
+  padding-top: 20px;
+}
+header {
+  padding: 0 32px;
+}
+header button {
+  border: 0;
+  margin-left: 0 !important;
+}
+.en header button {
+  font-family: Source-Medium;
+  font-size: 13px;
+}
+h2 {
+  margin: 0;
+  color: #252f33;
+  font-size: 18px;
+  font-family: Montserrat-SemiBold;
+}
+.en h2 {
+  color: #576066;
+  font-family: Source-Medium;
+  font-weight: 500;
+}
 
+.header-list {
+  display: flex;
+  align-items: center;
+  padding: 20px 32px 16px;
+  height: 64px;
+}
 
-  .header-list {display: flex;align-items: center;padding: 20px 32px 16px;height: 64px;}
+.header-img {
+  width: 64px;
+  height: 64px;
+  background: #eef2f1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
 
-  .header-img {width:64px;height:64px;background:#eef2f1;border-radius:50%;display: flex;align-items: center;justify-content: center;
-    margin-right: 20px;}
+.header-text {
+  flex: 1;
+}
+.header-text h3 {
+  margin: 0;
+  font-family: Lato-Bold;
+}
+.en .header-text h3 {
+  font-family: Source-Medium;
+  font-weight: 500;
+  color: #576066;
+}
+.header-text .header-txt {
+  padding-top: 6px;
+}
+.en .header-text .header-txt {
+  color: #6d7880;
+}
 
-  .header-text {flex: 1;}
-  .header-text h3 {margin: 0;font-family: Lato-Bold;}
-  .en .header-text h3 {font-family: Source-Medium;font-weight: 500;color: #576066;}
-  .header-text .header-txt {padding-top: 6px;}
-  .en .header-text .header-txt {color: #6D7880;}
+.look-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
 
-  .look-list {display: flex;align-items: center;justify-content: space-between;width: 100%;}
+.rules-btn {
+  width: 98px;
+  height: 32px;
+  background: #f7fbfa;
+  border-radius: 4px;
+  color: #29d893;
+  text-align: center;
+  line-height: 32px;
+  margin-left: 28px;
+  cursor: pointer;
+}
 
-  .rules-btn {width:98px;height:32px;background:#f7fbfa;border-radius:4px;color: #29D893;
-    text-align: center;line-height: 32px;margin-left: 28px;cursor: pointer;}
-
-  .progress-list {flex: 1;height: 10px;line-height: 6px;}
-  .progress-list span {float: left;vertical-align: middle;margin-left: 12px;color: #252F33;font-family: Lato-Medium;}
-  .progress-list >>> .el-progress-bar {width: 94%;float: left;vertical-align: middle;}
-  .progress-list >>> .el-progress__text {display: none!important;} 
-  .line {width: 100%;height: 6px;background: #F4F5F5;}
+.progress-list {
+  flex: 1;
+  height: 10px;
+  line-height: 6px;
+}
+.progress-list span {
+  float: left;
+  vertical-align: middle;
+  margin-left: 12px;
+  color: #252f33;
+  font-family: Lato-Medium;
+}
+.progress-list >>> .el-progress-bar {
+  width: 94%;
+  float: left;
+  vertical-align: middle;
+}
+.progress-list >>> .el-progress__text {
+  display: none !important;
+}
+.line {
+  width: 100%;
+  height: 6px;
+  background: #f4f5f5;
+}
 </style>

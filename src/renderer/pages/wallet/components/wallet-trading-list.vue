@@ -14,7 +14,7 @@
         </section>
       </section>
       <section class="list-amount" :class="item.listState | stateColor">
-        <p>{{ item.listMoney | currency("") }} {{ item.listUnit }}</p>
+        <p>{{ item.listMoney }} {{ item.listUnit }}</p>
         <span>{{ item.listState }}</span>
       </section>
     </li>

@@ -50,7 +50,7 @@ export default {
   computed: {
     updateIpt () {
       let name = this.poolName.trim()
-      if (name.length > 6 && this.poolNameIpt()) {
+      if (name.length >= 6 && this.poolNameIpt()) {
         return true
       }
     }
@@ -91,7 +91,7 @@ export default {
     //input开始不能输入空格、检测名称是否相同
     poolNameIpt () {
       this.$nextTick(()=> {
-        this.poolName = this.poolName.replace(/(^\s*)/g, '')
+        this.poolName = this.inputNull(this.poolName)
       })
 
       let name = this.poolName.trim()
@@ -149,7 +149,6 @@ export default {
   .en .pool-txt2 {font-family: Source-Medium;}
 
   input,button {font-family: Lato-Regular;}
-  .en input,.en button {font-family: Source-Regular;}
   
   button {width:372px;height:48px;background:#d8d8d8;border-radius:4px;border: 0;color: #F7FBFA;font-size: 14px;
     margin-top: 32px;}

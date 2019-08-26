@@ -9,10 +9,14 @@
         title="close"
         @click="closeMask"
       />
-     <!-- 首次开启挖矿 -->
+     
       <section class="begin-dig" v-show="pages == 0">
         
-        <p class="first-dig-tips">{{ $t('homeDigMask.hdMaskBeginTxt1') }} {{ poolName }} {{ $t('homeDigMask.hdMaskBeginTxt2') }}</p>
+        <p class="first-dig-tips">
+          {{ $t('homeDigMask.hdMaskBeginTxt1') }} 
+          <span>{{ poolName }}</span>
+          {{ $t('homeDigMask.hdMaskBeginTxt2') }}
+        </p>
         
         <button type="button" 
           class="first-dig-btn passCorrect"
@@ -39,7 +43,6 @@
         <section class="ipt-list flexBetween">
           <input
             type="text"
-            placeholder="10000.0"
             maxlength="19"
             v-model="mortgageIpt"
             @input="clearMortgage"
@@ -49,9 +52,10 @@
             <span>BIUT</span>
           </section>
         </section>
-        <p class="first-dig-txt-all">
-          {{ $t('homeWallet.hwBiutTxt1') }}：{{ availableMoney.toLocaleString("en-US") }} BIUT <span @click="allAmountMortgage">All</span>
-        </p>
+        <section class="first-dig-txt-all">
+          {{ $t('homeWallet.hwBiutTxt1') }}：<p>{{ availableMoney }} BIUT </p>
+          <span @click="allAmountMortgage">{{ $t('homeWalletMask.hwmSentTxt3All') }}</span>
+        </section>
         <p class="first-dig-txt-tips">{{ $t('homeDig.hdEnteryTxt4') }}</p>
         
         <button type="button" 
@@ -131,8 +135,12 @@ export default {
     
     //确认提交
     confirmFrom () {
-      this.$emit('beginMining')
-      this.closeMask ()
+      if (!navigator.onLine) {
+        this.pages = 2
+      } else {
+        this.closeMask ()
+        this.$emit('beginMining')
+      }
     },
 
     //断网的方法处理
@@ -183,6 +191,7 @@ export default {
 
   .begin-dig {height: 110px;text-align: right;}
   .begin-dig .first-dig-tips {font-size: 14px;padding-top: 10px;text-align: left;color: #576066;}
+  .begin-dig .first-dig-tips span {font-family: Lato-Regular;}
   .first-dig-btn {width:97px;border:0;color: #fff;
     height:32px;margin-top: 58px;
     background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
@@ -191,10 +200,11 @@ export default {
   .ipt-list {height: 40px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;}
   .ipt-list input {flex: 1;border: 0;}
   .ipt-list section {display: flex;align-items: center;}
-  .ipt-list img,.ipt-list section span {margin-left: 8px;cursor: pointer;}
+  .ipt-list img,.ipt-list section span {margin-left: 8px;cursor: pointer;font-family: Lato-Medium;}
   .first-dig-txt {padding-top: 36px;font-size: 16px;font-family: Lato-Bold;color: #99A1A6;}
   .en .first-dig-txt {font-family: Source-Medium;}
-  .first-dig-txt-all {padding: 8px 0 12px;font-size: 12px;}
+  .first-dig-txt-all {padding: 8px 0 12px;font-size: 12px;display: flex;}
+  .first-dig-txt-all p {font-family: Lato-Regular;}
   .first-dig-txt-all span {color: #29D893;padding-left: 8px;cursor: pointer;}
   .first-dig-txt-tips {line-height: 1.2;padding-bottom: 28px;}
   

@@ -6,14 +6,14 @@
       <section class="mining-wallet">
         <p class="mining-tit">{{ $t('homeDig.hdEnteryTxt1') }}</p>
         <p class="mining-address">0x{{ selectedWalletAddress }}</p>
-        <p class="flex-between">
-          <span>{{ $t('homeWallet.hwBiutTxt1') }}：</span>
+        <section class="flex-between">
+          <p>{{ $t('homeWallet.hwBiutTxt1') }}：</p>
           <span>{{ availableMoney | currency("") }}</span>
-        </p>
-        <p class="flex-between">
-          <span>{{ $t('homeWallet.hwBiutTxt2') }}：</span>
+        </section>
+        <section class="flex-between">
+          <p>{{ $t('homeWallet.hwBiutTxt2') }}：</p>
           <span>{{ freezeMoney | currency("") }}</span>
-        </p>
+        </section>
         <p class="mining-txt">{{ $t('homeDig.hdEnteryTxt2') }} <span style="color: #EE1C39;">*</span></p>
         <section class="flex-between mining-list">
           <input type="text" placeholder="10,000.00" maxlength="19"  v-model="mortgageAmount" onpaste="return false"/>
@@ -23,9 +23,10 @@
         <p class="mining-tips">{{ $t('homeDig.hdEnteryTxt3') }}</p>
         <button type="button" 
           :disabled="!mortgageActive"
+          :readonly="mortgageBtn1Disabled"
           :class="mortgageActive ? 'passCorrect' : ''"
           @click="onMortgage">
-            {{ $t('publicBtn.mortgageBtn1') }}
+            {{ $t(mortgageBtn1) }}
           </button>
       </section>
    
@@ -113,7 +114,7 @@
         </section>
 
       </section>
-      <wallet-margin/>
+      <section style="height: 4px;background:#F4F5F5;"></section>
       <!-- 挖矿底部 -->
       <section class="dig-footer">
         <dig-footer 
@@ -185,6 +186,8 @@ export default {
       loading: true, //进入的时候弹窗加载
       mortgageAmount: '',//输入开启挖矿冻结金额
       digButton: "publicBtn.openBtn",
+      mortgageBtn1: 'publicBtn.mortgageBtn1', //锁仓按钮第一次进入
+      mortgageBtn1Disabled: false,
       digNumber: 0,
       digIncome: '0',
       wallets: [],
@@ -310,13 +313,13 @@ export default {
     this.initMiningStatus()
 
     this._getLatestBlockInfo((balance) => {
-      if (balance < 10) {
-        this.stopMining()
-        this.digButton = "publicBtn.openBtn"
-        this.maskShow = false
-        //this.noCursor = false
-        this.miningIn = false
-      }
+      // if (balance < 10) {
+      //   this.stopMining()
+      //   this.digButton = "publicBtn.openBtn"
+      //   this.maskShow = false
+      //   //this.noCursor = false
+      //   this.miningIn = false
+      // }
     })
     this._getTotalReward()
 
@@ -650,6 +653,8 @@ export default {
     },
 
     async onMortgage () {
+      this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
+      this.mortgageBtn1Disabled = true
       let privateKey = this.selectedPrivateKey
       let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
       if (contractInfo.status === 'success') {
@@ -684,6 +689,8 @@ export default {
             console.log('update wallet file')
           })
           this.digPage = false
+          this.this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
+          this.mortgageBtn1Disabled = false
       })
     },
 
@@ -841,9 +848,10 @@ export default {
   .dig-header .dig-header-check {width: 308px;position: relative;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
     color:#252f33;padding-bottom: 26px;}
+  .en .dig-header .dig-header-check h3 {font-family: Source-Bold;}
   .minging-list {padding-bottom: 10px;color: #252F33;font-size: 14px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;
     width: 246px;font-family: Lato-Bold;}
-  .minging-list span {color: #99A1A6;margin-right: 12px;font-family: Source-Regular;}
+  .minging-list span {color: #99A1A6;margin-right: 12px;font-family: Lato-Medium;}
   .available-text,.guarantee-text {margin: 0;color:#576066;font-weight: normal;}
   .available-text span,.guarantee-text span {font-family: Lato-Medium;}
   .available-text {color: #29D893;padding-top: 10px;}
@@ -862,10 +870,15 @@ export default {
   .mining-wallet .mining-txt {padding-top: 36px;color: #6D7880;font-size: 14px;font-family: Lato-Medium;}
   .en .mining-wallet .mining-txt {font-family: Source-Medium;}
 
-  .mining-wallet .mining-address {color: #252F33;font-size: 14px;line-height: 1.6;word-wrap: break-word;}
+  .mining-wallet .mining-address {color: #252F33;font-size: 14px;line-height: 1.6;word-wrap: break-word;font-family: Lato-Medium;}
   .mining-wallet .mining-tips {line-height: 1.5;word-wrap: break-word;padding-top: 16px;color: #99A1A6;}
-  .mining-wallet .flex-between {padding-bottom: 10px;border-bottom: 1px solid #E6E6E6;padding-top: 12px;font-family: Lato-Regular;}
+  .mining-wallet .flex-between {padding-bottom: 10px;border-bottom: 1px solid #E6E6E6;padding-top: 12px;}
+  .mining-wallet .flex-between p {font-family: Lato-Regular;}
+  .mining-wallet .flex-between span {font-family: Lato-Medium;}
+  .en .mining-wallet .flex-between p {font-family: Source-Regular;}
+
   .mining-wallet .mining-list {padding: 0;height: 34px;}
+  .mining-wallet .mining-list span {font-family: Lato-Bold;}
 
   .dig-enter input {border: 0;flex: 1;}
   .dig-enter button {width:291px;border: 0;color: #fff;font-size: 14px;margin-top: 44px;font-family: Lato-Regular;
