@@ -17,6 +17,7 @@
         :maskAddress = maskAddress
         :maskLevel = userLevel
         :maskMoney = maskMoney
+        :detailList = detailList
         v-show = "maskShow"
         @close = 'closeMask' />
     </main>
@@ -45,7 +46,8 @@ export default {
       walletAddress: '',
       maskMoney: "-",
       maskAddress: '-',
-      invitationCode: ''
+      invitationCode: '',
+      detaiList: []
     }
   },
   computed: {
@@ -84,12 +86,23 @@ export default {
   destroyed () {},
   methods: {
     //查看详情 idx 参数 从子组件获取
-    details (idx) {
+    details (item) {
       this.maskShow = true
       this.idx = 2
-
-      this.maskMoney = 1000
-      this.maskAddress = "0xc4be3c8093fd7acdcdf415331040fc974f8b2ad5"
+      this.selectedItem = item
+      this.maskMoney = item.itemMoney
+      this.maskAddress = item.itemAddress
+      this.detailList = []
+      dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
+        for (let detail of body.rewards) {
+          this.detailList.push({
+            id: 1,
+            detailsTime: detail.insertAt,
+            detailsMoney: detail.reward
+          })
+        }
+        
+      })
     },
 
     //查看规则

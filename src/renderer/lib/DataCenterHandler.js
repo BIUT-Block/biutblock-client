@@ -66,6 +66,17 @@ const DataCenterHandler = {
 		}, (err, res, body)  => {
 			callback(body)
 		})
+	},
+
+	getInvitationDetails: function (params, callback) {
+		request({
+			url: `${dataCenterUrl}getRewardsHistoryByAddress`,
+			method: 'POST',
+			body: params,
+			json: true
+		}, (err, res, body) => {
+			callback(body)
+		})
 	}
 }
 

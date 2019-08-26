@@ -22,7 +22,7 @@
         <span>{{ item.itemAddress }}</span>
         <span>{{ item.itemTime }}</span>
         <span>{{ item.itemMoney }}</span>
-        <span class="look-details" @click='lookDetails(""+ index +"")'>{{ $t('homeInvitation.hiListBtn') }}</span>
+        <span class="look-details" @click='lookDetails(item)'>{{ $t('homeInvitation.hiListBtn') }}</span>
       </li>
       <section class="list-none" v-show="itemLists.length === 0">
         <section>
@@ -63,7 +63,7 @@ export default {
       pageSum: 0,
       total: 0,//总记录数
       beginPos: 0,
-      endpos: 0,
+      endpos: 50,
       searchIpt: '',//input搜索内容
       itemList: []
     }
@@ -80,14 +80,16 @@ export default {
     }, (body) => {
       if (body.length > 0) {
         for (let i = 0; i < body.length; i++) {
+          let reward = body[i].reward || '0'
           this.itemList.push({
             id: '1',
-            itemAddress: body[i].address,
+            itemAddress: `0x${body[i].address}`,
             itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-            itemMoney: ''
+            itemMoney: `${reward} BIUT`
           })
         }
         this.total = this.itemList.length
+        this.pageSum = Math.ceil(this.itemList.length / 50)
       }
     })
   },
@@ -116,8 +118,8 @@ export default {
     },
 
     //查看详情传对应的参数 地址、私钥都行
-    lookDetails (idx) {
-      this.$emit('details', idx)
+    lookDetails (item) {
+      this.$emit('details', item)
     },
 
     //下一页

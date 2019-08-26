@@ -214,6 +214,7 @@ let WalletHandler = {
         //   })
         // }
       } catch (e) {
+        console.log(e)
         fnAfterImport('error')
       }
     })

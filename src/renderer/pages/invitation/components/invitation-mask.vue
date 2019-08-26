@@ -26,7 +26,7 @@
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
 
-      <section class="details-list">
+      <!-- <section class="details-list">
         <p class="details-list-tit">{{ $t('homeInvitation.hiListTxt1') }}</p>
         <p>
           <span>{{ maskAddress }}</span>
@@ -34,7 +34,7 @@
             {{ userLevel }}
           </span>
         </p>
-      </section>
+      </section> -->
 
       <section class="details-list details-list-top">
         <p class="details-list-tit">{{ $t('homeInvitationMask.hiMaskDetailsTxt') }}:</p>
@@ -77,14 +77,15 @@ export default {
     pagesIdx: Number,
     maskAddress: String,
     maskLevel: Number,
-    maskMoney: String
+    maskMoney: String,
+    detailList: Array
   },
   components: {
     walletPages
   },
   computed: {
     detailsLists () {
-      return Array(5).fill(this.detailsList[0]) 
+      return this.detailsList
     },
 
     userLevel () {
@@ -148,13 +149,6 @@ export default {
           rulesNumber: 'homeInvitationMask.hiMaskRulesListLevel4Txt',
           rulesReward1: '10%',
           rulesReward2: '4%'
-        }
-      ],
-      detailsList: [
-        {
-          id: 1,
-          detailsTime: '2019-07-10 00:00',
-          detailsMoney: '1.2'
         }
       ]
     }
