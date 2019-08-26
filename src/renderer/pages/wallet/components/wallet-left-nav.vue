@@ -129,7 +129,7 @@ export default {
     border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
   ul li section {margin-left: 20px;}
   ul li section p:first-child {color: #576066;font-size: 14px;font-family: Lato-Bold;}
-  ul li section p {color: #839299;}
+  ul li section p {color: #839299;font-family: Lato-Regular;}
   ul li:hover,.create-button:hover {cursor: pointer;}
   .checked-nav {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
     box-shadow:0px 0px 10px rgba(41,216,147,0.5);flex: 1;pointer-events: none;}

@@ -325,6 +325,7 @@ export default {
     let createId = this.$route.query.createId
     if ((createId == 1 && this.createPages == 1) || createId === 1) {
       this.createClose = true
+      this.walletNameDisable = false
     } else {
       this.createClose = false
       this.walletName = 'Mining Wallet'
@@ -498,7 +499,6 @@ export default {
         this.agreedId = false
         this.radioImg = agreement
         this.walletName = ''
-        this.walletNameDisable = true
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
@@ -521,7 +521,6 @@ export default {
         this.agreedId = false
         this.radioImg = agreement
         this.walletName = 'Mining Wallet'
-        this.walletNameDisable = true
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
@@ -777,7 +776,7 @@ export default {
     border-bottom: 1px solid #E5E5E5;text-align: right;}
   
   /* 创建钱包 */
-  .wallet-create {padding: 102px 68px 0;flex: 1;width: 450px;}
+  .wallet-create {padding: 122px 68px 0;flex: 1;width: 450px;}
   .wallet-create p {padding-top: 24px;}
   .wallet-create .wallet-button-create {width:190px;margin-top: 36px;}
   .wallet-create .wallet-button-important {display: inline-block;padding: 8px 12px;
@@ -785,24 +784,27 @@ export default {
     position: absolute;right: 68px;top: 48px;}
 
   /* 备份助记词 */
-  .wallet-backup {padding: 120px 68px 0;flex: 1;}
-  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;}
+  .wallet-backup {padding: 94px 68px 0;flex: 1;}
+
+  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;line-height: 1.5;}
+  .en .wallet-backup .backup-title {font-size: 12px;padding-top: 0;padding-bottom: 20px;word-break: break-word;color: #EE1C39;line-height: 1.5;}
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
   .en .wallet-backup .backup-title label{font-family: Source-Regular;}
   .wallet-backup .private-key-title {padding-top: 17px;}
-  .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
+  .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;font-family: Lato-Regular;
     margin-top: 10px;padding: 11px 18px;word-break: break-all;line-height: 1.4;}
   .wallet-backup .private-key-contant img {margin-left: 20px;vertical-align: middle;}
   .wallet-backup .private-key-contant img:hover {cursor: pointer;}
   .wallet-backup .wallet-button-backup {width:190px;}
   .wallet-backup .radio-content {padding: 25px 0 16px;display: flex;align-items: center;color: #252F33;}
+  .en .wallet-backup .radio-content {padding: 36px 0;}
   .wallet-backup .radio-content img {margin-right: 10px;width: 14px;height: 14px;}
   .wallet-backup .radio-content span {color: #00D86D;}
 
   /* 导入钱包 */
-  .wallet-import {padding: 148px 90px 0 104px;flex: 1;}
+  .wallet-import {padding: 118px 94px 0 104px;flex: 1;}
   .wallet-import ul {display: flex;height: 36px;line-height: 36px;color: #388ED9;font-size: 14px;justify-content: space-between;}
-  .wallet-import ul li {text-align: center;border:1px solid rgba(229,229,229,1);display: block;flex: 1;}
+  .wallet-import ul li {text-align: center;border:1px solid rgba(229,229,229,1);display: block;flex: 1;box-sizing: border-box;}
   .wallet-import ul li:first-child {border-top-left-radius: 4px;border-right: 0;border-bottom-left-radius: 4px;}
   .wallet-import ul li:last-child {border-top-right-radius: 4px;border-left: 0;border-bottom-right-radius: 4px;}
   .wallet-import ul .check-li {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);color: #fff;}
@@ -825,7 +827,7 @@ export default {
   .wallet-import-keystore p {font-size: 14px;color: #839299;font-family: Lato-Bold;}
   .en .wallet-import-keystore p {font-family: Source-Medium;}
   .wallet-import-keystore .wallet-import-keystore-title {margin: 32px 0 12px;}
-  .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;padding-left: 16px;
+  .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;font-family: Lato-Regular;
     color: #42535B;font-size: 14px;margin-bottom: 20px;text-align: center;height: 36px;line-height: 36px;
     position: relative;}
   .wallet-import-keystore button {margin-top: 28px;}

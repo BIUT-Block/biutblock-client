@@ -16,7 +16,7 @@
         <p class="look-list">
           <section class="progress-list clearfix">
             <el-progress :percentage="progress" color="#29D893" /> 
-            <span>{{ progress }} / {{ levelNumber }}</span>
+            <span>{{ progress }} / {{ $t(levelNumber) }}</span>
           </section>
           <span @click="lookRules" class="rules-btn">{{ $t('homeInvitation.hiBtn') }}</span>
         </p>
@@ -89,13 +89,13 @@ export default {
 
     levelNumber () {
       if (this.level === 1) {
-        return 10
+        return 9
       } else if (this.level === 2) {
-        return 32
+        return 31
       } else if (this.level === 3) {
-        return 64
+        return 63
       } else {
-        return 100
+        return 'hiMaskRulesTit.hiMaskRulesListLevel4Txt'
       }
     }
   },
@@ -121,7 +121,7 @@ export default {
        * 
        */
       this.shareShow = true 
-      this.sharePage = 0 
+      this.sharePage = 1 
     }
   },
 }
@@ -153,7 +153,7 @@ export default {
     text-align: center;line-height: 32px;margin-left: 28px;cursor: pointer;}
 
   .progress-list {flex: 1;height: 10px;line-height: 6px;}
-  .progress-list span {float: left;vertical-align: middle;margin-left: 12px;color: #252F33;}
+  .progress-list span {float: left;vertical-align: middle;margin-left: 12px;color: #252F33;font-family: Lato-Medium;}
   .progress-list >>> .el-progress-bar {width: 94%;float: left;vertical-align: middle;}
   .progress-list >>> .el-progress__text {display: none!important;} 
   .line {width: 100%;height: 6px;background: #F4F5F5;}

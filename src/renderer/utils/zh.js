@@ -47,18 +47,18 @@ export default {
     walletPrivateKey: '请输入私钥',
     walletPhrase: '请输入助记词，并用空格隔开',
 
-    passFormatTips: '8-20位字符，必须包含数字，英文字母以及特殊字符中至少两种.',
-    passDifferent: '两次密码输入不一致.',
-    passError: '密码错误，无法解锁钱包.',
-    passUnlockError: '密码错误，解锁失败.',
+    passFormatTips: '8-30个字符，必须包含数字、英文字母、符号的组合',
+    passDifferent: '两次密码输入不一致',
+    passError: '密码错误，无法解锁钱包',
+    passUnlockError: '密码错误，解锁失败',
 
-    walletCodeError: '请输入正确的邀请码.',
+    walletCodeError: '请输入正确的邀请码',
 
-    nameNull: '请输入钱包名称.',
+    nameNull: '请输入钱包名称',
 
-    privateKeyError: '无效的私钥.',
+    privateKeyError: '无效的私钥',
     privateKeyError2: '输入值无效',
-    phraseError: '无效的助记词.',
+    phraseError: '无效的助记词',
 
     imporantExists: '当前钱包已存在或已导入'
   },
@@ -90,7 +90,7 @@ export default {
     hwNameNull: '钱包名称不能为空或只有空格.',
     hwUpdateNameSuccess: '更改钱包名称成功。',
 
-    hwDeleteSuccess: '删除钱包成功！',
+    hwDeleteSuccess: '删除钱包成功',
 
     hwInvitationTips: '在挖矿页面锁仓BIUT，即可解锁邀请码哦！'
   },
@@ -110,7 +110,7 @@ export default {
     hwmReceiptTxt3: '地址二维码',
 
     hwmSentTit1: '确认交易信息',
-    hwmSentTips: '您正在向以下地址转账，请确认交易',
+    hwmSentTips: '您正在向以下地址转账，请确认交易信息',
     hwmSentTxt1: '发送地址',
     hwmSentTxt2: '接收地址',
     hwmSentAddressIpt: '接收地址',
@@ -141,7 +141,7 @@ export default {
     hwdListTxt7: '手续费',
 
     hwFootTxt1: "在",
-    hwFootTxt2: " 上查看详细信息",
+    hwFootTxt2: "BlockChain上查看详细信息",
   },
 
   homeNode: {
@@ -178,7 +178,7 @@ export default {
     hsMain: '主网',
 
     hsNetwork1: '您将切换到 ',
-    hsNetwork2: ', 这个操作会重启客户端并更新钱包数据，请确保您的钱包信息已备份',
+    hsNetwork2: ', 这个操作会重启客户端并更新钱包数据，请确保您的钱包信息已备份！',
   },
 
   homeDig: {
@@ -300,11 +300,12 @@ export default {
     hiListBtn: '查看详情',
 
     hiListSearchNull: '没有搜索结果',
+    hiListNull: '暂无邀请记录',
   },
 
   homeInvitationMask: {
     hiMaskRulesTit: '查看规则',
-    hiMaskRulesTxt: '每次邀请成功就会奖励BIUT，请注意查收哦.',
+    hiMaskRulesTxt: '每次邀请成功就会奖励BIUT，请注意查收哦。',
     hiMaskRulesListTxt1: '级别',
     hiMaskRulesListTxt2: '人数',
     hiMaskRulesListLevel1: '铜牌合伙人',
@@ -345,7 +346,7 @@ export default {
     pageTotal: '条记录',
     pageNext: '下一页',
     pagePrev: '上一页',
-    addMore: '加载更多'
+    clickMore: '加载更多'
   },
 
   tips: {

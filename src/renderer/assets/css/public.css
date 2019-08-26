@@ -8,6 +8,11 @@ input::-moz-placeholder,textarea::-moz-placeholder {color:#839299;font-family: L
 input:-moz-placeholder,textarea:-moz-placeholder {color:#839299;font-family: Lato-Light;}
 input:-ms-input-placeholder,textarea:-ms-input-placeholder { color:#839299;font-family: Lato-Light;}
 
+.en input::-webkit-input-placeholder,.en textarea::-webkit-input-placeholder { color:#99A1A6;font-family: Source-Regular;font-size: 12px;}
+.en input::-moz-placeholder,.en textarea::-moz-placeholder {color:#99A1A6;font-family: Source-Regular;font-size: 12px;}
+.en input:-moz-placeholder,.en textarea:-moz-placeholder {color:#99A1A6;font-family: Source-Regular;font-size: 12px;}
+.en input:-ms-input-placeholder,.en textarea:-ms-input-placeholder { color:#99A1A6;font-family: Source-Regular;font-size: 12px;}
+
 .clearfix:after{content:'';display:block; height:0; line-height:0; visibility:hidden;}
 .clearfix{*zoom:1;}
 .mask {display: flex;align-items: center;justify-content: center;position: fixed;

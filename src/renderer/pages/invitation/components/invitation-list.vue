@@ -27,7 +27,7 @@
       <section class="list-none" v-show="itemLists.length === 0">
         <section>
           <img src="../../../assets/images/wallet-null.png" alt="">
-          <p>{{ $t('homeInvitation.hiListSearchNull') }}</p>
+          <p>{{ $t(nullTips) }}</p>
         </section>
       </section>
     </ul>
@@ -65,7 +65,8 @@ export default {
       beginPos: 0,
       endpos: 50,
       searchIpt: '',//input搜索内容
-      itemList: []
+      itemList: [],
+      nullTips: 'homeInvitation.hiListNull'  //为空记录提示  hiListSearchNull - 搜素记录空   hiListNull- 列表空
     }
   },
   computed: {
@@ -161,8 +162,7 @@ export default {
 </script>
 
 <style scoped>
-  .list-content {padding: 0 32px;display: flex;flex-direction: column;
-    height: calc(100% - 146px);}
+  .list-content {padding: 0 32px;display: flex;flex-direction: column;height: calc(100vh - 188px);}
   header {display: flex;align-items: center;justify-content: space-between;margin: 20px 0 6px;}
   h2 {margin: 0;color: #252F33;font-size: 16px;font-family: Lato-Bold;}
   .en h2 {font-weight: 500;font-family: Source-Medium;color: #576066;}
@@ -175,11 +175,11 @@ export default {
 
   .img-list {display: flex;align-items: center;}
   ul {flex: 1;display: flex;flex-direction: column;}
-  ul li {display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;padding: 6px 0 6px 12px;}
+  ul li {display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;padding: 6px 0 6px 12px;font-family: Lato-Regular;color: #252F33;}
   ul li:first-child {color: #99A1A6;font-family: Lato-Bold;border-radius: 4px;border: 0;height: 36px;padding: 0 0 0 12px;
     font-size: 13px;background:#f7fbfa;}
   .en ul li:first-child {font-family: Source-Medium;}
-  .en .ul li {color: #252F33;font-family: Lato-Regular;}
+
   ul li span:first-child {width: 38%;}
   ul li span:nth-child(2) {width: 25%;}
   ul li span:nth-child(3) {width: 23%;}
@@ -190,5 +190,6 @@ export default {
   .list-none section p {color: #99A1A6;font-size: 14px;padding-top: 16px;}
 
   .look-details {width:94px!important;height:32px;background:#f7fbfa;border-radius:4px;color: #29D893;
-    text-align: center;line-height: 32px;cursor: pointer;display: block;}
+    text-align: center;line-height: 32px;cursor: pointer;display: block;font-family: Lato-Regular;}
+  .en .look-details {font-family: Source-Regular;}
 </style>

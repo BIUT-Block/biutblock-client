@@ -1,17 +1,21 @@
 <template>
   <ul>
     <!-- 默认加载五条数据，点击查看更多就加载更多数据 -->
-    <li @click="tradingDetails(item)" v-for="(item, index) in tradingList" v-if="index < tradingList.length && tradingList.length > 0">
+    <li
+      @click="tradingDetails(item)"
+      v-for="(item, index) in tradingList"
+      v-if="index < tradingList.length && tradingList.length > 0"
+    >
       <section v-if="item" class="list-img">
-        <img :src="item.listState | stateImg(item.listMoney)" alt="">
+        <img :src="item.listState | stateImg(item.listMoney)" alt="" />
         <section>
-          <p>{{item.listAddress}}</p>
-          <p>{{item.listTime}}</p>
+          <p>{{ item.listAddress }}</p>
+          <span>{{ item.listTime }}</span>
         </section>
       </section>
       <section class="list-amount" :class="item.listState | stateColor">
-        <p>{{item.listMoney}} {{item.listUnit}}</p>
-        <p>{{item.listState}}</p>
+        <p>{{ item.listMoney | currency("") }} {{ item.listUnit }}</p>
+        <span>{{ item.listState }}</span>
       </section>
     </li>
   </ul>
@@ -26,14 +30,14 @@ import collection from '../../../assets/images/collectionImg.png'  //收款成�
 export default {
   name: '',
   components: {
-     
+
   },
   props: {
     tradingList: Array,
     wallets: Object,
     selectedPrivateKey: String
   },
-  data () {
+  data() {
     return {
 
     }
@@ -41,16 +45,16 @@ export default {
   computed: {
 
   },
-  created () {
+  created() {
 
   },
-  mounted () {
+  mounted() {
 
   },
-  destroyed () {},
+  destroyed() { },
   methods: {
-    tradingDetails (item) {
-      this.$router.push({ name: 'walletTrading', query: {trade: item, wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey}})
+    tradingDetails(item) {
+      this.$router.push({ name: 'walletTrading', query: { trade: item, wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey } })
     }
   },
   filters: {
@@ -64,21 +68,21 @@ export default {
       return statusMap[status];
     },
     stateImg(status, value) {
-      switch(status) {
-      case 'Successful':
-        if (value.indexOf('+') > -1) {
-          return collection
-        } else if (value.indexOf('-') > -1) {
-          return tradingSuccess
-        } 
-        break
-      case 'Packed':
-        return tradingPacked
-      case 'Mining':
-        return tradingMining
-        break
-      default:
-        break
+      switch (status) {
+        case 'Successful':
+          if (value.indexOf('+') > -1) {
+            return collection
+          } else if (value.indexOf('-') > -1) {
+            return tradingSuccess
+          }
+          break
+        case 'Packed':
+          return tradingPacked
+        case 'Mining':
+          return tradingMining
+          break
+        default:
+          break
       }
       // const statusMap = {
       //   Packed: tradingPacked,
@@ -93,18 +97,63 @@ export default {
 </script>
 
 <style scoped>
-  ul li {display: flex;justify-content: space-between;height: 62px;align-items: center;margin: 0 32px;
-    border-bottom: 1px solid #E6E6E6;font-size: 13px;color: #252F33;box-sizing: border-box;}
-  ul li .list-img {display: flex;}
-  ul li .list-img section p:last-child {color: #576066;font-size: 11px;}
-  ul li .list-img img {width: 40px;height: 33px;margin-right: 13px;}
-  ul li .list-amount {text-align: right;}
-  ul li .list-amount p:last-child {font-size: 11px;}
+ul li {
+  display: flex;
+  justify-content: space-between;
+  height: 62px;
+  align-items: center;
+  margin: 0 32px;
+  border-bottom: 1px solid #e6e6e6;
+  color: #252f33;
+  box-sizing: border-box;
+}
+ul li .list-img {
+  display: flex;
+}
+ul li .list-img section p:last-child {
+  color: #576066;
+}
 
-  ul li:hover {cursor: pointer;}
+ul li .list-img section p,
+ul li .list-img section span {
+  font-family: Lato-Regular;
+}
+.en ul li .list-img section span {
+  font-family: Source-Regular;
+}
+ul li .list-img img {
+  width: 40px;
+  height: 33px;
+  margin-right: 13px;
+}
+ul li .list-amount {
+  text-align: right;
+}
 
-  .packed {color: #F5A623;}
-  .successful {color: #29D893;}
-  .mining {color: #388ED9;}
-  .failed {color: #EE1C39;}
+ul li .list-img section p {
+  font-size: 13px;
+  padding-bottom: 2px;
+}
+ul li .list-img section span {
+  font-size: 12px;
+  color: #839299;
+  padding-top: 2px;
+}
+
+ul li:hover {
+  cursor: pointer;
+}
+
+.packed {
+  color: #f5a623;
+}
+.successful {
+  color: #29d893;
+}
+.mining {
+  color: #388ed9;
+}
+.failed {
+  color: #ee1c39;
+}
 </style>

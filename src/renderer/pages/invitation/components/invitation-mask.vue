@@ -55,12 +55,20 @@
       </ul>
 
       <!-- 分页 -->
+     
       <wallet-pages 
         class="page-container"
-        :total="total"
         @next="nextPage"
         @prev="prevPage"
         @goPage="goPage" />
+
+         <!-- <wallet-pages 
+        class="page-container"
+        v-show="detailsLists.length > 5"
+        :total="detailsLists.length"
+        @next="nextPage"
+        @prev="prevPage"
+        @goPage="goPage" /> -->
     </section>
   </main>
 </template>
@@ -116,13 +124,12 @@ export default {
   },
   data () {
     return {
-      total: 50,
       itemList: [
         {
           id: '1',
           rulesImg: level1,
           rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel1',
-          rulesNumber: '1-9',
+          rulesNumber: '0-9',
           rulesReward1: '2%',
           rulesReward2: '1%'
         },
@@ -190,14 +197,14 @@ export default {
     color: #252F33;font-size: 13px;}
   .en .rules-content ul li {color: #42535B;}
   .rules-content ul li:first-child {color: #99A1A6;background:#f7fbfa;border: 0;font-family: Lato-Medium;}
-  .rules-content ul li:first-child {font-family: Source-Medium;}
+  .en .rules-content ul li:first-child {font-family: Source-Medium;}
   .rules-content ul li span:nth-child(2) {margin-left: 20px;width: 100px;}
   .rules-content ul li span:last-child {width: 200px;text-align: center;}
   .rules-content ul li:first-child span:nth-child(2) {margin-left: 44px;}
   .rules-content ul li:first-child span:last-child {width: 200px;text-align: center;display: inline-block;}
 
 
-  .details-content {width: 492px;background: #fff;padding: 0 32px 0;border-radius: 4px;}
+  .details-content {width: 492px;background: #fff;padding: 0 32px 0;border-radius: 4px;height: 550px;}
   .details-content h2 {padding: 30px 0 36px;}
   .details-content ul {margin-top: 30px;}
   .details-content ul li {display: flex;align-items: center;padding-left: 20px;color: #252F33;font-size: 14px;height: 42px;

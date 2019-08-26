@@ -37,7 +37,7 @@ export default {
     walletName: 'WALLET NAME',
     walletNameIpt: 'Wallet Name',
     walletPass1: 'PASSWORD',
-    walletPass1Ipt: 'password',
+    walletPass1Ipt: 'Password',
     walletPass2: 'CONFIRM PASSWORD',
     walletPass2Ipt: 'Confirm Password',
 
@@ -47,20 +47,20 @@ export default {
     walletPrivateKey: 'Eenter your private key here',
     walletPhrase: 'Enter your Phrase here width space-separated',
 
-    passFormatTips: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
-    passDifferent: 'Two passwords are inconsistent.',
-    passError: 'Password error, unable to unlock wallet.',
-    passUnlockError: 'Password Error, unlock failed.',
+    passFormatTips: 'Use 8 to 30 characters must with a mix of letters, numbers & symbols',
+    passDifferent: 'Two passwords are inconsistent',
+    passError: 'Password error, unable to unlock wallet',
+    passUnlockError: 'Password Error, unlock failed',
 
-    walletCodeError: 'Please enter the correct invitation code.',
+    walletCodeError: 'Please enter the correct invitation code',
 
-    nameNull: 'Please input wallet name.',
+    nameNull: 'Please input wallet name',
 
-    privateKeyError: 'Private Error.',
-    privateKeyError2: 'Input value is not valid.',
-    phraseError: 'Phrase error.',
+    privateKeyError: 'Private Error',
+    privateKeyError2: 'Input value is not valid',
+    phraseError: 'Phrase error',
 
-    imporantExists: 'Wallet already exists or imported.'
+    imporantExists: 'Wallet already exists or imported'
   },
 
   homeLeftNav: {
@@ -88,11 +88,11 @@ export default {
     hwBiuInsufficient: "BIU isn't enough to sent",
 
     hwNameNull: 'Wallet name cannot be empty or only with space.',
-    hwUpdateNameSuccess: 'Change wallet name success.',
+    hwUpdateNameSuccess: 'Change wallet name success',
 
     hwDeleteSuccess: 'Delete wallet successfully',
 
-    hwInvitationTips: 'Lock the bin BIUT on the mining page and unlock the invitation code!'
+    hwInvitationTips: 'In the mining page lock  BIUT, you can unlock the invitation code oh!'
   },
 
   homeWalletMask: {
@@ -109,7 +109,7 @@ export default {
     hwmReceiptTxt2: 'Amount',
     hwmReceiptTxt3: 'Your address(QR Code)',
 
-    hwmSentTit1: 'Confirm The Following information.',
+    hwmSentTit1: 'Confirm The Following Information.',
     hwmSentTips: 'You are sending assets to the following address, please confirm the operation.',
     hwmSentTxt1: 'FROM',
     hwmSentTxt2: 'TO',
@@ -127,8 +127,8 @@ export default {
     hwmSentNetwork: 'No network connection.',
 
     hwmSentFeeErrorText: 'Fee cannot be greater than BIU balance.',
-    hwmSentFailure: 'Submission Failed.',
-    hwmSentSuccess: 'Submitted successfully.',
+    hwmSentFailure: 'Submission Failed',
+    hwmSentSuccess: 'Submitted successfully',
   },
 
   homeWalletDetails: {
@@ -292,15 +292,16 @@ export default {
 
     hiBtn: 'View rules',
 
-    hiListTit: 'Invited record',
+    hiListTit: 'Invited Record',
     hiListSearch: 'Enter address to search',
     hiListTxt1: 'Address',
     hiListTxt2: 'Invitation time',
-    hiListTxt3: 'Received a reward (BIUT)',
+    hiListTxt3: 'Total reward (BIUT)',
     hiListTxt4: 'Operation',
     hiListBtn: 'View details',
 
     hiListSearchNull: 'No search results yet',
+    hiListNull: 'No record yet',
   },
 
   homeInvitationMask: {
@@ -319,14 +320,14 @@ export default {
     hiMaskDetailsListTxt1: 'Time',
     hiMaskDetailsListTxt2: 'Reward (BUT)',
 
-    hiMaskShareTit1: 'BIUT-PC miner POW mining',  
+    hiMaskShareTit1: 'BIUT-PC Miner POW Mining',  
     
-    hiMaskShareTit2: 'invitation code',
+    hiMaskShareTit2: 'Invitation Code',
 
     hiMaskShareTxt1: 'Copy Link',
     hiMaskShareTxt2: 'Open the link with a browser to view',
 
-    hiMaskShareTxt3: 'Lock 10,000 BIUT on the mining page and share with one click!',
+    hiMaskShareTxt3: 'Lock 10,000 BIUT on the mining page to open one-click sharing.',
   },
 
   publicBtn: {
@@ -340,8 +341,8 @@ export default {
     resubmitBtn: 'Resubmit',
     knowBtn: 'OK',
 
-    myKnowBtn: 'I know the',
-    myGoShowBtn: 'Start share'
+    myKnowBtn: 'OK',
+    myGoShowBtn: 'Open Sharing'
   },
   page: {
     pageTotal: 'records in total',

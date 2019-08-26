@@ -140,9 +140,9 @@
         </section>
 
         <!-- 导出私钥 maskPages = 0 Export Private key -->
-        <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
+        <section class="wallet-mask-private-key" v-show="maskPages == 0">
           <h3>{{ $t('homeWallet.hwSet1') }}</h3>
-          <wallet-tips :tips="privateKey" />
+          <wallet-tips :tips="privateKey" class="error-tips"/>
           <section id="privateKey">
             {{selectedWallet.privateKey}}
           </section>
@@ -150,7 +150,7 @@
               @click="copyCnt" 
               data-clipboard-target="#privateKey"
               :class="copyTimeShow ? 'copySuccessBg' : ''">
-            {{ $t(copyButtonText) }} <span v-show="copyTimeShow">（{{ copyTimeShowTxt }}）</span>
+            {{ $t(copyButtonText) }} <span v-show="copyTimeShow">（{{ copyTimeShowTxt }} s）</span>
           </p>
         </section>
 
@@ -163,7 +163,7 @@
             v-model="walletNewPass"
             @input="inputContent"></wallet-input-pass>
           <wallet-tips :tips="passFormat" class="tips" />
-          <span class="wallet-button" @click="clostMask">Cancel</span>
+          <span class="wallet-button" @click="clostMask">{{ $t('publicBtn.cancelBtn') }}</span>
           <span class="wallet-button" 
                 :disabled="!keystroeActive"
                 :class="keystroeActive ? 'keystroeActive' : ''"
@@ -670,11 +670,11 @@ export default {
       var clipboard = new Clipboard('.copyButton')
       clipboard.on('success', e => {
           clipboard.destroy()
-          this.copyButtonText = "tips.copySuccess"
-          this.copyTimeShow = true
           let clock = window.setInterval(() => {
             var x = this.copyTime--
+            this.copyButtonText = "tips.copySuccess"
             this.copyTimeShowTxt = x
+            this.copyTimeShow = true
             if(this.copyTime < 0){ // = 0 就停止
               this.copyTime = 3  //恢复默认值
               this.copyTimeShow = false
@@ -766,8 +766,8 @@ export default {
   .wallet-mask {position: relative;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
-  .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;height: 516px;padding: 28px 32px 0;}
-  .en .wallet-mask-sent-confirm {height: 458px;}
+  .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;padding: 36px 32px;}
+  .en .wallet-mask-sent-confirm {height: 458px;padding: 32px 32px 24px;}
 
   .wallet-mask-sent img {width: 16px;height: 16px;}
   .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
@@ -781,7 +781,7 @@ export default {
   .wallet-mask-sent-to-address,.wallet-mask-sent-amount {display: flex;align-items: center;height: 36px;border-bottom:1px solid rgba(229,229,229,1);}
   .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;font-family: Lato-Medium;color: #252F33;}
   .wallet-mask-sent-amount section {display: flex;align-items: center;}
-  .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;}
+  .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;font-family: Lato-Regular;}
   .wallet-mask-sent-amount section span:hover {cursor: pointer;}
   .wallet-mask-sent-amount section span img {vertical-align: middle;margin-left: 4px;}
   
@@ -789,7 +789,7 @@ export default {
   .wallet-mask-sent-amount section .trading-list {position: absolute;right: 0;top: 37px;z-index: 9;border-radius: 4px;
     box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
   .wallet-mask-sent-amount section .trading-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
-  .wallet-mask-sent-amount section .trading-list li span {color: #576066;}
+  .wallet-mask-sent-amount section .trading-list li span {color: #576066;font-family: Lato-Regular;}
   .wallet-mask-sent-amount section .trading-list li:hover {cursor: pointer;}
   
   .wallet-mask-sent button {margin-top: 40px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
@@ -808,6 +808,7 @@ export default {
   .all-amount-list {color: #839299;font-size: 14px;padding-top: 8px;}
   .en .all-amount-list {color: #99A1A6;}
   .all-amount-list span:last-child {color: #29D893;margin-left: 10px;}
+  
   .all-amount-list span:last-child:hover {cursor: pointer;}
 
   .wallet-mask-receive {padding: 36px 32px 28px;}
@@ -817,26 +818,28 @@ export default {
   .en .wallet-mask-receive p {font-size: 16px;font-family: Source-Medium;}
   .wallet-mask-receive span {color: #252F33;font-size: 14px;padding-top: 10px;display: block;
     font-weight: 500;font-family: Lato-Medium;}
-  .en .wallet-mask-receive span {color: #787F81;font-size: 14px;font-family: Source-Regular;}
   .wallet-mask-receive span:last-child {padding-top: 0;font-size: 12px;font-weight: 400;}
-  .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;
+  .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;font-family: Lato-Regular;
     color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
-  .wallet-mask-receive section input {border: 0;flex: 1;}
+  .wallet-mask-receive section input {border: 0;flex: 1;font-family: Lato-Regular;}
   .wallet-mask-receive canvas {margin: 28px 0 7px;}
   .wallet-mask-receive section label img {vertical-align: middle;margin-left: 4px;}
   .wallet-mask-receive section label:hover {cursor: pointer;}
   .wallet-mask-receive .qrcode-list {position: absolute;top: 28px;right: 0;z-index: 9;border-radius: 4px;
     box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
   .wallet-mask-receive .qrcode-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
-  .wallet-mask-receive .qrcode-list li span {color: #576066;}
+  .wallet-mask-receive .qrcode-list li span {color: #576066;font-family: Lato-Regular;}
   .wallet-mask-receive .qrcode-list li:hover {cursor: pointer;}
 
-  .wallet-mask-priivate-key {padding: 32px 32px 28px;}
-  .wallet-mask-priivate-key h3 {padding-bottom: 42px;}
-  .wallet-mask-priivate-key section {padding: 24px;background:rgba(229,229,229,1);
+  .wallet-mask-private-key {padding: 32px 32px 28px;}
+  .wallet-mask-private-key h3 {padding-bottom: 42px;}
+  .wallet-mask-private-key section {padding: 24px;background:rgba(229,229,229,1);font-family: Lato-Regular;
     border-radius:4px;color: #42535B;font-size: 14px;word-wrap:break-word;margin: 16px 0 24px;}
-  .wallet-mask-priivate-key .priivate-key-button {display: block;height:48px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    border-radius:4px;line-height: 48px;text-align: center;color: #fff;}
+  .en .wallet-mask-private-key section {margin: 26px 0 24px;}
+  .en .wallet-mask-private-key .error-tips {font-size: 14px;}
+  .en .wallet-mask-private-key  h3 {padding-bottom: 45px;}
+  .wallet-mask-private-key .priivate-key-button {display: block;height:48px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
+    border-radius:4px;line-height: 48px;text-align: center;color: #fff;cursor: pointer;}
 
   .wallet-mask-keystroe .tips {text-align: left;}
   .wallet-mask-keystroe h3 {padding-bottom: 24px!important;}
@@ -847,10 +850,10 @@ export default {
 
 
   .wallet-mask-phrase,.wallet-mask-keystroe {padding: 32px 32px 16px;text-align: right;}
-  .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-priivate-key  h3 
+  .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-private-key  h3 
     {font-size: 18px;font-family: Montserrat-SemiBold;color: #576066;margin: 0;padding-bottom: 12px;text-align: left;}
 
-  .en .wallet-mask-phrase h3,.en .wallet-mask-keystroe h3,.en .wallet-mask-priivate-key  h3 {font-family: Source-Medium;font-weight: 500;
+  .en .wallet-mask-phrase h3,.en .wallet-mask-keystroe h3,.en .wallet-mask-private-key  h3 {font-family: Source-Medium;font-weight: 500;
     color: #42535B;}
 
   .wallet-mask-phrase ul {display: flex;flex-wrap: wrap;}
@@ -886,4 +889,6 @@ export default {
 
 .slow-color {color: #0B7FE6!important;}
 .fast-color {color: #F5A623!important;}
+
+.all-amount-list span:nth-child(2),.transfer-slider section span:nth-child(2) {font-family: Lato-Regular;}
 </style>

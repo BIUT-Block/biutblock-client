@@ -82,7 +82,7 @@
 
               <transition name="fade">
                 <section class="invitation-tips" v-show="showInvitation">
-                  {{ $t('') }}
+                  {{ $t('homeWallet.hwInvitationTips') }}
                 </section>
               </transition>
             </section>
@@ -123,14 +123,14 @@
             <span>{{ $t("homeWallet.hwBiut") }}</span>
             <p>{{ walletBalance | currency("") }} BIUT</p>
             <section class="money-text-list">
-              <p class="money-text">
+              <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt1") }}</span>
-                <span>{{ availableMoney }}</span>
-              </p>
-              <p class="money-text">
+                <span>{{ availableMoney | currency("") }}</span>
+              </section>
+              <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt2") }}</span>
-                <span>{{ freezeMoney }}</span>
-              </p>
+                <span>{{ freezeMoney | currency("") }}</span>
+              </section>
             </section>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
@@ -708,6 +708,14 @@ export default {
 .invitation-list figure {
   margin: 0;
 }
+.invitation-list figure figcaption {
+  font-size: 14px;
+  color: #99A1A6;
+}
+.invitation-list figure figcaption span {
+  font-family: Lato-Bold;
+  color: #252F33;
+}
 .invitation-list {
   position: relative;
 }
@@ -718,7 +726,7 @@ export default {
   width: 220px;
   font-size: 12px;
   height: 58px;
-  top: 20px;
+  top: 30px;
   background:#42535b;
   box-shadow: 0 10px 10px rgba(66,83,91,0.2);
   display: flex;
@@ -735,7 +743,7 @@ export default {
   position: absolute;
   width: 0;
   top: -6px;
-  right: .8px;
+  right: 2px;
 }
 .en .invitation-tips {
   font-size: 14px;
@@ -791,6 +799,8 @@ export default {
 .wallet-header-list .wallet-header-copy-list {
   display: flex;
   align-items: center;
+  font-family: Lato-Regular;
+  font-size: 14px;
 }
 .wallet-header-list .wallet-header-copy-list img {
   width: 14px;
@@ -855,6 +865,7 @@ export default {
 .wallet-header-money-list .money-content p {
   font-size: 24px;
   font-weight: normal;
+  font-family: Lato-Regular;
 }
 .wallet-header-money-list .money-content img {
   width: 128px;
@@ -876,6 +887,9 @@ export default {
 }
 .wallet-header-money-list .money-content .money-text-list .money-text span {
   padding: 3px 0 0 0;
+}
+.wallet-header-money-list .money-content .money-text-list .money-text span:last-child {
+  font-family: Lato-Regular;
 }
 .wallet-header-money-list
   .money-content

@@ -1,6 +1,6 @@
 <template>
   <main class="invitation-content">
-    <main class="content">
+    <section class="content">
       <invitation-header
         :level="userLevel"
         :progress="userprogress"
@@ -20,7 +20,7 @@
         :detailList = detailList
         v-show = "maskShow"
         @close = 'closeMask' />
-    </main>
+    </section>
   </main>
 </template>
 
@@ -47,7 +47,7 @@ export default {
       maskMoney: "-",
       maskAddress: '-',
       invitationCode: '',
-      detaiList: []
+      detailList: []
     }
   },
   computed: {
@@ -92,7 +92,6 @@ export default {
       this.selectedItem = item
       this.maskMoney = item.itemMoney
       this.maskAddress = item.itemAddress
-      this.detailList = []
       dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
         for (let detail of body.rewards) {
           this.detailList.push({
@@ -121,6 +120,5 @@ export default {
 
 <style scoped>
   .invitation-content {padding: 24px 24px 0;background: #F4F5F5;height: calc(100vh - 24px);display: flex;}
-  .content {background: #fff;flex: 1;box-shadow: 0px 0px 3px rgba(0,0,0,0.16);border-radius: 4px;
-    }
+  .content {background: #fff;flex: 1;box-shadow: 0px 0px 3px rgba(0,0,0,0.16);border-radius: 4px;}
 </style>

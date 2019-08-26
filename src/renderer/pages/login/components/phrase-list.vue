@@ -41,14 +41,13 @@ ul {
 }
 ul li {
   padding: 0 6px;
-  margin-right: 4px;
   background: rgba(242, 242, 242, 1);
   border-radius: 4px;
   color: #252f33;
   font-size: 14px;
-  margin-top: 10px;
   height: 24px;
   line-height: 24px;
+  margin: 12px 4px 0 0;
+  font-family: Lato-Regular;
 }
-.en ul li {font-family: Lato-Regular;}
 </style>

@@ -62,7 +62,7 @@ export default {
   .list-node h4 {height: calc(100vh - 350px);font-size: 16px;color: #839299;font-weight: normal;
     display: flex;align-items: center;justify-content: center;}
   
-  section ul {height: 40px;border-bottom: 1px solid rgba(229,229,229,1);color: #252F33;
+  section ul {height: 40px;border-bottom: 1px solid rgba(229,229,229,1);color: #252F33;font-family: Lato-Regular;
     display: flex;align-items: center;}
   section ul li{width: 25%;}
   .list-node-head {border-bottom: 2px solid rgba(229,229,229,1);font-family: Lato-Bold;color: #839299;margin-right: 32px;}
