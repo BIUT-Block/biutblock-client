@@ -14,8 +14,8 @@
         </section>
       </section>
       <section class="list-amount" :class="item.listState | stateColor">
-        <p>{{ item.listMoney | currency("") }} {{ item.listUnit }}</p>
-        <span>{{ item.listState }}</span>
+        <p>{{ item.listMoney }} {{ item.listUnit }}</p>
+        <span>{{ item.listState | state(item.listState, i18Ens) }}</span>
       </section>
     </li>
   </ul>
@@ -43,7 +43,14 @@ export default {
     }
   },
   computed: {
-
+    i18Ens() {
+      let flg = this.$i18n.locale
+      if (flg === 'zh') {
+        return 0
+      } else {
+        return 1
+      }
+    }
   },
   created() {
 
@@ -67,6 +74,7 @@ export default {
       };
       return statusMap[status];
     },
+
     stateImg(status, value) {
       switch (status) {
         case 'Successful':
@@ -84,14 +92,37 @@ export default {
         default:
           break
       }
-      // const statusMap = {
-      //   Packed: tradingPacked,
-      //   Successful: tradingSuccess,
-      //   Failed: tradingFailed,
-      //   Mining: tradingMining,
-      // };
-      // return statusMap[status];
     },
+
+    state(status1, status2, status3) {
+      if (status3 === 0) {
+        switch (status1) {
+          case 'Successful':
+            return '成功'
+            break
+          case 'Packed':
+            return '打包中'
+          case 'Mining':
+            return '挖矿收益'
+            break
+          default:
+            break
+        }
+      } else {
+        switch (status1) {
+          case 'Successful':
+            return 'Successful'
+            break
+          case 'Packed':
+            return 'Packed'
+          case 'Mining':
+            return 'Mining'
+            break
+          default:
+            break
+        }
+      }
+    }
   }
 }
 </script>

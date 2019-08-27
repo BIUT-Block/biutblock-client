@@ -2,13 +2,14 @@
   <main class="list-content">
     <header>
       <h2>{{ $t('homeInvitation.hiListTit') }}</h2>
-      <section class="ipt-list">
+
+      <!-- <section class="ipt-list">
         <input type="text" :placeholder="$t('homeInvitation.hiListSearch')" v-model='searchIpt' maxlength="42" @input="searchChange"/>
         <section class="img-list">
           <img src="../../../assets/images/clearAddress.png" alt="" v-show="clearBtn" class="clear-img" @click="clearIpt"/>
           <img src="../../../assets/images/search.png" alt="" class="search-img" @click="searchFrom"/>
         </section>
-      </section>
+      </section> -->
     </header>
 
     <ul>
@@ -175,15 +176,17 @@ export default {
 
   .img-list {display: flex;align-items: center;}
   ul {flex: 1;display: flex;flex-direction: column;}
-  ul li {display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;padding: 6px 0 6px 12px;font-family: Lato-Regular;color: #252F33;}
+  ul li {display: flex;align-items: center;border-bottom: 1px solid #e5e5e5;padding: 6px 0 6px 12px;justify-content: space-between;
+    font-family: Lato-Regular;color: #252F33;}
   ul li:first-child {color: #99A1A6;font-family: Lato-Bold;border-radius: 4px;border: 0;height: 36px;padding: 0 0 0 12px;
     font-size: 13px;background:#f7fbfa;}
+  ul li:first-child span:nth-child(4) {text-align: center;}
   .en ul li:first-child {font-family: Source-Medium;}
 
-  ul li span:first-child {width: 38%;}
+  ul li span:first-child {width: 40%;}
   ul li span:nth-child(2) {width: 25%;}
   ul li span:nth-child(3) {width: 23%;}
-  ul li span:nth-child(4) {width: 14%;cursor: pointer;}
+  ul li span:nth-child(4) {width: 12%;cursor: pointer;}
   
   .list-none {flex: 1;display: flex;align-items: center;justify-content: center;}
   .list-none section {width: 138px;text-align: center;}

@@ -29,7 +29,8 @@
                   inputActive ? 'input-active' : '',
                   changeActive ? 'load' : ''
                 ]"
-                @click="updateName">
+                @click="updateName"
+              >
                 <span v-show="inputReadonly">{{ oldWalletName }}</span>
                 <input
                   type="text"
@@ -46,7 +47,11 @@
               </section>
 
               <ul v-show="menuShow">
-                <li v-for="(item, index) in menuList" :key="index" @click="lookMask(index)">
+                <li
+                  v-for="(item, index) in menuList"
+                  :key="index"
+                  @click="lookMask(index)"
+                >
                   {{ $t(item.text) }}
                 </li>
               </ul>
@@ -66,10 +71,11 @@
                 <img
                   src="../../assets/images/copy.png"
                   alt=""
-                   v-show="!mortgageShow"
+                  v-show="!mortgageShow"
                   @click="copyCode"
                   data-clipboard-target="#invitation"
-                  class="copyCodeButton"/>
+                  class="copyCodeButton"
+                />
 
                 <img
                   src="../../assets/images/exclamationImg.png"
@@ -82,7 +88,7 @@
 
               <transition name="fade">
                 <section class="invitation-tips" v-show="showInvitation">
-                  {{ $t('homeWallet.hwInvitationTips') }}
+                  {{ $t("homeWallet.hwInvitationTips") }}
                 </section>
               </transition>
             </section>
@@ -185,6 +191,7 @@
       :balanceSEN="walletBalanceSEN"
       :selectedWallet="selectedWallet"
       :maskShow="maskShow"
+      :walletName="oldWalletName"
       @changeClose="closeMask"
       @updateWalletList="onUpdateWalletList"
       @updateWalletBalance="onUpdateWalletBalance"
@@ -322,16 +329,11 @@ export default {
     lookMask(index) {
       // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
       if (index === 3) {
-        let a = (this.walletName === "Mining Wallet") || (this.walletName === "挖矿钱包")
-        if (a) {
-          return
+        let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
+        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
+          this.maskPages = 6
         } else {
-          let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
-          if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
-            this.maskPages = 6
-          } else {
-            this.maskPages = index
-          }
+          this.maskPages = index
         }
       } else if (index === 4) {
         /**
@@ -491,11 +493,11 @@ export default {
       window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
       this._resetSkipTotal()
       this.selectedWallet = selectedWallet
-      if (this.selectedWallet.role === 'Owner') {
-        this.showInvitation = true
-      } else {
-        this.showInvitation = false
-      }
+      // if (this.selectedWallet.role === 'Owner') {
+      //   this.showInvitation = true
+      // } else {
+      //   this.showInvitation = false
+      // }
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
       console.log(this.selectedWalletData)
       this.selectedPrivateKey = selectedWallet.privateKey
@@ -523,11 +525,11 @@ export default {
       let poolAddress = []
       this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-//        this.walletBalance = balanceSEC.toString()
+        //        this.walletBalance = balanceSEC.toString()
         let freezeMoney = 0
         let walletBalance = 0
         let availableMoney = Number(balanceSEC)
-        if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
+        if (this.selectedWallet.mortgagePoolAddress.length > 0) {
           this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           })
@@ -545,11 +547,11 @@ export default {
               for (let i = 0; i < benifitAddress.length; i++) {
                 freezeMoney = freezeMoney + Number(benifitAddress[i].lockAmount)
               }
-            } 
+            }
           }
           if (freezeMoney > 0) {
             this.mortgageShow = false
-          } 
+          }
           walletBalance = this.cal.accAdd(freezeMoney, availableMoney) //精度问题处理
           this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
           this.walletBalance = this._checkValueFormat(walletBalance.toString())
@@ -619,16 +621,10 @@ export default {
     },
 
     showInvitation1() {
-      // if (Number(this.freezeMoney) > 0 && this.selectedWallet.role !== 'Owner') {
-        
-      // }
       this.showInvitation = true
     },
 
     showInvitation2() {
-      // if (Number(this.freezMoney) > 0 && this.selectedWallet.role !== 'Owner') {
-        
-      // }
       this.showInvitation = false
     }
   },
@@ -710,11 +706,11 @@ export default {
 }
 .invitation-list figure figcaption {
   font-size: 14px;
-  color: #99A1A6;
+  color: #99a1a6;
 }
 .invitation-list figure figcaption span {
   font-family: Lato-Bold;
-  color: #252F33;
+  color: #252f33;
 }
 .invitation-list {
   position: relative;
@@ -722,13 +718,13 @@ export default {
 .invitation-tips {
   position: absolute;
   right: 0;
-  color: #C9D1D4;
+  color: #c9d1d4;
   width: 220px;
   font-size: 12px;
   height: 58px;
   top: 30px;
-  background:#42535b;
-  box-shadow: 0 10px 10px rgba(66,83,91,0.2);
+  background: #42535b;
+  box-shadow: 0 10px 10px rgba(66, 83, 91, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -888,7 +884,11 @@ export default {
 .wallet-header-money-list .money-content .money-text-list .money-text span {
   padding: 3px 0 0 0;
 }
-.wallet-header-money-list .money-content .money-text-list .money-text span:last-child {
+.wallet-header-money-list
+  .money-content
+  .money-text-list
+  .money-text
+  span:last-child {
   font-family: Lato-Regular;
 }
 .wallet-header-money-list
@@ -968,7 +968,7 @@ export default {
 
 .moreList {
   background: #fff;
-  height: 50px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;

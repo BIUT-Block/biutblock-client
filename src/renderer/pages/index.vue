@@ -297,6 +297,12 @@ export default {
       this.languageIdx = 1
       this.languageTxt = 'English'
     }
+    // let selectedWallet = this.wallets[this.selectedPrivateKey]
+    // if (selectedWallet.mortgageValue > 0) {
+    //   this.invitationShow = true
+    // } else {
+    //   this.invitationShow = false
+    // }
   },
   mounted() {
 

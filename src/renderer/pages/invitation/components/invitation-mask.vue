@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     detailsLists () {
-      return this.detailsList
+      return this.detailList
     },
 
     userLevel () {

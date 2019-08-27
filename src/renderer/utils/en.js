@@ -11,6 +11,7 @@ export default {
     loginFooter2: 'Create Wallet',
 
     loginBtn1: 'Create Wallet',
+    loginBtn1s: 'Create Wallet...',
     loginBtn2: 'Login',
     loginBtn3: 'Enter Wallet',
 
@@ -102,9 +103,11 @@ export default {
     hwmKeystoreIpt: 'Enter your new password',
 
     hwmDeleteTit: 'Confirm to delete your wallet? Please make sure you have backed up your wallet.',
+    hwmDeleteTit1: "The wallet is a mining wallet and can't be deleted.",
     hwmDeleteTit2: 'The wallet is bind to mining. You can not remove it.',
-    hwmDeleteBtn: 'Delete',
-
+    hwmDeleteBtn1: 'Delete',
+    hwmDeleteBtn2: 'OK',
+    
     hwmReceiptTxt1: 'Account',
     hwmReceiptTxt2: 'Amount',
     hwmReceiptTxt3: 'Your address(QR Code)',
@@ -226,7 +229,9 @@ export default {
     hdNavPoolFailureTxt5: 'Refuse',
 
     hdNavPoolSuccessTit1: 'Mine Pool',
-    hdNavPoolSuccessTit2: 'Start time',
+    hdNavPoolSuccessTit2: 'Start Time',
+    hdNavPoolSuccessTit3: 'Current Address',
+    hdNavPoolSuccessTit4: 'Contract Address',
     hdNavPoolSuccessListTxt1: 'My pool assets',
     hdNavPoolSuccessListTxt2: 'Number of pool nodes',
     hdNavPoolSuccessListTxt3: 'Total pool profit',
@@ -239,6 +244,9 @@ export default {
     hdFootTimeTxt1: 'seconds ago',
     hdFootTimeTxt2: 'minutes ago',
     hdFootTimeTxt3: 'hours ago',
+
+
+    hdNavPoolRes: 'The mine pool has been opened. Please wait for the return result of the main network.'
   },
 
   homeDigMore: {
@@ -334,8 +342,9 @@ export default {
     cancelBtn: 'Cancel',
     confirmBtn: 'Confirm',
     backBtn: 'Back',
-    mortgageBtn1: 'Mortgage',
-    mortgageBtn2: 'Mortgage more',
+    mortgageBtn1: 'Locked',
+    mortgageBtn1s: 'Locking...',
+    mortgageBtn2: 'Locked amount',
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',

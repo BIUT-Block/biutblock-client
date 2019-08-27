@@ -191,6 +191,7 @@ import Clipboard from 'clipboard'
 import walletsHandler from '../../lib/WalletsHandler'
 
 const fs = require('fs')
+const random = require('string-random')
 const pkg = require('../../../../package.json')
 const dataCenterHandler = require('../../lib/DataCenterHandler')
 
@@ -226,7 +227,7 @@ export default {
       walletCodeError: false,//邀请码错误是否显示
       walletCodeErrorText: 'input.walletCodeError',//邀请码错误提示语
 
-      loginMaskShow: false,//钱包存在弹窗
+      loginMaskShow: false,//钱包未绑定邀请码的弹窗
 
       walletButtonText: 'login.loginBtn1',
       passFormat: 'input.passFormatTips',
@@ -433,6 +434,7 @@ export default {
 
     //创建钱包  需要传邀请码
     async createWallet() {
+      this.walletButtonText = 'login.loginBtn1s'
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       let transfer = {
         nonce: "1",
@@ -444,7 +446,7 @@ export default {
         txFee: '0',
         chainName: 'SEC'
       }
-      this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, 'Mine Pool', transfer)
+      this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, random(6), transfer)
       dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode, contractAddress: this.contractAddress}, (body) => {
         if (body && body.status && body.doc[0].role !== 'Owner') {
           this.parentWallet = body.doc[0]
@@ -470,9 +472,11 @@ export default {
           this.createPages = 2
           this.createTitle1 = 'login.loginImport2'
           this.createTitle2 = 'login.loginCreated'
+          this.walletButtonText = 'login.loginBtn1'
         } else {
           this.walletCodeError = true
           this.walletCodeErrorText = 'input.walletCodeError'
+          this.walletButtonText = 'login.loginBtn1'
         }
       })
     },
@@ -609,6 +613,7 @@ export default {
     },
 
     _findOutWallet (wallets, privateKey, from) {
+      console.log(wallets)
       if (wallets === 'error') {
         //this._showImportError(from, 'input.privateKeyError2')
         this.loginMaskShow = true

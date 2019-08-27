@@ -29,6 +29,8 @@ import invitationHeader from './components/invitation-header'
 import invitationList from './components/invitation-list'
 import invitationMask from './components/invitation-mask'
 const dataCenterHandler = require('../../lib/DataCenterHandler')
+import walletsHandler from '../../lib/WalletsHandler'
+const moment = require('moment-timezone')
 export default {
   name: '',
   components: {
@@ -92,12 +94,13 @@ export default {
       this.selectedItem = item
       this.maskMoney = item.itemMoney
       this.maskAddress = item.itemAddress
+      this.detailList = []
       dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
         for (let detail of body.rewards) {
           this.detailList.push({
             id: 1,
-            detailsTime: detail.insertAt,
-            detailsMoney: detail.reward
+            detailsTime: detail.insertAt ? walletsHandler.formatDate(moment(detail.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+            detailsMoney: detail.rewards
           })
         }
         

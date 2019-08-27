@@ -12,7 +12,7 @@
           @click="clostMask"
         />
         <!-- 转账 maskPages = 4 Sent -->
-        <section class="wallet-mask-sent" :class="sentPages == 2 ? 'wallet-mask-sent-confirm' : ''" v-show="maskPages == 4">
+        <section class="wallet-mask-sent" :class="sentPages == 2 ? 'wallet-mask-sent-en' : ''" v-show="maskPages == 4">
           <!-- 填写转账信息 --> 
           <section v-show="sentPages == 1">
             <h3>{{ $t('homeWallet.hwBtn2') }}</h3>
@@ -97,9 +97,9 @@
             <p>{{ $t('homeWalletMask.hwmSentTxt4') }}</p>
             <span class="wallet-mask-sent-from-address">{{feeVal}} BIU</span>
 
-            <section v-show="!networkError">
+            <section class="confirm-button-list" v-show="!networkError">
               <button type="button" @click="backSent">{{ $t('publicBtn.backBtn') }}</button>
-              <button type="button" class="passCorrect" @click="sent">{{ $t('publicBtn.confirmBtn') }}</button>
+              <button type="button" class="passCorrect" :disabled="sentDisabled" @click="sent">{{ $t('publicBtn.confirmBtn') }}</button>
             </section>
 
             <section class="network-error" v-show="networkError">
@@ -184,9 +184,9 @@
         <!-- 删除钱包 maskPages = 3 delete -->
         <section class="wallet-mask-delete" v-show="maskPages == 3">
           <p>
-            {{ $t('homeWalletMask.hwmDeleteTit') }}
+            {{ $t(maskDetTxt) }}
           </p>
-          <span class="wallet-button" @click="deleteWallet">{{ $t('homeWalletMask.hwmDeleteBtn') }}</span>
+          <span class="wallet-button" @click="deleteWallet">{{ $t(maskDetBtn) }}</span>
         </section>
 
         <section class="wallet-mask-delete" v-show="maskPages == 6">
@@ -225,7 +225,8 @@ export default {
     selectedWallet: Object,
     walletData: Object,
     balance: String,
-    balanceSEN: String
+    balanceSEN: String,
+    walletName: String
   },
   data() {
     return {
@@ -268,6 +269,7 @@ export default {
       tradingText: 'BIUT',
       tradingShow: false,
       imgUrl: amountChecked, //选中的图片
+      sentDisabled: false,
       itemList: [
         {
           id: '01',
@@ -287,7 +289,10 @@ export default {
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
       feeErrorText: 'homeWalletMask.hwmSentFeeErrorText',
-      feeValError: false
+      feeValError: false,
+
+      maskDetTxt: 'homeWalletMask.hwmDeleteTit',
+      maskDetBtn: 'homeWalletMask.hwmDeleteBtn'
     }
   },
   computed: {
@@ -439,6 +444,15 @@ export default {
         "type": this.qrcodeIdx
     }
     this.qrcodeWalletAddress = JSON.stringify(parm)
+
+    let name = this.walletName
+    if (name === "Mining Wallet" || name === "挖矿钱包") {
+      this.maskDetTxt = 'homeWalletMask.hwmDeleteTit1',
+      this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn2'
+    } else {
+      this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
+      this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn1'
+    }
   },
   mounted() {
 
@@ -487,6 +501,7 @@ export default {
       this.qrcodeIdx = 0
       this.tradingIdx = 0
       this.feeVal=0.02
+      this.sentDisabled = false
       this.$emit("changeClose","")
     },
 
@@ -531,8 +546,8 @@ export default {
     },
     
     _resetErrorText () {
-      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
-      this.confirmTitle = 'Confirm The Following information.'
+      this.addressError = 'homeWalletMask.hwmSentTxt2Error'
+      this.confirmTitle = 'homeWalletMask.hwmSentTit1'
       this.amountError = ''
       this.receiveError = ''
       this.networkError = false
@@ -540,9 +555,11 @@ export default {
 
     //转账
     sent () {
+      this.sentDisabled = true
       if (!navigator.onLine) {
         this.confirmTitle = 'homeWalletMask.hwmSentFailure'
         this.networkError = true
+        this.sentDisabled = false
         return 
       }
       
@@ -577,7 +594,7 @@ export default {
         }
 
         this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
-        this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
         }, (balance) => {
           this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
         })
@@ -624,10 +641,16 @@ export default {
 
     //删除钱包
     deleteWallet () {
-      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
-        this.$emit('updateWalletList', wallets)
-      })
+      let name = this.walletName
       this.clostMask ()
+      if (name === "Mining Wallet" || name === "挖矿钱包") {
+        this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
+        this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn'
+      } else {
+         WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
+          this.$emit('updateWalletList', wallets)
+        })
+      }
     },
     
     //二维码扫描只能输入金额
@@ -767,7 +790,7 @@ export default {
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
   .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;padding: 36px 32px;}
-  .en .wallet-mask-sent-confirm {height: 458px;padding: 32px 32px 24px;}
+  .en .wallet-mask-sent-en {height: 458px;padding: 32px 32px 0;}
 
   .wallet-mask-sent img {width: 16px;height: 16px;}
   .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
@@ -891,4 +914,6 @@ export default {
 .fast-color {color: #F5A623!important;}
 
 .all-amount-list span:nth-child(2),.transfer-slider section span:nth-child(2) {font-family: Lato-Regular;}
+
+.confirm-button-list {display: flex;}
 </style>
