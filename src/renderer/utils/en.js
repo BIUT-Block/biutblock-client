@@ -11,6 +11,7 @@ export default {
     loginFooter2: 'Create Wallet',
 
     loginBtn1: 'Create Wallet',
+    loginBtn1s: 'Create Wallet...',
     loginBtn2: 'Login',
     loginBtn3: 'Enter Wallet',
 

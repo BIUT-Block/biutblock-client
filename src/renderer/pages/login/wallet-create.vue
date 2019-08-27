@@ -227,7 +227,7 @@ export default {
       walletCodeError: false,//邀请码错误是否显示
       walletCodeErrorText: 'input.walletCodeError',//邀请码错误提示语
 
-      loginMaskShow: false,//钱包存在弹窗
+      loginMaskShow: false,//钱包未绑定邀请码的弹窗
 
       walletButtonText: 'login.loginBtn1',
       passFormat: 'input.passFormatTips',
@@ -434,6 +434,7 @@ export default {
 
     //创建钱包  需要传邀请码
     async createWallet() {
+      this.walletButtonText = 'login.loginBtn1s'
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       let transfer = {
         nonce: "1",
@@ -471,9 +472,11 @@ export default {
           this.createPages = 2
           this.createTitle1 = 'login.loginImport2'
           this.createTitle2 = 'login.loginCreated'
+          this.walletButtonText = 'login.loginBtn1'
         } else {
           this.walletCodeError = true
           this.walletCodeErrorText = 'input.walletCodeError'
+          this.walletButtonText = 'login.loginBtn1'
         }
       })
     },

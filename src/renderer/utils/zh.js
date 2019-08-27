@@ -11,6 +11,7 @@ export default {
     loginFooter2: '点此创建钱包',
 
     loginBtn1: '创建钱包',
+    loginBtn1s: '创建钱包中...',
     loginBtn2: '登录',
     loginBtn3: '进入钱包',
 
