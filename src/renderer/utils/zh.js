@@ -103,8 +103,10 @@ export default {
     hwmKeystoreIpt: '请输入新密码',
 
     hwmDeleteTit: '确认要删除钱包吗？请确认您已备份！',
+    hwmDeleteTit1: '该钱包为挖矿钱包，不能被删除。',
     hwmDeleteTit2: '当前钱包正在挖矿，您不能删除！',
-    hwmDeleteBtn: '删除',
+    hwmDeleteBtn1: '删除',
+    hwmDeleteBtn2: '我知道了',
 
     hwmReceiptTxt1: '接收地址',
     hwmReceiptTxt2: '数量',

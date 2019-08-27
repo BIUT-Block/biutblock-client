@@ -103,9 +103,11 @@ export default {
     hwmKeystoreIpt: 'Enter your new password',
 
     hwmDeleteTit: 'Confirm to delete your wallet? Please make sure you have backed up your wallet.',
+    hwmDeleteTit1: "The wallet is a mining wallet and can't be deleted.",
     hwmDeleteTit2: 'The wallet is bind to mining. You can not remove it.',
-    hwmDeleteBtn: 'Delete',
-
+    hwmDeleteBtn1: 'Delete',
+    hwmDeleteBtn2: 'OK',
+    
     hwmReceiptTxt1: 'Account',
     hwmReceiptTxt2: 'Amount',
     hwmReceiptTxt3: 'Your address(QR Code)',

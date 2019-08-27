@@ -191,6 +191,7 @@
       :balanceSEN="walletBalanceSEN"
       :selectedWallet="selectedWallet"
       :maskShow="maskShow"
+      :walletName="oldWalletName"
       @changeClose="closeMask"
       @updateWalletList="onUpdateWalletList"
       @updateWalletBalance="onUpdateWalletBalance"

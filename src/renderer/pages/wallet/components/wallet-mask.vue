@@ -184,9 +184,9 @@
         <!-- 删除钱包 maskPages = 3 delete -->
         <section class="wallet-mask-delete" v-show="maskPages == 3">
           <p>
-            {{ $t('homeWalletMask.hwmDeleteTit') }}
+            {{ $t(maskDetTxt) }}
           </p>
-          <span class="wallet-button" @click="deleteWallet">{{ $t('homeWalletMask.hwmDeleteBtn') }}</span>
+          <span class="wallet-button" @click="deleteWallet">{{ $t(maskDetBtn) }}</span>
         </section>
 
         <section class="wallet-mask-delete" v-show="maskPages == 6">
@@ -225,7 +225,8 @@ export default {
     selectedWallet: Object,
     walletData: Object,
     balance: String,
-    balanceSEN: String
+    balanceSEN: String,
+    walletName: String
   },
   data() {
     return {
@@ -288,7 +289,10 @@ export default {
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
       feeErrorText: 'homeWalletMask.hwmSentFeeErrorText',
-      feeValError: false
+      feeValError: false,
+
+      maskDetTxt: 'homeWalletMask.hwmDeleteTit',
+      maskDetBtn: 'homeWalletMask.hwmDeleteBtn'
     }
   },
   computed: {
@@ -440,6 +444,15 @@ export default {
         "type": this.qrcodeIdx
     }
     this.qrcodeWalletAddress = JSON.stringify(parm)
+
+    let name = this.walletName
+    if (name === "Mining Wallet" || name === "挖矿钱包") {
+      this.maskDetTxt = 'homeWalletMask.hwmDeleteTit1',
+      this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn2'
+    } else {
+      this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
+      this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn1'
+    }
   },
   mounted() {
 
@@ -628,10 +641,16 @@ export default {
 
     //删除钱包
     deleteWallet () {
-      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
-        this.$emit('updateWalletList', wallets)
-      })
+      let name = this.walletName
       this.clostMask ()
+      if (name === "Mining Wallet" || name === "挖矿钱包") {
+        this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
+        this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn'
+      } else {
+         WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
+          this.$emit('updateWalletList', wallets)
+        })
+      }
     },
     
     //二维码扫描只能输入金额
