@@ -26,7 +26,7 @@
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
 
-      <!-- <section class="details-list">
+      <section class="details-list">
         <p class="details-list-tit">{{ $t('homeInvitation.hiListTxt1') }}</p>
         <p>
           <span>{{ maskAddress }}</span>
@@ -34,7 +34,7 @@
             {{ userLevel }}
           </span>
         </p>
-      </section> -->
+      </section>
 
       <section class="details-list details-list-top">
         <p class="details-list-tit">{{ $t('homeInvitationMask.hiMaskDetailsTxt') }}:</p>
@@ -102,19 +102,19 @@ export default {
       if (locale === "en") {
         if (level == 1) {
           return 'level1'
-        } else if (level == 2) {
+        } else if (level == "2") {
           return 'level2'
-        } else if (level == 3) {
+        } else if (level == "3") {
           return 'level3'
         } else {
           return 'level4'
         }
       } else {
-        if (level == 1) {
+        if (level == "1") {
           return '一级'
-        } else if (level == 2) {
+        } else if (level == "2") {
           return '二级'
-        } else if (level == 3) {
+        } else if (level == "3") {
           return '三级'
         } else {
           return '四级'
