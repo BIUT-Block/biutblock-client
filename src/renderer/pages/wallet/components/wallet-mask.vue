@@ -12,7 +12,7 @@
           @click="clostMask"
         />
         <!-- 转账 maskPages = 4 Sent -->
-        <section class="wallet-mask-sent" :class="sentPages == 2 ? 'wallet-mask-sent-confirm' : ''" v-show="maskPages == 4">
+        <section class="wallet-mask-sent" :class="sentPages == 2 ? 'wallet-mask-sent-en' : ''" v-show="maskPages == 4">
           <!-- 填写转账信息 --> 
           <section v-show="sentPages == 1">
             <h3>{{ $t('homeWallet.hwBtn2') }}</h3>
@@ -546,8 +546,8 @@ export default {
     },
     
     _resetErrorText () {
-      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
-      this.confirmTitle = 'Confirm The Following information.'
+      this.addressError = 'homeWalletMask.hwmSentTxt2Error'
+      this.confirmTitle = 'homeWalletMask.hwmSentTit1'
       this.amountError = ''
       this.receiveError = ''
       this.networkError = false
@@ -790,7 +790,7 @@ export default {
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
   .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;padding: 36px 32px;}
-  .en .wallet-mask-sent-confirm {height: 458px;padding: 32px 32px 24px;}
+  .en .wallet-mask-sent-en {height: 458px;padding: 32px 32px 0;}
 
   .wallet-mask-sent img {width: 16px;height: 16px;}
   .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
