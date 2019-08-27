@@ -43,13 +43,13 @@ export default {
     }
   },
   computed: {
-
+    
   },
   created() {
 
   },
   mounted() {
-
+    
   },
   destroyed() { },
   methods: {
@@ -67,6 +67,7 @@ export default {
       };
       return statusMap[status];
     },
+
     stateImg(status, value) {
       switch (status) {
         case 'Successful':
@@ -84,13 +85,6 @@ export default {
         default:
           break
       }
-      // const statusMap = {
-      //   Packed: tradingPacked,
-      //   Successful: tradingSuccess,
-      //   Failed: tradingFailed,
-      //   Mining: tradingMining,
-      // };
-      // return statusMap[status];
     },
   }
 }
