@@ -546,8 +546,14 @@ export default {
           } 
         }
         if (benifs.length > 0) {
+          window.localStorage.removeItem(this.selectedWallet.walletAddress)
           this.digPage = false
         } else {
+          let status = window.localStorage.getItem(this.selectedWallet.walletAddress)
+          if (status === "pending") {
+            this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
+            this.mortgageBtn1Disabled = true
+          }
           this.digPage = true
         }
         this._calcMiningPool(benifs)
@@ -657,6 +663,7 @@ export default {
       this.mortgageBtn1Disabled = true
       let privateKey = this.selectedPrivateKey
       let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
+      window.localStorage.setItem(this.selectedWalletAddress, 'pending')
       if (contractInfo.status === 'success') {
         this._addMoreMortgage(this.mortgageAmount)
       }
@@ -689,8 +696,8 @@ export default {
             console.log('update wallet file')
           })
           this.digPage = false
-          this.this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
-          this.mortgageBtn1Disabled = false
+          this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
+          this.mortgageBtn1Disabled = true
       })
     },
 

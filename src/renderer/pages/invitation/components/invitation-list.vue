@@ -83,12 +83,15 @@ export default {
       if (body.length > 0) {
         for (let i = 0; i < body.length; i++) {
           let reward = body[i].reward || '0'
-          this.itemList.push({
-            id: '1',
-            itemAddress: `0x${body[i].address}`,
-            itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-            itemMoney: `${reward} BIUT`
-          })
+          if (body.mortgageValue !== "0") {
+            this.itemList.push({
+              id: '1',
+              itemAddress: `0x${body[i].address}`,
+              itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+              itemMoney: `${reward} BIUT`
+            })
+          }
+          
         }
         this.total = this.itemList.length
         this.pageSum = Math.ceil(this.itemList.length / 50)
