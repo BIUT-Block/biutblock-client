@@ -55,6 +55,7 @@
                       class="wallet-button-create" 
                       :text="walletButtonText"
                       :disabled="!createActive"
+                      :readonly="createReadonly"
                       :class="createActive?'passCorrect':''"
                       @click.native="createWallet"/>
     </section>
@@ -279,7 +280,8 @@ export default {
       copyShow: false,
       maskShow: false, //助记词导入钱包提示
       navQuery: {},
-      contractAddress: ''
+      contractAddress: '',
+      createReadonly: false
     }
   },
   computed: {
@@ -435,6 +437,7 @@ export default {
     //创建钱包  需要传邀请码
     async createWallet() {
       this.walletButtonText = 'login.loginBtn1s'
+      this.createReadonly = true
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
       let transfer = {
         nonce: "1",
@@ -473,10 +476,12 @@ export default {
           this.createTitle1 = 'login.loginImport2'
           this.createTitle2 = 'login.loginCreated'
           this.walletButtonText = 'login.loginBtn1'
+          this.createReadonly = false
         } else {
           this.walletCodeError = true
           this.walletCodeErrorText = 'input.walletCodeError'
           this.walletButtonText = 'login.loginBtn1'
+          this.createReadonly = false
         }
       })
     },
