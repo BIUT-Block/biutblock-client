@@ -175,9 +175,9 @@ export default {
       this.maskShow = false
     },
 
-    appendContractAddress (privateKey, contractAddress) {
+    appendContractAddress (privateKey, poolName) {
       this.maskShow = false
-      this.$emit('addContract', privateKey, contractAddress)
+      this.$emit('addContract', privateKey, poolName)
     }
     
   },

@@ -401,7 +401,7 @@ export default {
       ipcRenderer.send('close')
     },
 
-    onAddContract (privateKey) {
+    onAddContract (privateKey, poolName) {
       let wallet = this.selectedWallet
       wallet.role = 'Owner'
       wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
@@ -410,6 +410,7 @@ export default {
         address: this.selectedWalletAddress,
         ownPoolAddress: this.contractAddress[0],
         mortgageValue: wallet.mortgageValue,
+        poolName: poolName,
         role: 'Owner'
       }, (doc) => {
         console.log('update pool address success')

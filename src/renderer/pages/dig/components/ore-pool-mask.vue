@@ -37,6 +37,7 @@
 
 <script>
 import WalletHandler from '../../../lib/WalletsHandler';
+const dataCenterHandler = require('../../../lib/DataCenterHandler')
 export default {
   name: '',
   props: {walletAddress: String, privateKey: String, contractAddress: String},
@@ -69,6 +70,7 @@ export default {
     },
 
     submitFrom() {
+      let poolName = this.poolName
       let transferTimeLock = {
         timestamp: new Date().getTime(),
         walletAddress: this.walletAddress,
@@ -81,7 +83,7 @@ export default {
       }
       this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 365* 24 * 3600 * 1000, transferTimeLock, (response) => {
         if (response.result.status === '1') {
-          this.$emit('appendContract', this.privateKey)
+          this.$emit('appendContract', this.privateKey, poolName)
         } 
       })
       //alert("点击了提交按钮")

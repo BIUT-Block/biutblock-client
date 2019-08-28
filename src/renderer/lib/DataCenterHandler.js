@@ -79,6 +79,17 @@ const DataCenterHandler = {
     })
   },
 
+  addPoolName: function (params, callback) {
+    request({
+      url: `${dataCenterUrl}updateMiningPoolName`,
+      method: 'POST',
+      body: params,
+      json: true
+    }, (err, res, body) => {
+      callback(body)
+    })
+  },
+
   getMiningPool: function (params, callback) {
     request({
       url: `${dataCenterUrl}getMiningPool`,
