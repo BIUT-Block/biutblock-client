@@ -294,7 +294,10 @@ export default {
     hiTit: '我的等级',
     hiShare: '一键分享',
 
-    hiTxt: '金牌',
+    hiTxt1: '铜牌',
+    hiTxt2: '银牌',
+    hiTxt3: '金牌',
+    hiTxt4: '超级合伙人',
 
     hiBtn: '查看规则',
 

@@ -296,7 +296,10 @@ export default {
     hiTit: 'My Level',
     hiShare: 'Share',
 
-    hiTxt: 'Gold medal',
+    hiTxt1: 'Bronze medal',
+    hiTxt2: 'Silver medal',
+    hiTxt3: 'Gold medal',
+    hiTxt4: 'Super partner',
 
     hiBtn: 'View rules',
 

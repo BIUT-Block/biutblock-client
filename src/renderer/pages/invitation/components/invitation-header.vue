@@ -12,10 +12,10 @@
       
       <section class="header-text">
         <h3>{{ $t(headerLevel) }}</h3>
-        <p class="header-txt">{{ $t('homeInvitation.hiTxt') }}</p>
+        <p class="header-txt">{{ $t(nextUpgrade) }}</p>
         <p class="look-list">
           <section class="progress-list clearfix">
-            <el-progress :percentage="progress" color="#29D893" /> 
+            <el-progress :percentage="progressTxt" color="#29D893" /> 
             <span>{{ progress }} / {{ $t(levelNumber) }}</span>
           </section>
           <span @click="lookRules" class="rules-btn">{{ $t('homeInvitation.hiBtn') }}</span>
@@ -59,10 +59,11 @@ export default {
       level3,
       level4,
       shareShow: false,
-      sharePage: 0 // 0 可以显示分享弹窗 1 提示开启冻结
+      sharePage: 0, // 0 可以显示分享弹窗 1 提示开启冻结
     }
   },
   computed: {
+    //返回当前 奖牌图片
     headerImg() {
       if (this.level == 1) {
         return level1
@@ -75,6 +76,7 @@ export default {
       }
     },
 
+    //返回等级 合伙人
     headerLevel() {
       if (this.level === 1) {
         return 'homeInvitationMask.hiMaskRulesListLevel1'
@@ -87,6 +89,7 @@ export default {
       }
     },
 
+    //返回每个等级人数
     levelNumber() {
       if (this.level === 1) {
         return 9
@@ -96,6 +99,62 @@ export default {
         return 63
       } else {
         return 'hiMaskRulesTit.hiMaskRulesListLevel4Txt'
+      }
+    },
+
+    //返回奖金等级
+    nextUpgrade() {
+      if (this.level === 1) {
+        return 'homeInvitation.hiTxt1'
+      } else if (this.level === 2) {
+        return 'homeInvitation.hiTxt2'
+      } else if (this.level === 3) {
+        return 'homeInvitation.hiTxt2'
+      } else {
+        return 'homeInvitation.hiTxt3'
+      }
+    },
+
+    //返回进度条
+    progressTxt() {
+      if (this.level === 1) {
+        if (this.progress === 0) {
+          return 0
+        } else if (this.progress === 9) {
+          return 100
+        } else {
+          for (var i = 0; i < 9; i++) {
+            if (i === this.progress) {
+              return (i + 1) * 10
+            }
+          }
+        }
+      } else if (this.level === 2) {
+        if (this.progress === 10) {
+          return 0
+        } else if (this.progress === 31) {
+          return 100
+        } else {
+          for (var i = 11; i < 31; i++) {
+            if (i === this.progress) {
+              return (i - 10) * 4.5
+            }
+          }
+        }
+      } else if (this.level === 3) {
+        if (this.progress === 32) {
+          return 0
+        } else if (this.progress === 63) {
+          return 100
+        } else {
+          for (var i = 33; i < 63; i++) {
+            if (i === this.progress) {
+              return (i - 32) * 3.2
+            }
+          }
+        }
+      } else {
+        return 100
       }
     }
   },
@@ -123,12 +182,12 @@ export default {
       let wallets = this.$route.query.wallets
       let selectedPrivateKey = this.$route.query.firstKey
       let selectedWallet = wallets[selectedPrivateKey]
-      this.shareShow = true 
+      this.shareShow = true
       if (selectedWallet.mortgageValue > 0) {
         this.sharePage = 0
       } else {
         this.sharePage = 1
-      } 
+      }
     }
   }
 }

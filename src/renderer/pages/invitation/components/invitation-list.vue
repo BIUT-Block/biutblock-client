@@ -77,9 +77,7 @@ export default {
     }
   },
   created () {
-    dataCenterHandler.getRelatedMiners({
-      address: this.walletAddress
-    }, (body) => {
+    dataCenterHandler.getRelatedMiners({ address: this.walletAddress }, (body) => {
       if (body.length > 0) {
         for (let i = 0; i < body.length; i++) {
           let reward = body[i].reward || '0'
