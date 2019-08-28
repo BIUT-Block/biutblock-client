@@ -9,8 +9,8 @@ let sourceCode = 'ZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcywgYW1vdW50KSB7CiAgICB2YXIgdH
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = '35.158.171.46' //'scan.biut.io'
-    let externalServerAddressTest = '35.158.171.46' //'test.biut.io'
+    let externalServerAddress = 'test.biut.io' //'scan.biut.io'
+    let externalServerAddressTest = 'test.biut.io'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
     let localhostAddress = '127.0.0.1'
