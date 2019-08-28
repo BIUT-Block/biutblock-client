@@ -77,6 +77,17 @@ const DataCenterHandler = {
 		}, (err, res, body) => {
 			callback(body)
 		})
+	},
+
+	updatePoolName: function (params, callback) {
+		request({
+			url: `${dataCenterUrl}updateMiningPoolName`,
+			method: 'POST',
+			body: params,
+			json: true
+		}, (err, res, body) => {
+			callback(body)
+		})
 	}
 }
 

@@ -412,6 +412,11 @@ export default {
       wallet.role = 'Owner'
       wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
       this.orePoolPage = 2
+      dataCenterHandler.updatePoolName({
+        address: this.selectedWalletAddress
+      }, (doc) => {
+        console.log('update pool address success')
+      })
       dataCenterHandler.updatePoolAddress({
         address: this.selectedWalletAddress,
         ownPoolAddress: this.contractAddress,

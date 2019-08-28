@@ -92,7 +92,6 @@ export default {
               itemMoney: `${reward} BIUT`
             })
           }
-          
         }
         this.total = this.itemList.length
         this.pageSum = Math.ceil(this.itemList.length / 50)
