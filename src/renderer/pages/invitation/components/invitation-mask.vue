@@ -49,7 +49,7 @@
           <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt2') }}</span>
         </li>
         <li v-for="(item, index) in detailsLists" :key="index">
-          <span>{{ item.detailsTime }}</span>
+          <span>{{ item.detailsTime.slice(0, 19) }}</span>
           <span>{{ item.detailsMoney }}</span>
         </li>
       </ul>
@@ -57,6 +57,7 @@
       <!-- 分页 -->
      
       <wallet-pages 
+        v-show="detailsLists.length > 5"
         class="page-container"
         @next="nextPage"
         @prev="prevPage"
@@ -204,15 +205,18 @@ export default {
   .rules-content ul li:first-child span:last-child {width: 200px;text-align: center;display: inline-block;}
 
 
-  .details-content {width: 492px;background: #fff;padding: 0 32px 0;border-radius: 4px;height: 550px;}
+  .details-content {width: 428px;background: #fff;padding: 0 32px 0;border-radius: 4px;height: 550px;}
   .details-content h2 {padding: 30px 0 36px;}
-  .details-content ul {margin-top: 30px;}
+  .details-content ul {margin-top: 30px;height: 252px;}
   .details-content ul li {display: flex;align-items: center;padding-left: 20px;color: #252F33;font-size: 14px;height: 42px;
     box-sizing: border-box;border-bottom: 1px solid #E6E6E6;font-family: Lato-Medium;}
+  
+  
   .details-content ul li:first-child {height:42px;background:#f7fbfa;padding: 0 0 0 20px;color: #99A1A6;border: 0;}
   .en .details-content ul li:first-child {font-family: Source-Medium;}
-  .details-content ul li span:first-child {margin-right: 108px;}
-  .details-content ul li:first-child span:first-child {margin-right: 192px;}
+
+  .details-content ul li span:first-child {display: inline-block;width: 226px;}
+  .details-content ul li span:last-child {flex: 1;}
   
 
   .details-list {font-size: 14px;color: #252F33;}

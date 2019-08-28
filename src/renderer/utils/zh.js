@@ -27,9 +27,9 @@ export default {
 
     importKey: '私钥',
     importKeystore: 'Keystore文件',
-    importPhrase: '助记词',
+    importPhrase: '助记词'
   },
-  
+
   loginMask: {
     lgTxt: '无法导入，钱包地址未绑定邀请码。'
   },
@@ -294,7 +294,10 @@ export default {
     hiTit: '我的等级',
     hiShare: '一键分享',
 
-    hiTxt: '金牌',
+    hiTxt1: '铜牌',
+    hiTxt2: '银牌',
+    hiTxt3: '金牌',
+    hiTxt4: '超级合伙人',
 
     hiBtn: '查看规则',
 
@@ -341,6 +344,7 @@ export default {
     backBtn: '返回',
     mortgageBtn1: '锁仓',
     mortgageBtn1s: '锁仓中...',
+    mortgageBtn1ss: '等待智能合约生成...',
     mortgageBtn2: '锁仓更多',
     openBtn: '开启挖矿',
     stopBtn: '停止挖矿',
@@ -348,7 +352,7 @@ export default {
     knowBtn: '知道了',
 
     myKnowBtn: '我知道了',
-    myGoShowBtn: '马上开启分享',
+    myGoShowBtn: '马上开启分享'
   },
   page: {
     pageTotal: '条记录',

@@ -845,7 +845,7 @@ export default {
   .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;font-family: Lato-Regular;
     color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
   .wallet-mask-receive section input {border: 0;flex: 1;font-family: Lato-Regular;}
-  .wallet-mask-receive canvas {margin: 28px 0 7px;}
+  .wallet-mask-receive canvas {margin: 28px 0 7px -10px;width: 105px!important;height: 105px!important;}
   .wallet-mask-receive section label img {vertical-align: middle;margin-left: 4px;}
   .wallet-mask-receive section label:hover {cursor: pointer;}
   .wallet-mask-receive .qrcode-list {position: absolute;top: 28px;right: 0;z-index: 9;border-radius: 4px;

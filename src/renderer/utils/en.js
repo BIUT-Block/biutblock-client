@@ -296,7 +296,10 @@ export default {
     hiTit: 'My Level',
     hiShare: 'Share',
 
-    hiTxt: 'Gold medal',
+    hiTxt1: 'Bronze medal',
+    hiTxt2: 'Silver medal',
+    hiTxt3: 'Gold medal',
+    hiTxt4: 'Super partner',
 
     hiBtn: 'View rules',
 
@@ -344,6 +347,7 @@ export default {
     backBtn: 'Back',
     mortgageBtn1: 'Locked',
     mortgageBtn1s: 'Locking...',
+    mortgageBtn1ss: 'Waiting for contract address...',
     mortgageBtn2: 'Locked amount',
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
