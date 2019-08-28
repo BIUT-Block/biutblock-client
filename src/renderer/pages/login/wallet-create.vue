@@ -299,7 +299,7 @@ export default {
              && pass1.length > 7
              && passReg.test(pass1)
              && pass2 == pass1
-             && this.walletCode.length === 8 ? true : false
+             && this.walletCode.length === 8 && !this.createReadonly? true : false
     },
     
     //备份助记词按钮是否激活

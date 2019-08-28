@@ -79,7 +79,7 @@ export default {
         txFee: '0',
         chainName: 'SEC'
       }
-      this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 60 * 1000, transferTimeLock, (response) => {
+      this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 365* 24 * 3600 * 1000, transferTimeLock, (response) => {
         if (response.result.status === '1') {
           this.$emit('appendContract', this.privateKey)
         } 
