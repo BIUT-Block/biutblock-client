@@ -37,6 +37,7 @@
 
 <script>
 import WalletHandler from '../../../lib/WalletsHandler';
+const dataCenterHandler = require('../../../lib/DataCenterHandler')
 export default {
   name: '',
   props: {walletAddress: String, privateKey: String, contractAddress: String},
@@ -81,6 +82,12 @@ export default {
       }
       this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 60 * 1000, transferTimeLock, (response) => {
         if (response.result.status === '1') {
+          dataCenterHandler.updatePoolName({
+            address: this.walletAddress,
+            poolName: poolName
+        }, (doc) => {
+          console.log('update pool address success')
+        })
           this.$emit('appendContract', this.privateKey)
         } 
       })
