@@ -613,10 +613,11 @@ export default {
     },
 
     _findOutWallet (wallets, privateKey, from) {
-      console.log(wallets)
       if (wallets === 'error') {
-        //this._showImportError(from, 'input.privateKeyError2')
-        this.loginMaskShow = true
+
+        this._showImportError(from, '')
+        //this.walletnNewPassErrorText = "input.passUnlockError"
+        //this.walletnNewPassError = true
         return
       }
       dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
@@ -635,7 +636,8 @@ export default {
             }
           })
         } else {
-          this._showImportError(from, body.message)
+          this.loginMaskShow = true
+          //this._showImportError(from, body.message)
         }
       })
     },
@@ -644,15 +646,15 @@ export default {
       switch (from) {
         case "privatekey":
           this.privateKeyError = true
-          this.privateKeyErrorText = error
+          this.privateKeyErrorText = error === '' ? "input.privateKeyError" : error
           break
         case "keystore":
           this.walletnNewPassError = true
-          this.walletnNewPassErrorText = error
+          this.walletnNewPassErrorText = error === '' ? "input.passUnlockError" : error
           break
         case "phrase":
             this.phraseError = true
-            this.phraseErrorText = error
+            this.phraseErrorText = error === '' ? "input.phraseError" : error
           break
         default:
           break

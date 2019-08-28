@@ -15,7 +15,7 @@
       <invitation-mask 
         :pagesIdx = idx
         :maskAddress = maskAddress
-        :maskLevel = userLevel
+        :maskLevel = maskLevel
         :maskMoney = maskMoney
         :detailList = detailList
         v-show = "maskShow"
@@ -49,6 +49,7 @@ export default {
       maskMoney: "-",
       maskAddress: '-',
       invitationCode: '',
+      maskLevel: 0,
       detailList: []
     }
   },
@@ -94,6 +95,7 @@ export default {
       this.selectedItem = item
       this.maskMoney = item.itemMoney
       this.maskAddress = item.itemAddress
+      this.maskLevel = Number(item.level)
       this.detailList = []
       dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
         for (let detail of body.rewards) {

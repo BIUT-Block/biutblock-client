@@ -269,6 +269,7 @@ export default {
 
     //是否可点击开启挖矿
     mortgageActive () {
+     let _status = window.localStorage.getItem(this.selectedWallet.walletAddress)
      if (this.mortgageAmount.length > 10 && this.mortgageAmount.indexOf(".") < 0) {
         //只能输入10位整数
         this.mortgageAmount = String(this.mortgageAmount).substring(0,10)
@@ -282,7 +283,7 @@ export default {
       }
       return this.mortgageAmount >= 10000
         && this.availableMoney >= 10000
-        && Number(this.mortgageAmount) <= Number(this.availableMoney) ? true : false
+        && Number(this.mortgageAmount) <= Number(this.availableMoney) && _status !== "pending" && this.poolApplyTime !== '' ? true : false
     }
   },
   created () {
@@ -414,7 +415,7 @@ export default {
       this.orePoolPage = 2
       dataCenterHandler.updatePoolAddress({
         address: this.selectedWalletAddress,
-        ownPoolAddress: this.contractAddress,
+        ownPoolAddress: this.contractAddress[0],
         mortgageValue: wallet.mortgageValue,
         role: 'Owner'
       }, (doc) => {
@@ -546,15 +547,21 @@ export default {
           } 
         }
         if (benifs.length > 0) {
+          window.localStorage.removeItem(this.selectedWallet.walletAddress)
           this.digPage = false
         } else {
+          let status = window.localStorage.getItem(this.selectedWallet.walletAddress)
+          if (status === "pending") {
+            this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
+            this.mortgageBtn1Disabled = true
+          }
           this.digPage = true
         }
         this._calcMiningPool(benifs)
         this._insertLockHistory(benifs)
       })
       this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
-        if (contractInfo.timeLock) {
+        if (contractInfo.status && contractInfo.status !== 'pending') { 
           this.poolApplyMoney = contractInfo.totalSupply
           this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
           let tokenName = contractInfo.tokenName
@@ -564,6 +571,9 @@ export default {
           } else if (contractInfo.status === 'pending' && this.selectedWallet.role === 'Miner') {
             this.orePoolPage = 2
           }
+        } else {
+          window.localStorage.setItem(this.selectedWallet.walletAddress, 'noContract')
+          this.mortgageBtn1 = 'publicBtn.mortgageBtn1ss'
         }
       })
     },
@@ -657,6 +667,7 @@ export default {
       this.mortgageBtn1Disabled = true
       let privateKey = this.selectedPrivateKey
       let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
+      window.localStorage.setItem(this.selectedWalletAddress, 'pending')
       if (contractInfo.status === 'success') {
         this._addMoreMortgage(this.mortgageAmount)
       }
@@ -673,8 +684,9 @@ export default {
         txFee: '0',
         chainName: 'SEC'
       }
+      let unlockUntil = new Date().getTime() + 365 * 24 * 3600 * 1000
       this.$JsonRPCClient.sendContractTransaction(this.selectedWalletAddress, this.selectedPrivateKey, 
-        365 * 24 * 3600 * 1000, transferTimeLock,
+        unlockUntil, transferTimeLock,
         (response) => {
           this._getTimeLockHistory()
           this._getWalletBalance(this.selectedWalletAddress)
@@ -689,8 +701,8 @@ export default {
             console.log('update wallet file')
           })
           this.digPage = false
-          this.this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
-          this.mortgageBtn1Disabled = false
+          this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
+          this.mortgageBtn1Disabled = true
       })
     },
 

@@ -347,6 +347,7 @@ export default {
     backBtn: 'Back',
     mortgageBtn1: 'Locked',
     mortgageBtn1s: 'Locking...',
+    mortgageBtn1ss: 'Waiting for contract address...',
     mortgageBtn2: 'Locked amount',
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',

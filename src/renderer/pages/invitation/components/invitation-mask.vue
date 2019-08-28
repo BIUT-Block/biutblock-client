@@ -103,19 +103,19 @@ export default {
       if (locale === "en") {
         if (level == 1) {
           return 'level1'
-        } else if (level == 2) {
+        } else if (level == "2") {
           return 'level2'
-        } else if (level == 3) {
+        } else if (level == "3") {
           return 'level3'
         } else {
           return 'level4'
         }
       } else {
-        if (level == 1) {
+        if (level == "1") {
           return '一级'
-        } else if (level == 2) {
+        } else if (level == "2") {
           return '二级'
-        } else if (level == 3) {
+        } else if (level == "3") {
           return '三级'
         } else {
           return '四级'
