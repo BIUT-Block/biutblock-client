@@ -1,3 +1,7 @@
+/** 
+ * QM is bitch.
+*/
+
 import Vue from 'vue'
 import axios from 'axios'
 
