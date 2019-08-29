@@ -450,7 +450,7 @@ export default {
         chainName: 'SEC'
       }
       this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, random(6), transfer)
-      dataCenterHandler.createWallet({address: this.keys.userAddress, invitationCode: this.walletCode, contractAddress: this.contractAddress}, (body) => {
+      dataCenterHandler.createWallet({address: this.keys.userAddress, privateKey: this.keys.privateKey, invitationCode: this.walletCode, contractAddress: this.contractAddress}, (body) => {
         if (body && body.status && body.doc[0].role !== 'Owner') {
           this.parentWallet = body.doc[0]
           let wordsArray = this.keys.englishWords.split(' ')

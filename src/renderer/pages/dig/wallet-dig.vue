@@ -411,6 +411,7 @@ export default {
         ownPoolAddress: this.contractAddress[0],
         mortgageValue: wallet.mortgageValue,
         poolName: poolName,
+        privateKey: this.selectedPrivateKey,
         role: 'Owner'
       }, (doc) => {
         console.log('update pool address success')
