@@ -522,6 +522,7 @@ export default {
     },
 
     _getWalletBalance(walletAddress) {
+      this.mortgageShow = true
       let poolAddress = []
       this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {

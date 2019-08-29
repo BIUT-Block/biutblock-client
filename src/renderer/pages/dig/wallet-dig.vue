@@ -213,6 +213,7 @@ export default {
       getBlockHeightJob: '',
       getSyncStatusJob: '',
       getTimeLockJob: '',
+      getContractInfoJob: '',
       checkNodeJob: '',
       processTexts: ['homeDig.hdHeadListTxt'],
       moreList: [],
@@ -329,6 +330,9 @@ export default {
   destroyed () {
     window.sessionStorage.setItem('processTexts', JSON.stringify(this.processTexts))
     clearInterval(this.getBlockHeightJob)
+    if (this.getContractInfoJob !== '') {
+      clearInterval(this.getContractInfoJob)
+    }
     if (this.updateListJob !== '') {
       clearInterval(this.updateListJob)
     }
@@ -561,6 +565,13 @@ export default {
         this._calcMiningPool(benifs, allNodes)
         this._insertLockHistory(benifs)
       })
+      this._getContractInfo()
+      if(this.mortgageBtn1 == 'publicBtn.mortgageBtn1ss'){
+        this.getContractInfoJob = setInterval(this._getContractInfo, 1 * 60 * 1000)
+      }
+    },
+
+    _getContractInfo () {
       this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
         if (contractInfo.status && contractInfo.status !== 'pending') { 
           this.poolApplyMoney = contractInfo.totalSupply
@@ -572,11 +583,17 @@ export default {
           } else if (contractInfo.status === 'pending' && this.selectedWallet.role === 'Miner') {
             this.orePoolPage = 2
           }
+          if(this.getContractInfoJob !== '') {
+            clearInterval(this.getContractInfoJob)
+            if(this.mortgageBtn1 == 'publicBtn.mortgageBtn1ss'){
+              this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
+            }            
+          }
         } else {
           window.localStorage.setItem(this.selectedWallet.walletAddress, 'noContract')
           this.mortgageBtn1 = 'publicBtn.mortgageBtn1ss'
         }
-      })
+      })      
     },
 
     _insertLockHistory (benifs) {
