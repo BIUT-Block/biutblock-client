@@ -29,7 +29,7 @@
         >
           <span>{{ item.itemAddress }}</span>
           <span>{{ item.itemTime }}</span>
-          <span>{{ item.itemMoney }}</span>
+          <span>{{ getPointNum(item.itemMoney, 8) }}</span>
           <span class="look-details" @click="lookDetails(item)">{{
             $t("homeInvitation.hiListBtn")
           }}</span>
@@ -277,10 +277,10 @@ h2 {
 }
 
 .list-none {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 .list-none section {
   width: 138px;

@@ -329,6 +329,8 @@ export default {
     hiMaskDetailsListTxt1: '时间',
     hiMaskDetailsListTxt2: '奖励 (BUT)',
 
+    hiMaskDetailsListNull: '暂无记录',
+
     hiMaskShareTit1: 'BIUT- PC矿工POW挖矿',
     hiMaskShareTit2: '邀请码',
 
@@ -336,6 +338,7 @@ export default {
     hiMaskShareTxt2: '用浏览器打开链接查看',
 
     hiMaskShareTxt3: '在挖矿页面锁仓一万个BIUT，即可进行一键分享哦！',
+
   },
 
   publicBtn: {

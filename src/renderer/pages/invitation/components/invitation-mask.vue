@@ -39,7 +39,7 @@
       <section class="details-list details-list-top">
         <p class="details-list-tit">{{ $t('homeInvitationMask.hiMaskDetailsTxt') }}:</p>
         <p>
-          {{ maskMoney }}
+          {{ getPointNum(maskMoney, 8) }}
         </p>
       </section>
 
@@ -50,18 +50,23 @@
         </li>
         <li v-for="(item, index) in detailsLists" :key="index">
           <span>{{ item.detailsTime.slice(0, 19) }}</span>
-          <span>{{ item.detailsMoney }}</span>
+          <span>{{ getPointNum(item.detailsMoney, 8) }}</span>
         </li>
+
+        <!-- 列表为空 -->
+        <p v-show="detailsLists.length === 0" class="list-null">
+          {{ $t('homeInvitationMask.hiMaskDetailsListNull') }}
+        </p>
       </ul>
 
       <!-- 分页 -->
      
-      <wallet-pages 
+      <!-- <wallet-pages 
         v-show="detailsLists.length > 5"
         class="page-container"
         @next="nextPage"
         @prev="prevPage"
-        @goPage="goPage" />
+        @goPage="goPage" /> -->
 
          <!-- <wallet-pages 
         class="page-container"
@@ -130,7 +135,7 @@ export default {
           id: '1',
           rulesImg: level1,
           rulesLevel: 'homeInvitationMask.hiMaskRulesListLevel1',
-          rulesNumber: '1-9',
+          rulesNumber: '0-9',
           rulesReward1: '2%',
           rulesReward2: '1%'
         },
@@ -207,7 +212,11 @@ export default {
 
   .details-content {width: 428px;background: #fff;padding: 0 32px 0;border-radius: 4px;height: 550px;}
   .details-content h2 {padding: 30px 0 36px;}
-  .details-content ul {margin-top: 30px;height: 252px;}
+  .details-content ul {margin-top: 30px;height: 252px;overflow: auto;}
+  .details-content ul::-webkit-scrollbar { width: 2px; height: 2px;}
+  .details-content ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  .details-content ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
+
   .details-content ul li {display: flex;align-items: center;padding-left: 20px;color: #252F33;font-size: 14px;height: 42px;
     box-sizing: border-box;border-bottom: 1px solid #E6E6E6;font-family: Lato-Medium;}
   
@@ -222,8 +231,14 @@ export default {
   .details-list {font-size: 14px;color: #252F33;}
   .details-list-top {padding-top: 16px;}
   .details-list-tit {color: #99A1A6;padding-bottom: 6px;font-family: Lato-Bold;}
+  .en .details-list-tit {font-family: Source-Regular;}
   .details-list-level {width:56px;height:24px;background:#f5a623;border-radius:16px;display: inline-block;margin-left: 12px;
     text-align: center;line-height: 24px;color: #fff;}
 
   .page-container {padding-top: 16px;}
+
+  .list-null {display: flex;align-items: center;justify-content: center;height: calc(100% - 42px);font-size: 16px;font-family: Lato-Medium;
+    color: #99A1A6;}
+
+  .en .list-null {font-family: Source-Medium;}
 </style>

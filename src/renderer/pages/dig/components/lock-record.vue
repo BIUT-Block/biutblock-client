@@ -6,7 +6,7 @@
         <p>{{ $t('homeDig.hdNavRecordListTxt2') }}</p>
         <p class="last-more">
           {{ $t('homeDig.hdNavRecordListTxt3') }}
-          <span @click="maskShow = true" v-show="itemList.length > 0" class="more">{{ $t('homeDig.hdNavRecordMore') }}</span>
+          <span @click="maskShow = true" v-show="itemList.length > 5" class="more">{{ $t('homeDig.hdNavRecordMore') }}</span>
         </p>
       </li>
       <li v-for="(item, index) in itemList" v-if="itemList.length > 0 && index < 5" :key="index" v-show="itemList.length > 0">

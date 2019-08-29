@@ -331,6 +331,8 @@ export default {
     hiMaskDetailsListTxt1: 'Time',
     hiMaskDetailsListTxt2: 'Reward (BUT)',
 
+    hiMaskDetailsListTxt2: 'No record',
+
     hiMaskShareTit1: 'BIUT-PC Miner POW Mining',  
     
     hiMaskShareTit2: 'Invitation Code',

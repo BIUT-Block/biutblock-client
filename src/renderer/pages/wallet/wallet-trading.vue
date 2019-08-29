@@ -15,7 +15,7 @@
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3 :class="textStyle">{{amount}} {{moneyType}}</h3>
+        <h3 :class="textStyle">{{ amount}} {{moneyType}}</h3>
         <p :class="textStyle">{{status}}</p>
       </section>
 
