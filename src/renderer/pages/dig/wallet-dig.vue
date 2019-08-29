@@ -408,6 +408,7 @@ export default {
     onAddContract (privateKey, poolName) {
       let wallet = this.selectedWallet
       wallet.role = 'Owner'
+      this.poolName = poolName
       wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
       this.orePoolPage = 2
       dataCenterHandler.updatePoolAddress({
