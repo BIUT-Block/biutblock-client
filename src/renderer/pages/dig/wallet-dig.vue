@@ -523,6 +523,7 @@ export default {
     _getTimeLockHistory () {
       let benifs = []
       let poolAddress = []
+      let allNodes = new Set([]);
       if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
         this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
           poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
@@ -538,7 +539,12 @@ export default {
           let timeLock = contract.timeLock || {}
           if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
             benifs.push(timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
-          } 
+          }
+          if(contract.creator == this.selectedWallet.walletAddress){
+            Object.keys(timeLock).forEach((key)=>{
+              allNodes.add(key)
+            }) 
+          }
         }
         if (benifs.length > 0) {
           window.localStorage.removeItem(this.selectedWallet.walletAddress)
@@ -551,7 +557,7 @@ export default {
           }
           this.digPage = true
         }
-        this._calcMiningPool(benifs)
+        this._calcMiningPool(benifs, allNodes)
         this._insertLockHistory(benifs)
       })
       this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
@@ -587,8 +593,8 @@ export default {
       }
     },
 
-    _calcMiningPool (benifs) {
-      this.poolNode = benifs.length
+    _calcMiningPool (benifs, allNodes) {
+      this.poolNode = allNodes.size
       this.poolAssets = 0
  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
