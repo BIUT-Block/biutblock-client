@@ -70,6 +70,7 @@ export default {
     },
 
     submitFrom() {
+      let poolName = this.poolName
       let transferTimeLock = {
         timestamp: new Date().getTime(),
         walletAddress: this.walletAddress,
@@ -80,15 +81,9 @@ export default {
         txFee: '0',
         chainName: 'SEC'
       }
-      this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 60 * 1000, transferTimeLock, (response) => {
+      this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 365* 24 * 3600 * 1000, transferTimeLock, (response) => {
         if (response.result.status === '1') {
-          dataCenterHandler.updatePoolName({
-            address: this.walletAddress,
-            poolName: poolName
-        }, (doc) => {
-          console.log('update pool address success')
-        })
-          this.$emit('appendContract', this.privateKey)
+          this.$emit('appendContract', this.privateKey, poolName)
         } 
       })
       //alert("点击了提交按钮")

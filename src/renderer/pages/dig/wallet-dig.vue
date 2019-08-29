@@ -298,7 +298,7 @@ export default {
     this.selectedWallet = wallets[this.selectedPrivateKey]
     if (this.selectedWallet.role === 'Miner') {
       this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
-      this.poolName = this.selectedWallet.walletName
+      //this.poolName = this.selectedWallet.walletName
       if (this.selectedWallet.mortgageValue === '0' ) {
         this.digPage = true
       } else {
@@ -314,16 +314,9 @@ export default {
     this.initMiningStatus()
 
     this._getLatestBlockInfo((balance) => {
-      // if (balance < 10) {
-      //   this.stopMining()
-      //   this.digButton = "publicBtn.openBtn"
-      //   this.maskShow = false
-      //   //this.noCursor = false
-      //   this.miningIn = false
-      // }
     })
     this._getTotalReward()
-
+    this._getPoolName()
     this.getBlockHeightJob = setInterval(()=>{
       this._getLatestBlockInfo((balance) => {
       })
@@ -408,7 +401,7 @@ export default {
       ipcRenderer.send('close')
     },
 
-    onAddContract (privateKey) {
+    onAddContract (privateKey, poolName) {
       let wallet = this.selectedWallet
       wallet.role = 'Owner'
       wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
@@ -417,6 +410,7 @@ export default {
         address: this.selectedWalletAddress,
         ownPoolAddress: this.contractAddress[0],
         mortgageValue: wallet.mortgageValue,
+        poolName: poolName,
         role: 'Owner'
       }, (doc) => {
         console.log('update pool address success')
@@ -565,7 +559,7 @@ export default {
           this.poolApplyMoney = contractInfo.totalSupply
           this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
           let tokenName = contractInfo.tokenName
-          this.poolName = tokenName.split('-')[2]
+          //this.poolName = tokenName.split('-')[2]
           if (contractInfo.status === 'success' && this.selectedWallet.role === 'Owner') {
             this.orePoolPage = 4
           } else if (contractInfo.status === 'pending' && this.selectedWallet.role === 'Miner') {
@@ -598,7 +592,9 @@ export default {
       this.poolAssets = 0
  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
       for (let benifit of benifs) {
-        this.poolAssets = this.poolAssets + Number(benifit.lockAmount)
+        for (let item of benifit) {
+          this.poolAssets = this.poolAssets + Number(item.lockAmount)
+        }
       }
     },
     
@@ -624,6 +620,16 @@ export default {
             blockhash: element.blockHash
           })
         })
+      })
+    },
+
+    _getPoolName () {
+      dataCenterHandler.getMiningPool({
+        address: this.selectedWalletAddress
+      }, (body) => {
+        if (body.miningPool) {
+          this.poolName = body.miningPool.poolName
+        } 
       })
     },
 
@@ -700,7 +706,6 @@ export default {
           WalletsHandler.updateWalletFile(this.selectedWallet, () => {
             console.log('update wallet file')
           })
-          this.digPage = false
           this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
           this.mortgageBtn1Disabled = true
       })
