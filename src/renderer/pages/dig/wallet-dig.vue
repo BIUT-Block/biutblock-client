@@ -248,6 +248,7 @@ export default {
       poolApplyMoney: 0,
       poolName: '',
       applyContract: false,
+      _status: '',
       itemList: [],//锁仓记录
       orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
       codeShow: true //邀请码是否显示 
@@ -270,7 +271,7 @@ export default {
 
     //是否可点击开启挖矿
     mortgageActive () {
-     let _status = window.localStorage.getItem(this.selectedWallet.walletAddress)
+      this._status = window.localStorage.getItem(this.selectedWallet.walletAddress)
      if (this.mortgageAmount.length > 10 && this.mortgageAmount.indexOf(".") < 0) {
         //只能输入10位整数
         this.mortgageAmount = String(this.mortgageAmount).substring(0,10)
@@ -284,7 +285,7 @@ export default {
       }
       return this.mortgageAmount >= 10000
         && this.availableMoney >= 10000
-        && Number(this.mortgageAmount) <= Number(this.availableMoney) && _status !== "pending" && this.poolApplyTime !== '' ? true : false
+        && Number(this.mortgageAmount) <= Number(this.availableMoney) && this._status !== "pending" && this.poolApplyTime !== '' ? true : false
     }
   },
   created () {
@@ -697,6 +698,7 @@ export default {
       this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
       this.mortgageBtn1Disabled = true
       let privateKey = this.selectedPrivateKey
+      this._status = 'pending'
       let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
       window.localStorage.setItem(this.selectedWalletAddress, 'pending')
       if (contractInfo.status === 'success') {

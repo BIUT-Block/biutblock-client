@@ -83,7 +83,7 @@ export default {
   computed: {
     // 列表数据
     itemLists() {
-      return this.itemList.slice(this.beginPos, this.endpos)
+      return this.itemList
     }
   },
   created() {
