@@ -88,8 +88,8 @@ export default {
 
     hwBiuInsufficient: "BIU 不足",
 
-    hwNameNull: '钱包名称不能为空或只有空格',
-    hwUpdateNameSuccess: '更改钱包名称成功',
+    hwNameNull: '钱包名称不能为空',
+    hwUpdateNameSuccess: '钱包名称更改成功',
 
     hwDeleteSuccess: '删除钱包成功',
 
@@ -129,7 +129,7 @@ export default {
     hwmSentSilder2: '快',
     hwmSentNetwork: '没有网络连接。',
     hwmSentFeeErrorText: '转账手续费不能大于BIU余额',
-    hwmSentFailure: '转账失败',
+    hwmSentFailure: '提交失败',
     hwmSentSuccess: '提交成功',
   },
 
@@ -214,7 +214,7 @@ export default {
     hdNavPoolBtn1: '无法开通矿池',
     hdNavPoolBtn2: '申请开通矿池',
 
-    hdNavPoolTxt1: '500,000 BIUT以上可申请开通矿池，获得更高收益哦！',
+    hdNavPoolTxt1: '拥有可用数量500,000 BIUT以上即可申请开通矿池，获得更高收益哦！',
     hdNavPoolTxt2: '恭喜你获得开通矿池的资格，点击申请开通矿池，享受更高收益吧！',
     hdNavPoolApplyTxt1: '已申请开通矿池，请等待系统审核哦',
     hdNavPoolApplyTxt2: '名称',
