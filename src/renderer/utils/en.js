@@ -215,7 +215,7 @@ export default {
     hdNavPoolBtn1: 'Unable to open mining pool',
     hdNavPoolBtn2: 'Apply for opening a mining pool',
 
-    hdNavPoolTxt1: 'Only more than 500,000 you  can apply for opening the mining pool!',
+    hdNavPoolTxt1: 'Only more than 500,000 biut you  can apply for opening the mining pool!',
     hdNavPoolTxt2: 'Congratulations you on getting the qualification to open the mining pool,and click  to open the mining pool, enjoy more profit! ',
     hdNavPoolApplyTxt1: 'You have applied for starting the mining pool(',
     hdNavPoolApplyTxt2: '',
