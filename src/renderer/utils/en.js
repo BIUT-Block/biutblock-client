@@ -188,7 +188,7 @@ export default {
   homeDig: {
     hdEnteryTit: 'PC-Miner',
     hdEnteryTxt1: 'Mining Wallet',
-    hdEnteryTxt2: 'Locked amount',
+    hdEnteryTxt2: 'Lock amount',
     hdEnteryTxt3: '-Start from 10,000 BIUT, locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU.',
     hdEnteryTxt4: 'Locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU',
     
@@ -257,7 +257,7 @@ export default {
   homeDigMask: {
     hdMaskMortgageTit: 'Lock',
     hdMaskLoading: 'Loading...',
-    hdMaskMortgageTxt1: 'Locked amount',
+    hdMaskMortgageTxt1: 'Lock amount',
     hdMaskMortgageTxt2: 'Locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU.',
 
     hdMaskFirstTit: 'Start Mining',
@@ -347,10 +347,10 @@ export default {
     cancelBtn: 'Cancel',
     confirmBtn: 'Confirm',
     backBtn: 'Back',
-    mortgageBtn1: 'Locked',
+    mortgageBtn1: 'Lock',
     mortgageBtn1s: 'Locking...',
     mortgageBtn1ss: 'Waiting for contract address...',
-    mortgageBtn2: 'Locked amount',
+    mortgageBtn2: 'Lock amount',
     openBtn: 'Open mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',

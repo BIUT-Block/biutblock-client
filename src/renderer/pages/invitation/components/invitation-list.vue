@@ -29,7 +29,7 @@
         >
           <span>{{ item.itemAddress }}</span>
           <span>{{ item.itemTime }}</span>
-          <span>{{ getPointNum(item.itemMoney, 8) }}</span>
+          <span>{{ getPointNum(item.itemMoney) }}</span>
           <span class="look-details" @click="lookDetails(item)">{{
             $t("homeInvitation.hiListBtn")
           }}</span>

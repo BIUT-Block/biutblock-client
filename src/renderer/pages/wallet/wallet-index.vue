@@ -127,22 +127,22 @@
         <section class="wallet-header-money-list">
           <section class="money-content">
             <span>{{ $t("homeWallet.hwBiut") }}</span>
-            <p>{{ walletBalance | currency("") }} BIUT</p>
+            <p>{{ getPointNum(walletBalance) }} BIUT</p>
             <section class="money-text-list">
               <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt1") }}</span>
-                <span>{{ availableMoney | currency("") }}</span>
+                <span>{{ getPointNum(availableMoney) }}</span>
               </section>
               <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt2") }}</span>
-                <span>{{ freezeMoney | currency("") }}</span>
+                <span>{{ getPointNum(freezeMoney) }}</span>
               </section>
             </section>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
           <section class="money-content">
             <span>{{ $t("homeWallet.hwBiu") }}</span>
-            <p>{{ walletBalanceSEN | currency("") }} BIU</p>
+            <p>{{ getPointNum(walletBalanceSEN) }} BIU</p>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
         </section>

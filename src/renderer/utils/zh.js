@@ -88,8 +88,8 @@ export default {
 
     hwBiuInsufficient: "BIU 不足",
 
-    hwNameNull: '钱包名称不能为空或只有空格.',
-    hwUpdateNameSuccess: '更改钱包名称成功。',
+    hwNameNull: '钱包名称不能为空或只有空格',
+    hwUpdateNameSuccess: '更改钱包名称成功',
 
     hwDeleteSuccess: '删除钱包成功',
 

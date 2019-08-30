@@ -7,8 +7,8 @@
       <li style="width: 40%;">{{ $t('homeDig.hdNavProfitListTxt4') }}</li>
     </ul>
     <ul v-for="(item, index) in digLists" v-if ="index < 4">
-      <li style="width: 24%;">{{ item.age }}</li>
-      <li style="width: 18%;color: #F5A623;">{{ item.reward }}</li>
+      <li style="width: 24%;">{{ item.age.substring(0, 20) }}</li>
+      <li style="width: 18%;color: #F5A623;">{{ getPointNum(item.reward) }}</li>
       <li style="width: 18%;">{{ item.blocknumber }}</li>
       <li style="width: 40%;color: #388ED9;">{{ item.blockhash.replace(/(.{10}).+(.{12})/,'$1......$2') }}</li>
     </ul>

@@ -16,11 +16,9 @@ import './assets/common/font.css'
 
 import i18n from './utils/index'
 
-import {currency} from './utils/currency'
 import cal from './utils/calculation'
 Vue.prototype.cal = cal
 
-Vue.filter("currency",currency)
 
 import Element from 'element-ui'
 
@@ -45,12 +43,9 @@ Vue.prototype.navClose = function () {
 }
 
 //小数点保留位数
-Vue.prototype.getPointNum = function (num,n) {
+Vue.prototype.getPointNum = function (num) {
   let str = String(num);
-  let index = str.indexOf(".");
-  let str1 = str.substring(0,index+n+1);
-  str1 = Number(str1);
-  return str1
+  return str.split('.').map((item,idx)=>idx===0?item.replace(/\B(?=(\d{3})+$)/g,','):item.substring(0,8)).join('.')
 }
 
 //获取input输入框判断长度

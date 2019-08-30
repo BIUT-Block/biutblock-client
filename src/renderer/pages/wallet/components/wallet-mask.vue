@@ -56,7 +56,7 @@
             
             <section class="all-amount-list">
               <span>{{ $t('homeWalletMask.hwmSentTxt3Amount') }}：</span>
-              <span>{{tradingIdx === 0 ? allAmount : allfeeVal}} {{tradingText}}</span>
+              <span>{{tradingIdx === 0 ? (getPointNum(allAmount)) : (getPointNum(allfeeVal))}} {{tradingText}}</span>
               <span @click="sentAllAmount">{{ $t('homeWalletMask.hwmSentTxt3All') }}</span>
             </section>
             <wallet-tips :tips="moneyShowText" v-if="moneyShow"/>

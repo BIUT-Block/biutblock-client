@@ -2,7 +2,7 @@
   <ul>
     <li>
       <span>{{ $t('homeDig.hdFootTit1') }}：</span>
-      <span>{{totalMining}} BIU</span>
+      <span>{{ getPointNum(totalMining)}} BIU</span>
     </li>
     <li>
       <span>{{ $t('homeDig.hdFootTit2') }}：</span>

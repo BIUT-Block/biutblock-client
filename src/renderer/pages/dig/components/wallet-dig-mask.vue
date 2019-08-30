@@ -88,7 +88,7 @@
         </section>
         <section class="first-dig-txt-all">
           {{ $t("homeWallet.hwBiutTxt1") }}：
-          <p>{{ availableMoney }} BIUT</p>
+          <p>{{ getPointNum(availableMoney) }} BIUT</p>
           <span @click="allAmountMortgage">{{
             $t("homeWalletMask.hwmSentTxt3All")
           }}</span>

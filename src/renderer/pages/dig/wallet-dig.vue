@@ -8,11 +8,11 @@
         <p class="mining-address">0x{{ selectedWalletAddress }}</p>
         <section class="flex-between">
           <p>{{ $t('homeWallet.hwBiutTxt1') }}：</p>
-          <span>{{ availableMoney | currency("") }}</span>
+          <span>{{ getPointNum(availableMoney) }}</span>
         </section>
         <section class="flex-between">
           <p>{{ $t('homeWallet.hwBiutTxt2') }}：</p>
-          <span>{{ freezeMoney | currency("") }}</span>
+          <span>{{ getPointNum(freezeMoney) }}</span>
         </section>
         <p class="mining-txt">{{ $t('homeDig.hdEnteryTxt2') }} <span style="color: #EE1C39;">*</span></p>
         <section class="flex-between mining-list">
@@ -44,8 +44,8 @@
             0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}
           </section>
 
-          <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ availableMoney.toLocaleString('en-US') }} BIUT</span></h4>
-          <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ freezeMoney.toLocaleString('en-US') }} BIUT</span></h4>
+          <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ getPointNum(availableMoney) }} BIUT</span></h4>
+          <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ getPointNum(freezeMoney) }} BIUT</span></h4>
           <section class="dig-button-list">
             <button type="button" :class="[openPool ? 'sotpPool' : '', openActive ? 'passCorrect' : '']" :disabled="!openActive" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
             <button type="button" :class="appendAcitve ? 'appendAcitve' : ''" :disabled="!appendAcitve" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
@@ -242,8 +242,8 @@ export default {
       pageIdx: 1, //初始页面展示挖矿收益
       poolNode: 0,
       poolAssets: 0,
-      poolAllEarnings: 0,
-      poolMyEarnings: 0,
+      poolAllEarnings: "0",
+      poolMyEarnings: "0",
       poolApplyTime: '',
       poolApplyMoney: 0,
       poolName: '',

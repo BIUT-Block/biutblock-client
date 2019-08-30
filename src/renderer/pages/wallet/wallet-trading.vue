@@ -15,7 +15,7 @@
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3 :class="textStyle">{{ amount}} {{moneyType}}</h3>
+        <h3 :class="textStyle">{{ getPointNum(amount)}} {{moneyType}}</h3>
         <p :class="textStyle">{{status}}</p>
       </section>
 
@@ -106,7 +106,7 @@ export default {
           {
             id: '06',
             title: 'homeWalletDetails.hwdListTxt6',
-            cnt: this.amount + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
+            cnt: this.getPointNum(this.amount) + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
           },
           {
             id: '07',

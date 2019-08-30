@@ -5,12 +5,12 @@
       <section>
         <span></span>
         <span>{{ $t('homeDig.hdNavProfitListTit2') }}：</span>
-        <span>{{ getPointNum (this.number, 8) }}</span>
+        <span>{{ this.number }}</span>
       </section>
       <section>
         <span></span>
         <span>{{ $t('homeDig.hdNavProfitListTit3') }}：</span>
-        <span>{{ getPointNum (this.income, 8) }}  BIU</span>
+        <span>{{ getPointNum(this.income) }}  BIU</span>
       </section>
       <section class="dig-more" v-show="digTitle" @click="digMore">{{ $t('homeDig.hdNavRecordMore') }}</section>
     </section>

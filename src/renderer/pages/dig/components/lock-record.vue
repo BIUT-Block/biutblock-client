@@ -10,9 +10,9 @@
         </p>
       </li>
       <li v-for="(item, index) in itemList" v-if="itemList.length > 0 && index < 5" :key="index" v-show="itemList.length > 0">
-        <span>{{ item.lockTime }}</span>
-        <span>{{ item.lockMoney }}</span>
-        <span>{{ item.unlockTime }}</span>
+        <span>{{ item.lockTime.substring(0,20) }}</span>
+        <span>{{ getPointNum(item.lockMoney) }}</span>
+        <span>{{ item.unlockTime.substring(0,20) }}</span>
       </li>
     </ul>
     <section class="list-null" v-show="itemList.length === 0">

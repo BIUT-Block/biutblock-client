@@ -39,7 +39,7 @@
       <section class="details-list details-list-top">
         <p class="details-list-tit">{{ $t('homeInvitationMask.hiMaskDetailsTxt') }}:</p>
         <p>
-          {{ getPointNum(maskMoney, 8) }}
+          {{ getPointNum(maskMoney) }}
         </p>
       </section>
 
@@ -50,7 +50,7 @@
         </li>
         <li v-for="(item, index) in detailsLists" :key="index">
           <span>{{ item.detailsTime.slice(0, 19) }}</span>
-          <span>{{ getPointNum(item.detailsMoney, 8) }}</span>
+          <span>{{ getPointNum(item.detailsMoney) }}</span>
         </li>
 
         <!-- 列表为空 -->

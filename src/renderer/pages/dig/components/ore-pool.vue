@@ -52,7 +52,7 @@
       <section class="header-success-list">
         <section class="success-list1">
           <p>{{ $t('homeDig.hdNavPoolSuccessTit1') }}：<span>{{ poolName }}</span></p>
-          <p>{{ $t('homeDig.hdNavPoolSuccessTit2') }}：<span>{{ poolApplyTime }}</span></p>
+          <p>{{ $t('homeDig.hdNavPoolSuccessTit2') }}：<span>{{ poolApplyTime.substring(0,20) }}</span></p>
         </section>
         <section class="success-list2">
           <p>{{ $t('homeDig.hdNavPoolSuccessTit3') }}：<span>0x{{ walletAddress }}</span></p>
@@ -100,8 +100,8 @@ export default {
     poolName: String,
     poolNode: Number,
     poolAssets: Number,
-    poolAllEarnings: Number,
-    poolMyEarnings: Number,
+    poolAllEarnings: String,
+    poolMyEarnings: String,
     poolApplyTime: String,
     poolApplyMoney: Number,
     applyContract: Boolean
@@ -141,25 +141,25 @@ export default {
           id: 0,
           poolImg: this.applySuccess1,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt1',
-          poolTxt: (this.poolAssets || 0).toLocaleString('en-US') + " BIUT",
+          poolTxt: (this.getPointNum(this.poolAssets) || 0) + " BIUT",
         },
         {
           id: 1,
           poolImg: this.applySuccess2,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt2',
-          poolTxt: this.poolNode.toLocaleString('en-US'),
+          poolTxt: this.poolNode || 0,
         },
         {
           id: 2,
           poolImg: this.applySuccess3,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt3',
-          poolTxt: this.poolAllEarnings.toLocaleString('en-US') + " BIU",
+          poolTxt: (this.getPointNum(this.poolAllEarnings) || 0) + " BIU",
         },
         {
           id: 3,
           poolImg: this.applySuccess4,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt4',
-          poolTxt: this.poolMyEarnings.toLocaleString('en-US') + " BIU",
+          poolTxt: (this.getPointNum(this.poolMyEarnings) || 0) + " BIU",
         }
       ]
     }

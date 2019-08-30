@@ -16,7 +16,7 @@
         <p class="look-list">
           <section class="progress-list clearfix">
             <el-progress :percentage="progressTxt" color="#29D893" /> 
-            <span>{{ progress }} / {{ $t(levelNumber) }}</span>
+            <span>{{ progress }} / {{ levelNumber }}</span>
           </section>
           <span @click="lookRules" class="rules-btn">{{ $t('homeInvitation.hiBtn') }}</span>
         </p>
@@ -98,7 +98,7 @@ export default {
       } else if (this.level === 3) {
         return 63
       } else {
-        return 'hiMaskRulesTit.hiMaskRulesListLevel4Txt'
+        return '64 +'
       }
     },
 

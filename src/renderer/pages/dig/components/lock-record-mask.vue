@@ -13,17 +13,17 @@
           <span>{{ $t('homeDigMask.hdMaskRecordListTxt3') }}</span>
         </li>
         <li v-for="(item, index) in itemList" :key="index">
-          <span>{{ item.lockTime }}</span>
-          <span>{{ item.lockMoney }}</span>
-          <span>{{ item.unlockTime }}</span>
+          <span>{{ item.lockTime.substring(0,20) }}</span>
+          <span>{{ getPointNum(item.lockMoney) }}</span>
+          <span>{{ item.unlockTime.substring(0,20) }}</span>
         </li>
       </ul>
 
-      <wallet-pages 
+      <!-- <wallet-pages 
         :total= itemList.length
         @next="nextPage"
         @prev="prevPage"
-        @goPage="goPage" />
+        @goPage="goPage" /> -->
     </section>
   </main>
 </template>
@@ -73,7 +73,10 @@ export default {
   .en .record-head h2 {font-family: Source-Medium;font-size: 22px;}
   .record-head img {position: absolute;top: -10px;right: -12px;cursor: pointer;}
 
-  ul {padding-bottom: 20px;height: 394px;}
+  ul {padding-bottom: 20px;height: 394px;overflow: auto;}
+  ul::-webkit-scrollbar { width: 2px; height: 2px;}
+  ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
+  ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
   ul li {height: 42px;line-height: 42px;color: #252F33;font-size: 13px;display: flex;align-items: center;font-family: Lato-Regular;}
 
   ul li span:first-child {width: 30%;display: inline-block;padding-left: 20px;}

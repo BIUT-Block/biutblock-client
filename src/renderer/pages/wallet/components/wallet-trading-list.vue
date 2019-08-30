@@ -14,7 +14,7 @@
         </section>
       </section>
       <section class="list-amount" :class="item.listState | stateColor">
-        <p>{{ item.listMoney }} {{ item.listUnit }}</p>
+        <p>{{ getPointNum(item.listMoney) }} {{ item.listUnit }}</p>
         <span>{{ item.listState | state(item.listState, i18Ens) }}</span>
       </section>
     </li>

@@ -25,12 +25,12 @@
               <section>
                 <span></span>
                 <span>{{ $t('homeDig.hdNavProfitListTit2') }}：</span>
-                <span>{{this.digNumber}}</span>
+                <span>{{ this.digNumber}}</span>
               </section>
               <section>
                 <span></span>
                 <span>{{ $t('homeDig.hdNavProfitListTit3') }}：</span>
-                <span>{{this.digIncome}} BIU</span>
+                <span>{{ getPointNum(this.digIncome) }} BIU</span>
               </section>
             </section>
           </section>
