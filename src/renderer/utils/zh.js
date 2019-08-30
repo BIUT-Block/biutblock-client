@@ -263,6 +263,7 @@ export default {
 
     hdMaskBeginTxt1: '是否启用 ',
     hdMaskBeginTxt2: ' 开启挖矿',
+    hdMaskBeginTxt3: ' 是否开启挖矿',
 
     hdMaskStartTit: 'You will start mining with',
     hdMaskStartTxt1: 'Increase the number of frozen.',

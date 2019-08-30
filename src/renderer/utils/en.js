@@ -265,6 +265,7 @@ export default {
 
     hdMaskBeginTxt1: 'Whether to enable',
     hdMaskBeginTxt2: 'to open mining',
+    hdMaskBeginTxt3: 'Start Mining?',
 
     hdMaskStartTit: 'You will start mining with',
     hdMaskStartTxt1: 'Increase the number of frozen.',

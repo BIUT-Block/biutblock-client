@@ -28,7 +28,7 @@
           v-show="itemLists.length > 0"
         >
           <span>{{ item.itemAddress }}</span>
-          <span>{{ item.itemTime }}</span>
+          <span>{{ item.itemTime.substring(0,20) }}</span>
           <span>{{ getPointNum(item.itemMoney) }}</span>
           <span class="look-details" @click="lookDetails(item)">{{
             $t("homeInvitation.hiListBtn")

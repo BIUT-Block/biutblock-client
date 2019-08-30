@@ -925,6 +925,7 @@ export default {
   .dig-enter input {border: 0;flex: 1;}
   .dig-enter button {width:291px;border: 0;color: #fff;font-size: 14px;margin-top: 44px;font-family: Lato-Regular;
     height:48px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);border-radius:4px;}
+  .en .dig-enter button {font-family: Source-Regular;}
 
   .dig-button-list {display: flex;padding-top: 14px;}
   .dig-button-list button {width:120px;height:32px;background:#D8D8D8;border-radius:4px;

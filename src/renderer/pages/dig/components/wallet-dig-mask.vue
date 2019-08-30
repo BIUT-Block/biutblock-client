@@ -11,10 +11,14 @@
         @click="closeMask"
       />
       <section class="begin-dig">
-        <p class="first-dig-tips">
+        <p class="first-dig-tips" v-show="!nameShow">
           {{ $t("homeDigMask.hdMaskBeginTxt1") }}
           <span>{{ poolName }}</span>
           {{ $t("homeDigMask.hdMaskBeginTxt2") }}
+        </p>
+
+        <p class="first-dig-tips" v-show="nameShow">
+          {{ $t('homeDigMask.hdMaskBeginTxt3') }}
         </p>
 
         <button
@@ -127,7 +131,13 @@ export default {
       mortgageIpt: '',
       mortgageImg: false,
 
-      pageIdx: 1
+      pageIdx: 1,
+      nameShow: false,
+    }
+  },
+  created() {
+    if (this.poolName === "" || this.poolName === null) {
+      this.nameShow = true
     }
   },
   computed: {
