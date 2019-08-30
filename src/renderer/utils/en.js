@@ -349,7 +349,7 @@ export default {
     confirmBtn: 'Confirm',
     backBtn: 'Back',
     mortgageBtn1: 'Lock',
-    mortgageBtn1s: 'Locking...',
+    mortgageBtn1s: 'Locking, please be patient...',
     mortgageBtn1ss: 'Waiting for contract address...',
     mortgageBtn2: 'Lock amount',
     openBtn: 'Open mining',

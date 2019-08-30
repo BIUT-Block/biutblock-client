@@ -347,7 +347,7 @@ export default {
     confirmBtn: '确定',
     backBtn: '返回',
     mortgageBtn1: '锁仓',
-    mortgageBtn1s: '锁仓中...',
+    mortgageBtn1s: '锁仓中, 请耐心等待...',
     mortgageBtn1ss: '等待智能合约生成...',
     mortgageBtn2: '锁仓更多',
     openBtn: '开启挖矿',

@@ -731,7 +731,7 @@ export default {
           WalletsHandler.updateWalletFile(this.selectedWallet, () => {
             console.log('update wallet file')
           })
-          this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
+          this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
           this.mortgageBtn1Disabled = true
       })
     },
