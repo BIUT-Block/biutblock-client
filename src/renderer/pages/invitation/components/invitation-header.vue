@@ -12,7 +12,7 @@
       
       <section class="header-text">
         <h3>{{ $t(headerLevel) }}</h3>
-        <p class="header-txt">{{ $t(nextUpgrade) }}</p>
+        <!-- <p class="header-txt">{{ $t(nextUpgrade) }}</p> -->
         <p class="look-list">
           <section class="progress-list clearfix">
             <el-progress :percentage="progressTxt" color="#29D893" /> 
