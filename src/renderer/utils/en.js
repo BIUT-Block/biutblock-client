@@ -15,8 +15,8 @@ export default {
     loginBtn2: 'Login',
     loginBtn3: 'Enter Wallet',
 
-    createdTips1: 'Save these details!',
-    createdTips2: 'If you lose these credentials, you lose access to your assets.',
+    createdTips1: 'Save these information!',
+    createdTips2: 'Store these information at a safety position. If you lose it, you will lose access to your funds.',
     createdPhrase: 'PHRASE',
     createdKey: 'PRIVATE KEY',
     createdAgreement: 'I have backed up these credentials',
@@ -31,7 +31,7 @@ export default {
   },
 
   loginMask: {
-    lgTxt: 'Unable to import, wallet address unbound invitation code.'
+    lgTxt: "Unable to import, the wallet address doesn’t bind invitation code."
   },
 
   input: {
@@ -48,24 +48,24 @@ export default {
     walletPrivateKey: 'Eenter your private key here',
     walletPhrase: 'Enter your Phrase here width space-separated',
 
-    passFormatTips: 'Use 8 to 30 characters must with a mix of letters, numbers & symbols',
-    passDifferent: 'Two passwords are inconsistent',
-    passError: 'Password error, unable to unlock wallet',
+    passFormatTips: 'Use 8 to 30 characters, must with a mix of letters, numbers & symbols',
+    passDifferent: "Passwords don’t match",
+    passError: 'Wrong password, unable to unlock the wallet',
     passUnlockError: 'Password Error, unlock failed',
 
     walletCodeError: 'Please enter the correct invitation code',
 
     nameNull: 'Please input wallet name',
 
-    privateKeyError: 'Private Error',
-    privateKeyError2: 'Input value is not valid',
-    phraseError: 'Phrase error',
+    privateKeyError: 'Invalid Private Key',
+    privateKeyError2: 'Invalid Private Key',
+    phraseError: 'Phrase Error',
 
     imporantExists: 'Wallet already exists or imported'
   },
 
   homeLeftNav: {
-    createBtn: 'Create and Import Wallets'
+    createBtn: 'Create or Import a Wallet'
   },
 
   homeWallet: {
@@ -84,36 +84,36 @@ export default {
     hwBiu: 'BIU Balance',
 
     hwListTit: 'Transaction Record',
-    hwListNull: 'No transaction data',
+    hwListNull: 'No transaction record',
 
-    hwBiuInsufficient: "BIU isn't enough to sent",
+    hwBiuInsufficient: "Insufficient BIU amount",
 
-    hwNameNull: 'Wallet name cannot be empty or only with space.',
-    hwUpdateNameSuccess: 'Change wallet name success',
+    hwNameNull: 'Wallet name cannot be empty.',
+    hwUpdateNameSuccess: 'Wallet name successfully changed',
 
-    hwDeleteSuccess: 'Delete wallet successfully',
+    hwDeleteSuccess: 'Wallet successfully deleted',
 
-    hwInvitationTips: 'In the mining page lock  BIUT, you can unlock the invitation code oh!'
+    hwInvitationTips: 'Lock BIUT In the mining page, you will get your invitation code!'
   },
 
   homeWalletMask: {
-    hwmKeyTit: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
+    hwmKeyTit: 'Security Warning: The private key is not encrypted. and the export is risky. Here recommend to backup with mnemonic and Keystore.',
     hwmKeyCopy: 'Copy',
 
     hwmKeystoreIpt: 'Enter your new password',
 
-    hwmDeleteTit: 'Confirm to delete your wallet? Please make sure you have backed up your wallet.',
+    hwmDeleteTit: 'Are you sure to delete your wallet? Please make sure you have already make a backup!',
     hwmDeleteTit1: "The wallet is a mining wallet and can't be deleted.",
-    hwmDeleteTit2: 'The wallet is bind to mining. You can not remove it.',
+    hwmDeleteTit2: 'The wallet is mining. You can not delete it.',
     hwmDeleteBtn1: 'Delete',
     hwmDeleteBtn2: 'OK',
     
-    hwmReceiptTxt1: 'Account',
+    hwmReceiptTxt1: 'Receive Address',
     hwmReceiptTxt2: 'Amount',
     hwmReceiptTxt3: 'Your address(QR Code)',
 
-    hwmSentTit1: 'Confirm The Following Information.',
-    hwmSentTips: 'You are sending assets to the following address, please confirm the operation.',
+    hwmSentTit1: 'Confirm The Following Transaction Information.',
+    hwmSentTips: 'You are sending assets to the following address, please confirm the information.',
     hwmSentTxt1: 'FROM',
     hwmSentTxt2: 'TO',
     hwmSentAddressIpt: 'Receive Address',
@@ -121,7 +121,7 @@ export default {
     hwmSentTxt2Error2: 'This is not a valid address.',
     hwmSentTxt2Error3: 'The same address cannot be transferred.',
     hwmSentTxt3: 'AMOUNT',
-    hwmSentTxt3Error: 'Transfer amount must be less than balance.',
+    hwmSentTxt3Error: 'Transfer amount must be less than available balance.',
     hwmSentTxt3Amount: 'Available',
     hwmSentTxt3All: 'All',
     hwmSentTxt4: 'FEE',
@@ -136,8 +136,8 @@ export default {
 
   homeWalletDetails: {
     hwdTit: 'Transaction Details',
-    hwdListTxt1: 'Transaction number',
-    hwdListTxt2: 'Block',
+    hwdListTxt1: 'Transaction hash',
+    hwdListTxt2: 'Height',
     hwdListTxt3: 'Creation time',
     hwdListTxt4: 'From',
     hwdListTxt5: 'To',
@@ -161,7 +161,7 @@ export default {
     hnListTxt3: 'CITY',
     hnListTxt4: 'NODE TIME',
 
-    hnNetwork: 'Please check for network failure.',
+    hnNetwork: 'Please check your connection status.',
   },
 
   homeSet: {
@@ -170,8 +170,8 @@ export default {
     hsTxt1: 'Language',
     hsTxt2: 'Follow system',
 
-    hsTit2: 'Switching Network',
-    hsTxt3: 'Currently connected network',
+    hsTit2: 'Switch Network',
+    hsTxt3: 'Current connected network',
     hsTxt4: 'Test Network',
     hsTxt5: 'Main Network',
 
@@ -182,13 +182,13 @@ export default {
     hsMain: 'Main Net',
 
     hsNetwork1: 'You will switch to the ',
-    hsNetwork2: ', this operation will restart the client and update the wallet data, please confirm that the wallet information has been saved!',
+    hsNetwork2: ', this operation will restart the application and update the wallet data, please make sure the wallet data has been saved!',
   },
 
   homeDig: {
     hdEnteryTit: 'PC-Miner',
     hdEnteryTxt1: 'Mining Wallet',
-    hdEnteryTxt2: 'Lock amount',
+    hdEnteryTxt2: 'Lock-up amount',
     hdEnteryTxt3: '-Start from 10,000 BIUT, locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU.',
     hdEnteryTxt4: 'Locked BIUT will be frozen one year. The more BIUT locked, the more profits of mining BIU',
     
@@ -196,49 +196,49 @@ export default {
 
     hdNavProfit: 'Mining Profit',
     hdNavProfitListNull: 'No mining records yet',
-    hdNavProfitListTit1: 'Mining Record',
-    hdNavProfitListTit2: 'Number Of Mining',
-    hdNavProfitListTit3: 'Income of Mining',
-    hdNavProfitListTxt1: 'AGE',
-    hdNavProfitListTxt2: 'REWARD',
-    hdNavProfitListTxt3: 'BLOCKS',
-    hdNavProfitListTxt4: 'BLOCK HASH',
+    hdNavProfitListTit1: 'Mining Profits',
+    hdNavProfitListTit2: 'Mining Amount',
+    hdNavProfitListTit3: 'Total Profits',
+    hdNavProfitListTxt1: 'Date',
+    hdNavProfitListTxt2: 'Profits',
+    hdNavProfitListTxt3: 'HEIGHT',
+    hdNavProfitListTxt4: 'TRANSACTION HASH',
 
     hdNavRecord: 'Lock Record',
     hdNavRecordMore: 'More',
     hdNavRecordListNull: 'No record',
-    hdNavRecordListTxt1: 'LOCK RECORD',
-    hdNavRecordListTxt2: 'LOCKED AMOUNT (BIUT)',
+    hdNavRecordListTxt1: 'LOCK TIME',
+    hdNavRecordListTxt2: 'LOCK AMOUNT (BIUT)',
     hdNavRecordListTxt3: 'UNLOCK TIME',
 
     hdNavPool: 'Mining Pool',
     hdNavPoolBtn1: 'Unable to open mining pool',
     hdNavPoolBtn2: 'Apply for opening a mining pool',
 
-    hdNavPoolTxt1: 'Only more than 500,000 biut you  can apply for opening the mining pool!',
-    hdNavPoolTxt2: 'Congratulations you on getting the qualification to open the mining pool,and click  to open the mining pool, enjoy more profit! ',
-    hdNavPoolApplyTxt1: 'You have applied for starting the mining pool(',
+    hdNavPoolTxt1: 'With available 500,000 BIUT, you can open your own mining pool!',
+    hdNavPoolTxt2: 'Congratulations! You can open your own mining pool now. Please click below button to open it. Enjoy more profits',
+    hdNavPoolApplyTxt1: 'You have applied for open the mining pool. Please wait for the return result of the main network.',
     hdNavPoolApplyTxt2: '',
     hdNavPoolApplyTxt3: '),please wait for 3~5 days.',
 
-    hdNavPoolFailureTit: 'Create my mine pool',
+    hdNavPoolFailureTit: 'Create my Mining Pool',
     hdNavPoolFailureTxt1: 'Application record',
     hdNavPoolFailureTxt2: 'Application Amount',
     hdNavPoolFailureTxt3: 'Time',
     hdNavPoolFailureTxt4: 'Status',
     hdNavPoolFailureTxt5: 'Refuse',
 
-    hdNavPoolSuccessTit1: 'Mine Pool',
+    hdNavPoolSuccessTit1: 'Mining Pool',
     hdNavPoolSuccessTit2: 'Start Time',
     hdNavPoolSuccessTit3: 'Current Address',
     hdNavPoolSuccessTit4: 'Contract Address',
-    hdNavPoolSuccessListTxt1: 'My pool assets',
-    hdNavPoolSuccessListTxt2: 'Number of pool nodes',
-    hdNavPoolSuccessListTxt3: 'Total pool profit',
-    hdNavPoolSuccessListTxt4: 'My profit',
+    hdNavPoolSuccessListTxt1: 'My Pool assets',
+    hdNavPoolSuccessListTxt2: 'Pool nodes amount',
+    hdNavPoolSuccessListTxt3: 'Total Pool profits',
+    hdNavPoolSuccessListTxt4: 'My profits',
 
     hdFootTit1: 'Whole Network Mining',
-    hdFootTit2: 'Blocks',
+    hdFootTit2: 'Height',
     hdFootTit3: 'Mined by',
 
     hdFootTimeTxt1: 'seconds ago',
@@ -285,12 +285,12 @@ export default {
     hdMaskRecordListTxt2: 'LOCKED AMOUNT (BIUT)',
     hdMaskRecordListTxt3: 'UNLOCK TIME',
 
-    hdMaskPoolTit: 'Create the mining pool',
-    hdMaskPoolTxt1: 'Congratulations on getting the opportunity to creat mining pool. You can get more mining profit by completing the following operations.',
+    hdMaskPoolTit: 'Create my Mining Pool',
+    hdMaskPoolTxt1: 'Congratulations! You can open your mining pool now. Please complete below operations to open and enjoy more profits.',
     hdMaskPoolTxt2: 'Mining Pool Name',
     hdMaskPoolTxt3: 'Duplicate mine name',
     hdMaskPoolTxt4: 'Apply for opening a mining pool',
-    hdMaskPoolNameIpt: 'name your pool'
+    hdMaskPoolNameIpt: 'Make a name for your poo'
   },
 
   homeInvitation: {
@@ -318,7 +318,7 @@ export default {
 
   homeInvitationMask: {
     hiMaskRulesTit: 'View rules',
-    hiMaskRulesTxt: 'Every time the invitation is successful, it will reward BIUT, please check it.',
+    hiMaskRulesTxt: 'Every time the invitation is successful, you will get BIUT rewards. Please check it.',
     hiMaskRulesListTxt1: 'Level',
     hiMaskRulesListTxt2: 'Number of people',
     hiMaskRulesListLevel1: 'Bronze partner',
@@ -328,11 +328,11 @@ export default {
     hiMaskRulesListLevel4Txt: 'More than 64',
 
     hiMaskDetailsTit: 'Reward details',
-    hiMaskDetailsTxt: 'Total revenue (BIUT)',
+    hiMaskDetailsTxt: 'Total rewards(BIUT)',
     hiMaskDetailsListTxt1: 'Time',
-    hiMaskDetailsListTxt2: 'Reward (BUT)',
+    hiMaskDetailsListTxt2: 'Reward (BIUT)',
 
-    hiMaskDetailsListTxt2: 'No record',
+    hiMaskDetailsListNull: 'No record',
 
     hiMaskShareTit1: 'BIUT-PC Miner POW Mining',  
     
@@ -341,7 +341,7 @@ export default {
     hiMaskShareTxt1: 'Copy Link',
     hiMaskShareTxt2: 'Open the link with a browser to view',
 
-    hiMaskShareTxt3: 'Lock 10,000 BIUT on the mining page to open one-click sharing.',
+    hiMaskShareTxt3: 'Lock 10,000 BIUT on the mining page to get your invitation link.',
   },
 
   publicBtn: {
@@ -351,14 +351,14 @@ export default {
     mortgageBtn1: 'Lock',
     mortgageBtn1s: 'Locking, please be patient...',
     mortgageBtn1ss: 'Waiting for contract address...',
-    mortgageBtn2: 'Lock amount',
-    openBtn: 'Open mining',
+    mortgageBtn2: 'Lock more',
+    openBtn: 'Start mining',
     stopBtn: 'Stop mining',
     resubmitBtn: 'Resubmit',
     knowBtn: 'OK',
 
     myKnowBtn: 'OK',
-    myGoShowBtn: 'Open Sharing'
+    myGoShowBtn: 'Share Now'
   },
   page: {
     pageTotal: 'records in total',
@@ -368,7 +368,7 @@ export default {
   },
 
   tips: {
-    copySuccess: 'Copy success',
-    copyFailure: 'Copy failure'
+    copySuccess: 'Copied',
+    copyFailure: 'Fail to copy'
   }
 }
