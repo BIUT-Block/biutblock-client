@@ -534,9 +534,10 @@ export default {
       let poolAddress = []
       let allNodes = new Set([]);
       if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
-        this.selectedWallet.mortgagePoolAddress.forEach((pool) => {
+        for (let i = 1; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
+          let pool = this.selectedWallet.mortgagePoolAddress[i]
           poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
-        })
+        }
       }
       if (this.selectedWallet.ownPoolAddress.length > 0) {
         this.selectedWallet.ownPoolAddress.forEach((pool) => {
