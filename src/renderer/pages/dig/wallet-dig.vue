@@ -24,7 +24,7 @@
         <button type="button" 
           :disabled="!mortgageActive"
           :readonly="mortgageBtn1Disabled"
-          :class="mortgageActive ? 'passCorrect' : ''"
+          :class="[mortgageActive ? 'passCorrect' : '',mortgageBtn1Disabled?'cantClick':'']"
           @click="onMortgage">
             {{ $t(mortgageBtn1) }}
           </button>
@@ -128,6 +128,7 @@
     <dig-mask  
       v-show="maskShow"
       :pages="makePages"
+      ref="digMaskPage"
       :networkErrorText="networkErrorText"
       :selectedWalletAddress="selectedWalletAddress"
       :availableMoney="availableMoney"
@@ -707,6 +708,7 @@ export default {
     },
 
     _addMoreMortgage (mortgage) {
+      this.$refs.digMaskPage.appednReadonly = true
       let transferTimeLock = {
         timestamp: new Date().getTime(),
         walletAddress: this.selectedWalletAddress,
@@ -735,6 +737,7 @@ export default {
           })
           this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
           this.mortgageBtn1Disabled = true
+          this.$refs.digMaskPage.appednReadonly = false
       })
     },
 

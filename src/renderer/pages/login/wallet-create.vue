@@ -56,7 +56,7 @@
                       :text="walletButtonText"
                       :disabled="!createActive"
                       :readonly="createReadonly"
-                      :class="createActive?'passCorrect':''"
+                      :class="[createActive?'passCorrect':'',createReadonly?'cantClick':'']"
                       @click.native="createWallet"/>
     </section>
 

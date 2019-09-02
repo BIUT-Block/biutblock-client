@@ -102,7 +102,7 @@
         <button
           type="button"
           class="confrimBtn"
-          :class="mortgageActive ? 'passCorrect' : ''"
+          :class="[mortgageActive ? 'passCorrect' : '',appednReadonly?'cantClick':'']"
           :disabled="!mortgageActive"
           @click="mortgageFrom"
         >
@@ -133,6 +133,7 @@ export default {
 
       pageIdx: 1,
       nameShow: false,
+      appednReadonly: false
     }
   },
   created() {
@@ -217,7 +218,7 @@ export default {
     //     this.firstBeginIpt =  beginIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
     //   }
     // },
-
+    
     mortgageFrom() {
       this.$emit('addMoreMortgage', this.mortgageIpt)
       this.closeMask()
