@@ -49,27 +49,31 @@ function createWindow () {
 
   // ------------------------  SETUP DATABASE PATH && Envs -----------------------
   let path = app.getPath('appData') + '/' + packageJSON.name
-  let netType = 'main'
-  let settingPath = path + '/BIUT_Wallet_setting.json'
-  if (fs.existsSync(settingPath)) {
-    let settingContent = fs.readFileSync(settingPath, 'utf-8')
-    netType = JSON.parse(settingContent).netType
-  }
+  // let netType = 'main'
+  // let settingPath = path + '/BIUT_Wallet_Pool_setting.json'
+  // if (fs.existsSync(settingPath)) {
+  //   let settingContent = fs.readFileSync(settingPath, 'utf-8')
+  //   netType = JSON.parse(settingContent).netType
+  // }
   console.log(path + '/data/')
   const { net } = require('electron')
   let requestBIUT
   let requestBIU
-  if (netType === 'main') {
-    console.log('node connect with http://scan.biut.io/genesisBlockHash')
-    process.env.netType = 'main'
-    requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
-    requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
-  } else {
-    console.log('node connect with http://test.biut.io/genesisBlockHash')
-    process.env.netType = 'test'
-    requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
-    requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
-  }
+  console.log('node connect with http://scan.biut.io/genesisBlockHash')
+  process.env.netType = 'main'
+  requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
+  requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
+  // if (netType === 'main') {
+  //   console.log('node connect with http://scan.biut.io/genesisBlockHash')
+  //   process.env.netType = 'main'
+  //   requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
+  //   requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
+  // } else {
+  //   console.log('node connect with http://test.biut.io/genesisBlockHash')
+  //   process.env.netType = 'test'
+  //   requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
+  //   requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
+  // }
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
   const SECNODE = require('@biut-block/biutjs-node')
   let SECCore = new SECNODE.Core({

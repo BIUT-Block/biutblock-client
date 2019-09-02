@@ -87,11 +87,11 @@
             </section>
 
             <!-- 切换正式与测试网络 maskPages == 1 -->
-            <section
+            <!-- <section
               class="setting-mask-body-right-network"
               v-show="maskPages == 1"
-            >
-              <p>{{ $t("homeSet.hsTxt3") }}</p>
+            > -->
+              <!-- <p>{{ $t("homeSet.hsTxt3") }}</p>
               <section :class="networkIdx === 1 ? 'drop' : ''">
                 <img
                   :src="networkIdx === 1 ? agreements : agreement"
@@ -100,9 +100,9 @@
                   @click="isNetwork(1)"
                 />
                 <span>{{ $t("homeSet.hsTxt4") }}</span>
-              </section>
+              </section> -->
               <!-- 主网暂时不提供选择 -->
-              <section :class="networkIdx === 2 ? 'drop' : ''">
+              <!-- <section :class="networkIdx === 2 ? 'drop' : ''">
                 <img
                   :src="networkIdx === 2 ? agreements : agreement"
                   :class="networkIdx === 2 ? 'drop' : ''"
@@ -110,8 +110,8 @@
                   @click="isNetwork(2)"
                 />
                 <span>{{ $t("homeSet.hsTxt5") }}</span>
-              </section>
-            </section>
+              </section> -->
+            <!-- </section> -->
             <!-- 版本 maskPages == 2 -->
             <section
               class="setting-mask-body-right-version"
@@ -196,10 +196,10 @@ export default {
           id: '01',
           cnt: "homeSet.hsTit1"
         },
-        {
-          id: '02',
-          cnt: "homeSet.hsTit2"
-        },
+        // {
+        //   id: '02',
+        //   cnt: "homeSet.hsTit2"
+        // },
         {
           id: '03',
           cnt: "homeSet.hsTit3"

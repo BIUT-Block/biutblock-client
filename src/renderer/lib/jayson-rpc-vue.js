@@ -512,17 +512,19 @@ export default {
       }
     }
 
-    if (process.env.netType === 'test') {
-      console.log('Start jayson client with test network')
-      process.env.netType = 'test'
-      jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
-      jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
-    } else {
-      console.log('Start jayson client with main network')
-      process.env.netType = 'main'
-      jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-      jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
-    }
+    console.log('Start jayson client with main network')
+    process.env.netType = 'main'
+    jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+    jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+
+    // if (process.env.netType === 'test') {
+    //   console.log('Start jayson client with test network')
+    //   process.env.netType = 'test'
+    //   jsonRPC.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
+    //   jsonRPC.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
+    // } else {
+
+    // }
 
     Object.defineProperty(Vue.prototype, '$JsonRPCClient', {
       value: jsonRPC
