@@ -1,7 +1,7 @@
 <template>
   <section class="dig-body-title">
     <h3>{{ $t('homeDig.hdNavProfitListTit1') }}</h3>
-    <section class="dig-body-title-list">
+    <p class="dig-body-title-list">
       <section>
         <span></span>
         <span>{{ $t('homeDig.hdNavProfitListTit2') }}：</span>
@@ -12,7 +12,7 @@
         <span>{{ $t('homeDig.hdNavProfitListTit3') }}：</span>
         <span>{{ getPointNum(this.income) }}  BIU</span>
       </section>
-      <section class="dig-more" v-show="digTitle" @click="digMore">{{ $t('homeDig.hdNavRecordMore') }}</section>
+      <p class="dig-more" v-show="digTitle" @click="digMore">{{ $t('homeDig.hdNavRecordMore') }}</p>
     </section>
   </section>
 </template>
@@ -68,8 +68,7 @@ export default {
     background:rgba(245,166,35,1);border-radius:50%;margin-right: 10px;}
   .dig-body-title .dig-body-title-list section span:last-child {color: #252F33;font-family: Lato-Bold;}
   .dig-body-title .dig-body-title-list section:nth-of-type(even) span:first-child {background:#388ED9;margin-left: 40px;}
-  .dig-body-title .dig-body-title-list .dig-more {width:48px;height:24px;background:rgba(255,255,255,1);
+  .dig-more {height:24px;background:rgba(255,255,255,1);padding: 0 10px;cursor: pointer;
     box-shadow:0px 0px 2px rgba(0,0,0,0.16);border-radius:2px;text-align: center;line-height: 24px;
     color: #29D893;font-weight: 400;margin-left: 50px;}
-
 </style>

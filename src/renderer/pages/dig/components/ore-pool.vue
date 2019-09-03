@@ -32,7 +32,7 @@
             {{ $t('homeDig.hdNavPoolFailureTxt1') }}
           </p>
           <p>
-            {{ $t('homeDig.hdNavPoolFailureTxt2') }}：
+            {{ $t('homeDig.hdNavPoolFailureTxt2') }}
             <span>{{ poolApplyMoney }}</span>
           </p>
           <p>
@@ -40,7 +40,7 @@
             <span>{{ poolApplyTime }}</span>
           </p>
           <p>
-            {{ $t('homeDig.hdNavPoolFailureTxt4') }}：
+            {{ $t('homeDig.hdNavPoolFailureTxt4') }}： 
             <span>{{ $t('homeDig.hdNavPoolFailureTxt5') }}</span>
           </p>
         </li>
@@ -62,7 +62,7 @@
       <ul>
         <li v-for="(item, index) in successList" :key="index">
           <img :src="item.poolImg" alt="">
-          <span class="pool-tit">{{ $t(item.poolTit) }}</span>
+          <span class="pool-tit">{{ $t(item.poolTit) }}{{ item.poolType }}</span>
           <span class="pool-txt">{{ item.poolTxt }}</span>
         </li>
       </ul>
@@ -141,25 +141,29 @@ export default {
           id: 0,
           poolImg: this.applySuccess1,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt1',
-          poolTxt: (this.getPointNum(this.poolAssets) || 0) + " BIUT",
+          poolType: '（BIUT）',
+          poolTxt: this.getPointNum(this.poolAssets) || 0,
         },
         {
           id: 1,
           poolImg: this.applySuccess2,
+          poolType: '',
           poolTit: 'homeDig.hdNavPoolSuccessListTxt2',
           poolTxt: this.poolNode || 0,
         },
         {
           id: 2,
           poolImg: this.applySuccess3,
+          poolType: '（BIU）',
           poolTit: 'homeDig.hdNavPoolSuccessListTxt3',
-          poolTxt: (this.getPointNum(this.poolAllEarnings) || 0) + " BIU",
+          poolTxt: this.getPointNum(this.poolAllEarnings || 0),
         },
         {
           id: 3,
           poolImg: this.applySuccess4,
+          poolType: '（BIU）',
           poolTit: 'homeDig.hdNavPoolSuccessListTxt4',
-          poolTxt: (this.getPointNum(this.poolMyEarnings) || 0) + " BIU",
+          poolTxt: this.getPointNum(this.poolMyEarnings) || 0,
         }
       ]
     }

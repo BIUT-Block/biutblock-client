@@ -97,7 +97,7 @@ export default {
               itemAddress: `0x${body[i].address}`,
               itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
               level: body[i].level,
-              itemMoney: `${reward} BIUT`
+              itemMoney: `${reward}`
             })
           }
         }
