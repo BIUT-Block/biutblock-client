@@ -9,7 +9,7 @@ let sourceCode = 'ZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcywgYW1vdW50KSB7CiAgICB2YXIgdH
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = 'scan.biut.io'
+    let externalServerAddress = 'test.biut.io'
     let externalServerAddressTest = 'test.biut.io'
     let externalServerPort = '3002'
     let externalServerPortSEN = '3003'
@@ -26,16 +26,16 @@ export default {
         this.clientSEN = jayson.http(`http://${localhostAddress}:${localhostPortSEN}`)
       },
       switchToExternalServer: function () {
-        let isTestEnv = window.localStorage.getItem('secTest')
-        if (isTestEnv === 'true') {
+        //let isTestEnv = window.localStorage.getItem('secTest')
+        //if (isTestEnv === 'true') {
           process.env.netType = 'test'
           this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
-        } else {
-          process.env.netType = 'main'
-          this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-          this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
-        }
+        //} else {
+        //  process.env.netType = 'main'
+        //  this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+        //  this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+       // }
       },
 
       _getBalance: function (client, walletAddress, tokenName, fnUpdateBalance) {

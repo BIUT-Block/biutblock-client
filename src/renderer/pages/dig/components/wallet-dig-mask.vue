@@ -196,7 +196,7 @@ export default {
 
     //断网的方法处理
     onContinue() {
-      this.$emit('continue')
+      this.$emit('exit')
     },
 
     //断网的方法处理

@@ -271,7 +271,7 @@ export default {
     hdMaskStartTxt3: 'Guarantee Amount',
     hdMaskStartBtn: 'Open mining',
 
-    hdMaskNetworkTit: 'No connection to network. Continue or exit?',
+    hdMaskNetworkTit: '网络异常, 请检查网络状态并重新登录。',
     hdMaskNetworkExit: 'Exit',
     hdMaskNetworkContinue: 'Continue',
     hdMaskNetworkReconnecting: 'Reconnecting',

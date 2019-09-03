@@ -126,7 +126,7 @@
     </section>
 
     <!-- 切换主网测试 网络弹窗提示 -->
-    <section class="mask" v-show="maskIndexShow">
+    <!-- <section class="mask" v-show="maskIndexShow">
       <section class="mask-container index-mask">
         <section>
           <img
@@ -149,7 +149,7 @@
           }}</span>
         </section>
       </section>
-    </section>
+    </section> -->
   </main>
 </template>
 

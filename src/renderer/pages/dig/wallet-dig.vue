@@ -461,6 +461,22 @@ export default {
       }, 3 * 60 * 1000)
     },
 
+    /** 检查peers 和 网络连接的方法 */
+    _startCheckPeersJob () {
+      this.$JsonRPCClient.checkRlpConnections((response) => {
+        if (response.result.message === 0) {
+          this.networkError = true
+          this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+        }
+      })
+    },
+    _startCheckNetworkJob () {
+      if (!WalletsHandler.checkNetworkStatus()) {
+        this.networkError = true
+        this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+      }
+    },
+
     _getWalletBalance(walletAddress) {
       let poolAddress = []
       this.freezeMoney = 0
@@ -508,24 +524,6 @@ export default {
         return Number(value).toFixed(Number(splitValue[1])).toString()
       } else {
         return Number(value)
-      }
-    },
-
-    _startCheckPeersJob () {
-      this.$JsonRPCClient.checkRlpConnections((response) => {
-        if (response.result.message === 0) {
-          this.maskShow = true
-          this.makePages = 2
-          this.networkErrorText = 'homeDigMask.hdMaskNetworkTxt1'
-        }
-      })
-    },
-
-    _startCheckNetworkJob () {
-      if (!WalletsHandler.checkNetworkStatus()) {
-        this.maskShow = true
-        this.makePages = 2
-        this.networkErrorText = 'homeDigMask.hdMaskNetworkTxt2'
       }
     },
 
