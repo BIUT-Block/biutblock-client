@@ -49,9 +49,9 @@
           <button type="button" class="exit" @click="onAppExit">
             {{ $t("homeDigMask.hdMaskNetworkExit") }}
           </button>
-          <button type="button" class="continue" @click="onContinue">
+          <!-- <button type="button" class="continue" @click="onContinue">
             {{ $t("homeDigMask.hdMaskNetworkContinue") }}
-          </button>
+          </button> -->
         </section>
       </section>
     </section>
