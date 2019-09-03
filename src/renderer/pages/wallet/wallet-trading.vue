@@ -131,10 +131,21 @@ export default {
     this.fee = trade.listMinerCost
     this.moneyType=trade.listUnit
     
-    let address = 'http://scan.biut.io/sen/search?search='
+    var address;
     if (this.$JsonRPCClient.isTestNetwork()) {
-      address = 'http://test.biut.io/search?search='
+      if (trade.listUnit === "BIUT") {
+        address = 'http://test.biut.io/search?search='
+      } else {
+        address = 'http://test.biut.io/sen/search?search='
+      }
+    } else {
+      if(trade.listUnit === "BIUT") {
+        address = 'http://scan.biut.io/search?search='
+      } else {
+        address = 'http://scan.biut.io/sen/search?search='
+      }
     }
+
     switch(trade.listState) {
       case 'Successful':
         if (trade.listMoney.indexOf('+') > -1) {
