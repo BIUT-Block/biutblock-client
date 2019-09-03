@@ -465,14 +465,18 @@ export default {
     _startCheckPeersJob () {
       this.$JsonRPCClient.checkRlpConnections((response) => {
         if (response.result.message === 0) {
-          this.networkError = true
+          this.maskShow = true
+          this.makePages = 2
+         // this.networkError = true
           this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
         }
       })
     },
     _startCheckNetworkJob () {
       if (!WalletsHandler.checkNetworkStatus()) {
-        this.networkError = true
+        this.maskShow = true
+        this.makePages = 2
+       // this.networkError = true
         this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
       }
     },
@@ -827,6 +831,7 @@ export default {
                       this.saveMingingStatus()
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
+                      this._startCheckPeersJob()
                       this.checkNodeJob = setInterval(this._startCheckPeersJob, 2* 60 * 1000)
                     }
                   } else {
@@ -835,7 +840,7 @@ export default {
                   }
                 })
               }, 30*1000)
-            }, 10*60*1000)
+            }, 60*1000)
             this._beginMiningWithWallet()
           }
         })

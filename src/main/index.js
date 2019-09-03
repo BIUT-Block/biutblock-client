@@ -59,10 +59,10 @@ function createWindow () {
   const { net } = require('electron')
   let requestBIUT
   let requestBIU
-  console.log('node connect with http://scan.biut.io/genesisBlockHash')
-  process.env.netType = 'main'
-  requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
-  requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
+  console.log('node connect with http://test.biut.io/genesisBlockHash')
+  process.env.netType = 'test'
+  requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
+  requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
   // if (netType === 'main') {
   //   console.log('node connect with http://scan.biut.io/genesisBlockHash')
   //   process.env.netType = 'main'
