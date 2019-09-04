@@ -111,7 +111,7 @@ export default {
         {
           id: '2',
           tit: 'homeInvitation.hiListHeadTxt2',
-          txt: '456'
+          txt: '456'+'BIUT'
         },
         {
           id: '3',
@@ -121,7 +121,7 @@ export default {
         {
           id: '4',
           tit: 'homeInvitation.hiListHeadTxt4',
-          txt: '456'
+          txt: '456'+'BIUT'
         }
       ]
     }
