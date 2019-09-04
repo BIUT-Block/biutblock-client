@@ -87,6 +87,10 @@ export default {
       total: 0,//总记录数
       beginPos: 0,
       endpos: 50,
+      firstLevel: 0,
+      firstLevelAmount: 0,
+      secondLevel: 0,
+      secondLevelAmount: 0,
       searchIpt: '',//input搜索内容
       itemList: [],
       nullTips: 'homeInvitation.hiListNull', //为空记录提示  hiListSearchNull - 搜素记录空   hiListNull- 列表空
@@ -106,33 +110,33 @@ export default {
         {
           id: '1',
           tit: 'homeInvitation.hiListHeadTxt1',
-          txt: '456'
+          txt: this.firstLevel
         },
         {
           id: '2',
           tit: 'homeInvitation.hiListHeadTxt2',
-          txt: '456'+'BIUT'
+          txt: this.firstLevelAmount +'BIUT'
         },
         {
           id: '3',
           tit: 'homeInvitation.hiListHeadTxt3',
-          txt: '456'
+          txt: this.secondLevel
         },
         {
           id: '4',
           tit: 'homeInvitation.hiListHeadTxt4',
-          txt: '456'+'BIUT'
+          txt: this.secondLevelAmount +'BIUT'
         }
       ]
     }
   },
   created() {
     dataCenterHandler.getInvitationDetails({ address: this.walletAddress }, (body) => {
-      if (body.length > 0) {
-        for (let i = 0; i < body.length; i++) {
-          let reward = body[i].rewards || '0'
+      if (body.rewards && body.rewards.length > 0) {
+        for (let i = 0; i < body.rewards.length; i++) {
+          let reward = body.rewards[i].rewards || '0'
           let level = 1
-          switch (body[i].type) {
+          switch (body.rewards[i].type) {
             case 'level1':
               level = 1
               break
@@ -149,16 +153,23 @@ export default {
               level = 5 //矿池的等级
               break
           }
-          if (reward !== '0') {
+          if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level1') {
+            this.firstLevelAmount = this.firstLevelAmount + Number(body.rewards[i].rewards)
+            this.firstLevel = this.firstLevel + 1
             this.itemList.push({
               id: '1',
-              itemAddress: `0x${body[i].address || ''}`,
-              itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+              itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
+              itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
               level: level,
               itemMoney: `${reward}`
             })
+          } else if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level2') {
+            this.secondLevel = this.secondLevel + 1
+            this.secondLevelAmount = this.secondLevelAmount + Number(body.rewards[i].rewards)
           }
-        }
+        } 
+
+
         this.total = this.itemList.length
         this.pageSum = Math.ceil(this.itemList.length / 50)
       }

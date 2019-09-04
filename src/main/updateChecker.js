@@ -3,8 +3,8 @@ import { dialog, shell } from 'electron'
 import axios from 'axios'
 import pkg from '../../package.json'
 const version = pkg.version
-const release = 'https://api.github.com/repositories/158717489/releases'
-const downloadUrl = 'http://scan.secblock.io/secwallet'
+const release = 'https://api.github.com/repositories/206411923/releases'
+const downloadUrl = 'https://github.com/BIUT-Block/biutblock-client-pool/releases/tag/'
 
 const checkVersion = async (app) => {
   let showTip
@@ -25,7 +25,7 @@ const checkVersion = async (app) => {
           message: `Found new version ${latest}. Please update.`
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
-            shell.openExternal(downloadUrl)
+            shell.openExternal(`${downloadUrl}${latest}`)
           }
           app.quit()
         // db.read().set('picBed.showUpdateTip', !checkboxChecked).write()
