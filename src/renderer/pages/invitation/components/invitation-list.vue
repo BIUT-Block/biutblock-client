@@ -127,16 +127,34 @@ export default {
     }
   },
   created() {
-    dataCenterHandler.getRelatedMiners({ address: this.walletAddress }, (body) => {
+    dataCenterHandler.getInvitationDetails({ address: this.walletAddress }, (body) => {
       if (body.length > 0) {
         for (let i = 0; i < body.length; i++) {
-          let reward = body[i].reward || '0'
-          if (body.mortgageValue !== "0") {
+          let reward = body[i].rewards || '0'
+          let level = 1
+          switch (body[i].type) {
+            case 'level1':
+              level = 1
+              break
+            case 'level2':
+              level = 2
+              break
+            case 'level3':
+              level = 3
+              break
+            case 'level4':
+              level = 4
+              break
+            case 'pool':
+              level = 5 //矿池的等级
+              break
+          }
+          if (reward !== '0') {
             this.itemList.push({
               id: '1',
-              itemAddress: `0x${body[i].address}`,
+              itemAddress: `0x${body[i].address || ''}`,
               itemTime: body[i].insertAt ? walletsHandler.formatDate(moment(body[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-              level: body[i].level,
+              level: level,
               itemMoney: `${reward}`
             })
           }

@@ -26,7 +26,7 @@
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
 
-      <!-- <section class="details-list">
+      <section class="details-list">
         <p class="details-list-tit">{{ $t('homeInvitation.hiListTxt1') }}</p>
         <p>
           <span>{{ maskAddress }}</span>
@@ -41,7 +41,7 @@
         <p>
           {{ getPointNum(maskMoney) }}
         </p>
-      </section> -->
+      </section>
 
       <ul>
         <li>
