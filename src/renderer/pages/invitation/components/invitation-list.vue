@@ -2,7 +2,15 @@
   <main class="list-content">
     <header>
       <h2>{{ $t("homeInvitation.hiListTit") }}</h2>
-
+      <ul class="head-list">
+        <li v-for="(item, index) in headList" :key="index">
+          <section>
+            <span></span>
+            <span>{{ $t(item.tit) }}：</span>
+          </section>
+          <span class="head-list-cnt">{{ item.txt }}</span>
+        </li>
+      </ul>
       <!-- <section class="ipt-list">
         <input type="text" :placeholder="$t('homeInvitation.hiListSearch')" v-model='searchIpt' maxlength="42" @input="searchChange"/>
         <section class="img-list">
@@ -51,11 +59,14 @@
       @prev="prevPage"
       @goPage="goPage"
       v-show="itemLists.length > 0" /> -->
+      <wallet-translucent :text="translucentText" v-show="translucentShow" class="translucent-mask"/>
   </main>
 </template>
 
 <script>
 import walletPages from '../../../components/wallet-pages'
+import walletTranslucent from '../../../components/wallet-translucent'
+
 import walletsHandler from '../../../lib/WalletsHandler'
 const dataCenterHandler = require('../../../lib/DataCenterHandler')
 
@@ -66,7 +77,8 @@ export default {
     walletAddress: String
   },
   components: {
-    walletPages
+    walletPages,
+    walletTranslucent
   },
   data() {
     return {
@@ -77,13 +89,41 @@ export default {
       endpos: 50,
       searchIpt: '',//input搜索内容
       itemList: [],
-      nullTips: 'homeInvitation.hiListNull'  //为空记录提示  hiListSearchNull - 搜素记录空   hiListNull- 列表空
+      nullTips: 'homeInvitation.hiListNull', //为空记录提示  hiListSearchNull - 搜素记录空   hiListNull- 列表空
+      translucentText: 'homeInvitationMask.hiMaskDetailsListNull',
+      translucentShow: false
     }
   },
   computed: {
     // 列表数据
     itemLists() {
       return this.itemList
+    },
+
+    //头部数据
+    headList () {
+      return [
+        {
+          id: '1',
+          tit: 'homeInvitation.hiListHeadTxt1',
+          txt: '456'
+        },
+        {
+          id: '2',
+          tit: 'homeInvitation.hiListHeadTxt2',
+          txt: '456'
+        },
+        {
+          id: '3',
+          tit: 'homeInvitation.hiListHeadTxt3',
+          txt: '456'
+        },
+        {
+          id: '4',
+          tit: 'homeInvitation.hiListHeadTxt4',
+          txt: '456'
+        }
+      ]
     }
   },
   created() {
@@ -132,7 +172,14 @@ export default {
 
     //查看详情传对应的参数 地址、私钥都行
     lookDetails(item) {
-      this.$emit('details', item)
+      if (item.itemMoney > 0) {
+        this.$emit('details', item)
+      } else {
+        this.translucentShow = true
+        setTimeout(() => {
+          this.translucentShow = false
+        }, 3000)
+      }
     },
 
     //下一页
@@ -175,7 +222,7 @@ export default {
 
 <style scoped>
 .list-content {
-  padding: 0 32px;
+  padding-left: 32px;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 188px);
@@ -184,8 +231,9 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 27px 0 22px;
+  padding: 27px 32px 22px 0;
 }
+
 h2 {
   margin: 0;
   color: #252f33;
@@ -197,6 +245,16 @@ h2 {
   font-family: Source-Medium;
   color: #576066;
 }
+
+.head-list {display: flex;align-items: center;}
+.head-list li {padding-left: 28px;font-size: 13px;color: #42535B;font-family: Lato-Bold;display: flex;flex-direction: column;}
+.en .head-list li {flex-direction:inherit;}
+.head-list li:first-child {padding-left: 0;}
+.head-list li section span {color: #6D7880;}
+.head-list li section span:first-child {width:6px;height:6px;border-radius:50%;display: inline-block;background: #388ed9;margin-right: 6px;}
+.head-list li:first-child section span:first-child,.head-list li:nth-child(2) section span:first-child {background:#F5A623;}
+.head-list li .head-list-cnt {padding: 2px 0 0 14px;}
+.en .head-list li .head-list-cnt {padding: 0;}
 
 .ipt-list {
   width: 232px;
@@ -230,6 +288,7 @@ h2 {
 .list-head {
   display: flex;
   flex-direction: column;
+  padding-right: 32px;
 }
 .list-body li {
   display: flex;
@@ -308,7 +367,9 @@ h2 {
   font-family: Source-Regular;
 }
 
-.list-node {overflow: auto;flex: 1;height: calc(100vh - 300px);padding-bottom: 20px;}
+.translucent-mask {width: 172px;text-align: center;margin-left: -110px;}
+
+.list-node {overflow: auto;flex: 1;height: calc(100vh - 300px);padding: 0 32px 20px 0;}
 .list-node::-webkit-scrollbar { width: 2px; height: 2px;}
 .list-node::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
 .list-node::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}

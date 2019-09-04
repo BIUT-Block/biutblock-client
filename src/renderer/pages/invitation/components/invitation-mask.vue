@@ -26,7 +26,7 @@
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
 
-      <section class="details-list">
+      <!-- <section class="details-list">
         <p class="details-list-tit">{{ $t('homeInvitation.hiListTxt1') }}</p>
         <p>
           <span>{{ maskAddress }}</span>
@@ -41,16 +41,18 @@
         <p>
           {{ getPointNum(maskMoney) }}
         </p>
-      </section>
+      </section> -->
 
       <ul>
         <li>
           <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt1') }}</span>
           <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt2') }}</span>
+          <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt3') }}</span>
         </li>
         <li v-for="(item, index) in detailsLists" :key="index">
+          <span>{{ item.detailsAddress }}</span>
           <span>{{ item.detailsTime.slice(0, 19) }}</span>
-          <span>{{ getPointNum(item.detailsMoney) }}</span>
+          <span class="list-money">{{ getPointNum(item.detailsMoney) }}</span>
         </li>
 
         <!-- 列表为空 -->
@@ -60,14 +62,6 @@
       </ul>
 
       <!-- 分页 -->
-     
-      <!-- <wallet-pages 
-        v-show="detailsLists.length > 5"
-        class="page-container"
-        @next="nextPage"
-        @prev="prevPage"
-        @goPage="goPage" /> -->
-
          <!-- <wallet-pages 
         class="page-container"
         v-show="detailsLists.length > 5"
@@ -127,6 +121,9 @@ export default {
         }
       }
     }
+  },
+  created() {
+
   },
   data () {
     return {
@@ -192,7 +189,7 @@ export default {
 
 <style scoped>
   .public-title {display: flex;align-items: center;justify-content: space-between;position: relative;}
-  .public-title h2 {margin: 0;font-size: 24px;color: #252F33;padding: 30px 0 28px;font-family: Montserrat-SemiBold;}
+  .public-title h2 {margin: 0;font-size: 22px;color: #42535B;padding: 30px 0 28px;font-family: Lato-Bold;}
   .en .public-title h2 {font-family: Source-Medium;font-weight: 500;}
   .public-title img {cursor: pointer;position: absolute;right: -16px;top: 16px;}
 
@@ -210,9 +207,10 @@ export default {
   .rules-content ul li:first-child span:last-child {width: 200px;text-align: center;display: inline-block;}
 
 
-  .details-content {width: 428px;background: #fff;padding: 0 32px 0;border-radius: 4px;height: 550px;}
-  .details-content h2 {padding: 30px 0 36px;}
-  .details-content ul {margin-top: 30px;height: 252px;overflow: auto;}
+  .details-content {width: 778px;background: #fff;padding: 32px 0 0 32px;border-radius: 4px;height: 470px;}
+  .details-content h2 {padding: 0;}
+  .details-content .public-title img {top: -8px;right: 30px;}
+  .details-content ul {margin-top: 36px;overflow: auto;padding-right: 32px;height: calc(100% - 62px);}
   .details-content ul::-webkit-scrollbar { width: 2px; height: 2px;}
   .details-content ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
   .details-content ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
@@ -224,7 +222,8 @@ export default {
   .details-content ul li:first-child {height:42px;background:#f7fbfa;padding: 0 0 0 20px;color: #99A1A6;border: 0;}
   .en .details-content ul li:first-child {font-family: Source-Medium;}
 
-  .details-content ul li span:first-child {display: inline-block;width: 226px;}
+  .details-content ul li span:first-child {display: inline-block;width: 368px;}
+  .details-content ul li span:nth-child(2) {width: 194px;}
   .details-content ul li span:last-child {flex: 1;}
   
 
@@ -241,4 +240,6 @@ export default {
     color: #99A1A6;}
 
   .en .list-null {font-family: Source-Medium;}
+
+  .list-money {color: #388ED9;}
 </style>

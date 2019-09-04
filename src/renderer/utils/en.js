@@ -305,12 +305,17 @@ export default {
     hiBtn: 'View rules',
 
     hiListTit: 'Invited Record',
+    hiListHeadTxt1: 'LV 1 Invitee',
+    hiListHeadTxt2: 'Referral Bonus',
+    hiListHeadTxt3: 'LV 2 Invitee',
+    hiListHeadTxt4: 'Referral Bonus',
+
     hiListSearch: 'Enter address to search',
     hiListTxt1: 'Address',
     hiListTxt2: 'Invitation time',
     hiListTxt3: 'Total reward (BIUT)',
     hiListTxt4: 'Operation',
-    hiListBtn: 'View details',
+    hiListBtn: 'View',
 
     hiListSearchNull: 'No search results yet',
     hiListNull: 'No record yet',
@@ -327,12 +332,13 @@ export default {
     hiMaskRulesListLevel4: 'Super partner',
     hiMaskRulesListLevel4Txt: 'More than 64',
 
-    hiMaskDetailsTit: 'Reward details',
+    hiMaskDetailsTit: 'View',
     hiMaskDetailsTxt: 'Total rewards(BIUT)',
-    hiMaskDetailsListTxt1: 'Time',
-    hiMaskDetailsListTxt2: 'Reward (BIUT)',
+    hiMaskDetailsListTxt1: 'LV2 Address',
+    hiMaskDetailsListTxt2: 'Time',
+    hiMaskDetailsListTxt3: 'Total Reward (BIUT)',
 
-    hiMaskDetailsListNull: 'No record',
+    hiMaskDetailsListNull: 'No records',
 
     hiMaskShareTit1: 'BIUT-PC Miner POW Mining',  
     

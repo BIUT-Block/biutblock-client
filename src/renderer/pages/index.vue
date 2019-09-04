@@ -112,10 +112,11 @@
                 <span>{{ $t("homeSet.hsTxt5") }}</span>
               </section> -->
             <!-- </section> -->
+
             <!-- 版本 maskPages == 2 -->
             <section
               class="setting-mask-body-right-version"
-              v-show="maskPages == 2"
+              v-show="maskPages == 1"
             >
               <p>{{ $t("homeSet.hsTxt6") }}</p>
               <span>PC Miner V {{ versionNumber }}</span>

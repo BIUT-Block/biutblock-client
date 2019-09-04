@@ -231,7 +231,7 @@ export default {
     hdNavPoolSuccessTit2: '矿池开通时间',
     hdNavPoolSuccessTit3: '当前钱包地址',
     hdNavPoolSuccessTit4: '智能合约地址',
-    hdNavPoolSuccessListTxt1: '我的矿池资产',
+    hdNavPoolSuccessListTxt1: '矿池抵押总量',
     hdNavPoolSuccessListTxt2: '矿池节点数量',
     hdNavPoolSuccessListTxt3: '矿池总收益',
     hdNavPoolSuccessListTxt4: '我的收益',
@@ -303,12 +303,17 @@ export default {
     hiBtn: '查看规则',
 
     hiListTit: '邀请记录',
+    hiListHeadTxt1: '一级人数',
+    hiListHeadTxt2: '一级奖励',
+    hiListHeadTxt3: '二级人数',
+    hiListHeadTxt4: '二级奖励',
+
     hiListSearch: '请输入地址进行搜索',
     hiListTxt1: '地址',
     hiListTxt2: '邀请时间',
     hiListTxt3: '已获得奖励（BIUT）',
     hiListTxt4: '操作',
-    hiListBtn: '查看详情',
+    hiListBtn: '查看',
 
     hiListSearchNull: '没有搜索结果',
     hiListNull: '暂无邀请记录',
@@ -325,10 +330,11 @@ export default {
     hiMaskRulesListLevel4: '超级合伙人',
     hiMaskRulesListLevel4Txt: '64以上',
 
-    hiMaskDetailsTit: '查看明细',
+    hiMaskDetailsTit: '查看',
     hiMaskDetailsTxt: '总收益 (BIUT)',
-    hiMaskDetailsListTxt1: '时间',
-    hiMaskDetailsListTxt2: '奖励 (BUT)',
+    hiMaskDetailsListTxt1: '二级钱包地址',
+    hiMaskDetailsListTxt2: '时间',
+    hiMaskDetailsListTxt3: '奖励 (BUT)',
 
     hiMaskDetailsListNull: '暂无记录',
 

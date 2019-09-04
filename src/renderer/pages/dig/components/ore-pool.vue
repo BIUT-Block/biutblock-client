@@ -141,7 +141,7 @@ export default {
           id: 0,
           poolImg: this.applySuccess1,
           poolTit: 'homeDig.hdNavPoolSuccessListTxt1',
-          poolType: '（BIUT）',
+          poolType: '(BIUT)',
           poolTxt: this.getPointNum(this.poolAssets) || 0,
         },
         {
@@ -154,14 +154,14 @@ export default {
         {
           id: 2,
           poolImg: this.applySuccess3,
-          poolType: '（BIU）',
+          poolType: '(BIU)',
           poolTit: 'homeDig.hdNavPoolSuccessListTxt3',
           poolTxt: this.getPointNum(this.poolAllEarnings || 0),
         },
         {
           id: 3,
           poolImg: this.applySuccess4,
-          poolType: '（BIU）',
+          poolType: '(BIU)',
           poolTit: 'homeDig.hdNavPoolSuccessListTxt4',
           poolTxt: this.getPointNum(this.poolMyEarnings) || 0,
         }
