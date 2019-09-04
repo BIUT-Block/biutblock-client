@@ -67,13 +67,13 @@ export default {
 </script>
 
 <style scoped>
-  .record-mask {width: 716px;padding: 30px 32px 0;flex-direction: column;}
+  .record-mask {width: 684px;padding: 30px 0 0 32px;flex-direction: column;height: 496px;}
   .record-head {position: relative;}
   .record-head h2 {margin: 0;padding-bottom: 24px;font-family: Montserrat-SemiBold;font-size: 24px;color: #252F33;}
   .en .record-head h2 {font-family: Source-Medium;font-size: 22px;}
-  .record-head img {position: absolute;top: -10px;right: -12px;cursor: pointer;}
+  .record-head img {position: absolute;top: -10px;right: 20px;cursor: pointer;}
 
-  ul {padding-bottom: 20px;height: 394px;overflow: auto;}
+  ul {padding: 0 32px 0 0;height: 448px;overflow: auto;}
   ul::-webkit-scrollbar { width: 2px; height: 2px;}
   ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
   ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
