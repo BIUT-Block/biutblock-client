@@ -99,10 +99,12 @@ export default {
       this.detailList = []
       dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
         for (let detail of body.rewards) {
+          console.log(detail);
+          
           if (detail.type === 'level1') {
             this.detailList.push({
               id: 1,
-              detailsAddress: detail.addressFrom ? detail.addressFrom : '',
+              detailsAddress: detail.address ? `0x${detail.address}` : '',
               detailsTime: detail.insertAt ? walletsHandler.formatDate(moment(detail.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
               detailsMoney: detail.rewards
             })

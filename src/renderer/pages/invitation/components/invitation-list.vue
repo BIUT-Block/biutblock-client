@@ -154,21 +154,20 @@ export default {
               break
           }
           if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level1') {
-            this.firstLevelAmount = this.firstLevelAmount + Number(body.rewards[i].rewards)
+            this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, body.rewards[i].rewards)
             this.firstLevel = this.firstLevel + 1
             this.itemList.push({
               id: '1',
-              itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
+              itemAddress: body.rewards[i].address ? `0x${body.rewards[i].address}` : '',
               itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
               level: level,
               itemMoney: `${reward}`
             })
           } else if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level2') {
             this.secondLevel = this.secondLevel + 1
-            this.secondLevelAmount = this.secondLevelAmount + Number(body.rewards[i].rewards)
+            this.secondLevelAmount = this.cal.accAdd(this.secondLevelAmount, body.rewards[i].rewards)
           }
         } 
-
 
         this.total = this.itemList.length
         this.pageSum = Math.ceil(this.itemList.length / 50)
@@ -381,7 +380,6 @@ h2 {
 }
 
 .look-details {
-  width: 94px !important;
   height: 32px;
   background: #f7fbfa;
   border-radius: 4px;
