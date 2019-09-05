@@ -153,16 +153,18 @@ export default {
               level = 5 //矿池的等级
               break
           }
-          if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level1') {
-            this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, body.rewards[i].rewards)
+          if (body.rewards[i].type === 'level1') {
             this.firstLevel = this.firstLevel + 1
-            this.itemList.push({
-              id: '1',
-              itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
-              itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-              level: level,
-              itemMoney: `${reward}`
-            })
+            if (body.rewards[i].rewards !== '0') {
+              this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, body.rewards[i].rewards)
+              this.itemList.push({
+                id: '1',
+                itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
+                itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+                level: level,
+                itemMoney: `${reward}`
+              })
+            }
           } else if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level2') {
             this.secondLevel = this.secondLevel + 1
             this.secondLevelAmount = this.cal.accAdd(this.secondLevelAmount, body.rewards[i].rewards)

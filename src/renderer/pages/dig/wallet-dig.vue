@@ -241,10 +241,10 @@ export default {
       hasContract: false,
       invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
-      poolNode: 0,
-      poolAssets: 0,
-      poolAllEarnings: "0",
-      poolMyEarnings: "0",
+      poolNode: 0, // 矿池节点
+      poolAssets: 0, //矿池抵押总量
+      poolAllEarnings: "0", // 全部矿池收益
+      poolMyEarnings: "0", // 我的矿池收益
       poolApplyTime: '',
       poolApplyMoney: 0,
       poolName: '',
@@ -571,6 +571,7 @@ export default {
         }
         this._calcMiningPool(benifs, allNodes)
         this._insertLockHistory(benifs)
+        this._getPoolAssets()
       })
       this._getContractInfo()
       if(this.mortgageBtn1 == 'publicBtn.mortgageBtn1ss'){
@@ -620,13 +621,19 @@ export default {
 
     _calcMiningPool (benifs, allNodes) {
       this.poolNode = allNodes.size
-      this.poolAssets = 0
- //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-      for (let benifit of benifs) {
-        for (let item of benifit) {
-          this.poolAssets = this.poolAssets + Number(item.lockAmount)
-        }
-      }
+//       this.poolAssets = 0
+//  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+//       for (let benifit of benifs) {
+//         for (let item of benifit) {
+//           this.poolAssets = this.poolAssets + Number(item.lockAmount)
+//         }
+//       }
+    },
+
+    _getPoolAssets () {
+      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.ownPoolAddress[0], 'SEC', (balance) => {
+        this.poolAssets = Number(balance)
+      })
     },
     
     _getWalletMiningHistory () {

@@ -28,13 +28,13 @@ export default {
       switchToExternalServer: function () {
         //let isTestEnv = window.localStorage.getItem('secTest')
         //if (isTestEnv === 'true') {
-          process.env.netType = 'test'
-          this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
-          this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
+          // process.env.netType = 'test'
+          // this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
+          // this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
         //} else {
-        //  process.env.netType = 'main'
-        //  this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
-        //  this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
+         process.env.netType = 'main'
+         this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
+         this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
        // }
       },
 
