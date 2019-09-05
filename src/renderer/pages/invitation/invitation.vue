@@ -102,7 +102,7 @@ export default {
           if (detail.type === 'level1') {
             this.detailList.push({
               id: 1,
-              detailsAddress: detail.address ? `0x${detail.address}` : '',
+              detailsAddress: detail.addressFrom ? `0x${detail.addressFrom}` : '',
               detailsTime: detail.insertAt ? walletsHandler.formatDate(moment(detail.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
               detailsMoney: detail.rewards
             })

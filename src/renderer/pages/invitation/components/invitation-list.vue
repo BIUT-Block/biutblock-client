@@ -158,7 +158,7 @@ export default {
             this.firstLevel = this.firstLevel + 1
             this.itemList.push({
               id: '1',
-              itemAddress: body.rewards[i].address ? `0x${body.rewards[i].address}` : '',
+              itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
               itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
               level: level,
               itemMoney: `${reward}`
