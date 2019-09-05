@@ -99,8 +99,6 @@ export default {
       this.detailList = []
       dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
         for (let detail of body.rewards) {
-          console.log(detail);
-          
           if (detail.type === 'level1') {
             this.detailList.push({
               id: 1,

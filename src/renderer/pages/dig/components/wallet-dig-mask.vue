@@ -243,8 +243,9 @@ export default {
   width:400px;height:136px;
 }
 .dig-mask2 {
-  padding: 12px 20px 16px 24px;
-  width:400px;height:136px;
+  padding: 12px 20px 16px 20px;
+  width:400px;
+  height:144px;
 }
 .dig-mask3 {
   padding: 30px 32px 32px;
@@ -418,6 +419,7 @@ h2 {
   align-items: center;
   color: #576066;
   font-size: 14px;
+  padding-top: 30px;
 }
 .network-list img {
   margin-right: 10px;
@@ -426,7 +428,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 80px;
+  padding-top: 54px;
 }
 .network-btn button {
   width: 96px;

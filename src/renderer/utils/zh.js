@@ -272,7 +272,7 @@ export default {
     hdMaskStartBtn: 'Open mining',
 
     hdMaskNetworkTit: '网络异常, 请检查网络状态并重新登录。',
-    hdMaskNetworkExit: 'Exit',
+    hdMaskNetworkExit: '退出',
     hdMaskNetworkContinue: 'Continue',
     hdMaskNetworkReconnecting: 'Reconnecting',
     hdMaskNetworkTxt1: "No connected peer. You can exit the application and check your network",
