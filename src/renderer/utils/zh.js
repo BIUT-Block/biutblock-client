@@ -303,9 +303,9 @@ export default {
     hiBtn: '查看规则',
 
     hiListTit: '邀请记录',
-    hiListHeadTxt1: '一级人数',
+    hiListHeadTxt1: '一级矿工',
     hiListHeadTxt2: '一级奖励',
-    hiListHeadTxt3: '二级人数',
+    hiListHeadTxt3: '二级矿工',
     hiListHeadTxt4: '二级奖励',
 
     hiListSearch: '请输入地址进行搜索',

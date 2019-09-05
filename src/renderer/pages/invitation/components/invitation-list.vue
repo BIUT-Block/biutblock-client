@@ -68,6 +68,7 @@ import walletPages from '../../../components/wallet-pages'
 import walletTranslucent from '../../../components/wallet-translucent'
 
 import walletsHandler from '../../../lib/WalletsHandler'
+import { debug } from 'util';
 const dataCenterHandler = require('../../../lib/DataCenterHandler')
 
 const moment = require('moment-timezone')
@@ -177,12 +178,13 @@ export default {
 
       for (let miner of allRelatedMiners) {
         for (let payed of this.itemList) {
-          if (miner.address === payed.itemAddress) {
+          let address = payed.itemAddress.replace('0x', '')
+          if (address === miner.address) {
             remove = true
+            break
           }
         }
         if (!remove) {
-          this.firstLevel = this.firstLevel + 1
           this.itemList.push({
             id: '1',
             itemAddress: `0x${miner.address}`,

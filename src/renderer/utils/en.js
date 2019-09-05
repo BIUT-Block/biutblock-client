@@ -305,9 +305,9 @@ export default {
     hiBtn: 'View rules',
 
     hiListTit: 'Invited Record',
-    hiListHeadTxt1: 'LV 1 Invitee',
+    hiListHeadTxt1: 'LV 1 Miner',
     hiListHeadTxt2: 'Referral Bonus',
-    hiListHeadTxt3: 'LV 2 Invitee',
+    hiListHeadTxt3: 'LV 2 Miner',
     hiListHeadTxt4: 'Referral Bonus',
 
     hiListSearch: 'Enter address to search',
