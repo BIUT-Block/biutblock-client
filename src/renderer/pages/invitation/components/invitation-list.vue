@@ -115,7 +115,7 @@ export default {
         {
           id: '2',
           tit: 'homeInvitation.hiListHeadTxt2',
-          txt: this.firstLevelAmount +'BIUT'
+          txt: this.getPointNum(this.firstLevelAmount).substring(0, 9) +'BIUT'
         },
         {
           id: '3',
@@ -125,7 +125,7 @@ export default {
         {
           id: '4',
           tit: 'homeInvitation.hiListHeadTxt4',
-          txt: this.secondLevelAmount +'BIUT'
+          txt: this.getPointNum(this.secondLevelAmount).substring(0, 9) +'BIUT'
         }
       ]
     }
