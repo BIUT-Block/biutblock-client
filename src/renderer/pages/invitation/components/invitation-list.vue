@@ -131,50 +131,117 @@ export default {
     }
   },
   created() {
-    dataCenterHandler.getInvitationDetails({ address: this.walletAddress }, (body) => {
-      if (body.rewards && body.rewards.length > 0) {
-        for (let i = 0; i < body.rewards.length; i++) {
-          let reward = body.rewards[i].rewards || '0'
-          let level = 1
-          switch (body.rewards[i].type) {
-            case 'level1':
-              level = 1
-              break
-            case 'level2':
-              level = 2
-              break
-            case 'level3':
-              level = 3
-              break
-            case 'level4':
-              level = 4
-              break
-            case 'pool':
-              level = 5 //矿池的等级
-              break
-          }
-          if (body.rewards[i].type === 'level1') {
-            this.firstLevel = this.firstLevel + 1
-            if (body.rewards[i].rewards !== '0') {
-              this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, body.rewards[i].rewards)
-              this.itemList.push({
-                id: '1',
-                itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
-                itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-                level: level,
-                itemMoney: `${reward}`
-              })
-            }
-          } else if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level2') {
-            this.secondLevel = this.secondLevel + 1
-            this.secondLevelAmount = this.cal.accAdd(this.secondLevelAmount, body.rewards[i].rewards)
-          }
-        } 
+    let params = {address: this.walletAddress}
+    Promise.all([dataCenterHandler.getRelatedMinersPromise(params), dataCenterHandler.getInvitationDetailsPromise(params)])
+    .then(infos => {
+      console.log(infos)
+      let allRelatedMiners = infos[0].filter(item => item.level === '1')
+      let alreadyPayedMiners = infos[1].rewards
+      let remove = false
 
-        this.total = this.itemList.length
-        this.pageSum = Math.ceil(this.itemList.length / 50)
+      for (let i = 0; i < alreadyPayedMiners.length; i++) {
+        let reward = alreadyPayedMiners[i].rewards || '0'
+        let level = 1
+        switch (alreadyPayedMiners[i].type) {
+          case 'level1':
+            level = 1
+            break
+          case 'level2':
+            level = 2
+            break
+          case 'level3':
+            level = 3
+            break
+          case 'level4':
+            level = 4
+            break
+          case 'pool':
+            level = 5 //矿池的等级
+            break
+        }
+        if (alreadyPayedMiners[i].type === 'level1') {
+          this.firstLevel = this.firstLevel + 1
+          this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, alreadyPayedMiners[i].rewards)
+          this.itemList.push({
+            id: '1',
+            itemAddress: alreadyPayedMiners[i].addressFrom ? `0x${alreadyPayedMiners[i].addressFrom}` : '',
+            itemTime: alreadyPayedMiners[i].insertAt ? walletsHandler.formatDate(moment(alreadyPayedMiners[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+            level: level,
+            itemMoney: `${reward}`
+          })
+        } else if (alreadyPayedMiners[i].rewards !== '0' && alreadyPayedMiners[i].type === 'level2') {
+          this.secondLevel = this.secondLevel + 1
+          this.secondLevelAmount = this.cal.accAdd(this.secondLevelAmount, alreadyPayedMiners[i].rewards)
+        }
       }
+
+      for (let miner of allRelatedMiners) {
+        for (let payed of this.itemList) {
+          if (miner.address === payed.itemAddress) {
+            remove = true
+          }
+        }
+        if (!remove) {
+          this.firstLevel = this.firstLevel + 1
+          this.itemList.push({
+            id: '1',
+            itemAddress: `0x${miner.address}`,
+            itemTime: miner.insertAt ? walletsHandler.formatDate(moment(miner.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+            level: 1,
+            itemMoney: 0
+          })
+        } 
+      }
+
+      this.total = this.itemList.length
+      this.pageSum = Math.ceil(this.itemList.length / 50)
+    }).catch ((err) => {
+      console.log(err)
     })
+    // dataCenterHandler.getInvitationDetails({ address: this.walletAddress }, (body) => {
+    //   if (body.rewards && body.rewards.length > 0) {
+    //     for (let i = 0; i < body.rewards.length; i++) {
+    //       let reward = body.rewards[i].rewards || '0'
+    //       let level = 1
+    //       switch (body.rewards[i].type) {
+    //         case 'level1':
+    //           level = 1
+    //           break
+    //         case 'level2':
+    //           level = 2
+    //           break
+    //         case 'level3':
+    //           level = 3
+    //           break
+    //         case 'level4':
+    //           level = 4
+    //           break
+    //         case 'pool':
+    //           level = 5 //矿池的等级
+    //           break
+    //       }
+    //       if (body.rewards[i].type === 'level1') {
+    //         this.firstLevel = this.firstLevel + 1
+    //         if (body.rewards[i].rewards !== '0') {
+    //           this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, body.rewards[i].rewards)
+    //           this.itemList.push({
+    //             id: '1',
+    //             itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
+    //             itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+    //             level: level,
+    //             itemMoney: `${reward}`
+    //           })
+    //         }
+    //       } else if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level2') {
+    //         this.secondLevel = this.secondLevel + 1
+    //         this.secondLevelAmount = this.cal.accAdd(this.secondLevelAmount, body.rewards[i].rewards)
+    //       }
+    //     } 
+
+    //     this.total = this.itemList.length
+    //     this.pageSum = Math.ceil(this.itemList.length / 50)
+    //   }
+    // })
   },
   methods: {
     //搜索

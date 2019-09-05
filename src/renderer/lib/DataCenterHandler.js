@@ -57,6 +57,20 @@ const DataCenterHandler = {
     })
   },
 
+  getRelatedMinersPromise: function (params) {
+    return new Promise((resovle, reject) => {
+      request({
+        url: `${dataCenterUrl}getrelatedminers`,
+        method: 'POST',
+        body: params,
+        json: true
+      }, (err, res, body) => {
+        if (err) throw reject(err)
+        resovle(body)
+      })
+    })
+  },
+
   getMinerLevel: function (params, callback) {
     request({
       url: `${dataCenterUrl}getminertype`,
@@ -76,6 +90,20 @@ const DataCenterHandler = {
       json: true
     }, (err, res, body) => {
       callback(body)
+    })
+  },
+
+  getInvitationDetailsPromise: function (params) {
+    return new Promise((resovle, reject) => {
+      request({
+        url: `${dataCenterUrl}getRewardsHistoryByAddress`,
+        method: 'POST',
+        body: params,
+        json: true
+      }, (err, res, body) => {
+        if (err) throw reject(err)
+        resovle(body)
+      })
     })
   },
 
