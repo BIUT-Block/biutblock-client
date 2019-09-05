@@ -127,7 +127,7 @@
         <section class="wallet-header-money-list">
           <section class="money-content">
             <span>{{ $t("homeWallet.hwBiut") }}</span>
-            <p>{{ getPointNum(walletBalance) }} BIUT</p>
+            <p :class="[moneyLengthBIUT ? 'moneyLength': '',moneyLengthBIUTs ? 'moneyLengths' : '']">{{ getPointNum(walletBalance) }} BIUT</p>
             <section class="money-text-list">
               <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt1") }}</span>
@@ -142,7 +142,7 @@
           </section>
           <section class="money-content">
             <span>{{ $t("homeWallet.hwBiu") }}</span>
-            <p>{{ getPointNum(walletBalanceSEN) }} BIU</p>
+            <p :class="[moneyLengthBIU ? 'moneyLength': '',moneyLengthBIUs ? 'moneyLengths': '']">{{ getPointNum(walletBalanceSEN) }} BIU</p>
             <!-- <img src="../../assets/images/indexAmountBg.png" alt=""/> -->
           </section>
         </section>
@@ -303,6 +303,22 @@ export default {
       if (name === "Mining Wallet" || name === "挖矿钱包") {
         return true
       }
+    },
+
+    moneyLengthBIUT () {
+      return this.walletBalance.length > 15 ? true : false
+    },
+
+    moneyLengthBIUTs () {
+      return this.walletBalance.length > 21 ? true : false
+    },
+
+    moneyLengthBIU () {
+      return this.walletBalanceSEN.length > 15 ? true : false
+    },
+
+    moneyLengthBIUs () {
+      return this.walletBalanceSEN.length > 21 ? true : false
     }
   },
   created() {
@@ -864,6 +880,12 @@ export default {
   font-size: 24px;
   font-weight: normal;
   font-family: Lato-Regular;
+}
+.wallet-header-money-list .money-content .moneyLength {
+  font-size: 20px;
+}
+.wallet-header-money-list .money-content .moneyLengths {
+  font-size: 18px;
 }
 .wallet-header-money-list .money-content img {
   width: 128px;
