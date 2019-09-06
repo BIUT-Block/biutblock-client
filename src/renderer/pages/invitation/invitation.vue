@@ -97,19 +97,47 @@ export default {
       this.maskAddress = item.itemAddress
       this.maskLevel = Number(item.level)
       this.detailList = []
-      dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
-        for (let detail of body.rewards) {
-          if (detail.type === 'level1') {
+
+      Promise.all([dataCenterHandler.getInvitationDetailsPromise({address: item.itemAddress.replace('0x', '')}), dataCenterHandler.getInvitationDetailsPromise({address: this.walletAddress})])
+      .then((infos) => {
+        let firstlevel = infos[0].rewards.filter(item => item.type === 'level1')
+        let secondlevel = infos[1].rewards.filter(item => item.type === 'level2')
+        let isSameAddress = false
+        for (let level2item of secondlevel) {
+          for (let level1item of firstlevel) {
+            if (level2item.addressFrom === level1item.addressFrom) {
+              isSameAddress = true
+              break
+            } else {
+              isSameAddress = false
+            }
+          }
+          if (isSameAddress) {
             this.detailList.push({
               id: 1,
-              detailsAddress: detail.addressFrom ? `0x${detail.addressFrom}` : '',
-              detailsTime: detail.insertAt ? walletsHandler.formatDate(moment(detail.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-              detailsMoney: detail.rewards
+              detailsAddress: level2item.addressFrom ? `0x${level2item.addressFrom}` : '',
+              detailsTime: level2item.insertAt ? walletsHandler.formatDate(moment(level2item.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+              detailsMoney: level2item.rewards
             })
           }
         }
-        
       })
+      .catch((err) => {
+        console.log(err)
+      })
+
+      // dataCenterHandler.getInvitationDetails({address: item.itemAddress.replace('0x', '')}, (body) => {
+      //   for (let detail of body.rewards) {
+      //     if (detail.type === 'level1') {
+      //       this.detailList.push({
+      //         id: 1,
+      //         detailsAddress: detail.addressFrom ? `0x${detail.addressFrom}` : '',
+      //         detailsTime: detail.insertAt ? walletsHandler.formatDate(moment(detail.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+      //         detailsMoney: detail.rewards
+      //       })
+      //     }
+      //   }
+      // })
     },
 
     //查看规则

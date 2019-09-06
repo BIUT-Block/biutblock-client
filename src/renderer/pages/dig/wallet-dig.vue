@@ -467,6 +467,7 @@ export default {
         if (response.result.message === 0) {
           this.maskShow = true
           this.makePages = 2
+          this.stopMining()
          // this.networkError = true
           this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
         }
@@ -476,6 +477,7 @@ export default {
       if (!WalletsHandler.checkNetworkStatus()) {
         this.maskShow = true
         this.makePages = 2
+        this.stopMining()
        // this.networkError = true
         this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
       }
@@ -847,7 +849,7 @@ export default {
                   }
                 })
               }, 30*1000)
-            }, 10 * 60*1000)
+            }, 10*60*1000)
             this._beginMiningWithWallet()
           }
         })
