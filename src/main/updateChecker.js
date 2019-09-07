@@ -21,7 +21,7 @@ const checkVersion = async (app) => {
         dialog.showMessageBox({
           type: 'info',
           title: 'New Version',
-          buttons: ['Yes', 'No'],
+          buttons: ['Yes'],
           message: `Found new version ${latest}. Please update.`
         }, (res, checkboxChecked) => {
           if (res === 0) { // if selected yes
