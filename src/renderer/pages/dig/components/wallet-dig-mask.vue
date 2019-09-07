@@ -33,13 +33,13 @@
 
     <!-- 断网 2-->
     <section class="mask-container dig-mask dig-mask2" v-show="pages == 2">
-      <img
+      <!-- <img
         src="../../../assets/images/closeMask.png"
         alt=""
         class="closeImg"
         title="close"
         @click="closeMask"
-      />
+      /> -->
       <section>
         <section class="network-list">
           <img src="../../../assets/images/errorImg.png" alt="" />
@@ -419,7 +419,7 @@ h2 {
   align-items: center;
   color: #576066;
   font-size: 14px;
-  padding-top: 30px;
+  padding-top: 15px;
 }
 .network-list img {
   margin-right: 10px;
@@ -428,7 +428,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 54px;
+  padding-top: 69px;
 }
 .network-btn button {
   width: 96px;
