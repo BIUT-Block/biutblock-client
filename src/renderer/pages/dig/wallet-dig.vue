@@ -574,6 +574,7 @@ export default {
         this._calcMiningPool(benifs, allNodes)
         this._insertLockHistory(benifs)
         this._getPoolAssets()
+        this._getProfit()
       })
       this._getContractInfo()
       if(this.mortgageBtn1 == 'publicBtn.mortgageBtn1ss'){
@@ -637,6 +638,20 @@ export default {
         this.poolAssets = Number(balance)
       })
     },
+
+    _getProfit() {
+      let params = {address: this.selectedWallet.walletAddress}
+      dataCenterHandler.getTotalPoolProfit(params, (body) => {
+        if (body.status) {
+          this.poolAllEarnings = body.profit.toStrong()
+        }
+      })
+      dataCenterHandler.getMyPoolProfit(params, (body) => {
+        if (body.status) {
+          this.poolMyEarnings = body.profit.toString()
+        }
+      })
+    },
     
     _getWalletMiningHistory () {
       this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
@@ -649,8 +664,8 @@ export default {
         miningHistory.forEach((element, index) => {
           let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
           this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
-          this.poolAllEarnings = this.digIncome
-          this.poolMyEarnings = this.digIncome
+          //this.poolAllEarnings = this.digIncome
+          //this.poolMyEarnings = this.digIncome
           this.digNumber = this.digNumber + 1
           this.moreList.push({
             id: index,
