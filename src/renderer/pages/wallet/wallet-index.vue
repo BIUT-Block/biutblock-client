@@ -534,7 +534,7 @@ export default {
         console.log('Job ID')
         this._getWalletBalance(this.selectedWallet.walletAddress)
         this._getWalletTransactions(this.selectedWallet.walletAddress)
-      }, 30000)
+      }, 3 * 60 * 1000)
     },
 
     _getWalletBalance(walletAddress) {

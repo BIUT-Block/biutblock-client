@@ -624,13 +624,6 @@ export default {
 
     _calcMiningPool (benifs, allNodes) {
       this.poolNode = allNodes.size
-//       this.poolAssets = 0
-//  //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
-//       for (let benifit of benifs) {
-//         for (let item of benifit) {
-//           this.poolAssets = this.poolAssets + Number(item.lockAmount)
-//         }
-//       }
     },
 
     _getPoolAssets () {
@@ -643,7 +636,7 @@ export default {
       let params = {address: this.selectedWallet.walletAddress}
       dataCenterHandler.getTotalPoolProfit(params, (body) => {
         if (body.status) {
-          this.poolAllEarnings = body.profit.toStrong()
+          this.poolAllEarnings = body.profit.toString()
         }
       })
       dataCenterHandler.getMyPoolProfit(params, (body) => {
