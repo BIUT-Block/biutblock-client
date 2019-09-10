@@ -134,9 +134,9 @@ export default {
     var address;
     if (this.$JsonRPCClient.isTestNetwork()) {
       if (trade.listUnit === "BIUT") {
-        address = 'http://test.biut.io/search?search='
+        address = 'http://scan.biut.io/search?search='
       } else {
-        address = 'http://test.biut.io/sen/search?search='
+        address = 'http://scan.biut.io/sen/search?search='
       }
     } else {
       if(trade.listUnit === "BIUT") {

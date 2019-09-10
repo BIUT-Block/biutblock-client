@@ -133,12 +133,12 @@ export default {
         })
       },
 
-      _getTransactionsOfBothChains: function (walletAddress, fnFillWalletList) {
+      _getTransactionsOfBothChains: function (walletAddress, page, skip, fnFillWalletList) {
         let walletList = []
         let walletAddressTempInPool = ''
         let walletAddressTempInChain = ''
         let moneyValue = ''
-        this.client.request('sec_getTransactions', [walletAddress], (err, response) => {
+        this.client.request('sec_getTransactions', [walletAddress, page, skip], (err, response) => {
           if (err) return
           if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
@@ -187,7 +187,7 @@ export default {
               })
             }
           }
-          this.clientSEN.request('sec_getTransactions', [walletAddress], (err, response) => {
+          this.clientSEN.request('sec_getTransactions', [walletAddress, page, skip], (err, response) => {
             if (err) return
             if (response.result.resultInPool) {
               for (let j = 0; j < response.result.resultInPool.length; j++) {
@@ -266,10 +266,10 @@ export default {
       getWalletTransactionsSEN: function (walletAddress, fnFillWalletList) {
         this._getTransactions(this.clientSEN, 'BIU', walletAddress, fnFillWalletList)
       },
-      getWalletTransactionsBothChains: function (walletAddress, fnFillWalletList) {
+      getWalletTransactionsBothChains: function (walletAddress, page, skip, fnFillWalletList) {
         // this.getWalletTransactions(walletAddress, fnFillWalletListSEC)
         // this.getWalletTransactionsSEN(walletAddress, fnFillWalletListSEN)
-        this._getTransactionsOfBothChains(walletAddress, fnFillWalletList)
+        this._getTransactionsOfBothChains(walletAddress, page, skip, fnFillWalletList)
       },
 
       _sendTransactions: function (client, walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {

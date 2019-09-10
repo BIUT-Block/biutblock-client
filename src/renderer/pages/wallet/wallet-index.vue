@@ -272,7 +272,9 @@ export default {
       maskShow: false,
       tradingList: [],
       tradingListTotalLength: 0,
-      tradingListSkip: 4
+      tradingListSkip: 4,
+      tradingPgeSize: 4, // rpc 请求交易历史每页显示数量
+      tradingPge: 1 // rpc 请求交易历史页数
     }
   },
   computed: {
@@ -336,6 +338,7 @@ export default {
   methods: {
     //交易记录方法
     onClickLoadMore() {
+      this.tradingPge = this.tradingPge + 1
       this.tradingListSkip = this.tradingListSkip + 4
       clearInterval(jobID)
       this._startUpateJob()
@@ -497,6 +500,9 @@ export default {
     _resetSkipTotal() {
       this.tradingListTotalLength = 0
       this.tradingListSkip = 4
+      this.tradingPge = 1
+      this.tradingPgeSize = 4
+      this.tradingListSkip = 4
       this.tradingList = []
       this.noMoreData = false
     },
@@ -520,6 +526,8 @@ export default {
       //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
       this.oldWalletName = selectedWallet.name
       this.walletName = selectedWallet.name
+      //this.tradingList = []
+
       this._startUpateJob()
       //return
     },
@@ -529,12 +537,12 @@ export default {
         clearInterval(jobID)
       }
       this._getWalletBalance(this.selectedWallet.walletAddress)
-      this._getWalletTransactions(this.selectedWallet.walletAddress)
+      this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
       jobID = setInterval(() => {
         console.log('Job ID')
         this._getWalletBalance(this.selectedWallet.walletAddress)
-        this._getWalletTransactions(this.selectedWallet.walletAddress)
-      }, 3 * 60 * 1000)
+        this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
+      }, 30 * 1000)
     },
 
     _getWalletBalance(walletAddress) {
@@ -590,21 +598,21 @@ export default {
       }
     },
 
-    _getWalletTransactions(walletAddress) {
-      let skip = 0
-      this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, (transactions) => {
+    _getWalletTransactions(walletAddress, page, skip) {
+      let pgeSkip = 0
+      this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, page, skip, (transactions) => {
 
-        this.tradingListTotalLength = transactions.length
-        if (this.tradingListSkip >= transactions.length && transactions.length > 0) {
-          this.noMoreData = true
-          skip = transactions.length
-        } else {
-          this.noMoreData = false
-          skip = this.tradingListSkip
-        }
+        this.tradingListTotalLength = transactions.length === 0 ? 1 : transactions.length
+        //if (this.tradingListSkip >= transactions.length && transactions.length > 0) {
+        //  this.noMoreData = true
+          pgeSkip = transactions.length
+      //   } else {
+      //     this.noMoreData = false
+      //     pgeSkip = this.tradingListSkip
+      //  // }
         if (transactions.length > 0) {
-          this.tradingList = []
-          for (let i = 0; i < skip; i++) {
+         // this.tradingList = transactions
+          for (let i = 0; i < pgeSkip; i++) {
             this.tradingList.push(transactions[i])
           }
         }
