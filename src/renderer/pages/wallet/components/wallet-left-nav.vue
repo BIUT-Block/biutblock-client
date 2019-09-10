@@ -30,13 +30,21 @@ export default {
       bgColorArr: ['bgColor1','bgColor2','bgColor3','bgColor4'],
       navIdx: 0,
       createButtonText: "homeLeftNav.createBtn",
-      imgUrl: imgUrl
+      imgUrl: imgUrl,
+      addedWallet: 0
     }
   },
   computed: {
     walletList: function () {
       let list = []
       let selectedWallet
+      let isChanged = false
+      if (Object.keys(this.wallets).length === this.addedWallet) {
+        isChanged = false
+      } else {
+        this.addedWallet = Object.keys(this.wallets).length
+        isChanged = true
+      } 
       Object.keys(this.wallets).forEach( (privateKey) => {
       list.push({
         id: '01',
@@ -76,7 +84,9 @@ export default {
       } else {
         this.navIdx = list[0].privateKey
       }
-      this.$emit("walletSelectionChanged", selectedWallet || list[0])
+      if (isChanged) {
+        this.$emit("walletSelectionChanged", selectedWallet || list[0])
+      }
       return list
     }
   },
