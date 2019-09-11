@@ -613,7 +613,9 @@ export default {
         if (transactions.length > 0) {
          // this.tradingList = transactions
           for (let i = 0; i < pgeSkip; i++) {
-            this.tradingList.push(transactions[i])
+            if(this.tradingList.filter(tx=>tx.id===transactions[i].id).length == 0){
+              this.tradingList.push(transactions[i])
+            }
           }
         }
       })
