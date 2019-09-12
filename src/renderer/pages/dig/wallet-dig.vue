@@ -216,6 +216,7 @@ export default {
       getTimeLockJob: '',
       getContractInfoJob: '',
       checkNodeJob: '',
+      checkNetWorkJob: '',
       processTexts: ['homeDig.hdHeadListTxt'],
       moreList: [],
       tipsShow: false,
@@ -325,6 +326,10 @@ export default {
       })
       this._getTotalReward()
     }, 3 * 60 * 1000)
+    if(this.miningIn){
+      this._startCheckPeersJob()
+      this._startCheckNetworkJob()
+    }
   },
   mounted () {
     
@@ -332,6 +337,8 @@ export default {
   destroyed () {
     window.sessionStorage.setItem('processTexts', JSON.stringify(this.processTexts))
     clearInterval(this.getBlockHeightJob)
+    if(this.checkNodeJob) clearInterval(this.checkNodeJob)
+    if(this.checkNetWorkJob) clearInterval(this.checkNetWorkJob)
     if (this.getContractInfoJob !== '') {
       clearInterval(this.getContractInfoJob)
     }
@@ -465,21 +472,60 @@ export default {
     _startCheckPeersJob () {
       this.$JsonRPCClient.checkRlpConnections((response) => {
         if (response.result.message === 0) {
-          this.maskShow = true
-          this.makePages = 2
-          this.stopMining()
-         // this.networkError = true
-          this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+          if(window.sessionStorage.getItem('NoPeerTime') == null){
+            window.sessionStorage.setItem('NoPeerTime', Date.now())
+            clearInterval(this.checkNodeJob)
+            this.checkNodeJob = setInterval(this._startCheckPeersJob, 30 * 60 * 1000)
+            // this.maskShow = true
+            // this.makePages = 2
+            // this.stopMining()
+            // this.networkError = true
+            // this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+          }
+          else {
+            let noPeerTime = window.sessionStorage.getItem('NoPeerTime')
+            let currTime = Date.now()
+            let diffSec = Math.floor((currTime - noPeerTime)/1000)
+            if(diffSec >= 2 * 3600){
+              this.maskShow = true
+              this.makePages = 2
+              this.stopMining()
+              this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'            
+            }
+          }
+        } else {
+          if(window.sessionStorage.getItem('NoPeerTime') != null) {
+            window.sessionStorage.removeItem('NoPeerTime')
+          }
         }
       })
     },
     _startCheckNetworkJob () {
       if (!WalletsHandler.checkNetworkStatus()) {
-        this.maskShow = true
-        this.makePages = 2
-        this.stopMining()
-       // this.networkError = true
-        this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+        if(window.sessionStorage.getItem('NoNetworkTime') == null){
+          window.sessionStorage.setItem('NoNetworkTime', Date.now())
+          clearInterval(this.checkNetWorkJob)
+          this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 30 * 60 * 1000)
+        } else {
+          let noNetworkTime = window.sessionStorage.getItem('NoNetworkTime')
+          let currTime = Date.now()
+          let diffSec = Math.floor((currTime - noNetworkTime)/1000)
+          if(diffSec >= 2 * 3600){
+            this.maskShow = true
+            this.makePages = 2
+            this.stopMining()
+            this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+          }
+        }
+      //   this.maskShow = true
+      //   this.makePages = 2
+      //   this.stopMining()
+      //  // this.networkError = true
+      //   this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+      } else {
+          if(window.sessionStorage.getItem('NoNetworkTime') != null) {
+            window.sessionStorage.removeItem('NoNetworkTime')
+          }        
       }
     },
 
@@ -816,7 +862,7 @@ export default {
     },
 
     startMining () {
-      setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
+      this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {
