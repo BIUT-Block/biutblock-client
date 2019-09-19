@@ -272,6 +272,51 @@ export default {
         this._getTransactionsOfBothChains(walletAddress, page, skip, fnFillWalletList)
       },
 
+      /** 获取挖矿收益 */
+      getMiningTransactions: function (params, fnFillWalletList) {
+        this.clientSEN.request('sec_getMiningTransactions', params, (err, response) => {
+          let walletList = []
+          let walletAddressTempInChain = ''
+          let moneyValue = ''
+          if (response.result.resultInChain) {
+            for (let i = 0; i < response.result.resultInChain.length; i++) {
+              if (response.result.resultInChain[i].TxTo === params[0] && response.result.resultInChain[i].Value !== '0' && response.result.resultInChain[i].TxFrom !== '0000000000000000000000000000000000000000') {
+                moneyValue = '+ ' + response.result.resultInChain[i].Value
+                walletAddressTempInChain = response.result.resultInChain[i].TxFrom
+              } else if (response.result.resultInChain[i].TxTo === '0000000000000000000000000000000000000000') {
+                moneyValue = '- ' + response.result.resultInChain[i].Value
+                walletAddressTempInChain = 'Gas'
+              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value !== '0') {
+                moneyValue = '+ ' + (response.result.resultInChain[i].Value.length > 10 && response.result.resultInChain[i].Value.indexOf('.') > 0) ? Number(response.result.resultInChain[i].Value).toFixed(8) : response.result.resultInChain[i].Value
+                walletAddressTempInChain = 'Mined'
+              } else if (response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' && response.result.resultInChain[i].Value === '0') {
+                continue
+              } else {
+                moneyValue = '- ' + response.result.resultInChain[i].Value
+                walletAddressTempInChain = `0x${response.result.resultInChain[i].TxTo}`
+              }
+              walletList.push({
+                id: response.result.resultInChain[i].TxHash,
+                blockNumber: response.result.resultInChain[i].BlockNumber,
+                blockHash: `0x${response.result.resultInChain[i].BlockHash}`,
+                listAddress: walletAddressTempInChain,
+                listFrom: response.result.resultInChain[i].TxFrom,
+                listTo: response.result.resultInChain[i].TxTo,
+                listTime: WalletsHandler.formatDate(moment(response.result.resultInChain[i].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+                listMoney: moneyValue,
+                listUnit: 'BIU',
+                listMinerCost: response.result.resultInChain[i].TxFee,
+                listInputData: response.result.resultInChain[i].InputData,
+                listState: response.result.resultInChain[i].TxFrom === '0000000000000000000000000000000000000000' ? 'Mining' : 'Successful'
+              })
+            }
+          }
+          fnFillWalletList(walletList)
+        })
+      },
+
+      /** 获取所有挖矿历史记录 */
+
       _sendTransactions: function (client, walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
         client.request('sec_sendRawTransaction', transferData, (err, response) => {
           if (err) return

@@ -708,28 +708,44 @@ export default {
     },
     
     _getWalletMiningHistory () {
-      this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
-        let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined' && hist.listState === 'Mining' && hist.listInputData.indexOf('Mining reward') > -1
-        })
+      // 获取挖矿交易历史
+      this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress, 1, 5], (history) => {
         this.moreList = []
-        this.digIncome = "0"
-        this.digNumber = 0
-        miningHistory.forEach((element, index) => {
-          let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
-          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
-          //this.poolAllEarnings = this.digIncome
-          //this.poolMyEarnings = this.digIncome
-          this.digNumber = this.digNumber + 1
+        for (let item of history) {
+          let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
           this.moreList.push({
-            id: index,
-            age: element.listTime,
+            id: 0,
+            age: item.listTime,
             reward: `${moneyValue} BIU`,
-            blocknumber: element.blockNumber,
-            blockhash: element.blockHash
+            blocknumber: item.blockNumber,
+            blockhash: item.blockHash
           })
+        }
+      })
+
+      // 获取挖矿交易数量 和 挖矿总收益
+      this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress], (history) => {
+        this.digNumber = history.length
+        this.digIncome = "0"
+        history.forEach(item => {
+          let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
+          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
         })
       })
+
+      // this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
+      //   let miningHistory = history.filter((hist) => {
+      //     return hist.listAddress === 'Mined' && hist.listState === 'Mining' && hist.listInputData.indexOf('Mining reward') > -1
+      //   })
+        
+      //   this.digIncome = "0"
+      //   this.digNumber = 0
+      //   miningHistory.forEach((element, index) => {
+      //     let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
+      //     this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+      //     this.digNumber = this.digNumber + 1
+      //   })
+      // })
     },
 
     _getPoolName () {
