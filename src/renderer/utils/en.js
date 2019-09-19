@@ -162,6 +162,8 @@ export default {
     hnListTxt4: 'NODE TIME',
 
     hnNetwork: 'Please check your connection status.',
+
+    hnNetworkTxt: 'Main Net'
   },
 
   homeSet: {

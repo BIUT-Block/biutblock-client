@@ -115,7 +115,8 @@ export default {
         let localDate = moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss')
         this.nodeTimeText = WalletsHandler.formatDate(nodeDate.format('YYYY/MM/DD HH:mm:ss'), -nodeDate._offset)
         this.localTimeText = WalletsHandler.formatDate(localDate, new Date().getTimezoneOffset())
-        this.nodeText = response.result.ipv4
+        //this.nodeText = response.result.ipv4
+        this.nodeText = "homeNode.hnNetworkTxt"
       })
     }
   }

@@ -161,6 +161,8 @@ export default {
     hnListTxt4: '节点时间',
 
     hnNetwork: '请检查您的网络是否故障',
+
+    hnNetworkTxt: '主网'
   },
 
   homeSet: {

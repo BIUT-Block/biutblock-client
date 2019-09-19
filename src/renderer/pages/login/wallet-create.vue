@@ -14,14 +14,16 @@
     <section class="wallet-create" v-if="createPages == 1">
       <span class="wallet-button-important" @click="importCreate">{{ $t("login.loginImportBtn") }}</span>
       
-      <wallet-title :title="walletNameText" :choose="true"/>
+      <wallet-title :title="walletNameText" :choose="true"  v-show="!walletNameDisable"/>
       <wallet-input 
         type="text" 
         :placeholder="$t('input.walletNameIpt')" 
         maxlength="14"
         v-model="walletName"
-        :readonly="walletNameDisable"
-        @input="inputName"></wallet-input>
+        @input="inputName" v-show="!walletNameDisable"></wallet-input>
+      
+      <h4 v-show="walletNameDisable">{{ walletName }}</h4>
+
       
       <wallet-title :title="walletPassText1" :choose="true"/>
       <wallet-input-pass :placeholder="$t('input.walletPass1Ipt')" maxlength="30" 
@@ -777,6 +779,8 @@ export default {
   main aside h2 {color: #fff;font-size: 32px;margin: 0;padding-left: 64px;font-family: Montserrat-SemiBold;}
   .en main aside h2 {font-family: Source-Medium;}
 
+  h4 {font-size: 22px;font-family: Lato-Regular;font-weight: bold;margin: 0;padding-bottom: 32px;color:#6D7880;}
+
   main aside .titleTop {margin-top: 155px;}
   main aside span {display: block;width:43px;height:10px;background:rgba(255,255,255,1);
     margin-top: 16px;margin-left: 64px;}
@@ -788,7 +792,7 @@ export default {
     border-bottom: 1px solid #E5E5E5;text-align: right;}
   
   /* 创建钱包 */
-  .wallet-create {padding: 122px 68px 0;flex: 1;width: 450px;}
+  .wallet-create {padding: 142px 68px 0;flex: 1;width: 450px;}
   .wallet-create p {padding-top: 24px;}
   .wallet-create .wallet-button-create {width:190px;margin-top: 36px;}
   .wallet-create .wallet-button-important {display: inline-block;padding: 8px 12px;
