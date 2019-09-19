@@ -124,7 +124,7 @@ export default {
           this.moreList.push({
             id: index,
             age: element.listTime,
-            reward: `${moneyValue} BIUT`,
+            reward: `${moneyValue} BIU`,
             blocknumber: element.blockNumber,
             blockhash: element.blockHash
           })
