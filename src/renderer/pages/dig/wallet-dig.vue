@@ -203,7 +203,7 @@ export default {
       //digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
 
       openPool: false,//挖矿按钮的状态改变
-
+      networkOrPeer: true,
       miningWallet: 'Mining Wallet', //挖矿钱包名称
       isSynced: false,
       chainHeight: '0',
@@ -263,12 +263,12 @@ export default {
 
     //是否可点击追加按钮
     appendAcitve () {
-      return this.availableMoney > 0 ? true : false
+      return this.availableMoney > 0 && this.networkOrPeer ? true : false
     },
 
     //是否可点击开启挖矿按钮
     openActive () {
-      return this.freezeMoney > 0 && navigator.onLine  ? true : false
+      return this.freezeMoney > 0 && navigator.onLine && this.networkOrPeer ? true : false
     },
 
     //是否可点击开启挖矿
@@ -326,8 +326,11 @@ export default {
       })
       this._getTotalReward()
     }, 3 * 60 * 1000)
-    if(this.miningIn){
+    if(window.sessionStorage.getItem('NoPeerTime') == null){
       this._startCheckPeersJob()
+    }
+
+    if(window.sessionStorage.getItem('NoNetworkTime') == null){
       this._startCheckNetworkJob()
     }
   },
@@ -473,9 +476,13 @@ export default {
       this.$JsonRPCClient.checkRlpConnections((response) => {
         if (response.result.message === 0) {
           if(window.sessionStorage.getItem('NoPeerTime') == null){
+            this.stopMining()
+            this.digButton = "publicBtn.openBtn"
+            this.openPool = false      
+            this.networkOrPeer  = false
             window.sessionStorage.setItem('NoPeerTime', Date.now())
-            clearInterval(this.checkNodeJob)
-            this.checkNodeJob = setInterval(this._startCheckPeersJob, 30 * 60 * 1000)
+            clearInterval(this.checkNodeJob)           
+            this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
             // this.maskShow = true
             // this.makePages = 2
             // this.stopMining()
@@ -486,10 +493,9 @@ export default {
             let noPeerTime = window.sessionStorage.getItem('NoPeerTime')
             let currTime = Date.now()
             let diffSec = Math.floor((currTime - noPeerTime)/1000)
-            if(diffSec >= 2 * 3600){
+            if(diffSec >= 10 * 60){
               this.maskShow = true
               this.makePages = 2
-              this.stopMining()
               this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'            
             }
           }
@@ -497,23 +503,29 @@ export default {
           if(window.sessionStorage.getItem('NoPeerTime') != null) {
             window.sessionStorage.removeItem('NoPeerTime')
           }
+          if (this.digButton === 'publicBtn.openBtn') this.digButton === 'publicBtn.stopBtn'
+          if(!this.openPool) this.openPool = true
+          if(!this.networkOrPeer) this.networkOrPeer = true              
         }
       })
     },
     _startCheckNetworkJob () {
       if (!WalletsHandler.checkNetworkStatus()) {
         if(window.sessionStorage.getItem('NoNetworkTime') == null){
+          this.stopMining()
+          this.digButton = "publicBtn.openBtn"
+          this.openPool = false    
+          this.networkOrPeer  = false     
           window.sessionStorage.setItem('NoNetworkTime', Date.now())
           clearInterval(this.checkNetWorkJob)
-          this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 30 * 60 * 1000)
+          this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 2 * 60 * 1000)
         } else {
           let noNetworkTime = window.sessionStorage.getItem('NoNetworkTime')
           let currTime = Date.now()
           let diffSec = Math.floor((currTime - noNetworkTime)/1000)
-          if(diffSec >= 2 * 3600){
+          if(diffSec >=  10 * 60){
             this.maskShow = true
             this.makePages = 2
-            this.stopMining()
             this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
           }
         }
@@ -525,7 +537,10 @@ export default {
       } else {
           if(window.sessionStorage.getItem('NoNetworkTime') != null) {
             window.sessionStorage.removeItem('NoNetworkTime')
-          }        
+          } 
+          if (this.digButton === 'publicBtn.openBtn') this.digButton === 'publicBtn.stopBtn'
+          if(!this.openPool) this.openPool = true
+          if(!this.networkOrPeer) this.networkOrPeer = true       
       }
     },
 
@@ -862,6 +877,7 @@ export default {
     },
 
     startMining () {
+      clearInterval(this.checkNetWorkJob)
       this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
@@ -895,6 +911,7 @@ export default {
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
                       this._startCheckPeersJob()
+                      clearInterval(this.checkNodeJob)
                       this.checkNodeJob = setInterval(this._startCheckPeersJob, 2* 60 * 1000)
                     }
                   } else {
