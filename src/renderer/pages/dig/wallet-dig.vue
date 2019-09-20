@@ -503,8 +503,8 @@ export default {
           if(window.sessionStorage.getItem('NoPeerTime') != null) {
             window.sessionStorage.removeItem('NoPeerTime')
           }
-          if (this.digButton === 'publicBtn.openBtn') this.digButton === 'publicBtn.stopBtn'
-          if(!this.openPool) this.openPool = true
+          // if (this.digButton === 'publicBtn.openBtn') this.digButton == 'publicBtn.stopBtn'
+          // if(!this.openPool) this.openPool = true
           if(!this.networkOrPeer) this.networkOrPeer = true              
         }
       })
@@ -538,8 +538,8 @@ export default {
           if(window.sessionStorage.getItem('NoNetworkTime') != null) {
             window.sessionStorage.removeItem('NoNetworkTime')
           } 
-          if (this.digButton === 'publicBtn.openBtn') this.digButton === 'publicBtn.stopBtn'
-          if(!this.openPool) this.openPool = true
+          // if (this.digButton === 'publicBtn.openBtn') this.digButton == 'publicBtn.stopBtn'
+          // if(!this.openPool) this.openPool = true
           if(!this.networkOrPeer) this.networkOrPeer = true       
       }
     },
