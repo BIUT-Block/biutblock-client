@@ -187,7 +187,7 @@
     <wallet-mask
       :maskPages="maskPages"
       :walletData="selectedWalletData"
-      :balance="walletBalance"
+      :balance="availableMoney"
       :balanceSEN="walletBalanceSEN"
       :selectedWallet="selectedWallet"
       :maskShow="maskShow"
