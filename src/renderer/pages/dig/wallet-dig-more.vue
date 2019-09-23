@@ -57,8 +57,8 @@ export default {
   data () {
     return {
       loadMore: false, //加载更多按钮
-      digNumber: 0,
-      digIncome: '0',
+      digNumber: '-',
+      digIncome: '-',
       wallets: {},
       selectedPrivateKey: '',
       selectedWallet: {},

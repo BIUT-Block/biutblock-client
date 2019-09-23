@@ -76,7 +76,7 @@
         <section class="dig-earnings" v-show="pageIdx == 1">
           <!-- 挖矿内容-头部 -->
           <dig-title  
-            :number="digNumber"
+            :number="digNumber.toString()"
             :digTitleShow="true"
             :selectedWallet="selectedWallet" 
             :selectedPrivateKey="selectedPrivateKey" 
@@ -189,8 +189,8 @@ export default {
       digButton: "publicBtn.openBtn",
       mortgageBtn1: 'publicBtn.mortgageBtn1', //锁仓按钮第一次进入
       mortgageBtn1Disabled: false,
-      digNumber: 0,
-      digIncome: '0',
+      digNumber: '-',
+      digIncome: '-',
       wallets: [],
       selectedPrivateKey: '',
       selectedWallet: '',
@@ -206,10 +206,10 @@ export default {
       networkOrPeer: true,
       miningWallet: 'Mining Wallet', //挖矿钱包名称
       isSynced: false,
-      chainHeight: '0',
+      chainHeight: '-',
       minedByAddress: '',
       timeDiff: new Date().getTime().toString(),
-      networkMining: '0',
+      networkMining: '-',
       updateListJob: '',
       getBlockHeightJob: '',
       getSyncStatusJob: '',
@@ -237,15 +237,14 @@ export default {
 
       makePages: 0,//默认是首次开启挖矿 0 - 开启挖矿 2 - 断网  3 - 追加更多
       digBalance: 0, //挖矿余额
-      availableMoney: "0", //biut的可用金额
-      freezeMoney: "0", //biut冻结金额
+      availableMoney: "-", //biut的可用金额
+      freezeMoney: "-", //biut冻结金额
       hasContract: false,
-      invitationCode: 12345678,//我的邀请码
       pageIdx: 1, //初始页面展示挖矿收益
       poolNode: 0, // 矿池节点
       poolAssets: 0, //矿池抵押总量
-      poolAllEarnings: "0", // 全部矿池收益
-      poolMyEarnings: "0", // 我的矿池收益
+      poolAllEarnings: "-", // 全部矿池收益
+      poolMyEarnings: "-", // 我的矿池收益
       poolApplyTime: '',
       poolApplyMoney: 0,
       poolName: '',
@@ -546,7 +545,6 @@ export default {
 
     _getWalletBalance(walletAddress) {
       let poolAddress = []
-      this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
 //        this.walletBalance = balanceSEC.toString()
         let freezeMoney = 0

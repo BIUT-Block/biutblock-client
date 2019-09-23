@@ -26,7 +26,7 @@ export default {
 
   },
   props: {
-    number: Number,
+    number: String,
     income: String,
     selectedWallet: Object,
     selectedPrivateKey: String,

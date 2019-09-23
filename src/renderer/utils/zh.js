@@ -336,7 +336,7 @@ export default {
     hiMaskDetailsTxt: '总收益 (BIUT)',
     hiMaskDetailsListTxt1: '二级钱包地址',
     hiMaskDetailsListTxt2: '时间',
-    hiMaskDetailsListTxt3: '奖励 (BUT)',
+    hiMaskDetailsListTxt3: '奖励 (BIUT)',
 
     hiMaskDetailsListNull: '暂无记录',
 

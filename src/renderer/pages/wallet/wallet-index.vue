@@ -236,14 +236,14 @@ export default {
       menuShow: false,
       walletName: '',
       oldWalletName: '',
-      walletBalance: '0',//sec余额
-      availableMoney: 0, //biut的可用金额
-      freezeMoney: 0, //biut冻结金额
+      walletBalance: '-',//sec余额
+      availableMoney: '-', //biut的可用金额
+      freezeMoney: '-', //biut冻结金额
       invitationCode: '',//邀请码
       showInvitation: false,//邀请码提示 是否显示
       mortgageShow: true, // 邀请码是否显示
 
-      walletBalanceSEN: '0',//sen余额
+      walletBalanceSEN: '-',//sen余额
       walletAddress: '',
       inputReadonly: true,
       inputActive: false,
@@ -515,11 +515,13 @@ export default {
       window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
       this._resetSkipTotal()
       this.selectedWallet = selectedWallet
-      // if (this.selectedWallet.role === 'Owner') {
-      //   this.showInvitation = true
-      // } else {
-      //   this.showInvitation = false
-      // }
+      // 切换钱包后 讲页面内容重置
+      this.mortgageShow = false
+      this.walletBalance = '-'
+      this.freezeMoney = '-'
+      this.availableMoney = '-'
+      this.walletBalanceSEN = '-'
+      this.tradingList = []
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
       console.log(this.selectedWalletData)
       this.selectedPrivateKey = selectedWallet.privateKey
@@ -546,11 +548,9 @@ export default {
     },
 
     _getWalletBalance(walletAddress) {
-      this.mortgageShow = true
       let poolAddress = []
-      this.freezeMoney = 0
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        //        this.walletBalance = balanceSEC.toString()
+        //this.mortgageShow = true
         let freezeMoney = 0
         let walletBalance = 0
         let availableMoney = Number(balanceSEC)
