@@ -411,8 +411,11 @@ export default {
       },
       checkRlpConnections: function (fnCheckPeers) {
         this.client.request('sec_getRLPPeersNumber', [], (err, response) => {
-          if (err) return
-          fnCheckPeers(response)
+          if (err){
+            fnCheckPeers(err, null)
+          } else {
+            fnCheckPeers(null, response)
+          }
         })
       },
 

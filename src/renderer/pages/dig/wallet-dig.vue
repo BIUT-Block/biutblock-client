@@ -472,8 +472,8 @@ export default {
 
     /** 检查peers 和 网络连接的方法 */
     _startCheckPeersJob () {
-      this.$JsonRPCClient.checkRlpConnections((response) => {
-        if (response.result.message === 0) {
+      this.$JsonRPCClient.checkRlpConnections((err, response) => {
+        if (err || (response && response.result.message === 0)) {
           if(window.sessionStorage.getItem('NoPeerTime') == null){
             this.stopMining()
             this.digButton = "publicBtn.openBtn"
