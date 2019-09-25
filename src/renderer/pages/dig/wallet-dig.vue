@@ -413,7 +413,9 @@ export default {
     },
 
     onAppExit () {
-      ipcRenderer.send('close')
+      window.sessionStorage.removeItem('NoPeerTime')
+      window.sessionStorage.removeItem('NoNetworkTime')
+      ipcRenderer.send('relaunch')
     },
 
     onAddContract (privateKey, poolName) {

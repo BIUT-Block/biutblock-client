@@ -31,7 +31,7 @@ export default {
   },
 
   loginMask: {
-    lgTxt: '无法导入，钱包地址未绑定邀请码。'
+    lgTxt: '无法导入，钱包地址未绑定邀请码或网络异常。'
   },
 
   input: {
@@ -273,7 +273,7 @@ export default {
     hdMaskStartTxt3: 'Guarantee Amount',
     hdMaskStartBtn: 'Open mining',
 
-    hdMaskNetworkTit: '网络异常, 请检查网络状态并重新登录。',
+    hdMaskNetworkTit: '网络异常, 程序将重启, 请检查网络状态并重新登录。',
     hdMaskNetworkExit: '退出',
     hdMaskNetworkContinue: 'Continue',
     hdMaskNetworkReconnecting: 'Reconnecting',

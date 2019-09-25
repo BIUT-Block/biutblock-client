@@ -635,6 +635,9 @@ export default {
           wallets[privateKey].mortgageValue = body.doc[0].mortgageValue
           wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress
           wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress
+
+          // this.$store.commit('addWallet', wallets[privateKey])
+
           walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
             if (wallets === 'DuplicateKey') {
               this._showImportError(from, 'input.imporantExists')

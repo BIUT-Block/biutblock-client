@@ -223,6 +223,7 @@ ipcMain.on('max', () => {
 })
 
 ipcMain.on('relaunch', () => {
+  walletsHandler.deleteAllWalletsFromFile()
   app.relaunch()
   app.quit()
 })

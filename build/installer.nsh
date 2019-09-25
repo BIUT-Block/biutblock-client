@@ -1,3 +1,9 @@
+InstallDir "PC-Miner\"
+
+Function .onVerifyInstDir
+    !system "echo '' > ${BUILD_RESOURCES_DIR}/preInit"
+FunctionEnd
+
 !macro preInit
   ; This macro is inserted at the beginning of the NSIS .OnInit callback
   ; !system "echo '' > ${BUILD_RESOURCES_DIR}/preInit"
