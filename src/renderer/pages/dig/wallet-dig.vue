@@ -474,10 +474,10 @@ export default {
     _startCheckPeersJob () {
       this.$JsonRPCClient.checkRlpConnections((err, response) => {
         if(response && response.result){
-          console.log('-------------- mingCheckNoPeer With Response W/O Error --------------', response.result)
+          console.log('-------------- CheckNoPeer With Response W/O Error --------------', response.result)
         } else {
-          if(err) console.log('-------------- mingCheckNoPeer With Error W/O Response--------------', err)
-          else console.log('-------------- mingCheckNoPeer W/O Error W/O Response--------------')
+          if(err) console.log('-------------- CheckNoPeer With Error W/O Response--------------', err)
+          else console.log('-------------- CheckNoPeer W/O Error W/O Response--------------')
         }
         
         if (err || (response && response.result.message === 0)) {
