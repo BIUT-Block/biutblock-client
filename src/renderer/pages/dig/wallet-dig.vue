@@ -473,6 +473,13 @@ export default {
     /** 检查peers 和 网络连接的方法 */
     _startCheckPeersJob () {
       this.$JsonRPCClient.checkRlpConnections((err, response) => {
+        if(response && response.result){
+          console.log('-------------- mingCheckNoPeer With Response W/O Error --------------', response.result)
+        } else {
+          if(err) console.log('-------------- mingCheckNoPeer With Error W/O Response--------------', err)
+          else console.log('-------------- mingCheckNoPeer W/O Error W/O Response--------------')
+        }
+        
         if (err || (response && response.result.message === 0)) {
           if(window.sessionStorage.getItem('NoPeerTime') == null){
             this.stopMining()
