@@ -275,7 +275,7 @@ export default {
     hdMaskStartTxt3: 'Frozen Amount',
     hdMaskStartBtn: 'Open mining',
 
-    hdMaskNetworkTit: 'No connection to network, PC-Miner will be restarted, please check internet connection and relaunch the app.',
+    hdMaskNetworkTit: 'No connection to network, please check internet connection and relaunch the app.',
     hdMaskNetworkExit: 'Exit',
     hdMaskNetworkContinue: 'Continue',
     hdMaskNetworkReconnecting: 'Reconnecting',

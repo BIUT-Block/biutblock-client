@@ -325,11 +325,11 @@ export default {
       })
       this._getTotalReward()
     }, 3 * 60 * 1000)
-    if(window.sessionStorage.getItem('NoPeerTime') == null){
+    if(window.sessionStorage.getItem('NoPeerTime') != null){
       this._startCheckPeersJob()
     }
 
-    if(window.sessionStorage.getItem('NoNetworkTime') == null){
+    if(window.sessionStorage.getItem('NoNetworkTime') != null){
       this._startCheckNetworkJob()
     }
   },
@@ -415,7 +415,7 @@ export default {
     onAppExit () {
       window.sessionStorage.removeItem('NoPeerTime')
       window.sessionStorage.removeItem('NoNetworkTime')
-      ipcRenderer.send('relaunch')
+      ipcRenderer.send('close')
     },
 
     onAddContract (privateKey, poolName) {
@@ -475,13 +475,6 @@ export default {
     /** 检查peers 和 网络连接的方法 */
     _startCheckPeersJob () {
       this.$JsonRPCClient.checkRlpConnections((err, response) => {
-        if(response && response.result){
-          console.log('-------------- CheckNoPeer With Response W/O Error --------------', response.result)
-        } else {
-          if(err) console.log('-------------- CheckNoPeer With Error W/O Response--------------', err)
-          else console.log('-------------- CheckNoPeer W/O Error W/O Response--------------')
-        }
-        
         if (err || (response && response.result.message === 0)) {
           if(window.sessionStorage.getItem('NoPeerTime') == null){
             this.stopMining()
@@ -490,7 +483,7 @@ export default {
             this.networkOrPeer  = false
             window.sessionStorage.setItem('NoPeerTime', Date.now())
             clearInterval(this.checkNodeJob)           
-            this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
+            this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000 )
             // this.maskShow = true
             // this.makePages = 2
             // this.stopMining()
@@ -921,7 +914,7 @@ export default {
                       clearInterval(this.getSyncStatusJob)
                       this._startCheckPeersJob()
                       clearInterval(this.checkNodeJob)
-                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 2* 60 * 1000)
+                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
                     }
                   } else {
                     _statusSameTimes = 0
@@ -929,7 +922,7 @@ export default {
                   }
                 })
               }, 30*1000)
-            }, 10*60*1000)
+            }, 10 *60 * 1000)
             this._beginMiningWithWallet()
           }
         })
