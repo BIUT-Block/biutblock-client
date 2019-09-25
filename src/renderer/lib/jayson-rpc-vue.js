@@ -20,6 +20,7 @@ export default {
     let jsonRPC = {
       target: '',
       client: '',
+      localClient: '',
       clientSEN: '',
       switchToLocalHost: function () {
         this.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
@@ -410,9 +411,12 @@ export default {
         })
       },
       checkRlpConnections: function (fnCheckPeers) {
-        this.client.request('sec_getRLPPeersNumber', [], (err, response) => {
-          if (err) return
-          fnCheckPeers(response)
+        this.localClient.request('sec_getRLPPeersNumber', [], (err, response) => {
+          if (err){
+            fnCheckPeers(err, null)
+          } else {
+            fnCheckPeers(null, response)
+          }
         })
       },
 
@@ -561,7 +565,7 @@ export default {
     process.env.netType = 'main'
     jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
     jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
-
+    jsonRPC.localClient = jayson.http(`http://${localhostAddress}:${localhostPort}`)
     // if (process.env.netType === 'test') {
     //   console.log('Start jayson client with test network')
     //   process.env.netType = 'test'
