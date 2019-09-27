@@ -273,7 +273,7 @@ export default {
       tradingList: [],
       tradingListTotalLength: 0,
       tradingListSkip: 4,
-      tradingPgeSize: 4, // rpc 请求交易历史每页显示数量
+      tradingPgeSize: 5, // rpc 请求交易历史每页显示数量
       tradingPge: 1 // rpc 请求交易历史页数
     }
   },
@@ -501,7 +501,7 @@ export default {
       this.tradingListTotalLength = 0
       this.tradingListSkip = 4
       this.tradingPge = 1
-      this.tradingPgeSize = 4
+      this.tradingPgeSize = 5
       this.tradingListSkip = 4
       this.tradingList = []
       this.noMoreData = false

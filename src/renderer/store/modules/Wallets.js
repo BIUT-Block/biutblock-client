@@ -24,7 +24,7 @@ const mutations = {
     console.log(state.wallets)
   },
 
-  removeWallet (state, privateKey) {
+  removeWallet (state, wallet) {
     delete state.wallets[wallet.privateKey]
   }
 }

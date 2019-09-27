@@ -560,6 +560,19 @@ export default {
 
     //备份助记词成功进入钱包主页
     backupWallet () {
+      this.$store.commit('addWallet', {
+        walletName: this.walletName,
+        privateKey: this.keys.privateKey,
+        publicKey: this.keys.publicKey,
+        walletAddress: this.keys.userAddress,
+        englishWords: this.keys.englishWords,
+        invitationCode: this.parentWallet.invitationCode,
+        ownInvitationCode: this.parentWallet.ownInvitationCode,
+        mortgagePoolAddress: this.parentWallet.role === 'Miner' ? [this.parentWallet.mortgagePoolAddress] : [this.parentWallet.ownPoolAddress],
+        mortgageValue: '0',
+        ownPoolAddress: [this.contractAddress],
+        role: this.parentWallet.role
+      })
       walletsHandler.backUpWalletIntoFile({
         walletName: this.walletName,
         privateKey: this.keys.privateKey,
@@ -636,8 +649,8 @@ export default {
           wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress
           wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress
 
-          // this.$store.commit('addWallet', wallets[privateKey])
-
+          this.$store.commit('addWallet', wallets[privateKey])
+          
           walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
             if (wallets === 'DuplicateKey') {
               this._showImportError(from, 'input.imporantExists')
