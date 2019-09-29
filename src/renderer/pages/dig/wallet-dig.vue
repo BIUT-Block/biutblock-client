@@ -325,13 +325,13 @@ export default {
       })
       this._getTotalReward()
     }, 3 * 60 * 1000)
-    if(window.sessionStorage.getItem('NoPeerTime') != null){
-      this._startCheckPeersJob()
-    }
+    // if(window.sessionStorage.getItem('NoPeerTime') != null){
+    //   this._startCheckPeersJob()
+    // }
 
-    if(window.sessionStorage.getItem('NoNetworkTime') != null){
-      this._startCheckNetworkJob()
-    }
+    // if(window.sessionStorage.getItem('NoNetworkTime') != null){
+    //   this._startCheckNetworkJob()
+    // }
   },
   mounted () {
     
@@ -880,7 +880,7 @@ export default {
 
     startMining () {
       clearInterval(this.checkNetWorkJob)
-      this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
+      // this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {
@@ -912,9 +912,9 @@ export default {
                       this.saveMingingStatus()
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
-                      this._startCheckPeersJob()
-                      clearInterval(this.checkNodeJob)
-                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
+                      // this._startCheckPeersJob()
+                      // clearInterval(this.checkNodeJob)
+                      // this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
                     }
                   } else {
                     _statusSameTimes = 0
