@@ -1,6 +1,6 @@
 {
   "name": "PC-Miner",
-  "version": "1.2.24",
+  "version": "1.2.29",
   "author": "MongoX Technology GmbH",
   "description": "BIUT PC Miner",
   "license": "MIT",
@@ -89,7 +89,7 @@
     "moment-timezone": "^0.5.26",
     "net-ping": "^1.2.3",
     "node-fetch": "^2.6.0",
-    "node-gyp": "^5.0.3",
+    "node-gyp": "^5.0.4",
     "portfinder": "^1.0.24",
     "qrious": "^4.0.2",
     "secp256k1": "^3.7.1",

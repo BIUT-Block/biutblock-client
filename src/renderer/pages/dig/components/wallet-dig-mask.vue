@@ -92,7 +92,7 @@
         </section>
         <section class="first-dig-txt-all">
           {{ $t("homeWallet.hwBiutTxt1") }}：
-          <p>{{ getPointNum(availableMoney) }} BIUT</p>
+          <p>{{ getPointNum(availibleMoney) }} BIUT</p>
           <span @click="allAmountMortgage">{{
             $t("homeWalletMask.hwmSentTxt3All")
           }}</span>
@@ -119,9 +119,6 @@ export default {
   props: {
     pages: Number,
     networkErrorText: String,
-    selectedWalletAddress: String,
-    availableMoney: String,
-    freezeMoney: String,
     poolName: String, // 如果是矿池就启用框挖矿、没矿池就用钱包名称
   },
   data() {
@@ -142,6 +139,18 @@ export default {
     }
   },
   computed: {
+    selectedWalletAddress () {
+      return this.$store.getters.miningWallet.walletAddress
+    },
+
+    availibleMoney () {
+      return this.$store.getters.miningWallet.availibleMoney
+    },
+
+    freezeMoney () {
+      return this.$store.getters.miningWallet.freezeMoney
+    },
+
     mortgageActive() {
       let ipt1 = this.mortgageIpt
       if (this.mortgageIpt.length > 10 && this.mortgageIpt.indexOf(".") < 0) {

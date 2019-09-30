@@ -222,11 +222,11 @@ export default {
   props: {
     maskPages: Number,
     maskShow: Boolean,
-    selectedWallet: Object,
+   // selectedWallet: Object,
     walletData: Object,
-    balance: String,
-    balanceSEN: String,
-    walletName: String
+   // balance: String,
+   // balanceSEN: String,
+   // walletName: String
   },
   data() {
     return {
@@ -296,6 +296,19 @@ export default {
     }
   },
   computed: {
+    selectedWallet () {
+      return this.$store.getters.selectedWallet
+    },
+    walletName () {
+      return this.$store.getters.walletName
+    },
+    balance () {
+      return this.$store.getters.walletBalance
+    },
+    balanceSEN () {
+      return this.$store.getters.walletBalanceSEN
+    },
+
     //转账地址清空按钮
     clearSentAddressImg () {
       return this.sentAddress.length > 0 ? true : false
@@ -628,7 +641,13 @@ export default {
     //导出keystroe文件
     importantKeystroe () {
       let keyDataJSON = {}
-      keyDataJSON[this.selectedWallet.privateKey] = this.walletData
+      keyDataJSON[this.selectedWallet.privateKey] = {
+        walletName: this.selectedWallet.walletName,
+        privateKey: this.selectedWallet.privateKey,
+        publicKey: this.selectedWallet.publicKey,
+        englishWords: this.selectedWallet.englishWords,
+        walletAddress: this.selectedWallet.walletAddress
+      }
       WalletHandler.saveKeyStore(`BIUT${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
       this.clostMask()
     },
@@ -647,6 +666,7 @@ export default {
         this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
         this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn'
       } else {
+        this.$store.commit('removeWallet', this.selectedWallet)
          WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
           this.$emit('updateWalletList', wallets)
         })

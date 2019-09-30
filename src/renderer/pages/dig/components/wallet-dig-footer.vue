@@ -32,15 +32,27 @@ export default {
   components: {
 
   },
-  props: {walletAddress: String, totalBlockHeight: String, totalMining: String, timeDiff: String},
+  props: {},
   data() {
     return {
       timeIdx: ""
     }
   },
   computed: {
+    walletAddress () {
+      return this.$store.getters.lastBlock.Beneficiary || ''
+    },
+    totalBlockHeight () {
+      return this.$store.getters.chainHeight
+    },
+    totalMining () {
+      return this.$store.getters.netTotalReward
+    },
+    timeDiff () {
+      return Math.abs(new Date().getTime() - Number(this.$store.getters.lastBlock.TimeStamp)).toString()
+    },
     textText () {
-      if (this.walletAddress == "") {
+      if (this.walletAddress === "") {
         return '-'
       } else {
         return '0x' + this.walletAddress.replace(/(.{6}).+(.{8})/,'$1...$2')

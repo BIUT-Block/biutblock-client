@@ -31,12 +31,12 @@
                 ]"
                 @click="updateName"
               >
-                <span v-show="inputReadonly">{{ oldWalletName }}</span>
+                <span v-show="inputReadonly">{{ walletName }}</span>
                 <input
                   type="text"
                   maxlength="14"
                   ref="contentInput"
-                  v-model="walletName"
+                  v-model="newWalletName"
                   v-show="!inputReadonly"
                   :readonly="inputReadonly"
                   onkeyup="this.value=this.value.replace(/(^\s*)/g, '')"
@@ -62,7 +62,7 @@
                 <figcaption>
                   {{ $t("homeWallet.hwCode") }}：
                   <span id="invitation" v-show="!mortgageShow">
-                    {{ selectedWalletData.ownInvitationCode }}
+                    {{ selectedWallet.ownInvitationCode }}
                   </span>
                   <span v-show="mortgageShow">
                     --
@@ -131,7 +131,7 @@
             <section class="money-text-list">
               <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt1") }}</span>
-                <span>{{ getPointNum(availableMoney) }}</span>
+                <span>{{ getPointNum(availibleMoney) }}</span>
               </section>
               <section class="money-text">
                 <span>{{ $t("homeWallet.hwBiutTxt2") }}</span>
@@ -186,12 +186,7 @@
     <!-- 遮罩层弹窗 -->
     <wallet-mask
       :maskPages="maskPages"
-      :walletData="selectedWalletData"
-      :balance="availableMoney.toString()"
-      :balanceSEN="walletBalanceSEN"
-      :selectedWallet="selectedWallet"
       :maskShow="maskShow"
-      :walletName="oldWalletName"
       @changeClose="closeMask"
       @updateWalletList="onUpdateWalletList"
       @updateWalletBalance="onUpdateWalletBalance"
@@ -229,21 +224,21 @@ export default {
       receiptImg: receiptImg,
       transferButon: 'homeWallet.hwBtn2',
       wallets: {},
-      selectedWallet: {},
+      // selectedWallet: {},
       selectedPrivateKey: '',
       selectedWalletData: {},
       transferImg: transferImg,
       menuShow: false,
-      walletName: '',
-      oldWalletName: '',
-      walletBalance: '-',//sec余额
-      availableMoney: '-', //biut的可用金额
-      freezeMoney: '-', //biut冻结金额
+      //walletName: '',
+      newWalletName: '',
+     // walletBalance: '-',//sec余额
+      // availableMoney: '-', //biut的可用金额
+      // freezeMoney: '-', //biut冻结金额
       invitationCode: '',//邀请码
       showInvitation: false,//邀请码提示 是否显示
-      mortgageShow: true, // 邀请码是否显示
+     // mortgageShow: true, // 邀请码是否显示
 
-      walletBalanceSEN: '-',//sen余额
+     // walletBalanceSEN: '-',//sen余额
       walletAddress: '',
       inputReadonly: true,
       inputActive: false,
@@ -270,7 +265,7 @@ export default {
       translucentShow: false,
       maskPages: 0,
       maskShow: false,
-      tradingList: [],
+      // tradingList: [],
       tradingListTotalLength: 0,
       tradingListSkip: 4,
       tradingPgeSize: 5, // rpc 请求交易历史每页显示数量
@@ -278,6 +273,49 @@ export default {
     }
   },
   computed: {
+    selectedWallet () {
+      this.selectedPrivateKey = this.$store.getters.selectedWallet.privateKey
+      return this.$store.getters.selectedWallet
+    },
+
+    walletBalance () {
+      return this.$store.getters.walletBalance
+    },
+
+    availibleMoney () {
+      return this.$store.getters.availibleMoney
+    },
+
+    freezeMoney () {
+      return this.$store.getters.freezeMoney
+    },
+
+    mortgageShow () {
+      return !(this.$store.getters.freezeMoney !== "0" &&  this.$store.getters.freezeMoney !== "-")
+    },
+
+    walletBalanceSEN () {
+      return this.$store.getters.walletBalanceSEN
+    },
+
+    walletName () {
+      this.newWalletName = this.$store.getters.walletName
+      return this.$store.getters.walletName
+    },
+
+    transListPage () {
+      return this.$store.getters.transactionListPage
+    },
+
+    transListPageSize () {
+      return this.$store.getters.transactionListPageSize
+    },
+
+    tradingList () {
+      this.tradingListTotalLength = this.$store.getters.transactionList.length
+      return this.$store.getters.transactionList
+    },
+
     noTradingStyle() {
       if (this.tradingListTotalLength > 0) {
         return {
@@ -308,24 +346,27 @@ export default {
     },
 
     moneyLengthBIUT () {
-      return this.walletBalance.length > 15 ? true : false
+      return this.$store.getters.walletBalance > 15 ? true : false
     },
 
     moneyLengthBIUTs () {
-      return this.walletBalance.length > 21 ? true : false
+      return this.$store.getters.walletBalance.length > 21 ? true : false
     },
 
     moneyLengthBIU () {
-      return this.walletBalanceSEN.length > 15 ? true : false
+      return this.$store.getters.walletBalanceSEN > 15 ? true : false
     },
 
     moneyLengthBIUs () {
-      return this.walletBalanceSEN.length > 21 ? true : false
+      return this.$store.getters.walletBalanceSEN > 21 ? true : false
     }
   },
   created() {
     this.wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
+    this._getWalletBalance(this.selectedWallet.walletAddress)
+    this._getWalletTransactions(this.selectedWallet.walletAddress)
+    // this.onSelectWalletChanged(this.selectedWallet)
+    // this.selectedPrivateKey = this.$route.query.selectedPrivateKey
   },
   mounted() {
 
@@ -340,7 +381,13 @@ export default {
     onClickLoadMore() {
       this.tradingPge = this.tradingPge + 1
       this.tradingListSkip = this.tradingListSkip + 4
+      this.$store.commit('updateTransPage', {
+        privateKey: this.selectedWallet.privateKey,
+        page: this.transListPage + 1
+      })
       clearInterval(jobID)
+      this._getWalletBalance(this.selectedWallet.walletAddress)
+      this._getWalletTransactions(this.selectedWallet.walletAddress)
       this._startUpateJob()
     },
 
@@ -424,7 +471,7 @@ export default {
     //钱包名称不能输入空格开头
     inputUpdateName() {
       this.$nextTick(() => {
-        this.walletName = this.walletName.replace(/(^\s*)/g, '')
+        this.newWalletName = this.newWalletName.replace(/(^\s*)/g, '')
       })
     },
 
@@ -440,14 +487,14 @@ export default {
     //失去焦点保存名称
     saveName() {
       let newKeyStore = {}
-      if (this.walletName.trim().length === 0) {
+      if (this.newWalletName.trim().length === 0) {
         this.translucentShow = true
         this.translucentText = "homeWallet.hwNameNull"
         setTimeout(() => {
           this.translucentShow = false
         }, 4000)
         return
-      } else if (this.walletName === this.selectedWallet.name) {
+      } else if (this.newWalletName === this.selectedWallet.name) {
         this.inputReadonly = true
         this.inputActive = false
         return
@@ -455,10 +502,13 @@ export default {
       let miningWallet = JSON.parse(window.sessionStorage.getItem("miningStatus"))
 
       if (miningWallet) {
-        miningWallet.wallet.walletName = this.walletName
+        miningWallet.wallet.walletName = this.newWalletName
         window.sessionStorage.setItem("miningStatus", JSON.stringify(miningWallet))
       }
-
+      this.$store.commit('updateWalletName', {
+        privateKey: this.selectedWallet.privateKey,
+        newName: this.newWalletName
+      })
       this.selectedWallet.name = this.walletName
       this.wallets[this.selectedWallet.privateKey].walletName = this.walletName
       this.selectedWalletData.walletName = this.walletName
@@ -503,7 +553,7 @@ export default {
       this.tradingPge = 1
       this.tradingPgeSize = 5
       this.tradingListSkip = 4
-      this.tradingList = []
+     // this.tradingList = []
       this.noMoreData = false
     },
 
@@ -514,20 +564,19 @@ export default {
       }
       window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
       this._resetSkipTotal()
-      this.selectedWallet = selectedWallet
+      // this.selectedWallet = selectedWallet
       // 切换钱包后 讲页面内容重置
-      this.mortgageShow = false
-      this.walletBalance = '-'
-      this.freezeMoney = '-'
-      this.availableMoney = '-'
-      this.walletBalanceSEN = '-'
-      this.tradingList = []
+      // this.mortgageShow = false
+      // this.walletBalance = '-'
+      // this.freezeMoney = '-'
+      // this.availibleMoney = '-'
+      // this.walletBalanceSEN = '-'
+      // this.tradingList = []
       this.selectedWalletData = this.wallets[selectedWallet.privateKey]
-      console.log(this.selectedWalletData)
       this.selectedPrivateKey = selectedWallet.privateKey
       //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
-      this.oldWalletName = selectedWallet.name
-      this.walletName = selectedWallet.name
+      // this.oldWalletName = selectedWallet.name
+      // this.walletName = selectedWallet.name
       //this.tradingList = []
 
       this._startUpateJob()
@@ -538,8 +587,8 @@ export default {
       if (jobID) {
         clearInterval(jobID)
       }
-      this._getWalletBalance(this.selectedWallet.walletAddress)
-      this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
+      // this._getWalletBalance(this.selectedWallet.walletAddress)
+      // this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
       jobID = setInterval(() => {
         console.log('Job ID')
         this._getWalletBalance(this.selectedWallet.walletAddress)
@@ -575,16 +624,28 @@ export default {
               }
             }
           }
-          if (freezeMoney > 0) {
-            this.mortgageShow = false
-          }
+          // if (freezeMoney > 0) {
+          //   this.mortgageShow = false
+          // }
           walletBalance = this.cal.accAdd(freezeMoney, availableMoney) //精度问题处理
-          this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
-          this.walletBalance = this._checkValueFormat(walletBalance.toString())
-          this.availableMoney = this._checkValueFormat(availableMoney.toString())
+          this.$store.commit('updateWalletBalanceSEC', {
+            privateKey: this.selectedWallet.privateKey,
+            walletBalance: walletBalance.toString(),
+            availibleMoney: availableMoney.toString(),
+            freezeMoney: freezeMoney.toString()
+          })
+          
+          // this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
+          // this.walletBalance = this._checkValueFormat(walletBalance.toString())
+          // this.availableMoney = this._checkValueFormat(availableMoney.toString())
         })
       }, (balanceSEN) => {
-        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
+        this.$store.commit('updateWalletBalanceSEN', {
+          privateKey: this.selectedWallet.privateKey,
+          walletBalanceSEN: balanceSEN.toString()
+        })
+        // this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
+
       })
     },
 
@@ -598,26 +659,20 @@ export default {
       }
     },
 
-    _getWalletTransactions(walletAddress, page, skip) {
+    _getWalletTransactions(walletAddress) {
       let pgeSkip = 0
-      this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, page, skip, (transactions) => {
-
-        this.tradingListTotalLength = transactions.length === 0 ? 1 : transactions.length
-        //if (this.tradingListSkip >= transactions.length && transactions.length > 0) {
-        //  this.noMoreData = true
-          pgeSkip = transactions.length
-      //   } else {
-      //     this.noMoreData = false
-      //     pgeSkip = this.tradingListSkip
-      //  // }
-        if (transactions.length > 0) {
-         // this.tradingList = transactions
-          for (let i = 0; i < pgeSkip; i++) {
-            if(this.tradingList.filter(tx=>tx.id===transactions[i].id).length == 0){
-              this.tradingList.push(transactions[i])
-            }
+      this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, this.transListPage, this.transListPageSize, (transactions) => {
+        let trans = []
+        for (let item of transactions) {
+          if (this.tradingList.filter(tx => tx.id === item.id 
+              && (tx.listFrom.indexOf(this.selectedWallet.walletAddress) !== -1 || tx.listTo.indexOf(this.selectedWallet.walletAddress) !== -1)).length === 0) {
+            trans.push(item)
           }
         }
+        this.$store.commit('updateTransList', {
+          privateKey: this.selectedWallet.privateKey,
+          trans: trans
+        })
       })
     },
 
@@ -640,7 +695,8 @@ export default {
 
     /** Event Method, triggered if wallet balance updated */
     onUpdateWalletBalance(balance, walletAddress) {
-      this.walletBalance = this._checkValueFormat(balance.toString()).toString()
+      this._getWalletBalance(walletAddress)
+      // this.walletBalance = this._checkValueFormat(balance.toString()).toString()
       this._getWalletTransactions(walletAddress)
     },
 

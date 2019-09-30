@@ -40,7 +40,7 @@ import WalletHandler from '../../../lib/WalletsHandler';
 const dataCenterHandler = require('../../../lib/DataCenterHandler')
 export default {
   name: '',
-  props: {walletAddress: String, privateKey: String, contractAddress: String},
+  props: {},
   data() {
     return {
       poolName: '',
@@ -49,6 +49,15 @@ export default {
     }
   },
   computed: {
+    walletAddress () {
+      return this.$store.getters.miningWallet.walletAddress
+    },
+    privateKey () {
+      return this.$store.getters.miningWallet.privateKey
+    },
+    contractAddress () {
+      return this.$store.getters.miningWallet.contractAddress[0]
+    },
     updateIpt () {
       let name = this.poolName.trim()
       if (name.length >= 6 && this.poolNameIpt()) {

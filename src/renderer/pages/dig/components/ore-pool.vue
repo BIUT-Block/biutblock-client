@@ -71,9 +71,6 @@
     <!-- 申请矿池弹窗 -->
     <pool-mask
        v-show="maskShow"
-       :walletAddress="walletAddress"
-       :privateKey="privateKey"
-       :contractAddress="contractAddress"
        @appendContract="appendContractAddress"
        @close="closeMask"/>
   </main>
@@ -90,11 +87,11 @@ export default {
   name: '',
   props: {
     pages: Number,
-    availableMoney: String,
-    freezeMoney: String,
-    walletAddress: String,
-    contractAddress: String,
-    privateKey: String,
+    // availableMoney: String,
+    // freezeMoney: String,
+    // walletAddress: String,
+    // contractAddress: String,
+    // privateKey: String,
     hasContract: Boolean,
     poolList: Array,
     poolName: String,
@@ -123,8 +120,23 @@ export default {
     }
   },
   computed: {
+    availibleMoney () {
+      return this.$store.getters.miningWalletAvailibleMoney
+    },
+    freezeMoney () {
+      return this.$store.getters.miningWalletFreezeMoney
+    },
+
+    contractAddress () {
+      return this.$store.getters.miningWallet.ownPoolAddress[0]
+    },
+
+    walletAddress () {
+      return this.$store.getters.miningWallet.walletAddress
+    },
+
     orePoolTrue () {
-      if (this.availableMoney >= 500000 && this.applyContract) {//
+      if (this.removeCommaNum(this.$store.getters.miningWalletAvailibleMoney) >= 500000 && this.applyContract) {//
         this.orePoolTxt = 'homeDig.hdNavPoolBtn2'
         this.conditionsTips = "homeDig.hdNavPoolTxt2"
         return true

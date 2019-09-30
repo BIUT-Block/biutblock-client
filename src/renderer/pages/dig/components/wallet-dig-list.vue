@@ -6,7 +6,7 @@
       <li style="width: 18%;">{{ $t('homeDig.hdNavProfitListTxt3') }}</li>
       <li style="width: 40%;">{{ $t('homeDig.hdNavProfitListTxt4') }}</li>
     </ul>
-    <ul v-for="(item, index) in digLists" v-if ="index < 4">
+    <ul v-for="(item, index) in miningHistory" v-if ="index < 4">
       <li style="width: 24%;">{{ item.age.substring(0, 20) }}</li>
       <li style="width: 18%;color: #F5A623;">{{ getPointNum(item.reward) }}</li>
       <li style="width: 18%;">{{ item.blocknumber }}</li>
@@ -24,9 +24,7 @@ export default {
   components: {
     
   },
-  props: {
-    digLists: Array
-  },
+  props: {},
   data() {
     return {
       // digList: [
@@ -41,8 +39,11 @@ export default {
     }
   },
   computed: {
+    miningHistory () {
+      return this.$store.getters.miningWalletHistory
+    },
     digListShow () {
-      if (this.digLists.length > 0) {
+      if (this.miningHistory.length > 0) {
         return false
       } else {
         return true
