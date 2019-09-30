@@ -17,4 +17,6 @@ logs/*
 build/.DS_Store
 build/electron-builder.yaml
 build/PC-Miner*
-build/PC-Miner*
+biutlogs
+build/preInit
+ndpprivatekey
