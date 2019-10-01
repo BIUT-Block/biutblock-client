@@ -4,12 +4,12 @@
       <invitation-header
         :level="userLevel"
         :progress="userprogress"
-        :walletAddress="walletAddress"
-        :invitationCode="invitationCode"
+        :walletAddress="selectedWallet.walletAddress"
+        :invitationCode="selectedWallet.ownInvitationCode"
         @rules = "rules"/>
 
       <invitation-list
-        :walletAddress="walletAddress"
+        :walletAddress="selectedWallet.walletAddress"
         @details = "details"/>
 
       <invitation-mask 
@@ -54,15 +54,17 @@ export default {
     }
   },
   computed: {
-
+    selectedWallet () {
+      return this.$store.getters.miningWallet
+    }
   },
   created () {
-    let privateKey = this.$route.query.firstKey
-    this.walletAddress = this.$route.query.wallets[privateKey].walletAddress
-    this.invitationCode = this.$route.query.wallets[privateKey].ownInvitationCode
-
+    // let privateKey = this.$route.query.firstKey
+    // this.walletAddress = this.$route.query.wallets[privateKey].walletAddress
+    // this.invitationCode = this.$route.query.wallets[privateKey].ownInvitationCode
+    let walletAddress = this.selectedWallet.walletAddress
     dataCenterHandler.getMinerLevel({
-      address: this.walletAddress
+      address: walletAddress
     }, (body) => {
       if (body.status) {
         this.userprogress = body.amount || 0

@@ -189,7 +189,7 @@ export default {
   props: {},
   data() {
     return {
-      wallets: {},
+      // wallets: {},
       invitationShow: true,//邀请 侧栏导航 判断是否显示 参考需求文档  方便调试 先true显示
       idx: 0,
       settingList: [
@@ -281,8 +281,8 @@ export default {
   },
   created() {
     this.versionNumber = pkg.version
-    this.wallets = this.$route.query.wallets
-    this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
+    // this.wallets = this.$route.query.wallets
+    // this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
     if (process.env.netType === 'test') {
       this.networkIdx = 1
       this.networkContent = 'homeSet.hsText'
@@ -313,24 +313,33 @@ export default {
     //左侧菜单切换
     istab(index, url) {
       this.idx = index
-      this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
+      // this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
 
-      WalletsHandler.getAllWalletsFromFile((wallets) => {
-        let firstKey = Object.keys(wallets)[0]
-        if (wallets.hasOwnProperty(this.selectedPrivateKey)) {
-          this.$router.push({ path: "" + url + "", query: { wallets: wallets, selectedPrivateKey: this.selectedPrivateKey, firstKey: firstKey } })
-        } else {
-          this.$router.push({ path: "" + url + "", query: { wallets: wallets, selectedPrivateKey: firstKey, firstKey: firstKey } })
-        }
+      if (index === 3) {
+        let asideIdx = sessionStorage.getItem("asideIdx")
+        sessionStorage.setItem("asideIdx", asideIdx)
+        this.maskShow = true
+      } else {
+        sessionStorage.setItem("asideIdx", this.idx)
+      }
+      this.$router.push({path: url})
 
-        if (index === 3) {
-          let asideIdx = sessionStorage.getItem("asideIdx")
-          sessionStorage.setItem("asideIdx", asideIdx)
-          this.maskShow = true
-        } else {
-          sessionStorage.setItem("asideIdx", this.idx)
-        }
-      })
+      // WalletsHandler.getAllWalletsFromFile((wallets) => {
+      //   let firstKey = Object.keys(wallets)[0]
+      //   if (wallets.hasOwnProperty(this.selectedPrivateKey)) {
+      //     this.$router.push({ path: "" + url + "", query: { wallets: wallets, selectedPrivateKey: this.selectedPrivateKey, firstKey: firstKey } })
+      //   } else {
+      //     this.$router.push({ path: "" + url + "", query: { wallets: wallets, selectedPrivateKey: firstKey, firstKey: firstKey } })
+      //   }
+
+      //   if (index === 3) {
+      //     let asideIdx = sessionStorage.getItem("asideIdx")
+      //     sessionStorage.setItem("asideIdx", asideIdx)
+      //     this.maskShow = true
+      //   } else {
+      //     sessionStorage.setItem("asideIdx", this.idx)
+      //   }
+      // })
     },
 
     //设置切换

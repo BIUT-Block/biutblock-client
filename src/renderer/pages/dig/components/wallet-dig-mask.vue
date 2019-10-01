@@ -164,7 +164,7 @@ export default {
         this.mortgageIpt = this.mortgageIpt.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
         this.mortgageIpt = this.mortgageIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/, '$1$2.$3');//只能输入两个小数  
       }
-      return ipt1 > 0 && Number(ipt1) <= Number(this.availableMoney) ? true : false
+      return ipt1 > 0 && Number(ipt1) <= Number(this.availibleMoney) ? true : false
     }
   },
   methods: {

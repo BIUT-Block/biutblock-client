@@ -56,7 +56,7 @@ export default {
       return this.$store.getters.miningWallet.privateKey
     },
     contractAddress () {
-      return this.$store.getters.miningWallet.contractAddress[0]
+      return this.$store.getters.miningWallet.ownPoolAddress[0]
     },
     updateIpt () {
       let name = this.poolName.trim()

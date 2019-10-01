@@ -137,11 +137,17 @@ const mutations = {
 
   updateTransList (state, params) {
     if (state.selectedWallet.privateKey === params.privateKey) {
-      params.trans.forEach(item => {
-        state.selectedWallet.transactionHistory.push(item)
-      })
+      state.selectedWallet.transactionHistory = params.trans
     }
-    // state.wallets[params.privateKey].transactionHistory = params.transHistory
+    state.wallets[params.privateKey].transactionHistory = params.trans
+  },
+
+  updateWalletRole (state, params) {
+    if (state.selectedWallet.role === params.privateKey) {
+      state.selectedWallet.role = params.role
+    } else {
+      state.wallets[params.privateKey].role = params.role
+    }
   },
 
   updateMiningAmount (state, params) {
@@ -156,7 +162,7 @@ const mutations = {
 
   updateTransPage (state, params) {
     if (state.selectedWallet.privateKey === params.privateKey) {
-      state.selectedWallet.transListPage = params.page
+      state.selectedWallet.transListPageSize = params.pageSize
     }
     // state.wallets[params].transListPage = params.page
   },

@@ -176,7 +176,8 @@ export default {
   destroyed () {},
   methods: {
     returnWallet () {
-      this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
+      this.$router.push({name: 'index'})
+      // this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
     }
   },
 }

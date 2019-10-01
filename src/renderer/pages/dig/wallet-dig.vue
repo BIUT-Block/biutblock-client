@@ -172,7 +172,7 @@ export default {
       mortgageBtn1: 'publicBtn.mortgageBtn1', //锁仓按钮第一次进入
       mortgageBtn1Disabled: false,
       // wallets: [],
-      selectedPrivateKey: '',
+      // selectedPrivateKey: '',
       // selectedWallet: '',
       // selectedWalletName: '',
       // selectedWalletAddress: '',
@@ -241,6 +241,10 @@ export default {
 
     selectedWalletName () {
       return this.$store.getters.miningWallet.walletName
+    },
+
+    selectedPrivateKey () {
+      return this.$store.getters.miningWallet.privateKey
     },
 
     selectedWalletAddress () {
@@ -430,8 +434,9 @@ export default {
       }, (doc) => {
         console.log('update pool address success')
       })
-      WalletsHandler.updateWalletFile(wallet, () => {
-        console.log('update wallet file')
+      this.$store.commit('updateWalletRole', {
+        privateKey: this.selectedPrivateKey,
+        role: 'Owner'
       })
     },
 
@@ -830,9 +835,6 @@ export default {
             mortgageValue: this.selectedWallet.mortgageValue
           }, (body) => {
             console.log('update wallet mortgage value')
-          })
-          WalletsHandler.updateWalletFile(this.selectedWallet, () => {
-            console.log('update wallet file')
           })
           this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
           this.mortgageBtn1Disabled = true

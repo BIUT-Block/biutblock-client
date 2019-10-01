@@ -383,7 +383,7 @@ export default {
       this.tradingListSkip = this.tradingListSkip + 4
       this.$store.commit('updateTransPage', {
         privateKey: this.selectedWallet.privateKey,
-        page: this.transListPage + 1
+        pageSize: this.transListPageSize + 10
       })
       clearInterval(jobID)
       this._getWalletBalance(this.selectedWallet.walletAddress)
@@ -662,17 +662,14 @@ export default {
     _getWalletTransactions(walletAddress) {
       let pgeSkip = 0
       this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, this.transListPage, this.transListPageSize, (transactions) => {
-        let trans = []
-        for (let item of transactions) {
-          if (this.tradingList.filter(tx => tx.id === item.id 
-              && (tx.listFrom.indexOf(this.selectedWallet.walletAddress) !== -1 || tx.listTo.indexOf(this.selectedWallet.walletAddress) !== -1)).length === 0) {
-            trans.push(item)
-          }
+        if (transactions.length > this.selectedWallet.transactionHistory.length) {
+            this.$store.commit('updateTransList', {
+            privateKey: this.selectedWallet.privateKey,
+            trans: transactions
+          })
+        } else {
+          this.noMoreData = true
         }
-        this.$store.commit('updateTransList', {
-          privateKey: this.selectedWallet.privateKey,
-          trans: trans
-        })
       })
     },
 
@@ -701,7 +698,10 @@ export default {
     },
 
     onUpdateWalletBalanceSEN(balance, walletAddress) {
-      this.walletBalanceSEN = this._checkValueFormat(balance.toString()).toString()
+      this.$store.commit('updateWalletBalanceSEN', {
+        privateKey: this.selectedPrivateKey,
+        walletBalanceSEN: balance.toString()
+      })
     },
 
     showInvitation1() {
