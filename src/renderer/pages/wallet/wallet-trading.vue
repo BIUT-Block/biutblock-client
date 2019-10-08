@@ -118,8 +118,6 @@ export default {
   },
   created () {
     let trade = this.$route.query.trade
-    this.wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
     this.transactionNumber = `0x${trade.id}`
     this.block = trade.blockNumber
     this.time = trade.listTime
