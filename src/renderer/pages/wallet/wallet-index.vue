@@ -229,20 +229,14 @@ export default {
       selectedWalletData: {},
       transferImg: transferImg,
       menuShow: false,
-      //walletName: '',
       newWalletName: '',
-     // walletBalance: '-',//sec余额
-      // availableMoney: '-', //biut的可用金额
-      // freezeMoney: '-', //biut冻结金额
       invitationCode: '',//邀请码
       showInvitation: false,//邀请码提示 是否显示
-     // mortgageShow: true, // 邀请码是否显示
-
-     // walletBalanceSEN: '-',//sen余额
       walletAddress: '',
       inputReadonly: true,
       inputActive: false,
       noMoreData: false, //暂无更多数据
+      isMoreClicked: false,
       menuList: [
         {
           id: '01',
@@ -379,6 +373,7 @@ export default {
   methods: {
     //交易记录方法
     onClickLoadMore() {
+      this.isMoreClicked = true
       this.tradingPge = this.tradingPge + 1
       this.tradingListSkip = this.tradingListSkip + 4
       this.$store.commit('updateTransPage', {
@@ -387,7 +382,7 @@ export default {
       })
       clearInterval(jobID)
       this._getWalletBalance(this.selectedWallet.walletAddress)
-      this._getWalletTransactions(this.selectedWallet.walletAddress)
+      this._getWalletTransactions(this.selectedWallet.walletAddress, 'click')
       this._startUpateJob()
     },
 
@@ -659,16 +654,20 @@ export default {
       }
     },
 
-    _getWalletTransactions(walletAddress) {
-      let pgeSkip = 0
+    _getWalletTransactions(walletAddress, eventFrom) {
       this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, this.transListPage, this.transListPageSize, (transactions) => {
         if (transactions.length > this.selectedWallet.transactionHistory.length) {
-            this.$store.commit('updateTransList', {
+          this.$store.commit('updateTransList', {
             privateKey: this.selectedWallet.privateKey,
             trans: transactions
           })
         } else {
-          this.noMoreData = true
+          /**判断是否显示加载更多按钮 */
+          if (this.isMoreClicked && eventFrom === 'click') {
+            this.noMoreData = true
+          } else if (!this.isMoreClicked && eventFrom === 'click') {
+            this.noMoreData = false
+          }
         }
       })
     },
