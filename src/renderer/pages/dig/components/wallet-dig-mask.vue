@@ -190,7 +190,7 @@ export default {
     },
 
     allAmountMortgage() {
-      this.mortgageIpt = this.availableMoney
+      this.mortgageIpt = this.availibleMoney
     },
 
     //确认提交
