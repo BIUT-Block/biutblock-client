@@ -325,7 +325,7 @@ export default {
       }
     },
     moreShow() {
-      if (this.tradingListTotalLength > 2 && !this.noMoreData) {
+      if (this.tradingListTotalLength > 4 && !this.noMoreData) {
         return true
       } else {
         return false

@@ -13,16 +13,20 @@ const checkVersion = async (cb) => {
   // db.read().set('picBed.showUpdateTip', true).write()
   showTip = true
   if (showTip) {
-    const res = await axios.get(release)
-    if (res.status === 200) {
-      const latest = res.data[0].tag_name
-      const result = compareVersion2Update(version, latest)
-      if (result) {
-        cb(true, latest)    
+    try{
+      const res = await axios.get(release)
+      if (res.status === 200) {
+        const latest = res.data[0].tag_name
+        const result = compareVersion2Update(version, latest)
+        if (result) {
+          cb(true, latest)    
+        } else {
+          cb(false, '')
+        }
       } else {
         cb(false, '')
       }
-    } else {
+    } catch(err){
       cb(false, '')
     }
   } else {
