@@ -18,7 +18,7 @@ const checkVersion = async (cb) => {
       const latest = res.data[0].tag_name
       const result = compareVersion2Update(version, latest)
       if (result) {
-        cb(true, version)    
+        cb(true, latest)    
       } else {
         cb(false, '')
       }
