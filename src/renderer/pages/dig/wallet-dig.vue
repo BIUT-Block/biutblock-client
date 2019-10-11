@@ -371,7 +371,7 @@ export default {
           // this.selectedWallet = miningStatus.wallet
           // this.selectedWalletName = miningStatus.wallet.walletName
           // this.selectedWalletAddress =  miningStatus.wallet.walletAddress
-          // this.miningIn = miningStatus.miningIn
+          this.miningIn = miningStatus.miningIn
           this._setButton()
           this.isSynced = miningStatus.isSynced
         } else {

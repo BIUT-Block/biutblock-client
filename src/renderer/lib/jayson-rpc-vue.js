@@ -139,7 +139,7 @@ export default {
         let walletAddressTempInPool = ''
         let walletAddressTempInChain = ''
         let moneyValue = ''
-        this.client.request('sec_getTransactions', [walletAddress, page, skip], (err, response) => {
+        this.client.request('sec_getTransactions', [walletAddress, page, Math.floor(skip / 2)], (err, response) => {
           if (err) return
           if (response.result.resultInPool) {
             for (let j = 0; j < response.result.resultInPool.length; j++) {
@@ -188,7 +188,7 @@ export default {
               })
             }
           }
-          this.clientSEN.request('sec_getTransactions', [walletAddress, page, skip], (err, response) => {
+          this.clientSEN.request('sec_getTransactions', [walletAddress, page, Math.floor(skip / 2)], (err, response) => {
             if (err) return
             if (response.result.resultInPool) {
               for (let j = 0; j < response.result.resultInPool.length; j++) {

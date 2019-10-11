@@ -4,9 +4,9 @@ import axios from 'axios'
 import pkg from '../../package.json'
 const version = pkg.version
 const release = 'https://api.github.com/repositories/206411923/releases'
-const downloadUrl = 'https://github.com/BIUT-Block/biutblock-client-pool/releases/tag/'
 
-const checkVersion = async (app) => {
+
+const checkVersion = async (cb) => {
   let showTip
   // let showTip = db.read().get('picBed.showUpdateTip').value()
   // if (showTip === undefined) {
@@ -18,24 +18,15 @@ const checkVersion = async (app) => {
       const latest = res.data[0].tag_name
       const result = compareVersion2Update(version, latest)
       if (result) {
-        dialog.showMessageBox({
-          type: 'info',
-          title: 'New Version',
-          buttons: ['Yes'],
-          message: `Found new version ${latest}. Please update.`
-        }, (res, checkboxChecked) => {
-          if (res === 0) { // if selected yes
-            shell.openExternal(`${downloadUrl}${latest}`)
-          }
-          app.quit()
-        // db.read().set('picBed.showUpdateTip', !checkboxChecked).write()
-        })
+        cb(true, version)    
+      } else {
+        cb(false, '')
       }
     } else {
-      return false
+      cb(false, '')
     }
   } else {
-    return false
+    cb(false, '')
   }
 }
 

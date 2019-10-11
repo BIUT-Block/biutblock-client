@@ -303,7 +303,7 @@ export default {
       return this.$store.getters.walletName
     },
     balance () {
-      return this.$store.getters.walletBalance
+      return this.$store.getters.availibleMoney
     },
     balanceSEN () {
       return this.$store.getters.walletBalanceSEN
