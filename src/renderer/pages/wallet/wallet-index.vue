@@ -357,8 +357,8 @@ export default {
   },
   created() {
     this.wallets = this.$route.query.wallets
-    this._getWalletBalance(this.selectedWallet.walletAddress)
-    this._getWalletTransactions(this.selectedWallet.walletAddress)
+    this._getWalletBalance(this.selectedWallet, this.selectedPrivateKey, this.selectedWallet.walletAddress)
+    this._getWalletTransactions(this.selectedPrivateKey, this.selectedWallet.walletAddress)
     // this.onSelectWalletChanged(this.selectedWallet)
     // this.selectedPrivateKey = this.$route.query.selectedPrivateKey
   },
@@ -381,8 +381,8 @@ export default {
         pageSize: this.transListPageSize + 10
       })
       clearInterval(jobID)
-      this._getWalletBalance(this.selectedWallet.walletAddress)
-      this._getWalletTransactions(this.selectedWallet.walletAddress, 'click')
+      this._getWalletBalance(this.selectedWallet, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
+      this._getWalletTransactions(this.selectedWallet.privateKey, this.selectedWallet.walletAddress, 'click')
       this._startUpateJob()
     },
 
@@ -391,7 +391,7 @@ export default {
       // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
       if (index === 3) {
         let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
-        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
+        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedWallet.privateKey && mingingStatus.miningIn) {
           this.maskPages = 6
         } else {
           this.maskPages = index
@@ -571,25 +571,24 @@ export default {
       // this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
       jobID = setInterval(() => {
         console.log('Job ID')
-        this._getWalletBalance(this.selectedWallet.walletAddress)
-        this._getWalletTransactions(this.selectedWallet.walletAddress)
+        this._getWalletBalance(this.selectedWallet, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
+        this._getWalletTransactions(this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
       }, 30 * 1000)
     },
 
-    _getWalletBalance(walletAddress) {
+    _getWalletBalance(wallet, privateKey, walletAddress) {
       let poolAddress = []
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        //this.mortgageShow = true
         let freezeMoney = 0
         let walletBalance = 0
         let availableMoney = Number(balanceSEC)
-        if (this.selectedWallet.mortgagePoolAddress.length > 0) {
-          for (let i = 1; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
-            let pool = this.selectedWallet.mortgagePoolAddress[i]
+        if (wallet.mortgagePoolAddress.length > 0) {
+          for (let i = 1; i < wallet.mortgagePoolAddress.length; i++) {
+            let pool = wallet.mortgagePoolAddress[i]
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           }
         }
-        if (this.selectedWallet.ownPoolAddress.length > 0) {
+        if (wallet.ownPoolAddress.length > 0) {
           for (let ownpool of this.selectedWallet.ownPoolAddress) {
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(ownpool))
           }
@@ -597,35 +596,27 @@ export default {
         Promise.all(poolAddress).then((contractInfos) => {
           for (let contract of contractInfos) {
             let timeLock = contract.timeLock || {}
-            if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
-              let benifitAddress = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+            if (wallet.walletAddress in timeLock && wallet.walletAddress in timeLock[wallet.walletAddress]) {
+              let benifitAddress = timeLock[wallet.walletAddress][wallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
                 freezeMoney = freezeMoney + Number(benifitAddress[i].lockAmount)
               }
             }
           }
-          // if (freezeMoney > 0) {
-          //   this.mortgageShow = false
-          // }
+
           walletBalance = this.cal.accAdd(freezeMoney, availableMoney) //精度问题处理
           this.$store.commit('updateWalletBalanceSEC', {
-            privateKey: this.selectedWallet.privateKey,
+            privateKey: privateKey,
             walletBalance: walletBalance.toString(),
             availibleMoney: availableMoney.toString(),
             freezeMoney: freezeMoney.toString()
           })
-          
-          // this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
-          // this.walletBalance = this._checkValueFormat(walletBalance.toString())
-          // this.availableMoney = this._checkValueFormat(availableMoney.toString())
         })
       }, (balanceSEN) => {
         this.$store.commit('updateWalletBalanceSEN', {
-          privateKey: this.selectedWallet.privateKey,
+          privateKey: privateKey,
           walletBalanceSEN: balanceSEN.toString()
         })
-        // this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
-
       })
     },
 
@@ -639,10 +630,10 @@ export default {
       }
     },
 
-    _getWalletTransactions(walletAddress, eventFrom) {
+    _getWalletTransactions(privateKey, walletAddress, eventFrom) {
       this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, this.transListPage, this.transListPageSize, (transactions) => {
         this.$store.commit('updateTransList', {
-          privateKey: this.selectedWallet.privateKey,
+          privateKey: privateKey,
           trans: transactions
         })
         
@@ -675,15 +666,14 @@ export default {
     },
 
     /** Event Method, triggered if wallet balance updated */
-    onUpdateWalletBalance(balance, walletAddress) {
-      this._getWalletBalance(walletAddress)
-      // this.walletBalance = this._checkValueFormat(balance.toString()).toString()
-      this._getWalletTransactions(walletAddress)
+    onUpdateWalletBalance(balance, privateKey, walletAddress) {
+        this._getWalletBalance(this.selectedWallet, privateKey, walletAddress)
+        this._getWalletTransactions(privateKey, walletAddress)
     },
 
-    onUpdateWalletBalanceSEN(balance, walletAddress) {
+    onUpdateWalletBalanceSEN(balance, privateKey, walletAddress) {
       this.$store.commit('updateWalletBalanceSEN', {
-        privateKey: this.selectedPrivateKey,
+        privateKey: privateKey,
         walletBalanceSEN: balance.toString()
       })
     },
