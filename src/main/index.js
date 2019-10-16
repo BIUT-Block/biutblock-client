@@ -12,8 +12,8 @@ import {
 import updateChecker from './updateChecker.js'
 import walletsHandler from '../renderer/lib/WalletsHandler'
 
-const packageJSON = require('../../package.json')
-const fs = require('fs')
+// const packageJSON = require('../../package.json')
+// const fs = require('fs')
 
 /**
  * Set `__static` path to static files in production
@@ -66,10 +66,10 @@ function createWindow () {
   requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
   requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
   // } else {
-    // console.log('node connect with http://test.biut.io/genesisBlockHash')
-    // process.env.netType = 'test'
-    // requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
-    // requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
+  // console.log('node connect with http://test.biut.io/genesisBlockHash')
+  // process.env.netType = 'test'
+  // requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
+  // requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
   // }
   // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
   const SECNODE = require('@biut-block/biutjs-node')
@@ -98,10 +98,10 @@ function createWindow () {
         if (genesisBlock[0].Hash === remotegenesisHash) {
           return console.log('BIUT GenesisHash check passed')
         } else {
-          SECCore.secAPIs.clearDB((err) => {
-            if (err) return console.error(err)
-            console.log('BIUT GenesisHash not passed, remove local database')
-          })
+          // SECCore.secAPIs.clearDB((err) => {
+          //   if (err) return console.error(err)
+          console.log('BIUT GenesisHash not passed, remove local database')
+          // })
         }
       })
     })
@@ -121,10 +121,10 @@ function createWindow () {
         if (genesisBlock[0].Hash === remotegenesisHash) {
           return console.log('BIU GenesisHash check passed')
         } else {
-          SECCore.senAPIs.clearDB((err) => {
-            if (err) return console.error(err)
-            console.log('BIU GenesisHash not passed, remove local database')
-          })
+          // SECCore.senAPIs.clearDB((err) => {
+          //   if (err) return console.error(err)
+          console.log('BIU GenesisHash not passed, remove local database')
+          // })
         }
       })
     })
