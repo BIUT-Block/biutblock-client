@@ -604,7 +604,7 @@ export default {
         let walletBalance = 0
         let availableMoney = Number(balanceSEC)
         if (this.selectedWallet.mortgagePoolAddress.length > 0) {
-          for (let i = 1; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
+          for (let i = 0; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
             let pool = this.selectedWallet.mortgagePoolAddress[i]
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           }
