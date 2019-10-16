@@ -36,58 +36,7 @@ export default {
   },
   computed: {
     walletList: function () {
-      let list = []
-      let selectedWallet
-      let isChanged = false
-      if (Object.keys(this.wallets).length === this.addedWallet) {
-        isChanged = false
-      } else {
-        this.addedWallet = Object.keys(this.wallets).length
-        isChanged = true
-      } 
-      Object.keys(this.wallets).forEach( (privateKey) => {
-      list.push({
-        id: '01',
-        name: this.wallets[privateKey].walletName,
-        address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(32, 41)}`,
-        walletAddress: this.wallets[privateKey].walletAddress,
-        privateKey: privateKey,
-        publicKey: this.wallets[privateKey].publicKey,
-        englishWords: this.wallets[privateKey].englishWords,
-        invitationCode: this.wallets[privateKey].invitationCode,
-        ownInvitationCode: this.wallets[privateKey].ownInvitationCode,
-        role: this.wallets[privateKey].role,
-        mortgagePoolAddress: this.wallets[privateKey].mortgagePoolAddress,
-        mortgageValue: this.wallets[privateKey].mortgageValue,
-        ownPoolAddress: this.wallets[privateKey].ownPoolAddress
-        })
-        if (privateKey === this.selectedPrivateKey) {
-          selectedWallet = {
-            id: '01',
-            name: this.wallets[privateKey].walletName,
-            address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(32, 41)}`,
-            walletAddress: this.wallets[privateKey].walletAddress,
-            privateKey: privateKey,
-            publicKey: this.wallets[privateKey].publicKey,
-            englishWords: this.wallets[privateKey].englishWords,
-            invitationCode: this.wallets[privateKey].invitationCode,
-            ownInvitationCode: this.wallets[privateKey].ownInvitationCode,
-            role: this.wallets[privateKey].role,
-            mortgagePoolAddress: this.wallets[privateKey].mortgagePoolAddress,
-            mortgageValue: this.wallets[privateKey].mortgageValue,
-            ownPoolAddress: this.wallets[privateKey].ownPoolAddress
-          }
-        }
-      })
-      if (selectedWallet) {
-        this.navIdx = selectedWallet.privateKey
-      } else {
-        this.navIdx = list[0].privateKey
-      }
-      if (isChanged) {
-        this.$emit("walletSelectionChanged", selectedWallet || list[0])
-      }
-      return list
+      return this.$store.getters.wallets
     }
   },
   created () {   
@@ -95,32 +44,34 @@ export default {
   },
   mounted () {
     this.navIdx = this.selectedPrivateKey
-    if (this.createdId === 'walletIndex') {
-      this.$emit("walletSelectionChanged", {
-        id: '01',
-        name: this.wallets[this.selectedPrivateKey].walletName,
-        address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(32, 41)}`,
-        walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
-        privateKey: this.selectedPrivateKey,
-        publicKey: this.wallets[this.selectedPrivateKey].publicKey,
-        englishWords: this.wallets[this.selectedPrivateKey].englishWords,
-        invitationCode: this.wallets[this.selectedPrivateKey].invitationCode,
-        ownInvitationCode: this.wallets[this.selectedPrivateKey].ownInvitationCode,
-        role: this.wallets[this.selectedPrivateKey].role,
-        mortgagePoolAddress: this.wallets[this.selectedPrivateKey].mortgagePoolAddress,
-        ownPoolAddress: this.wallets[this.selectedPrivateKey].ownPoolAddress
-      })
-    }  
+    // if (this.createdId === 'walletIndex') {
+    //   this.$emit("walletSelectionChanged", {
+    //     id: '01',
+    //     name: this.wallets[this.selectedPrivateKey].walletName,
+    //     address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(32, 41)}`,
+    //     walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
+    //     privateKey: this.selectedPrivateKey,
+    //     publicKey: this.wallets[this.selectedPrivateKey].publicKey,
+    //     englishWords: this.wallets[this.selectedPrivateKey].englishWords,
+    //     invitationCode: this.wallets[this.selectedPrivateKey].invitationCode,
+    //     ownInvitationCode: this.wallets[this.selectedPrivateKey].ownInvitationCode,
+    //     role: this.wallets[this.selectedPrivateKey].role,
+    //     mortgagePoolAddress: this.wallets[this.selectedPrivateKey].mortgagePoolAddress,
+    //     ownPoolAddress: this.wallets[this.selectedPrivateKey].ownPoolAddress
+    //   })
+    // }  
   },
   destroyed () {},
   methods: {
     tabWallet (item, index) {
       this.navIdx = item.privateKey
+      this.$store.commit('changeSelectedWallet', item.privateKey)
       this.$emit("walletSelectionChanged", item)
     },
 
     createWallet () {
-      this.$router.push({ name: 'walletCreate', query: { wallets: this.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
+      this.$router.push({ name: 'walletCreate', query: { createId: 1 }})
+      // this.$router.push({ name: 'walletCreate', query: { wallets: this.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
     }
   }
 }

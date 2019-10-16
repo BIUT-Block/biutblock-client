@@ -57,25 +57,30 @@ export default {
   data () {
     return {
       loadMore: false, //加载更多按钮
-      digNumber: '-',
-      digIncome: '-',
       wallets: {},
-      selectedPrivateKey: '',
-      selectedWallet: {},
-      moreList: [],
-      moreListSkip: 7,
+      // moreList: [],
+      // moreListSkip: 7,
       updateListJob: ''
     }
   },
   computed: {
-
+    selectedWallet () {
+      return this.$store.getters.miningWallet
+    },
+    digNumber () {
+      return this.$store.getters.miningWalletDigNumber
+    },
+    digIncome () {
+      return this.$store.getters.miningWalletDigIncome
+    },
+    moreListSkip () {
+      return this.$store.getters.miningWalletPageSize
+    },
+    moreList () {
+      return this.$store.getters.miningWalletHistoryAll
+    }
   },
   created () {
-    this.wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
-    if (this.wallets.hasOwnProperty(this.selectedPrivateKey)) {
-      this.selectedWallet = this.wallets[this.selectedPrivateKey]
-    }
     //console.log(this.wallets.length)
     this._startUpdateHisotryJob()
   },
@@ -89,7 +94,11 @@ export default {
   },
   methods: {
     onClickLoadMore () {
-      this.moreListSkip = this.moreListSkip + 10
+      this.$store.commit('updateMiningListPageSize', {
+        privateKey: this.selectedWallet.privateKey,
+        pageSize: this.moreListSkip + 10
+      })
+      // this.moreListSkip = this.moreListSkip + 10
       if (updateListJob) {
         clearInterval(updateListJob)
       }
@@ -99,7 +108,7 @@ export default {
     getMiningList () {
       // 获取挖矿交易历史
       this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress, 1, this.moreListSkip], (history) => {
-        this.moreList = []
+        let moreList = []
         if (this.moreListSkip === history.length) {
           this.loadMore = true
         } else {
@@ -107,8 +116,7 @@ export default {
         }
         for (let item of history) {
           let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
-
-          this.moreList.push({
+          moreList.push({
             id: 0,
             age: item.listTime,
             reward: `${moneyValue} BIU`,
@@ -116,50 +124,25 @@ export default {
             blockhash: item.blockHash
           })
         }
+        this.$store.commit('updateMiningHistoryAll', {
+          privateKey: this.selectedWallet.privateKey,
+          miningHistory: moreList
+        })
       })
 
       // 获取挖矿交易数量 和 挖矿总收益
       this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress], (history) => {
-        this.digNumber = history.length
-        this.digIncome = "0"
+        let digIncome = 0
         history.forEach(item => {
-          let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
-          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+          let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum(item.listMoney, 8) : item.listMoney
+          digIncome = digIncome + Number(moneyValue)
+        })
+        this.$store.commit('updateMiningAmount', {
+          privateKey: this.selectedWallet.privateKey,
+          digNumber: history.length,
+          digIncome: digIncome.toString()
         })
       })
-      // this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {
-      //   this.digIncome = "0"
-      //   this.digNumber = 0
-      //   this.moreList = []
-      //   let miningHistory = history.filter((hist) => {
-      //     return hist.listAddress === 'Mined' && hist.listState === 'Mining' && hist.listInputData.indexOf('Mining reward') > -1
-      //   })
-      //   let skip = 0
-      //   if (this.moreListSkip >= miningHistory.length) {
-      //     skip = miningHistory.length
-      //     this.loadMore = false
-      //   } else {
-      //     skip = this.moreListSkip
-      //   }
-      //   miningHistory.forEach((element, index) => {
-      //     let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? Number(element.listMoney).toFixed(8) : element.listMoney
-      //     this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
-      //     this.digNumber = this.digNumber + 1
-      //     console.log(index)
-      //     console.log(skip)
-      //     if (index > skip - 1) {
-      //       this.loadMore = true
-      //       return
-      //     }
-      //     this.moreList.push({
-      //       id: index,
-      //       age: element.listTime,
-      //       reward: `${moneyValue} BIU`,
-      //       blocknumber: element.blockNumber,
-      //       blockhash: element.blockHash
-      //     })
-      //   })
-      // })
     },
 
     _startUpdateHisotryJob () {

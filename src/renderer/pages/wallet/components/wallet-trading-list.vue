@@ -61,7 +61,7 @@ export default {
   destroyed() { },
   methods: {
     tradingDetails(item) {
-      this.$router.push({ name: 'walletTrading', query: { trade: item, wallets: this.wallets, selectedPrivateKey: this.selectedPrivateKey } })
+      this.$router.push({ name: 'walletTrading', query: { trade: item } })
     }
   },
   filters: {

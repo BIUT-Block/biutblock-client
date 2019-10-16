@@ -8,7 +8,7 @@
         <p class="mining-address">0x{{ selectedWalletAddress }}</p>
         <section class="flex-between">
           <p>{{ $t('homeWallet.hwBiutTxt1') }}：</p>
-          <span>{{ getPointNum(availableMoney) }}</span>
+          <span>{{ getPointNum(availibleMoney) }}</span>
         </section>
         <section class="flex-between">
           <p>{{ $t('homeWallet.hwBiutTxt2') }}：</p>
@@ -44,7 +44,7 @@
             0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}
           </section>
 
-          <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ getPointNum(availableMoney) }} BIUT</span></h4>
+          <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ getPointNum(availibleMoney) }} BIUT</span></h4>
           <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ getPointNum(freezeMoney) }} BIUT</span></h4>
           <section class="dig-button-list">
             <button type="button" :class="[openPool ? 'sotpPool' : '', openActive ? 'passCorrect' : '']" :disabled="!openActive" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
@@ -75,16 +75,10 @@
         <!-- 挖矿收益 -->
         <section class="dig-earnings" v-show="pageIdx == 1">
           <!-- 挖矿内容-头部 -->
-          <dig-title  
-            :number="digNumber.toString()"
-            :digTitleShow="true"
-            :selectedWallet="selectedWallet" 
-            :selectedPrivateKey="selectedPrivateKey" 
-            :wallets="this.$route.query.wallets" 
-            :income="digIncome"/>
+          <dig-title />
           <!-- 挖矿内容-列表 -->
           <section class="dig-earnings-list">
-            <dig-list :digLists="moreList"/>
+            <dig-list />
           </section>
         </section>
         
@@ -97,10 +91,6 @@
         <section class="ore-pool" v-show="pageIdx == 3">
           <ore-pool 
             :pages="orePoolPage"
-            :availableMoney="availableMoney"
-            :freezeMoney="freezeMoney.toString()"
-            :walletAddress="selectedWallet.walletAddress"
-            :privateKey="selectedWallet.privateKey"
             :poolAssets="poolAssets"
             :poolNode="poolNode"
             :poolMyEarnings="poolMyEarnings"
@@ -109,7 +99,6 @@
             :poolApplyTime="poolApplyTime"
             :poolName="poolName"
             :applyContract="applyContract"
-            :contractAddress="contractAddress[0]"
             @addContract="onAddContract" />
         </section>
 
@@ -117,11 +106,7 @@
       <section style="height: 4px;background:#F4F5F5;"></section>
       <!-- 挖矿底部 -->
       <section class="dig-footer">
-        <dig-footer 
-          :walletAddress="minedByAddress" 
-          :totalBlockHeight="chainHeight" 
-          :timeDiff="timeDiff" 
-          :totalMining="networkMining" />
+        <dig-footer />
       </section>
     </section>
 
@@ -130,9 +115,6 @@
       :pages="makePages"
       ref="digMaskPage"
       :networkErrorText="networkErrorText"
-      :selectedWalletAddress="selectedWalletAddress"
-      :availableMoney="availableMoney"
-      :freezeMoney="freezeMoney.toString()"
       :poolName="poolName"
       @continue="onContinue" 
       @exit="onAppExit" 
@@ -189,14 +171,12 @@ export default {
       digButton: "publicBtn.openBtn",
       mortgageBtn1: 'publicBtn.mortgageBtn1', //锁仓按钮第一次进入
       mortgageBtn1Disabled: false,
-      digNumber: '-',
-      digIncome: '-',
-      wallets: [],
-      selectedPrivateKey: '',
-      selectedWallet: '',
-      selectedWalletName: '',
-      selectedWalletAddress: '',
-      contractAddress: '',
+      // wallets: [],
+      // selectedPrivateKey: '',
+      // selectedWallet: '',
+      // selectedWalletName: '',
+      // selectedWalletAddress: '',
+      // contractAddress: '',
       miningIn: false, //挖矿中改变按钮样式
       //noCursor: false, //默认可以选择钱包
       //disabledButton: false,//默认不可点击
@@ -237,9 +217,8 @@ export default {
 
       makePages: 0,//默认是首次开启挖矿 0 - 开启挖矿 2 - 断网  3 - 追加更多
       digBalance: 0, //挖矿余额
-      availableMoney: "-", //biut的可用金额
-      freezeMoney: "-", //biut冻结金额
-      hasContract: false,
+      // availableMoney: "-", //biut的可用金额
+      // freezeMoney: "-", //biut冻结金额
       pageIdx: 1, //初始页面展示挖矿收益
       poolNode: 0, // 矿池节点
       poolAssets: 0, //矿池抵押总量
@@ -256,18 +235,48 @@ export default {
     }
   },
   computed: {
+    selectedWallet () {
+      return this.$store.getters.miningWallet
+    },
+
+    selectedWalletName () {
+      return this.$store.getters.miningWallet.walletName
+    },
+
+    selectedPrivateKey () {
+      return this.$store.getters.miningWallet.privateKey
+    },
+
+    selectedWalletAddress () {
+      return this.$store.getters.miningWallet.walletAddress
+    },
+
+    contractAddress () {
+      return this.$store.getters.miningWallet.ownPoolAddress
+    },
+
     recordLists () {
       return this.itemList
     },
 
     //是否可点击追加按钮
     appendAcitve () {
-      return this.availableMoney > 0 && this.networkOrPeer ? true : false
+      return this.$store.getters.miningWalletAvailibleMoney !== '0' 
+        && this.$store.getters.miningWalletAvailibleMoney !== '-'
+        && this.availibleMoney && this.networkOrPeer ? true : false
     },
 
     //是否可点击开启挖矿按钮
     openActive () {
       return this.freezeMoney > 0 && navigator.onLine && this.networkOrPeer ? true : false
+    },
+
+    availibleMoney () {
+      return this.$store.getters.miningWalletAvailibleMoney
+    },
+
+    freezeMoney () {
+      return this.$store.getters.miningWalletFreezeMoney
     },
 
     //是否可点击开启挖矿
@@ -285,22 +294,22 @@ export default {
         this.mortgageAmount =  this.mortgageAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
       }
       return this.mortgageAmount >= 10000
-        && this.availableMoney >= 10000
-        && Number(this.mortgageAmount) <= Number(this.availableMoney) && this._status !== "pending" && this.poolApplyTime !== '' ? true : false
+        && this.availibleMoney >= 10000
+        && Number(this.mortgageAmount) <= Number(this.availibleMoney) && this._status !== "pending" && this.poolApplyTime !== '' ? true : false
     }
   },
   created () {
-    let wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.firstKey
-    this.selectedWalletAddress = wallets[this.selectedPrivateKey].walletAddress
-    for (let key in wallets) {
-      if (wallets.hasOwnProperty(key)) {
-        this.wallets.push(wallets[key])
-      }
-    }
-    this.selectedWallet = wallets[this.selectedPrivateKey]
+    // let wallets = this.$route.query.wallets
+    // this.selectedPrivateKey = this.$route.query.firstKey
+    // this.selectedWalletAddress = wallets[this.selectedPrivateKey].walletAddress
+    // for (let key in wallets) {
+    //   if (wallets.hasOwnProperty(key)) {
+    //     this.wallets.push(wallets[key])
+    //   }
+    // }
+    // this.selectedWallet = wallets[this.selectedPrivateKey]
     if (this.selectedWallet.role === 'Miner') {
-      this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
+      // this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
       //this.poolName = this.selectedWallet.walletName
       if (this.selectedWallet.mortgageValue === '0' ) {
         this.digPage = true
@@ -309,7 +318,7 @@ export default {
         this.orePoolPage = 1
       }
     } else {
-      this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
+      // this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
       this.orePoolPage = 2
       this._getTimeLockHistory()
     }
@@ -325,13 +334,6 @@ export default {
       })
       this._getTotalReward()
     }, 3 * 60 * 1000)
-    // if(window.sessionStorage.getItem('NoPeerTime') != null){
-    //   this._startCheckPeersJob()
-    // }
-
-    // if(window.sessionStorage.getItem('NoNetworkTime') != null){
-    //   this._startCheckNetworkJob()
-    // }
   },
   mounted () {
     
@@ -366,20 +368,20 @@ export default {
       if (miningStatus) {
         miningStatus = JSON.parse(miningStatus)
         if (miningStatus.miningIn) {
-          this.selectedWallet = miningStatus.wallet
-          this.selectedWalletName = miningStatus.wallet.walletName
-          this.selectedWalletAddress =  miningStatus.wallet.walletAddress
-          this.miningIn = miningStatus.miningIn
+          // this.selectedWallet = miningStatus.wallet
+          // this.selectedWalletName = miningStatus.wallet.walletName
+          // this.selectedWalletAddress =  miningStatus.wallet.walletAddress
+          // this.miningIn = miningStatus.miningIn
           this._setButton()
           this.isSynced = miningStatus.isSynced
         } else {
-          this.selectedWalletName = this.selectedWallet.walletName
-          this.selectedWalletAddress = this.selectedWallet.walletAddress
+          // this.selectedWalletName = this.selectedWallet.walletName
+          // this.selectedWalletAddress = this.selectedWallet.walletAddress
         }
       } else {
         //this.selectedWallet = this.wallets[0]
-        this.selectedWalletName = this.selectedWallet.walletName
-        this.selectedWalletAddress = this.selectedWallet.walletAddress
+        // this.selectedWalletName = this.selectedWallet.walletName
+        // this.selectedWalletAddress = this.selectedWallet.walletAddress
       }
       if (processTexts) {
         this.processTexts = JSON.parse(processTexts)
@@ -389,8 +391,6 @@ export default {
       }
       this._startUpdateHistoryJob()
     },
-
-
 
     _setButton () {
       if (this.miningIn) {
@@ -434,8 +434,9 @@ export default {
       }, (doc) => {
         console.log('update pool address success')
       })
-      WalletsHandler.updateWalletFile(wallet, () => {
-        console.log('update wallet file')
+      this.$store.commit('updateWalletRole', {
+        privateKey: this.selectedPrivateKey,
+        role: 'Owner'
       })
     },
 
@@ -482,8 +483,8 @@ export default {
             this.openPool = false      
             this.networkOrPeer  = false
             window.sessionStorage.setItem('NoPeerTime', Date.now())
-            clearInterval(this.checkNodeJob)           
-            this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000 )
+            // clearInterval(this.checkNodeJob)           
+            // this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000 )
             // this.maskShow = true
             // this.makePages = 2
             // this.stopMining()
@@ -501,12 +502,12 @@ export default {
             }
           }
         } else {
-          if(window.sessionStorage.getItem('NoPeerTime') != null) {
-            window.sessionStorage.removeItem('NoPeerTime')
-          }
+          // if(window.sessionStorage.getItem('NoPeerTime') != null) {
+          //   window.sessionStorage.removeItem('NoPeerTime')
+          // }
           // if (this.digButton === 'publicBtn.openBtn') this.digButton == 'publicBtn.stopBtn'
           // if(!this.openPool) this.openPool = true
-          if(!this.networkOrPeer) this.networkOrPeer = true              
+          // if(!this.networkOrPeer) this.networkOrPeer = true              
         }
       })
     },
@@ -517,9 +518,9 @@ export default {
           this.digButton = "publicBtn.openBtn"
           this.openPool = false    
           this.networkOrPeer  = false     
-          window.sessionStorage.setItem('NoNetworkTime', Date.now())
-          clearInterval(this.checkNetWorkJob)
-          this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 2 * 60 * 1000)
+          // window.sessionStorage.setItem('NoNetworkTime', Date.now())
+          // clearInterval(this.checkNetWorkJob)
+          // this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 2 * 60 * 1000)
         } else {
           let noNetworkTime = window.sessionStorage.getItem('NoNetworkTime')
           let currTime = Date.now()
@@ -536,12 +537,12 @@ export default {
       //  // this.networkError = true
       //   this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
       } else {
-          if(window.sessionStorage.getItem('NoNetworkTime') != null) {
-            window.sessionStorage.removeItem('NoNetworkTime')
-          } 
+          // if(window.sessionStorage.getItem('NoNetworkTime') != null) {
+          //   window.sessionStorage.removeItem('NoNetworkTime')
+          // } 
           // if (this.digButton === 'publicBtn.openBtn') this.digButton == 'publicBtn.stopBtn'
           // if(!this.openPool) this.openPool = true
-          if(!this.networkOrPeer) this.networkOrPeer = true       
+          // if(!this.networkOrPeer) this.networkOrPeer = true       
       }
     },
 
@@ -551,7 +552,7 @@ export default {
 //        this.walletBalance = balanceSEC.toString()
         let freezeMoney = 0
         let walletBalance = 0
-        let availableMoney = balanceSEC
+        let availibleMoney = balanceSEC
         if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {
           for (let i = 1; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
             let pool = this.selectedWallet.mortgagePoolAddress[i]
@@ -574,13 +575,19 @@ export default {
               }
             } 
           }
-          walletBalance = freezeMoney + availableMoney
-          this.freezeMoney = this._checkValueFormat(freezeMoney.toString()).toString()
-          this.walletBalance = this._checkValueFormat(walletBalance.toString()).toString()
-          this.availableMoney = this._checkValueFormat(availableMoney.toString()).toString()
+          walletBalance = this.cal.accAdd(freezeMoney, availibleMoney)
+          this.$store.commit('updateWalletBalanceSEC', {
+            privateKey: this.selectedWallet.privateKey,
+            walletBalance: walletBalance.toString(),
+            availibleMoney: availibleMoney.toString(),
+            freezeMoney: freezeMoney.toString()
+          })
         })
       }, (balanceSEN) => {
-        this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
+        this.$store.commit('updateWalletBalanceSEN', {
+          privateKey: this.selectedWallet.privateKey,
+          walletBalanceSEN: balanceSEN.toString()
+        })
       })
     },
 
@@ -710,10 +717,10 @@ export default {
     _getWalletMiningHistory () {
       // 获取挖矿交易历史
       this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress, 1, 5], (history) => {
-        this.moreList = []
+        let moreList = []
         for (let item of history) {
           let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
-          this.moreList.push({
+          moreList.push({
             id: 0,
             age: item.listTime,
             reward: `${moneyValue} BIU`,
@@ -721,15 +728,24 @@ export default {
             blockhash: item.blockHash
           })
         }
+        this.$store.commit('updateMiningHistory', {
+          privateKey: this.selectedWallet.privateKey,
+          miningHistory: moreList
+        })
       })
 
       // 获取挖矿交易数量 和 挖矿总收益
       this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress], (history) => {
-        this.digNumber = history.length
-        this.digIncome = "0"
+        let digNumber = 0
+        let digIncome = 0
         history.forEach(item => {
           let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
-          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
+          digIncome = digIncome + Number(moneyValue)
+        })
+        this.$store.commit('updateMiningAmount', {
+          privateKey: this.selectedWallet.privateKey,
+          digNumber: history.length,
+          digIncome: digIncome.toString()
         })
       })
     },
@@ -750,12 +766,14 @@ export default {
         fnCheckMining(balance)
       })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
-        this.chainHeight = height.toString()
+        this.$store.commit('updateChainHeight', height.toString())
+        // this.chainHeight = height.toString()
       //  this.networkMining = (Number(this.chainHeight)*2).toString()
         if (block.length > 0) {
-          this.minedByAddress = block[0].Beneficiary
-          this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
-          if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
+          // this.minedByAddress = block[0].Beneficiary
+          // this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
+          this.$store.commit('updateLastBlock', block[0])
+          if (this.selectedWallet.walletAddress === block[0].Beneficiary && !this.bAlreadyShowed) {
             if (this.processTexts.length > 6) { // should not be showed if the page is initial
               let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
               this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
@@ -772,9 +790,11 @@ export default {
     _getTotalReward () {
       this.$JsonRPCClient.getWalletTotalReward((reward) => {
         if (String(reward).indexOf('.') > -1 && String(reward).length > 0) {
-          this.networkMining = reward.toFixed(8)
+          // this.networkMining = reward.toFixed(8)
+          this.$store.commit('updateNetAllReward', reward.toFixed(8))
         } else {
-          this.networkMining = reward.toString()
+          // this.networkMining = reward.toString()
+          this.$store.commit('updateNetAllReward', reward.toString())
         }
       })
     },
@@ -815,9 +835,6 @@ export default {
             mortgageValue: this.selectedWallet.mortgageValue
           }, (body) => {
             console.log('update wallet mortgage value')
-          })
-          WalletsHandler.updateWalletFile(this.selectedWallet, () => {
-            console.log('update wallet file')
           })
           this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
           this.mortgageBtn1Disabled = true
@@ -879,7 +896,7 @@ export default {
     },
 
     startMining () {
-      clearInterval(this.checkNetWorkJob)
+      // clearInterval(this.checkNetWorkJob)
       // this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)

@@ -100,6 +100,9 @@ export default {
     }
   },
   computed: {
+    wallets () {
+      return this.$store.getters.wallets
+    },
     // 列表数据
     itemLists() {
       return this.itemList
@@ -200,50 +203,6 @@ export default {
     }).catch ((err) => {
       console.log(err)
     })
-    // dataCenterHandler.getInvitationDetails({ address: this.walletAddress }, (body) => {
-    //   if (body.rewards && body.rewards.length > 0) {
-    //     for (let i = 0; i < body.rewards.length; i++) {
-    //       let reward = body.rewards[i].rewards || '0'
-    //       let level = 1
-    //       switch (body.rewards[i].type) {
-    //         case 'level1':
-    //           level = 1
-    //           break
-    //         case 'level2':
-    //           level = 2
-    //           break
-    //         case 'level3':
-    //           level = 3
-    //           break
-    //         case 'level4':
-    //           level = 4
-    //           break
-    //         case 'pool':
-    //           level = 5 //矿池的等级
-    //           break
-    //       }
-    //       if (body.rewards[i].type === 'level1') {
-    //         this.firstLevel = this.firstLevel + 1
-    //         if (body.rewards[i].rewards !== '0') {
-    //           this.firstLevelAmount = this.cal.accAdd(this.firstLevelAmount, body.rewards[i].rewards)
-    //           this.itemList.push({
-    //             id: '1',
-    //             itemAddress: body.rewards[i].addressFrom ? `0x${body.rewards[i].addressFrom}` : '',
-    //             itemTime: body.rewards[i].insertAt ? walletsHandler.formatDate(moment(body.rewards[i].insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-    //             level: level,
-    //             itemMoney: `${reward}`
-    //           })
-    //         }
-    //       } else if (body.rewards[i].rewards !== '0' && body.rewards[i].type === 'level2') {
-    //         this.secondLevel = this.secondLevel + 1
-    //         this.secondLevelAmount = this.cal.accAdd(this.secondLevelAmount, body.rewards[i].rewards)
-    //       }
-    //     } 
-
-    //     this.total = this.itemList.length
-    //     this.pageSum = Math.ceil(this.itemList.length / 50)
-    //   }
-    // })
   },
   methods: {
     //搜索

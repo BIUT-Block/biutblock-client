@@ -92,7 +92,7 @@
         </section>
         <section class="first-dig-txt-all">
           {{ $t("homeWallet.hwBiutTxt1") }}：
-          <p>{{ getPointNum(availableMoney) }} BIUT</p>
+          <p>{{ getPointNum(availibleMoney) }} BIUT</p>
           <span @click="allAmountMortgage">{{
             $t("homeWalletMask.hwmSentTxt3All")
           }}</span>
@@ -119,9 +119,6 @@ export default {
   props: {
     pages: Number,
     networkErrorText: String,
-    selectedWalletAddress: String,
-    availableMoney: String,
-    freezeMoney: String,
     poolName: String, // 如果是矿池就启用框挖矿、没矿池就用钱包名称
   },
   data() {
@@ -142,6 +139,18 @@ export default {
     }
   },
   computed: {
+    selectedWalletAddress () {
+      return this.$store.getters.miningWallet.walletAddress
+    },
+
+    availibleMoney () {
+      return this.$store.getters.miningWallet.availibleMoney
+    },
+
+    freezeMoney () {
+      return this.$store.getters.miningWallet.freezeMoney
+    },
+
     mortgageActive() {
       let ipt1 = this.mortgageIpt
       if (this.mortgageIpt.length > 10 && this.mortgageIpt.indexOf(".") < 0) {
@@ -155,7 +164,7 @@ export default {
         this.mortgageIpt = this.mortgageIpt.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
         this.mortgageIpt = this.mortgageIpt.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/, '$1$2.$3');//只能输入两个小数  
       }
-      return ipt1 > 0 && Number(ipt1) <= Number(this.availableMoney) ? true : false
+      return ipt1 > 0 && Number(ipt1) <= Number(this.availibleMoney) ? true : false
     }
   },
   methods: {
@@ -181,7 +190,7 @@ export default {
     },
 
     allAmountMortgage() {
-      this.mortgageIpt = this.availableMoney
+      this.mortgageIpt = this.availibleMoney
     },
 
     //确认提交

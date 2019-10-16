@@ -63,6 +63,12 @@ export default {
     }
   },
   computed: {
+    wallets () {
+      return this.$store.getters.wallets
+    },
+    miningWallet () {
+      return this.$store.getters.miningWallet
+    },
     //返回当前 奖牌图片
     headerImg() {
       if (this.level == 1) {
@@ -179,11 +185,8 @@ export default {
        * 0 有抵押  1 没有抵押
        * 
        */
-      let wallets = this.$route.query.wallets
-      let selectedPrivateKey = this.$route.query.firstKey
-      let selectedWallet = wallets[selectedPrivateKey]
       this.shareShow = true
-      if (selectedWallet.mortgageValue > 0) {
+      if (Number(this.miningWallet.mortgageValue) > 0) {
         this.sharePage = 0
       } else {
         this.sharePage = 1

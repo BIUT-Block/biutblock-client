@@ -47,7 +47,9 @@ Vue.prototype.getPointNum = function (num) {
   let str = String(num);
   return str.split('.').map((item, idx) => idx === 0 ? item.replace(/\B(?=(\d{3})+$)/g, ',') : item.substring(0, 8)).join('.').replace(/(?:(\.\d*[1-9])0+|\.0*)$/, '$1')
 }
-
+Vue.prototype.removeCommaNum = function (value) {
+  return Number(value.split(',').join(''))
+}
 //获取input输入框判断长度
 Vue.prototype.getBLen = function(str) {  
   if (str == null) return 0;  

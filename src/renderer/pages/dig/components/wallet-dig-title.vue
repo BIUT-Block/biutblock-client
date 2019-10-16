@@ -26,18 +26,19 @@ export default {
 
   },
   props: {
-    number: String,
-    income: String,
-    selectedWallet: Object,
-    selectedPrivateKey: String,
-    wallets: Object
   },
   data() {
     return {
     }
   },
   computed: {
-    digTitle: function(){
+    number () {
+      return this.$store.getters.miningWalletDigNumber
+    },
+    income () {
+      return this.$store.getters.miningWalletDigIncome
+    },
+    digTitle (){
       if (this.number === 0 || this.number < 6) {
         return false
       } else {

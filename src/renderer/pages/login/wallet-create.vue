@@ -287,6 +287,9 @@ export default {
     }
   },
   computed: {
+    wallets () {
+      return this.$store.getters.wallets
+    },
     //创建钱包按钮是否激活
     createActive () {
       let passReg = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
@@ -492,7 +495,8 @@ export default {
     closeCreate () {
       let createId = this.$route.query.createId // 获取路由参数，如果 是 1 是从主页进入的 ，否则点击关闭按钮返回创建页面
       if (createId === 1 && this.createPages === 1) {
-        this.$router.push({name: 'walletIndex', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
+        this.$router.push({name: 'walletIndex'})
+        // this.$router.push({name: 'walletIndex', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
       } else if (this.createPages == 2 && createId == 1  || this.createPages == 3  && createId == 1) {
         this.createPages = 1
         this.createTitle1 = 'login.loginCreate1'
@@ -573,22 +577,23 @@ export default {
         ownPoolAddress: [this.contractAddress],
         role: this.parentWallet.role
       })
-      walletsHandler.backUpWalletIntoFile({
-        walletName: this.walletName,
-        privateKey: this.keys.privateKey,
-        publicKey: this.keys.publicKey,
-        walletAddress: this.keys.userAddress,
-        englishWords: this.keys.englishWords,
-        invitationCode: this.parentWallet.invitationCode,
-        ownInvitationCode: this.parentWallet.ownInvitationCode,
-        mortgagePoolAddress: this.parentWallet.role === 'Miner' ? [this.parentWallet.mortgagePoolAddress] : [this.parentWallet.ownPoolAddress],
-        mortgageValue: '0',
-        ownPoolAddress: [this.contractAddress],
-        role: this.parentWallet.role
-      }, (keyDataJSON) => {
-        window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
-          this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
-      })
+      this.$router.push({name: 'walletIndex'})
+      // walletsHandler.backUpWalletIntoFile({
+      //   walletName: this.walletName,
+      //   privateKey: this.keys.privateKey,
+      //   publicKey: this.keys.publicKey,
+      //   walletAddress: this.keys.userAddress,
+      //   englishWords: this.keys.englishWords,
+      //   invitationCode: this.parentWallet.invitationCode,
+      //   ownInvitationCode: this.parentWallet.ownInvitationCode,
+      //   mortgagePoolAddress: this.parentWallet.role === 'Miner' ? [this.parentWallet.mortgagePoolAddress] : [this.parentWallet.ownPoolAddress],
+      //   mortgageValue: '0',
+      //   ownPoolAddress: [this.contractAddress],
+      //   role: this.parentWallet.role
+      // }, (keyDataJSON) => {
+      //   window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
+      //     this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
+      // })
     },
 
     //导入钱包
@@ -640,7 +645,10 @@ export default {
         //this.walletnNewPassError = true
         return
       }
-      dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
+      if (this.wallets.filter(item => item.privateKey === privateKey).length > 0) {
+        this._showImportError(from, 'input.imporantExists')
+      } else {
+        dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
         if (body && body.doc.length > 0) {
           wallets[privateKey].role = body.doc[0].role
           wallets[privateKey].invitationCode = body.doc[0].invitationCode
@@ -648,21 +656,14 @@ export default {
           wallets[privateKey].mortgageValue = body.doc[0].mortgageValue
           wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress
           wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress
-
           this.$store.commit('addWallet', wallets[privateKey])
-          
-          walletsHandler.backUpWalletIntoFile(wallets[privateKey], (wallets, selectedPrivateKey) => {
-            if (wallets === 'DuplicateKey') {
-              this._showImportError(from, 'input.imporantExists')
-            } else {
-              this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: privateKey}})
-            }
-          })
+          this.$router.push({ name: 'index' })
         } else {
           this.loginMaskShow = true
           //this._showImportError(from, body.message)
         }
       })
+      }
     },
 
     _showImportError (from, error) {
