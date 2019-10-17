@@ -26,23 +26,6 @@
         <img src="../../../assets/images/closeMask.png" alt="" title="close" @click="cloasMask">
       </section>
 
-      <!-- <section class="details-list">
-        <p class="details-list-tit">{{ $t('homeInvitation.hiListTxt1') }}</p>
-        <p>
-          <span>{{ maskAddress }}</span>
-          <span class="details-list-level">
-            {{ userLevel }}
-          </span>
-        </p>
-      </section>
-
-      <section class="details-list details-list-top">
-        <p class="details-list-tit">{{ $t('homeInvitationMask.hiMaskDetailsTxt') }}:</p>
-        <p>
-          {{ getPointNum(maskMoney) }}
-        </p>
-      </section> -->
-
       <ul>
         <li>
           <span>{{ $t('homeInvitationMask.hiMaskDetailsListTxt1') }}</span>

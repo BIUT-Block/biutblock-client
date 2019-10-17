@@ -103,6 +103,11 @@ export default {
     wallets () {
       return this.$store.getters.wallets
     },
+
+    miningWallet () {
+      return this.$store.getters.miningWallet
+    },
+
     // 列表数据
     itemLists() {
       return this.itemList
@@ -138,7 +143,6 @@ export default {
     let params = {address: this.walletAddress}
     Promise.all([dataCenterHandler.getRelatedMinersPromise(params), dataCenterHandler.getInvitationDetailsPromise(params)])
     .then(infos => {
-      console.log(infos)
       let allRelatedMiners = infos[0].filter(item => item.level === '1')
       let alreadyPayedMiners = infos[1].rewards
       let remove = false
@@ -179,23 +183,27 @@ export default {
         }
       }
 
-      for (let miner of allRelatedMiners) {
+      let relatedTemp = allRelatedMiners.filter(miner => {
+        let repeat = false
         for (let payed of this.itemList) {
-          let address = payed.itemAddress.replace('0x', '')
-          if (address === miner.address) {
-            remove = true
+          if (payed.itemAddress.replace('0x', '') === miner.address) {
+            repeat = true
             break
           }
         }
-        if (!remove) {
-          this.itemList.push({
-            id: '1',
-            itemAddress: `0x${miner.address}`,
-            itemTime: miner.insertAt ? walletsHandler.formatDate(moment(miner.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
-            level: 1,
-            itemMoney: 0
-          })
-        } 
+        if (!repeat) {
+            return miner
+        }
+      })
+
+      for (let item of relatedTemp) {
+        this.itemList.push({
+          id: '1',
+          itemAddress: `0x${item.address}`,
+          itemTime: item.insertAt ? walletsHandler.formatDate(moment(item.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+          level: 1,
+          itemMoney: 0
+        })
       }
 
       this.total = this.itemList.length
@@ -229,15 +237,57 @@ export default {
     },
 
     //查看详情传对应的参数 地址、私钥都行
+    // lookDetails(item) {
+    //   if (item.itemMoney > 0) {
+    //     this.$emit('details', item)
+    //   } else {
+    //     this.translucentShow = true
+    //     setTimeout(() => {
+    //       this.translucentShow = false
+    //     }, 3000)
+    //   }
+    // },
+
     lookDetails(item) {
-      if (item.itemMoney > 0) {
-        this.$emit('details', item)
-      } else {
-        this.translucentShow = true
-        setTimeout(() => {
-          this.translucentShow = false
-        }, 3000)
-      }
+      let detailList = []
+
+      Promise.all([dataCenterHandler.getInvitationDetailsPromise({address: item.itemAddress.replace('0x', '')}), 
+                   dataCenterHandler.getInvitationDetailsPromise({address: this.miningWallet.walletAddress})])
+      .then((infos) => {
+        let firstlevel = infos[0].rewards.filter(item => item.type === 'level1')
+        let secondlevel = infos[1].rewards.filter(item => item.type === 'level2')
+        let isSameAddress = false
+        for (let level2item of secondlevel) {
+          for (let level1item of firstlevel) {
+            if (level2item.addressFrom === level1item.addressFrom) {
+              isSameAddress = true
+              break
+            } else {
+              isSameAddress = false
+            }
+          }
+          if (isSameAddress) {
+            detailList.push({
+              id: 1,
+              detailsAddress: level2item.addressFrom ? `0x${level2item.addressFrom}` : '',
+              detailsTime: level2item.insertAt ? walletsHandler.formatDate(moment(level2item.insertAt).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()) : '',
+              detailsMoney: level2item.rewards
+            })
+          }
+        }
+
+        if (item.itemMoney > 0 && detailList.length > 0) {
+          this.$emit('details', item, detailList)
+        } else {
+          this.translucentShow = true
+          setTimeout(() => {
+            this.translucentShow = false
+          }, 3000)
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
 
     //下一页

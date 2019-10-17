@@ -229,20 +229,14 @@ export default {
       selectedWalletData: {},
       transferImg: transferImg,
       menuShow: false,
-      //walletName: '',
       newWalletName: '',
-     // walletBalance: '-',//sec余额
-      // availableMoney: '-', //biut的可用金额
-      // freezeMoney: '-', //biut冻结金额
       invitationCode: '',//邀请码
       showInvitation: false,//邀请码提示 是否显示
-     // mortgageShow: true, // 邀请码是否显示
-
-     // walletBalanceSEN: '-',//sen余额
       walletAddress: '',
       inputReadonly: true,
       inputActive: false,
       noMoreData: false, //暂无更多数据
+      isMoreClicked: false,
       menuList: [
         {
           id: '01',
@@ -268,7 +262,7 @@ export default {
       // tradingList: [],
       tradingListTotalLength: 0,
       tradingListSkip: 4,
-      tradingPgeSize: 5, // rpc 请求交易历史每页显示数量
+      // tradingPgeSize: 2, // rpc 请求交易历史每页显示数量
       tradingPge: 1 // rpc 请求交易历史页数
     }
   },
@@ -363,8 +357,8 @@ export default {
   },
   created() {
     this.wallets = this.$route.query.wallets
-    this._getWalletBalance(this.selectedWallet.walletAddress)
-    this._getWalletTransactions(this.selectedWallet.walletAddress)
+    this._getWalletBalance(this.selectedWallet, this.selectedPrivateKey, this.selectedWallet.walletAddress)
+    this._getWalletTransactions(this.selectedPrivateKey, this.selectedWallet.walletAddress)
     // this.onSelectWalletChanged(this.selectedWallet)
     // this.selectedPrivateKey = this.$route.query.selectedPrivateKey
   },
@@ -379,6 +373,7 @@ export default {
   methods: {
     //交易记录方法
     onClickLoadMore() {
+      this.isMoreClicked = true
       this.tradingPge = this.tradingPge + 1
       this.tradingListSkip = this.tradingListSkip + 4
       this.$store.commit('updateTransPage', {
@@ -386,8 +381,8 @@ export default {
         pageSize: this.transListPageSize + 10
       })
       clearInterval(jobID)
-      this._getWalletBalance(this.selectedWallet.walletAddress)
-      this._getWalletTransactions(this.selectedWallet.walletAddress)
+      this._getWalletBalance(this.selectedWallet, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
+      this._getWalletTransactions(this.selectedWallet.privateKey, this.selectedWallet.walletAddress, 'click')
       this._startUpateJob()
     },
 
@@ -396,7 +391,7 @@ export default {
       // maskPages 0 私钥 1 keystrore 2 助记词 3 删除 4  转账 5 二维码地址
       if (index === 3) {
         let mingingStatus = JSON.parse(window.sessionStorage.getItem('miningStatus'))
-        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedPrivateKey && mingingStatus.miningIn) {
+        if (mingingStatus && mingingStatus.wallet.privateKey === this.selectedWallet.privateKey && mingingStatus.miningIn) {
           this.maskPages = 6
         } else {
           this.maskPages = index
@@ -511,8 +506,8 @@ export default {
       })
       this.selectedWallet.name = this.walletName
       this.wallets[this.selectedWallet.privateKey].walletName = this.walletName
-      this.selectedWalletData.walletName = this.walletName
-      newKeyStore[this.selectedWalletData.privateKey] = this.selectedWalletData
+      // this.selectedWalletData.walletName = this.walletName
+      // newKeyStore[this.selectedWalletData.privateKey] = this.selectedWalletData
       WalletsHandler.updateWalletFile(this.selectedWalletData, () => {
         this.translucentShow = true
         this.translucentText = "homeWallet.hwUpdateNameSuccess"
@@ -564,21 +559,6 @@ export default {
       }
       window.sessionStorage.setItem("selectedPrivateKey", selectedWallet.privateKey)
       this._resetSkipTotal()
-      // this.selectedWallet = selectedWallet
-      // 切换钱包后 讲页面内容重置
-      // this.mortgageShow = false
-      // this.walletBalance = '-'
-      // this.freezeMoney = '-'
-      // this.availibleMoney = '-'
-      // this.walletBalanceSEN = '-'
-      // this.tradingList = []
-      this.selectedWalletData = this.wallets[selectedWallet.privateKey]
-      this.selectedPrivateKey = selectedWallet.privateKey
-      //this.$route.query.selectedPrivateKey = this.selectedPrivateKey
-      // this.oldWalletName = selectedWallet.name
-      // this.walletName = selectedWallet.name
-      //this.tradingList = []
-
       this._startUpateJob()
       //return
     },
@@ -591,15 +571,14 @@ export default {
       // this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
       jobID = setInterval(() => {
         console.log('Job ID')
-        this._getWalletBalance(this.selectedWallet.walletAddress)
-        this._getWalletTransactions(this.selectedWallet.walletAddress, this.tradingPge, this.tradingPgeSize)
+        this._getWalletBalance(this.selectedWallet, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
+        this._getWalletTransactions(this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
       }, 30 * 1000)
     },
 
-    _getWalletBalance(walletAddress) {
+    _getWalletBalance(wallet, privateKey, walletAddress) {
       let poolAddress = []
       this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
-        //this.mortgageShow = true
         let freezeMoney = 0
         let walletBalance = 0
         let availableMoney = Number(balanceSEC)
@@ -609,7 +588,7 @@ export default {
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           }
         }
-        if (this.selectedWallet.ownPoolAddress.length > 0) {
+        if (wallet.ownPoolAddress.length > 0) {
           for (let ownpool of this.selectedWallet.ownPoolAddress) {
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(ownpool))
           }
@@ -617,35 +596,27 @@ export default {
         Promise.all(poolAddress).then((contractInfos) => {
           for (let contract of contractInfos) {
             let timeLock = contract.timeLock || {}
-            if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
-              let benifitAddress = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+            if (wallet.walletAddress in timeLock && wallet.walletAddress in timeLock[wallet.walletAddress]) {
+              let benifitAddress = timeLock[wallet.walletAddress][wallet.walletAddress]
               for (let i = 0; i < benifitAddress.length; i++) {
                 freezeMoney = freezeMoney + Number(benifitAddress[i].lockAmount)
               }
             }
           }
-          // if (freezeMoney > 0) {
-          //   this.mortgageShow = false
-          // }
+
           walletBalance = this.cal.accAdd(freezeMoney, availableMoney) //精度问题处理
           this.$store.commit('updateWalletBalanceSEC', {
-            privateKey: this.selectedWallet.privateKey,
+            privateKey: privateKey,
             walletBalance: walletBalance.toString(),
             availibleMoney: availableMoney.toString(),
             freezeMoney: freezeMoney.toString()
           })
-          
-          // this.freezeMoney = this._checkValueFormat(freezeMoney.toString())
-          // this.walletBalance = this._checkValueFormat(walletBalance.toString())
-          // this.availableMoney = this._checkValueFormat(availableMoney.toString())
         })
       }, (balanceSEN) => {
         this.$store.commit('updateWalletBalanceSEN', {
-          privateKey: this.selectedWallet.privateKey,
+          privateKey: privateKey,
           walletBalanceSEN: balanceSEN.toString()
         })
-        // this.walletBalanceSEN = this._checkValueFormat(balanceSEN.toString()).toString()
-
       })
     },
 
@@ -659,16 +630,20 @@ export default {
       }
     },
 
-    _getWalletTransactions(walletAddress) {
-      let pgeSkip = 0
+    _getWalletTransactions(privateKey, walletAddress, eventFrom) {
       this.$JsonRPCClient.getWalletTransactionsBothChains(walletAddress, this.transListPage, this.transListPageSize, (transactions) => {
-        if (transactions.length > this.selectedWallet.transactionHistory.length) {
-            this.$store.commit('updateTransList', {
-            privateKey: this.selectedWallet.privateKey,
-            trans: transactions
-          })
-        } else {
-          this.noMoreData = true
+        this.$store.commit('updateTransList', {
+          privateKey: privateKey,
+          trans: transactions
+        })
+        
+        if (transactions.length <= this.selectedWallet.transactionHistory.length) {
+          /**判断是否显示加载更多按钮 */
+          if (this.isMoreClicked && eventFrom === 'click') {
+            this.noMoreData = true
+          } else if (!this.isMoreClicked && eventFrom === 'click') {
+            this.noMoreData = false
+          }
         }
       })
     },
@@ -691,15 +666,14 @@ export default {
     },
 
     /** Event Method, triggered if wallet balance updated */
-    onUpdateWalletBalance(balance, walletAddress) {
-      this._getWalletBalance(walletAddress)
-      // this.walletBalance = this._checkValueFormat(balance.toString()).toString()
-      this._getWalletTransactions(walletAddress)
+    onUpdateWalletBalance(balance, privateKey, walletAddress) {
+        this._getWalletBalance(this.selectedWallet, privateKey, walletAddress)
+        this._getWalletTransactions(privateKey, walletAddress)
     },
 
-    onUpdateWalletBalanceSEN(balance, walletAddress) {
+    onUpdateWalletBalanceSEN(balance, privateKey, walletAddress) {
       this.$store.commit('updateWalletBalanceSEN', {
-        privateKey: this.selectedPrivateKey,
+        privateKey: privateKey,
         walletBalanceSEN: balance.toString()
       })
     },

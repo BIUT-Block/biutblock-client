@@ -303,7 +303,7 @@ export default {
       return this.$store.getters.walletName
     },
     balance () {
-      return this.$store.getters.walletBalance
+      return this.$store.getters.availibleMoney
     },
     balanceSEN () {
       return this.$store.getters.walletBalanceSEN
@@ -622,9 +622,9 @@ export default {
           chainName: chainName
         }
         this.$JsonRPCClient.sendTransactionsSEN(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
-          this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalance', balance, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
         }, (balance) => {
-          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
         })
       }
       

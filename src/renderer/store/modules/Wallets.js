@@ -14,7 +14,8 @@ const state = {
   selectedWallet: {},
   netTotalReward: '-',
   chainHeight: '-',
-  lastBlock: {}
+  lastBlock: {},
+  noMoreTrans: false
 }
 
 const getters = {

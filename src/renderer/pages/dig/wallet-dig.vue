@@ -371,7 +371,7 @@ export default {
           // this.selectedWallet = miningStatus.wallet
           // this.selectedWalletName = miningStatus.wallet.walletName
           // this.selectedWalletAddress =  miningStatus.wallet.walletAddress
-          // this.miningIn = miningStatus.miningIn
+          this.miningIn = miningStatus.miningIn
           this._setButton()
           this.isSynced = miningStatus.isSynced
         } else {
@@ -554,7 +554,7 @@ export default {
         let walletBalance = 0
         let availibleMoney = balanceSEC
         if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {
-          for (let i = 1; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
+          for (let i = 0; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
             let pool = this.selectedWallet.mortgagePoolAddress[i]
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
           }
@@ -606,7 +606,7 @@ export default {
       let poolAddress = []
       let allNodes = new Set([]);
       if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
-        for (let i = 1; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
+        for (let i = 0; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
           let pool = this.selectedWallet.mortgagePoolAddress[i]
           poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
         }

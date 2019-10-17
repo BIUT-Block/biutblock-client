@@ -1,8 +1,9 @@
 import {
   app,
   BrowserWindow,
-  ipcMain
-  // dialog,
+  ipcMain,
+  dialog,
+  shell
   // Menu
 } from 'electron'
 import {
@@ -12,8 +13,9 @@ import {
 import updateChecker from './updateChecker.js'
 import walletsHandler from '../renderer/lib/WalletsHandler'
 
-// const packageJSON = require('../../package.json')
-// const fs = require('fs')
+const downloadUrl = 'https://github.com/BIUT-Block/biutblock-client-pool/releases/tag/'
+const packageJSON = require('../../package.json')
+const fs = require('fs')
 
 /**
  * Set `__static` path to static files in production
@@ -36,160 +38,184 @@ let shouldQuit = app.makeSingleInstance(function (commandLine, workingDirectory)
   }
 })
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
-  updateChecker(app)
+  let created = false
+
+  updateChecker((isNewVersion, version) => {
+    if (isNewVersion) {
+      dialog.showMessageBox({
+        type: 'info',
+        title: 'New Version',
+        buttons: ['Yes'],
+        message: `Found new version ${version}. Please update.`
+      }, (res, checkboxChecked) => {
+        if (res === 0) { // if selected yes
+          shell.openExternal(`${downloadUrl}${version}`)
+        }
+        app.quit()
+        // db.read().set('picBed.showUpdateTip', !checkboxChecked).write()
+      })
+    } else {
+      if (!created) {
+        created = true
+        // ------------------------  SETUP DATABASE PATH && Envs -----------------------
+        // let path = app.getPath('appData') + '/' + packageJSON.name
+        let path = process.cwd()
+        // let netType = 'main'
+        // let settingPath = path + '/BIUT_Wallet_Pool_setting.json'
+        // if (fs.existsSync(settingPath)) {
+        //   let settingContent = fs.readFileSync(settingPath, 'utf-8')
+        //   netType = JSON.parse(settingContent).netType
+        // }
+        console.log(path + '/data/')
+        const {
+          net
+        } = require('electron')
+        let requestBIUT
+        let requestBIU
+        // if (netType === 'main') {
+        console.log('node connect with http://scan.biut.io/genesisBlockHash')
+        process.env.netType = 'main'
+        requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
+        requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
+        // } else {
+        // console.log('node connect with http://test.biut.io/genesisBlockHash')
+        // process.env.netType = 'test'
+        // requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
+        // requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
+        // }
+        // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
+        const SECNODE = require('@biut-block/biutjs-node')
+        let SECCore = new SECNODE.Core({
+          DBPath: path + '/data/',
+          SecDBPath: path + '/data/Sec',
+          SenDBPath: path + '/data/Sen',
+          cacheDBPath: path + '/data/powCache',
+          loggerPath: path + '/biutlogs',
+          NDPPrivKeyFilePath: path + '/ndpprivatekey',
+          ID: []
+        })
+        let SECRPC = new SECNODE.RPC(SECCore)
+        SECRPC.runRPCServer()
+
+        // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
+        requestBIUT.on('response', response => {
+          response.on('data', remotegenesisHash => {
+            remotegenesisHash = remotegenesisHash.toString()
+            console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
+            SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+              if (err) {
+                return console.log('BIUT Blockchain Database is empty')
+              }
+              console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
+              if (genesisBlock[0].Hash === remotegenesisHash) {
+                return console.log('BIUT GenesisHash check passed')
+              } else {
+                console.log('BIUT GenesisHash not passed, remove local database')
+              }
+            })
+          })
+          response.on('end', () => {})
+        })
+        requestBIUT.end()
+
+        requestBIU.on('response', response => {
+          response.on('data', remotegenesisHash => {
+            remotegenesisHash = remotegenesisHash.toString()
+            console.log(`remote BIU GenesisHash: ${remotegenesisHash}`)
+            SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
+              if (err) {
+                return console.log('BIU Blockchain Database is empty')
+              }
+              console.log(`Local BIU GenesisHash: ${genesisBlock[0].Hash}`)
+              if (genesisBlock[0].Hash === remotegenesisHash) {
+                return console.log('BIU GenesisHash check passed')
+              } else {
+                console.log('BIUT GenesisHash not passed, remove local database')
+              }
+            })
+          })
+          response.on('end', () => {})
+        })
+        requestBIU.end()
+
+        mainWindow = new BrowserWindow({
+          height: 610,
+          useContentSize: true,
+          width: 960,
+          transparent: false,
+          frame: true,
+          minHeight: 610,
+          minWidth: 960
+        })
+        mainWindow.setResizable(true)
+
+        /** catch the clos event of main window */
+        mainWindow.on('close', () => {
+          walletsHandler.deleteAllWalletsFromFile()
+        })
+        if (process.platform === 'darwin') {
+          const template = [{
+            label: 'Application',
+            submenu: [{
+              label: 'Quit',
+              accelerator: 'Command+Q',
+              click: function () {
+                app.quit()
+              }
+            }]
+          }, {
+            label: 'Edit',
+            submenu: [{
+                label: 'Copy',
+                accelerator: 'CmdOrCtrl+C',
+                selector: 'copy:'
+              },
+              {
+                label: 'Paste',
+                accelerator: 'CmdOrCtrl+V',
+                selector: 'paste:'
+              }
+            ]
+          }, {
+            label: 'Network Setting',
+            submenu: [{
+              label: 'Main Network'
+            }, {
+              label: 'Test Network'
+            }]
+          }]
+          // Menu.setApplicationMenu(null)
+        } else {
+          // Menu.setApplicationMenu(null)
+        }
+        try {
+          mainWindow.loadURL(winURL)
+        } catch (err) {
+          console.log(err)
+        }
+
+        mainWindow.on('closed', () => {
+          app.quit()
+        })
+      }
+    }
+  })
+
+
+
+  setInterval(() => {
+    updateChecker(app)
+  }, 20 * 60 * 1000)
 
   if (shouldQuit) {
     app.quit()
     return
   }
 
-  // ------------------------  SETUP DATABASE PATH && Envs -----------------------
-  // let path = app.getPath('appData') + '/' + packageJSON.name
-  let path = process.cwd()
-  // let netType = 'main'
-  // let settingPath = path + '/BIUT_Wallet_Pool_setting.json'
-  // if (fs.existsSync(settingPath)) {
-  //   let settingContent = fs.readFileSync(settingPath, 'utf-8')
-  //   netType = JSON.parse(settingContent).netType
-  // }
-  console.log(path + '/data/')
-  const { net } = require('electron')
-  let requestBIUT
-  let requestBIU
-  // if (netType === 'main') {
-  console.log('node connect with http://scan.biut.io/genesisBlockHash')
-  process.env.netType = 'main'
-  requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
-  requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
-  // } else {
-  // console.log('node connect with http://test.biut.io/genesisBlockHash')
-  // process.env.netType = 'test'
-  // requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
-  // requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
-  // }
-  // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
-  const SECNODE = require('@biut-block/biutjs-node')
-  let SECCore = new SECNODE.Core({
-    DBPath: path + '/data/',
-    SecDBPath: path + '/data/Sec',
-    SenDBPath: path + '/data/Sen',
-    cacheDBPath: path + '/data/powCache',
-    loggerPath: path + '/biutlogs',
-    NDPPrivKeyFilePath: path + '/ndpprivatekey',
-    ID: []
-  })
-  let SECRPC = new SECNODE.RPC(SECCore)
-  SECRPC.runRPCServer()
-
-  // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
-  requestBIUT.on('response', response => {
-    response.on('data', remotegenesisHash => {
-      remotegenesisHash = remotegenesisHash.toString()
-      console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
-      SECCore.secAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
-        if (err) {
-          return console.log('BIUT Blockchain Database is empty')
-        }
-        console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
-        if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('BIUT GenesisHash check passed')
-        } else {
-          // SECCore.secAPIs.clearDB((err) => {
-          //   if (err) return console.error(err)
-          console.log('BIUT GenesisHash not passed, remove local database')
-          // })
-        }
-      })
-    })
-    response.on('end', () => { })
-  })
-  requestBIUT.end()
-
-  requestBIU.on('response', response => {
-    response.on('data', remotegenesisHash => {
-      remotegenesisHash = remotegenesisHash.toString()
-      console.log(`remote BIU GenesisHash: ${remotegenesisHash}`)
-      SECCore.senAPIs.getTokenBlockchain(0, 0, (err, genesisBlock) => {
-        if (err) {
-          return console.log('BIU Blockchain Database is empty')
-        }
-        console.log(`Local BIU GenesisHash: ${genesisBlock[0].Hash}`)
-        if (genesisBlock[0].Hash === remotegenesisHash) {
-          return console.log('BIU GenesisHash check passed')
-        } else {
-          // SECCore.senAPIs.clearDB((err) => {
-          //   if (err) return console.error(err)
-          console.log('BIU GenesisHash not passed, remove local database')
-          // })
-        }
-      })
-    })
-    response.on('end', () => { })
-  })
-  requestBIU.end()
-
-  mainWindow = new BrowserWindow({
-    height: 610,
-    useContentSize: true,
-    width: 960,
-    transparent: false,
-    frame: true,
-    minHeight: 610,
-    minWidth: 960
-  })
-  mainWindow.setResizable(true)
-
-  /** catch the clos event of main window */
-  mainWindow.on('close', () => {
-    walletsHandler.deleteAllWalletsFromFile()
-  })
-  if (process.platform === 'darwin') {
-    const template = [{
-      label: 'Application',
-      submenu: [{
-        label: 'Quit',
-        accelerator: 'Command+Q',
-        click: function () {
-          app.quit()
-        }
-      }]
-    }, {
-      label: 'Edit',
-      submenu: [{
-        label: 'Copy',
-        accelerator: 'CmdOrCtrl+C',
-        selector: 'copy:'
-      },
-      {
-        label: 'Paste',
-        accelerator: 'CmdOrCtrl+V',
-        selector: 'paste:'
-      }]
-    }, {
-      label: 'Network Setting',
-      submenu: [{
-        label: 'Main Network'
-      }, {
-        label: 'Test Network'
-      }]
-    }]
-    // Menu.setApplicationMenu(null)
-  } else {
-    // Menu.setApplicationMenu(null)
-  }
-  try {
-    mainWindow.loadURL(winURL)
-  } catch (err) {
-    console.log(err)
-  }
-
-  mainWindow.on('closed', () => {
-    app.quit()
-  })
 }
 
 app.on('ready', createWindow)
