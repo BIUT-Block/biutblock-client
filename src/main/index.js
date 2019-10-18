@@ -77,10 +77,10 @@ function createWindow() {
         let requestBIUT
         let requestBIU
         // if (netType === 'main') {
-        console.log('node connect with http://test.biut.io/genesisBlockHash')
+        console.log('node connect with http://scan.biut.io/genesisBlockHash')
         process.env.netType = 'test'
-        requestBIUT = net.request('http://test.biut.io/genesisBlockHash')
-        requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
+        requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
+        requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
         // } else {
         // console.log('node connect with http://test.biut.io/genesisBlockHash')
         // process.env.netType = 'test'
