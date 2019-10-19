@@ -14,6 +14,6 @@ const messages = {
 Vue.use(VueI8n)
 
 export default new VueI8n({
-  locale: Cookies.get('LANG') || 'zh',
+  locale: Cookies.get('LANG') || 'en',
   messages,
 })
