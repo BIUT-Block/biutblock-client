@@ -20,7 +20,7 @@
     },
     computed: {
       changeLanguage () {
-        if (this.$i18n.locale == "en") {
+        if (this.$i18n.locale == "zh") {
           return true
         }
       }
@@ -37,4 +37,3 @@
   .home-app {font-family: Lato-Regular;}
   .en {font-family: Source-Regular;}
 </style>
-
