@@ -33,7 +33,7 @@ export default {
           // this.client = jayson.http(`http://${externalServerAddressTest}:${externalServerPort}`)
           // this.clientSEN = jayson.http(`http://${externalServerAddressTest}:${externalServerPortSEN}`)
         //} else {
-         process.env.netType = 'test'
+         process.env.netType = 'main'
          this.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
          this.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
        // }
@@ -562,7 +562,7 @@ export default {
     }
 
     console.log('Start jayson client with main network')
-    process.env.netType = 'test'
+    process.env.netType = 'main'
     jsonRPC.client = jayson.http(`http://${externalServerAddress}:${externalServerPort}`)
     jsonRPC.clientSEN = jayson.http(`http://${externalServerAddress}:${externalServerPortSEN}`)
     jsonRPC.localClient = jayson.http(`http://${localhostAddress}:${localhostPort}`)

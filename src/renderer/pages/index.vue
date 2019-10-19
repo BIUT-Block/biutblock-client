@@ -283,7 +283,7 @@ export default {
     this.versionNumber = pkg.version
     // this.wallets = this.$route.query.wallets
     // this.selectedPrivateKey = window.sessionStorage.getItem("selectedPrivateKey")
-    if (process.env.netType === 'test') {
+    if (process.env.netType === 'main') {
       this.networkIdx = 1
       this.networkContent = 'homeSet.hsText'
     } else {
