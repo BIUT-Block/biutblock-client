@@ -564,7 +564,7 @@ export default {
             poolAddress.push(this.$JsonRPCClient.getContractInfoSync(ownpool))
           }
         }
-
+        poolAddress = Array.from(new Set(poolAddress))
         Promise.all(poolAddress).then((contractInfos) => {
           for (let contract of contractInfos) {
             let timeLock = contract.timeLock || {}
