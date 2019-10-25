@@ -9,10 +9,10 @@ let sourceCode = 'ZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcywgYW1vdW50KSB7CiAgICB2YXIgdH
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = 'scan.biut.io'
+    let externalServerAddress = 'scan.secblock.io'
     let externalServerAddressTest = 'test.biut.io'
-    let externalServerPort = '3002'
-    let externalServerPortSEN = '3003'
+    let externalServerPort = '3001/secrpc'
+    let externalServerPortSEN = '3001/senrpc'
     let localhostAddress = '127.0.0.1'
     let localhostPort = '3002'
     let localhostPortSEN = '3003'
