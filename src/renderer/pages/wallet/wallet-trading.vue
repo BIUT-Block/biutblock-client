@@ -132,15 +132,15 @@ export default {
     var address;
     if (this.$JsonRPCClient.isTestNetwork()) {
       if (trade.listUnit === "BIUT") {
-        address = 'http://scan.biut.io/search?search='
+        address = 'http://scan.biut.io:3001/search?search='
       } else {
-        address = 'http://scan.biut.io/sen/search?search='
+        address = 'http://scan.biut.io:3001/sen/search?search='
       }
     } else {
       if(trade.listUnit === "BIUT") {
-        address = 'http://scan.biut.io/search?search='
+        address = 'http://scan.biut.io:3001/search?search='
       } else {
-        address = 'http://scan.biut.io/sen/search?search='
+        address = 'http://scan.biut.io:3001/sen/search?search='
       }
     }
 

@@ -30,7 +30,7 @@ import { setInterval, clearInterval } from 'timers';
 const moment = require('moment-timezone')
 const ipify = require('ipify')
 const fetch = require('node-fetch')
-let secAPI = 'http://scan.biut.io/'
+let secAPI = 'http://scan.biut.io:3001/'
 
 export default {
   name: 'walletNode',
@@ -88,9 +88,9 @@ export default {
   methods: {
     _getNodeLists () {
       if (window.localStorage.getItem('secTest') && window.localStorage.getItem('secTest') === 'true') {
-        secAPI = 'http://test.secblock.io/'
+        secAPI = 'http://test.biut.io/'
       } else {
-        secAPI = 'http://scan.biut.io/'
+        secAPI = 'http://scan.biut.io:3001/'
       }
       fetch(`${secAPI}nodeinfoapi`).then(response => response.json()).then((nodestable) => {
         this.nodeList = []

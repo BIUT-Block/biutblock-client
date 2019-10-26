@@ -68,10 +68,7 @@
     }
   },
   "dependencies": {
-    "@biut-block/biutjs-blockchain": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-blockchain.git#SenSmartContractTimeLock",
-    "@biut-block/biutjs-datahandler": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-datahandler.git#SenSmartContractTimeLock",
-    "@biut-block/biutjs-node": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-node.git#SenSmartContractTimeLock",
-    "@biut-block/biutjs-util": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-util.git#SenSmartContractTimeLock",
+    "@biut-block/biutjs-node": "^1.0.96",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "axios": "^0.16.1",
