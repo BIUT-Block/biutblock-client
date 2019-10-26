@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@biut-block/biutjs-node": "^1.0.96",
+    "@biut-block/biutjs-util": "^1.0.2",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "axios": "^0.16.1",

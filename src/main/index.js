@@ -64,6 +64,9 @@ function createWindow() {
         // ------------------------  SETUP DATABASE PATH && Envs -----------------------
         // let path = app.getPath('appData') + '/' + packageJSON.name
         let path = process.cwd()
+        if (process.platform === 'darwin') {
+          path = app.getPath('appData') + '/' + packageJSON.name
+        }
         // let netType = 'main'
         // let settingPath = path + '/BIUT_Wallet_Pool_setting.json'
         // if (fs.existsSync(settingPath)) {
