@@ -43,7 +43,7 @@ export default {
         client.request('sec_getBalance', [walletAddress, tokenName], (err, response) => {
           if (err) return
           if (response.result.status === '1') {
-            fnUpdateBalance(response.result.value)
+            fnUpdateBalance(response.result.value.Balance)
           }
         })
       },
