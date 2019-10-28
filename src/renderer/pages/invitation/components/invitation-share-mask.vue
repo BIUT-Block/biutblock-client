@@ -63,7 +63,7 @@ export default {
     }
   },
   mounted(){
-    this.qrcodeWalletLink = "http://mining.biut.io/?code=" + this.invitationCode
+    this.qrcodeWalletLink = "https://mining.biut.io/?code=" + this.invitationCode
   },
   methods: {
     close() {
