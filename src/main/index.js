@@ -64,6 +64,9 @@ function createWindow() {
         // ------------------------  SETUP DATABASE PATH && Envs -----------------------
         // let path = app.getPath('appData') + '/' + packageJSON.name
         let path = process.cwd()
+        if (process.platform === 'darwin') {
+          path = app.getPath('appData') + '/' + packageJSON.name
+        }
         // let netType = 'main'
         // let settingPath = path + '/BIUT_Wallet_Pool_setting.json'
         // if (fs.existsSync(settingPath)) {
@@ -77,10 +80,10 @@ function createWindow() {
         let requestBIUT
         let requestBIU
         // if (netType === 'main') {
-        console.log('node connect with http://scan.biut.io/genesisBlockHash')
+        console.log('node connect with http://scan.biut.io:3001/genesisBlockHash')
         process.env.netType = 'main'
-        requestBIUT = net.request('http://scan.biut.io/genesisBlockHash')
-        requestBIU = net.request('http://scan.biut.io/sen/genesisBlockHash')
+        requestBIUT = net.request('http://scan.biut.io:3001/genesisBlockHash')
+        requestBIU = net.request('http://scan.biut.io:3001/sen/genesisBlockHash')
         // } else {
         // console.log('node connect with http://test.biut.io/genesisBlockHash')
         // process.env.netType = 'test'

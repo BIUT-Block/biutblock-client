@@ -1,6 +1,6 @@
 {
   "name": "PC-Miner",
-  "version": "1.2.43",
+  "version": "1.2.45",
   "author": "MongoX Technology GmbH",
   "description": "BIUT PC Miner",
   "license": "MIT",
@@ -68,10 +68,8 @@
     }
   },
   "dependencies": {
-    "@biut-block/biutjs-blockchain": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-blockchain.git#SenSmartContractTimeLock",
-    "@biut-block/biutjs-datahandler": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-datahandler.git#SenSmartContractTimeLock",
-    "@biut-block/biutjs-node": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-node.git#SenSmartContractTimeLock",
-    "@biut-block/biutjs-util": "git+ssh://git@gitlab.com/MongoX-BIUT/biutjs-util.git#SenSmartContractTimeLock",
+    "@biut-block/biutjs-node": "^1.0.96",
+    "@biut-block/biutjs-util": "^1.0.2",
     "@mdi/font": "^2.7.94",
     "@xkeshi/vue-qrcode": "^1.0.0",
     "axios": "^0.16.1",
