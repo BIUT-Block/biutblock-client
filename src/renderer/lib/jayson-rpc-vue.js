@@ -387,6 +387,12 @@ export default {
           fnAfterGetReward(response.result.info)
         })
       },
+      getMiningTotalReward: function (walletAddress, fnAfterGetReward) {
+        this.clientSEN.request('sec_getMiningRewards', [walletAddress], (err, response) => {
+          if (err) return
+          fnAfterGetReward(response.result)
+        })
+      },
       getHeightAndLastBlock: function (fnGetBlock) {
         this.getBlockHeight((height) => {
           this.getLastBlock(height, (height, block) => {

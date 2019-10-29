@@ -735,19 +735,28 @@ export default {
       })
 
       // 获取挖矿交易数量 和 挖矿总收益
-      this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress], (history) => {
-        let digNumber = 0
-        let digIncome = 0
-        history.forEach(item => {
-          let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
-          digIncome = digIncome + Number(moneyValue)
-        })
+      this.$JsonRPCClient.getMiningTotalReward(this.selectedWallet.walletAddress, (reward) => {
+        let digNumber = reward.rewardsum
+        let digIncome = reward.miningreward
         this.$store.commit('updateMiningAmount', {
           privateKey: this.selectedWallet.privateKey,
-          digNumber: history.length,
+          digNumber: digNumber,
           digIncome: digIncome.toString()
         })
       })
+      // this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress], (history) => {
+      //   let digNumber = 0
+      //   let digIncome = 0
+      //   history.forEach(item => {
+      //     let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
+      //     digIncome = digIncome + Number(moneyValue)
+      //   })
+      //   this.$store.commit('updateMiningAmount', {
+      //     privateKey: this.selectedWallet.privateKey,
+      //     digNumber: history.length,
+      //     digIncome: digIncome.toString()
+      //   })
+      // })
     },
 
     _getPoolName () {
