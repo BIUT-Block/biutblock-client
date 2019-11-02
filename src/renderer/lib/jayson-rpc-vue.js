@@ -321,7 +321,7 @@ export default {
       _sendTransactions: function (client, walletAddress, transferData, fnAfterTransactionSEC, fnAfterTransactionSEN) {
         client.request('sec_sendRawTransaction', transferData, (err, response) => {
           if (err) return
-          if (response.result.status === '1') {
+          if (response.result) {
             this.getWalletBalanceOfBothChains(walletAddress, fnAfterTransactionSEC, fnAfterTransactionSEN)
           }
         })
