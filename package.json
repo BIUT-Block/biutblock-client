@@ -52,7 +52,8 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.png"
+      "icon": "build/icons/icon.png",
+      "target": "pkg"
     },
     "win": {
       "target": "nsis",
