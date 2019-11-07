@@ -20,7 +20,7 @@
     },
     computed: {
       changeLanguage () {
-        if (this.$i18n.locale == "en") {
+        if (this.$i18n.locale == "zh") {
           return true
         }
       }
