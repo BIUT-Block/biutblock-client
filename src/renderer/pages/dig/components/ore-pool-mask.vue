@@ -91,7 +91,7 @@ export default {
         chainName: 'SEC'
       }
       this.$JsonRPCClient.sendContractTransaction(this.walletAddress, this.privateKey, new Date().getTime() + 365* 24 * 3600 * 1000, transferTimeLock, (response) => {
-        if (response.result.status === '1') {
+        if (response.result) {
           this.$emit('appendContract', this.privateKey, poolName)
         } 
       })

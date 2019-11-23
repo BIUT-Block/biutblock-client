@@ -154,7 +154,7 @@ export default {
     hnTxt3: '连接节点',
     hnTxt4: '节点时间',
 
-    hnListTit: '所有节点',
+    hnListTit: '连接节点',
     hnListTxt1: '节点 IP',
     hnListTxt2: '国家',
     hnListTxt3: '城市',
@@ -347,7 +347,6 @@ export default {
     hiMaskShareTxt2: '用浏览器打开链接查看',
 
     hiMaskShareTxt3: '在挖矿页面锁仓一万个BIUT，即可进行一键分享哦！',
-
   },
 
   publicBtn: {

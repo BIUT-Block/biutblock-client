@@ -155,7 +155,7 @@ export default {
     hnTxt3: 'Connected Node',
     hnTxt4: 'Node Time',
 
-    hnListTit: 'All Nodes List',
+    hnListTit: 'Connected Node',
     hnListTxt1: 'NODE IP',
     hnListTxt2: 'COUNTRY',
     hnListTxt3: 'CITY',
