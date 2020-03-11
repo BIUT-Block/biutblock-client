@@ -1,120 +1,128 @@
 <template>
-  <main @click="closeWalletList">
-    <section class="dig-container">
+  <main class="wallet-dig-container">
+    <section class="dig-enter" v-show="digPage">
+      <h2>{{ $t('homeDig.hdEnteryTit') }}</h2>
+
+      <section class="mining-wallet">
+        <p class="mining-tit">{{ $t('homeDig.hdEnteryTxt1') }}</p>
+        <p class="mining-address">0x{{ selectedWalletAddress }}</p>
+        <section class="flex-between">
+          <p>{{ $t('homeWallet.hwBiutTxt1') }}：</p>
+          <span>{{ getPointNum(availibleMoney) }}</span>
+        </section>
+        <section class="flex-between">
+          <p>{{ $t('homeWallet.hwBiutTxt2') }}：</p>
+          <span>{{ getPointNum(freezeMoney) }}</span>
+        </section>
+        <p class="mining-txt">{{ $t('homeDig.hdEnteryTxt2') }} <span style="color: #EE1C39;">*</span></p>
+        <section class="flex-between mining-list">
+          <input type="text" placeholder="10,000.00" maxlength="19"  v-model="mortgageAmount" onpaste="return false"/>
+          <span>BIUT</span>
+        </section>
+        
+        <p class="mining-tips">{{ $t('homeDig.hdEnteryTxt3') }}</p>
+        <button type="button" 
+          :disabled="!mortgageActive"
+          :readonly="mortgageBtn1Disabled"
+          :class="[mortgageActive ? 'passCorrect' : '',mortgageBtn1Disabled?'cantClick':'']"
+          @click="onMortgage">
+            {{ $t(mortgageBtn1) }}
+          </button>
+      </section>
+   
+    </section>  
+
+    <section class="dig-container" v-show="!digPage">
       <!-- 挖矿头部 -->
       <section class="dig-header">
         <section class="dig-header-check">
-          <h3>Mining</h3>
-          <p>Wallet Account</p>
-          <section class="button-list">
-            <ul>
-              <li @click="downCheckWallet" :disabled="checkedWallet" :class="noCursor ? 'noCursor' : ''" ref="walletListImg">
-                <span>{{selectedWalletName}}</span>
-                <img src="../../assets/images/moreDown.png" alt="">
-              </li>
-              <li v-show="checkWallet">
-                <ul>
-                  <li v-for="(wallet, index) in wallets"  @click="checkDigWallet(wallet)">
-                    <span :class="wallet.walletAddress == selectedWalletAddress ? 'checkColor' : ''">{{ wallet.walletName }}</span>
-                    <img src="../../assets/images/amountChecked.png" v-show="wallet.walletAddress == selectedWalletAddress" alt="">
-                  </li>
-                </ul>
-              </li>
-            </ul>
-            <wallet-button type="button" 
-                :text="digButton"
-                :disabled="disabledButton"
-                :class="[miningIn ? 'miningIn' : '', 
-                  checkedWallet ? 'passCorrect' : '', 
-                  disabledButton ? 'noCursor' : '']"
-                @click.native="beginDigMask"/>
+          <h3>{{ $t('homeDig.hdEnteryTit') }}</h3>
+          <section class="minging-list">
+            <span>
+              {{ miningWallet }}
+            </span>
+            0x{{ selectedWalletAddress.replace(/(.{6}).+(.{8})/,'$1...$2') }}
           </section>
-          <h4>Balance：<span>{{ digBalance.toLocaleString('en-US') }} BIUT</span></h4>
-          <section class="dig-tips">
-            <label>Description:</label> After the node is mined, the BIUT Token is automatically acquired. 
-            The higher the balance, the greater probability to get BIU.
+
+          <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ getPointNum(availibleMoney) }} BIUT</span></h4>
+          <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ getPointNum(freezeMoney) }} BIUT</span></h4>
+          <section class="dig-button-list">
+            <button type="button" :class="[openPool ? 'sotpPool' : '', openActive ? 'passCorrect' : '']" :disabled="!openActive" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
+            <button type="button" :class="appendAcitve ? 'appendAcitve' : ''" :disabled="!appendAcitve" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
           </section>
+
         </section>
+
         <section class="dig-header-list">
           <ul>
-            <li v-for="text in processTexts">·&nbsp;&nbsp;&nbsp;&nbsp;{{text}}</li>
+            <li v-for="text in processTexts">·&nbsp;&nbsp;&nbsp;&nbsp;{{ $t(text) }}</li>
           </ul>
         </section>
       </section>
-      <wallet-margin/>
+
+      <wallet-margin />
       <!-- 挖矿内容 -->
       <section class="dig-body">
-         <!-- 挖矿内容-头部 -->
-        <dig-title  :number="digNumber"
-                    :digTitleShow="true"
-                    :selectedWallet="selectedWallet" 
-                    :selectedPrivateKey="selectedPrivateKey" 
-                    :wallets="this.$route.query.wallets" :income="digIncome"/>
-        <!-- 挖矿内容-列表 -->
-        <section>
-          <dig-list :digLists="moreList"/>
+        <!-- tab列表 -->
+        <section class="tab-list">
+          <ul>
+            <li @click="tabPage(1)" :class="pageIdx == 1 ? 'checkColor' : ''">{{ $t('homeDig.hdNavProfit') }}</li>
+            <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">{{ $t('homeDig.hdNavRecord') }}</li>
+            <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">{{ $t('homeDig.hdNavPool') }}</li>
+          </ul>
         </section>
+
+        <!-- 挖矿收益 -->
+        <section class="dig-earnings" v-show="pageIdx == 1">
+          <!-- 挖矿内容-头部 -->
+          <dig-title />
+          <!-- 挖矿内容-列表 -->
+          <section class="dig-earnings-list">
+            <dig-list />
+          </section>
+        </section>
+        
+        <!-- 锁仓记录 -->
+        <section class="Lock-record" v-show="pageIdx == 2">
+          <lock-record :itemList = "recordLists"/>
+        </section>
+
+        <!-- 矿池 -->
+        <section class="ore-pool" v-show="pageIdx == 3">
+          <ore-pool 
+            :pages="orePoolPage"
+            :poolAssets="poolAssets"
+            :poolNode="poolNode"
+            :poolMyEarnings="poolMyEarnings"
+            :poolAllEarnings="poolAllEarnings"
+            :poolApplyMoney="poolApplyMoney"
+            :poolApplyTime="poolApplyTime"
+            :poolName="poolName"
+            :applyContract="applyContract"
+            @addContract="onAddContract" />
+        </section>
+
       </section>
-      <wallet-margin/>
+      <section style="height: 4px;background:#F4F5F5;"></section>
       <!-- 挖矿底部 -->
       <section class="dig-footer">
-        <dig-footer :walletAddress="minedByAddress" :totalBlockHeight="chainHeight" :timeDiff="timeDiff" :totalMining="networkMining"/>
-      </section>
-    </section>
-    <!-- 遮罩层 -->
-    <section class="mask" v-show="maskShow">
-      <section class="mask-container dig-mask">
-        <img
-          src="../../assets/images/closeMask.png"
-          alt=""
-          class="closeImg"
-          title="close"
-          @click="maskShow = false"
-        />
-        <section class="dig-mask-body">
-          <p>{{maskText}}</p>
-          <button type="button"  @click="_confirm()">Confirm</button>
-        </section>
+        <dig-footer />
       </section>
     </section>
 
-    <section class="mask" v-show="mineStatusError">
-      <section class="mask-container dig-mask">
-        <img
-          src="../../assets/images/closeMask.png"
-          alt=""
-          class="closeImg"
-          title="close"
-          @click="mineStatusError = false"
-        />
-        <section class="dig-mask-body">
-          <p>{{mineStatusText}}</p>
-          <button type="button"  @click="onCloseMessage()">Confirm</button>
-        </section>
-      </section>
-    </section>
+    <dig-mask  
+      v-show="maskShow"
+      :pages="makePages"
+      ref="digMaskPage"
+      :networkErrorText="networkErrorText"
+      :poolName="poolName"
+      @continue="onContinue" 
+      @exit="onAppExit" 
+      @close="maskShow = false"
+      @beginMining="onBeginMining"
+      @addMoreMortgage="onAddMoreMortgage" />
 
-    <!-- 中途断网情况下，错误弹窗提示 -->
-    <section class="mask" v-show="networkError">
-      <section class="mask-container dig-mask">
-        <img
-          src="../../assets/images/closeMask.png"
-          alt=""
-          class="closeImg"
-          title="close"
-          @click="networkError = false"
-        />
-        <section class="dig-mask-body">
-          <p>{{networkErrorText}}</p>
-          <button type="button" class="continue" @click="onContinue()">Continue</button>
-          <button type="button" class="exit"  @click="onAppExit()">Exit</button>
-        </section>
-      </section>
-    </section>
-
-    <section class="dig-mask-tips" v-show = "translucentShow">
-      {{ translucentText }}
-    </section>      
+    <wallet-translucent :text="translucentText" v-show="translucentShow"/>   
   </main>
 </template>
 
@@ -123,12 +131,23 @@ import digFooter from './components/wallet-dig-footer'
 import digTitle from './components/wallet-dig-title'
 import walletButton from '../../components/wallet-button'
 import digList from './components/wallet-dig-list'
+import walletTranslucent from '../../components/wallet-translucent'
+
+import lockRecord from './components/lock-record'
+import orePool from './components/ore-pool'
+
+import digMask from './components/wallet-dig-mask'
+
+
 import walletMargin from '../../components/wallet-margin'
+
+import Clipboard from 'clipboard'
 import WalletsHandler from '../../lib/WalletsHandler'
-import { setInterval, clearTimeout, clearInterval, setTimeout } from 'timers'
+import { setInterval, clearInterval } from 'timers'
 import { ipcRenderer } from 'electron'
 import { constants } from 'fs';
 import WalletHandler from '../../lib/WalletsHandler';
+const dataCenterHandler = require('../../lib/DataCenterHandler')
 const moment = require('moment-timezone')
 export default {
   name: 'walletDig',
@@ -138,76 +157,178 @@ export default {
     digTitle,
     digList,
     walletMargin,
+    lockRecord,
+    orePool,
+    walletTranslucent,
+    digMask
   },
   props: {},
   data () {
     return {
-      digButton: "Start Mining",
-      digNumber: 0,
-      digIncome: '0',
-      checkWallet: false,
-      checkedWallet: true,
-      wallets: [],
-      selectedPrivateKey: '',
-      selectedWallet: '',
-      selectedWalletName: '',
-      selectedWalletAddress: '',
+      digPage: false,// 第一次进入的时候  后面进入成 false
+      loading: true, //进入的时候弹窗加载
+      mortgageAmount: '',//输入开启挖矿冻结金额
+      digButton: "publicBtn.openBtn",
+      mortgageBtn1: 'publicBtn.mortgageBtn1', //锁仓按钮第一次进入
+      mortgageBtn1Disabled: false,
+      // wallets: [],
+      // selectedPrivateKey: '',
+      // selectedWallet: '',
+      // selectedWalletName: '',
+      // selectedWalletAddress: '',
+      // contractAddress: '',
       miningIn: false, //挖矿中改变按钮样式
-      noCursor: false, //默认可以选择钱包
-      disabledButton: false,//默认不可点击
-      digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
+      //noCursor: false, //默认可以选择钱包
+      //disabledButton: false,//默认不可点击
+      //digStatus: true, //挖矿日子列表默认显示，开始挖矿的时候关闭
+
+      openPool: false,//挖矿按钮的状态改变
+      networkOrPeer: true,
+      miningWallet: 'Mining Wallet', //挖矿钱包名称
       isSynced: false,
-      chainHeight: '0',
+      chainHeight: '-',
       minedByAddress: '',
       timeDiff: new Date().getTime().toString(),
-      networkMining: '0',
+      networkMining: '-',
       updateListJob: '',
       getBlockHeightJob: '',
       getSyncStatusJob: '',
+      getTimeLockJob: '',
+      getContractInfoJob: '',
       checkNodeJob: '',
-      processTexts: ['Enter the mining page, and wait for mining.'],
+      checkNetWorkJob: '',
+      processTexts: ['homeDig.hdHeadListTxt'],
       moreList: [],
+      tipsShow: false,
       
       maskShow: false,
       maskText: '',
-      mineStatusText: 'Please stop mining before changing wallet',
-      mineStatusError: false,
+      
+      //mineStatusText: 'Please stop mining before changing wallet',
+      // mineStatusError: false,
       bAlreadyShowed: false,
-      digBalance: 0, //挖矿余额
+      
       translucentShow: false,
       navigatorPost: false,// 监听网络请求
-      translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
-      networkError: false,
-      networkErrorText: 'No connection to network. Continue or exit?',
-      networkCheckJob: ''
+      //translucentText: 'Only if the range of mine digging mortgage is changed to BIUT mortgage of 10-100000 can the mining function be started.',
+      translucentText: '',
+      networkErrorText: 'homeDigMask.hdMaskNetworkTit',
+      networkCheckJob: '',
+
+      makePages: 0,//默认是首次开启挖矿 0 - 开启挖矿 2 - 断网  3 - 追加更多
+      digBalance: 0, //挖矿余额
+      // availableMoney: "-", //biut的可用金额
+      // freezeMoney: "-", //biut冻结金额
+      pageIdx: 1, //初始页面展示挖矿收益
+      poolNode: 0, // 矿池节点
+      poolAssets: 0, //矿池抵押总量
+      poolAllEarnings: "-", // 全部矿池收益
+      poolMyEarnings: "-", // 我的矿池收益
+      poolApplyTime: '',
+      poolApplyMoney: 0,
+      poolName: '',
+      applyContract: false,
+      _status: '',
+      itemList: [],//锁仓记录
+      orePoolPage: 1, //矿池页面切换显示  1 - 不满足条件、满足条件显示 2 - 申请中 3 - 申请失败 4 - 申请成功
+      codeShow: true //邀请码是否显示 
     }
   },
   computed: {
+    selectedWallet () {
+      return this.$store.getters.miningWallet
+    },
 
+    selectedWalletName () {
+      return this.$store.getters.miningWallet.walletName
+    },
+
+    selectedPrivateKey () {
+      return this.$store.getters.miningWallet.privateKey
+    },
+
+    selectedWalletAddress () {
+      return this.$store.getters.miningWallet.walletAddress
+    },
+
+    contractAddress () {
+      return this.$store.getters.miningWallet.ownPoolAddress
+    },
+
+    recordLists () {
+      return this.itemList
+    },
+
+    //是否可点击追加按钮
+    appendAcitve () {
+      return this.$store.getters.miningWalletAvailibleMoney !== '0' 
+        && this.$store.getters.miningWalletAvailibleMoney !== '-'
+        && this.availibleMoney && this.networkOrPeer ? true : false
+    },
+
+    //是否可点击开启挖矿按钮
+    openActive () {
+      return this.freezeMoney > 0 && navigator.onLine && this.networkOrPeer ? true : false
+    },
+
+    availibleMoney () {
+      return this.$store.getters.miningWalletAvailibleMoney
+    },
+
+    freezeMoney () {
+      return this.$store.getters.miningWalletFreezeMoney
+    },
+
+    //是否可点击开启挖矿
+    mortgageActive () {
+      this._status = window.localStorage.getItem(this.selectedWallet.walletAddress)
+     if (this.mortgageAmount.length > 10 && this.mortgageAmount.indexOf(".") < 0) {
+        //只能输入10位整数
+        this.mortgageAmount = String(this.mortgageAmount).substring(0,10)
+      } else if (this.mortgageAmount.indexOf(".") == 0) {
+        this.mortgageAmount = String(this.mortgageAmount).substring(0,9)
+      } else {
+        this.mortgageAmount =  this.mortgageAmount.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        this.mortgageAmount =  this.mortgageAmount.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        this.mortgageAmount =  this.mortgageAmount.replace(".","$#$").replace(/\./g,"").replace("$#$","."); 
+        this.mortgageAmount =  this.mortgageAmount.replace(/^(\-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/,'$1$2.$3');//只能输入两个小数  
+      }
+      return this.mortgageAmount >= 10000
+        && this.availibleMoney >= 10000
+        && Number(this.mortgageAmount) <= Number(this.availibleMoney) && this._status !== "pending" && this.poolApplyTime !== '' ? true : false
+    }
   },
   created () {
-    let wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
-    for (let key in wallets) {
-      if (wallets.hasOwnProperty(key)) {
-        this.wallets.push(wallets[key])
+    // let wallets = this.$route.query.wallets
+    // this.selectedPrivateKey = this.$route.query.firstKey
+    // this.selectedWalletAddress = wallets[this.selectedPrivateKey].walletAddress
+    // for (let key in wallets) {
+    //   if (wallets.hasOwnProperty(key)) {
+    //     this.wallets.push(wallets[key])
+    //   }
+    // }
+    // this.selectedWallet = wallets[this.selectedPrivateKey]
+    if (this.selectedWallet.role === 'Miner') {
+      // this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
+      //this.poolName = this.selectedWallet.walletName
+      if (this.selectedWallet.mortgageValue === '0' ) {
+        this.digPage = true
+      } else {
+        this.digPage = false
+        this.orePoolPage = 1
       }
+    } else {
+      // this.contractAddress =  wallets[this.selectedPrivateKey].ownPoolAddress
+      this.orePoolPage = 2
+      this._getTimeLockHistory()
     }
-    this.selectedWallet = wallets[this.selectedPrivateKey]
+
     this.initMiningStatus()
 
     this._getLatestBlockInfo((balance) => {
-      if (balance < 10) {
-        this.stopMining()
-        this.digButton = "Start Mining"
-        this.maskShow = false
-        this.checkedWallet = true
-        this.noCursor = false
-        this.miningIn = false
-      }
     })
     this._getTotalReward()
-
+    this._getPoolName()
     this.getBlockHeightJob = setInterval(()=>{
       this._getLatestBlockInfo((balance) => {
       })
@@ -220,101 +341,103 @@ export default {
   destroyed () {
     window.sessionStorage.setItem('processTexts', JSON.stringify(this.processTexts))
     clearInterval(this.getBlockHeightJob)
+    if(this.checkNodeJob) clearInterval(this.checkNodeJob)
+    if(this.checkNetWorkJob) clearInterval(this.checkNetWorkJob)
+    if (this.getContractInfoJob !== '') {
+      clearInterval(this.getContractInfoJob)
+    }
     if (this.updateListJob !== '') {
       clearInterval(this.updateListJob)
     }
   },
   methods: {
+    // tab切换
+   async tabPage (idx) {
+      this.pageIdx = idx
+      if (idx === 3) {
+        let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
+        if (contractInfo.status === 'success' && contractInfo.hasOwnProperty("timeLock")) {
+          this.applyContract = true
+        }
+      }
+    },
+
     initMiningStatus () {
       let miningStatus = window.sessionStorage.getItem('miningStatus')
       let processTexts = window.sessionStorage.getItem('processTexts')
       if (miningStatus) {
         miningStatus = JSON.parse(miningStatus)
         if (miningStatus.miningIn) {
-          this.selectedWallet = miningStatus.wallet
-          this.selectedWalletName = miningStatus.wallet.walletName
-          this.selectedWalletAddress =  miningStatus.wallet.walletAddress
+          // this.selectedWallet = miningStatus.wallet
+          // this.selectedWalletName = miningStatus.wallet.walletName
+          // this.selectedWalletAddress =  miningStatus.wallet.walletAddress
           this.miningIn = miningStatus.miningIn
           this._setButton()
           this.isSynced = miningStatus.isSynced
         } else {
-          this.selectedWalletName = this.selectedWallet.walletName
-          this.selectedWalletAddress = this.selectedWallet.walletAddress
+          // this.selectedWalletName = this.selectedWallet.walletName
+          // this.selectedWalletAddress = this.selectedWallet.walletAddress
         }
       } else {
         //this.selectedWallet = this.wallets[0]
-        this.selectedWalletName = this.selectedWallet.walletName
-        this.selectedWalletAddress = this.selectedWallet.walletAddress
+        // this.selectedWalletName = this.selectedWallet.walletName
+        // this.selectedWalletAddress = this.selectedWallet.walletAddress
       }
       if (processTexts) {
         this.processTexts = JSON.parse(processTexts)
       }
       if (this.miningIn) {
-        this.noCursor = true
+        //this.noCursor = true
       }
       this._startUpdateHistoryJob()
-    },
-
-    //点击其他的地方关闭钱包选择
-    closeWalletList (event) {
-      let menuList = this.$refs.walletListImg
-      if (menuList && !menuList.contains(event.target) && this.checkWallet) {
-        this.checkWallet = false;
-      }
-    },
-
-    //选择挖矿钱包
-    downCheckWallet () {
-      if (this.digButton == "Start Mining" && this.checkWallet) {
-        this.checkWallet = !this.checkWallet
-      } else if (this.digButton == "Start Mining") {
-        this.checkWallet = true
-      } else {
-        this.checkWallet = false
-      }
     },
 
     _setButton () {
       if (this.miningIn) {
-        this.digButton = "Stop Mining"
-        this.checkedWallet = false
+        this.digButton = "publicBtn.stopBtn"
+        this.openPool = true
       } else {
-        this.digButton = "Start Mining"
-        this.checkedWallet = true
+        this.digButton = "publicBtn.openBtn"
+        this.openPool = false
       }
-    },
-
-    //选择钱包
-    checkDigWallet (wallet) {
-      let miningStatus = window.sessionStorage.getItem('miningStatus')
-      if (miningStatus) {
-        miningStatus = JSON.parse(miningStatus)
-        if (miningStatus.miningIn && wallet.walletAddress !== miningStatus.wallet.walletAddress) {
-          this.mineStatusError = true
-          return
-        }
-      }
-      window.sessionStorage.setItem("selectedPrivateKey", wallet.privateKey)
-      this.selectedWallet = wallet
-      this.selectedWalletName = wallet.walletName
-      this.selectedWalletAddress = wallet.walletAddress
-      this.selectedPrivateKey = wallet.privateKey
-      this._startUpdateHistoryJob()
-      this.checkWallet = false
-      this.checkedWallet = true
-      this.disabledButton = false
-    },
-
-    onCloseMessage () {
-      this.mineStatusError = false
     },
 
     onContinue () {
-      this.networkError = false
+      this.maskShow = false
+      this.makePages = 0
+      this.translucentShow = true
+      this.translucentText = 'homeDigMask.hdMaskNetworkReconnecting'
+      setTimeout(() => {
+        this.translucentShow = false
+      }, 3000)
     },
 
     onAppExit () {
+      window.sessionStorage.removeItem('NoPeerTime')
+      window.sessionStorage.removeItem('NoNetworkTime')
       ipcRenderer.send('close')
+    },
+
+    onAddContract (privateKey, poolName) {
+      let wallet = this.selectedWallet
+      wallet.role = 'Owner'
+      this.poolName = poolName
+      wallet.mortgageValue = (Number(wallet.mortgageValue) + 5000000).toString()
+      this.orePoolPage = 2
+      dataCenterHandler.updatePoolAddress({
+        address: this.selectedWalletAddress,
+        ownPoolAddress: this.contractAddress[0],
+        mortgageValue: wallet.mortgageValue,
+        poolName: poolName,
+        privateKey: this.selectedPrivateKey,
+        role: 'Owner'
+      }, (doc) => {
+        console.log('update pool address success')
+      })
+      this.$store.commit('updateWalletRole', {
+        privateKey: this.selectedPrivateKey,
+        role: 'Owner'
+      })
     },
 
     _restartAllJobs () {
@@ -326,8 +449,12 @@ export default {
     _startUpdateHistoryJob () {
       clearInterval(this.updateListJob)
       this._getWalletMiningHistory()
+      this._getTimeLockHistory()
+      this._getWalletBalance(this.selectedWallet.walletAddress)
       this.updateListJob = setInterval(() => {
         this._getWalletMiningHistory()
+        this._getTimeLockHistory()
+        this._getWalletBalance(this.selectedWallet.walletAddress)
       }, 3 * 60 * 1000)
     },
     _startUpdateLastBlockInfoJob () {
@@ -346,63 +473,324 @@ export default {
       }, 3 * 60 * 1000)
     },
 
+    /** 检查peers 和 网络连接的方法 */
     _startCheckPeersJob () {
-      this.$JsonRPCClient.checkRlpConnections((response) => {
-        if (response.result.message === 0) {
-          this.networkError = true
-          this.networkErrorText = 'No connected peer. You can exit the application and check your network'
+      this.$JsonRPCClient.checkRlpConnections((err, response) => {
+        if (err || (response && response.result.message === 0)) {
+          if(window.sessionStorage.getItem('NoPeerTime') == null){
+            this.stopMining()
+            this.digButton = "publicBtn.openBtn"
+            this.openPool = false      
+            this.networkOrPeer  = false
+            window.sessionStorage.setItem('NoPeerTime', Date.now())
+            // clearInterval(this.checkNodeJob)           
+            // this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000 )
+            // this.maskShow = true
+            // this.makePages = 2
+            // this.stopMining()
+            // this.networkError = true
+            // this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+          }
+          else {
+            let noPeerTime = window.sessionStorage.getItem('NoPeerTime')
+            let currTime = Date.now()
+            let diffSec = Math.floor((currTime - noPeerTime)/1000)
+            if(diffSec >= 10 * 60){
+              this.maskShow = true
+              this.makePages = 2
+              this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'            
+            }
+          }
+        } else {
+          // if(window.sessionStorage.getItem('NoPeerTime') != null) {
+          //   window.sessionStorage.removeItem('NoPeerTime')
+          // }
+          // if (this.digButton === 'publicBtn.openBtn') this.digButton == 'publicBtn.stopBtn'
+          // if(!this.openPool) this.openPool = true
+          // if(!this.networkOrPeer) this.networkOrPeer = true              
         }
       })
     },
-
     _startCheckNetworkJob () {
       if (!WalletsHandler.checkNetworkStatus()) {
-        this.networkError = true
-        this.networkErrorText = 'No network connection. You can exit the application and check your network'
+        if(window.sessionStorage.getItem('NoNetworkTime') == null){
+          this.stopMining()
+          this.digButton = "publicBtn.openBtn"
+          this.openPool = false    
+          this.networkOrPeer  = false     
+          // window.sessionStorage.setItem('NoNetworkTime', Date.now())
+          // clearInterval(this.checkNetWorkJob)
+          // this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 2 * 60 * 1000)
+        } else {
+          let noNetworkTime = window.sessionStorage.getItem('NoNetworkTime')
+          let currTime = Date.now()
+          let diffSec = Math.floor((currTime - noNetworkTime)/1000)
+          if(diffSec >=  10 * 60){
+            this.maskShow = true
+            this.makePages = 2
+            this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+          }
+        }
+      //   this.maskShow = true
+      //   this.makePages = 2
+      //   this.stopMining()
+      //  // this.networkError = true
+      //   this.networkErrorText = 'homeDigMask.hdMaskNetworkTit'
+      } else {
+          // if(window.sessionStorage.getItem('NoNetworkTime') != null) {
+          //   window.sessionStorage.removeItem('NoNetworkTime')
+          // } 
+          // if (this.digButton === 'publicBtn.openBtn') this.digButton == 'publicBtn.stopBtn'
+          // if(!this.openPool) this.openPool = true
+          // if(!this.networkOrPeer) this.networkOrPeer = true       
       }
+    },
+
+    _getWalletBalance(walletAddress) {
+      let poolAddress = []
+      this.$JsonRPCClient.getWalletBalanceOfBothChains(walletAddress, (balanceSEC) => {
+//        this.walletBalance = balanceSEC.toString()
+        let freezeMoney = 0
+        let walletBalance = 0
+        let availibleMoney = balanceSEC
+        if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {
+          for (let i = 0; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
+            let pool = this.selectedWallet.mortgagePoolAddress[i]
+            poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
+          }
+        }
+        if (this.selectedWallet.ownPoolAddress.length > 0) {
+          for (let ownpool of this.selectedWallet.ownPoolAddress) {
+            poolAddress.push(this.$JsonRPCClient.getContractInfoSync(ownpool))
+          }
+        }
+        poolAddress = Array.from(new Set(poolAddress))
+        Promise.all(poolAddress).then((contractInfos) => {
+          for (let contract of contractInfos) {
+            let timeLock = contract.timeLock || {}
+            if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
+              let benifitAddress = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+              for (let i = 0; i < benifitAddress.length; i++) {
+                freezeMoney = freezeMoney + Number(benifitAddress[i].lockAmount)
+              }
+            } 
+          }
+          walletBalance = this.cal.accAdd(freezeMoney, availibleMoney)
+          this.$store.commit('updateWalletBalanceSEC', {
+            privateKey: this.selectedWallet.privateKey,
+            walletBalance: walletBalance.toString(),
+            availibleMoney: availibleMoney.toString(),
+            freezeMoney: freezeMoney.toString()
+          })
+        })
+      }, (balanceSEN) => {
+        this.$store.commit('updateWalletBalanceSEN', {
+          privateKey: this.selectedWallet.privateKey,
+          walletBalanceSEN: balanceSEN.toString()
+        })
+      })
+    },
+
+    /** intern methode to handle the value format */
+    _checkValueFormat (value) {
+      let splitValue = value.split("e-")
+      if (splitValue.length > 1) {
+        return Number(value).toFixed(Number(splitValue[1])).toString()
+      } else {
+        return Number(value)
+      }
+    },
+
+    _getTimeLockHistory () {
+      let benifs = []
+      let poolAddress = []
+      let allNodes = new Set([]);
+      if (this.selectedWallet.mortgagePoolAddress.length > 0 ) {   
+        for (let i = 0; i < this.selectedWallet.mortgagePoolAddress.length; i++) {
+          let pool = this.selectedWallet.mortgagePoolAddress[i]
+          poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
+        }
+      }
+      if (this.selectedWallet.ownPoolAddress.length > 0) {
+        this.selectedWallet.ownPoolAddress.forEach((pool) => {
+          poolAddress.push(this.$JsonRPCClient.getContractInfoSync(pool))
+        })
+      }
+      Promise.all(poolAddress).then((contractInfos) => {
+        for (let contract of contractInfos) {
+          let timeLock = contract.timeLock || {}
+          if (this.selectedWallet.walletAddress in timeLock && this.selectedWallet.walletAddress in timeLock[this.selectedWallet.walletAddress]) {
+            benifs.push(timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress])
+          }
+          if(contract.creator == this.selectedWallet.walletAddress){
+            Object.keys(timeLock).forEach((key)=>{
+              allNodes.add(key)
+            }) 
+          }
+        }
+        if (benifs.length > 0) {
+          window.localStorage.removeItem(this.selectedWallet.walletAddress)
+          this.digPage = false
+        } else {
+          let status = window.localStorage.getItem(this.selectedWallet.walletAddress)
+          if (status === "pending") {
+            this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
+            this.mortgageBtn1Disabled = true
+          }
+          this.digPage = true
+        }
+        this._calcMiningPool(benifs, allNodes)
+        this._insertLockHistory(benifs)
+        this._getPoolAssets()
+        this._getProfit()
+      })
+      this._getContractInfo()
+      if(this.mortgageBtn1 == 'publicBtn.mortgageBtn1ss'){
+        this.getContractInfoJob = setInterval(this._getContractInfo, 1 * 60 * 1000)
+      }
+    },
+
+    _getContractInfo () {
+      this.$JsonRPCClient.getContractInfoSync(this.selectedWallet.ownPoolAddress[0]).then((contractInfo) => {
+        if (contractInfo.status && contractInfo.status !== 'pending') { 
+          this.poolApplyMoney = contractInfo.totalSupply
+          this.poolApplyTime = WalletsHandler.formatDate(moment(contractInfo.time).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+          let tokenName = contractInfo.tokenName
+          //this.poolName = tokenName.split('-')[2]
+          if (contractInfo.status === 'success' && this.selectedWallet.role === 'Owner') {
+            this.orePoolPage = 4
+          } else if (contractInfo.status === 'pending' && this.selectedWallet.role === 'Miner') {
+            this.orePoolPage = 2
+          }
+          if(this.getContractInfoJob !== '') {
+            clearInterval(this.getContractInfoJob)
+            if(this.mortgageBtn1 == 'publicBtn.mortgageBtn1ss'){
+              this.mortgageBtn1 = 'publicBtn.mortgageBtn1'
+            }            
+          }
+        } else {
+          window.localStorage.setItem(this.selectedWallet.walletAddress, 'noContract')
+          this.mortgageBtn1 = 'publicBtn.mortgageBtn1ss'
+        }
+      })      
+    },
+
+    _insertLockHistory (benifs) {
+      this.itemList = []
+ //     let benifs = timeLock[this.selectedWallet.walletAddress][this.selectedWallet.walletAddress]
+      for (let benifit of benifs) {
+        for (let item of benifit) {
+          this.itemList.push({
+            id: '1',
+            lockTime: WalletsHandler.formatDate(moment(item.lockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset()),
+            lockMoney: item.lockAmount,
+            unlockTime: WalletsHandler.formatDate(moment(item.unlockTime).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+          }) 
+        }  
+      }
+    },
+
+    _calcMiningPool (benifs, allNodes) {
+      this.poolNode = allNodes.size
+    },
+
+    _getPoolAssets () {
+      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.ownPoolAddress[0], 'SEC', (balance) => {
+        this.poolAssets = Number(balance)
+      })
+    },
+
+    _getProfit() {
+      let params = {address: this.selectedWallet.walletAddress}
+      dataCenterHandler.getTotalPoolProfit(params, (body) => {
+        if (body.status) {
+          this.poolAllEarnings = body.profit.toString()
+        }
+      })
+      dataCenterHandler.getMyPoolProfit(params, (body) => {
+        if (body.status) {
+          this.poolMyEarnings = body.profit.toString()
+        }
+      })
     },
     
     _getWalletMiningHistory () {
-      this.$JsonRPCClient.getWalletTransactionsSEN(this.selectedWallet.walletAddress, (history) => {  
-        let miningHistory = history.filter((hist) => {
-          return hist.listAddress === 'Mined' && hist.listState === 'Mining' && hist.listInputData.indexOf('Mining reward') > -1
-        })
-        this.moreList = []
-        this.digIncome = "0"
-        this.digNumber = 0
-        miningHistory.forEach((element, index) => {
-          let moneyValue = element.listMoney.length > 10 && element.listMoney.indexOf('.') > 0 ? this.getPointNum (element.listMoney, 8) : element.listMoney
-          this.digIncome = (Number(this.digIncome) + Number(moneyValue)).toString()
-          this.digNumber = this.digNumber + 1
-          this.moreList.push({
-            id: index,
-            age: element.listTime,
+      // 获取挖矿交易历史
+      this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress, 1, 5], (history) => {
+        let moreList = []
+        for (let item of history) {
+          let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
+          moreList.push({
+            id: 0,
+            age: item.listTime,
             reward: `${moneyValue} BIU`,
-            blocknumber: element.blockNumber,
-            blockhash: element.blockHash
+            blocknumber: item.blockNumber,
+            blockhash: item.blockHash
           })
+        }
+        this.$store.commit('updateMiningHistory', {
+          privateKey: this.selectedWallet.privateKey,
+          miningHistory: moreList
         })
+      })
+
+      // 获取挖矿交易数量 和 挖矿总收益
+      this.$JsonRPCClient.getMiningTotalReward(this.selectedWallet.walletAddress, (reward) => {
+        let digNumber = reward.rewardsum
+        let digIncome = reward.miningreward
+        this.$store.commit('updateMiningAmount', {
+          privateKey: this.selectedWallet.privateKey,
+          digNumber: digNumber,
+          digIncome: digIncome.toString()
+        })
+      })
+      // this.$JsonRPCClient.getMiningTransactions([this.selectedWallet.walletAddress], (history) => {
+      //   let digNumber = 0
+      //   let digIncome = 0
+      //   history.forEach(item => {
+      //     let moneyValue = item.listMoney.length > 10 && item.listMoney.indexOf('.') > 0 ? this.getPointNum (item.listMoney, 8) : item.listMoney
+      //     digIncome = digIncome + Number(moneyValue)
+      //   })
+      //   this.$store.commit('updateMiningAmount', {
+      //     privateKey: this.selectedWallet.privateKey,
+      //     digNumber: history.length,
+      //     digIncome: digIncome.toString()
+      //   })
+      // })
+    },
+
+    _getPoolName () {
+      dataCenterHandler.getMiningPool({
+        address: this.selectedWalletAddress
+      }, (body) => {
+        if (body.miningPool) {
+          this.poolName = body.miningPool.poolName
+        } 
       })
     },
 
     _getLatestBlockInfo (fnCheckMining) {
-      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, (balance) => {
+      this.$JsonRPCClient.getWalletBalance(this.selectedWallet.walletAddress, 'SEC', (balance) => {
         this.digBalance = balance
         fnCheckMining(balance)
       })
       this.$JsonRPCClient.getHeightAndLastBlock((height, block) => {  
-        this.chainHeight = height.toString()
+        this.$store.commit('updateChainHeight', height.toString())
+        // this.chainHeight = height.toString()
       //  this.networkMining = (Number(this.chainHeight)*2).toString()
-        this.minedByAddress = block[0].Beneficiary
-        this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
-        if (this.selectedWallet.walletAddress === this.minedByAddress && !this.bAlreadyShowed) {
-          if (this.processTexts.length > 6) { // should not be showed if the page is initial
-            let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
-            this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
-            this.processTexts.push('Continue mining...')
-            this.bAlreadyShowed = true // to avoid duplicate showed text in job
-          } else {
-            this.bAlreadyShowed = false
+        if (block.length > 0) {
+          // this.minedByAddress = block[0].Beneficiary
+          // this.timeDiff = Math.abs(new Date().getTime() - Number(block[0].TimeStamp)).toString()
+          this.$store.commit('updateLastBlock', block[0])
+          if (this.selectedWallet.walletAddress === block[0].Beneficiary && !this.bAlreadyShowed) {
+            if (this.processTexts.length > 6) { // should not be showed if the page is initial
+              let formattedTime = WalletsHandler.formatDate(moment(block[0].TimeStamp).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())
+              this.processTexts.push(`Congratulations on the success of mining at ${formattedTime}`)
+              this.processTexts.push('Continue mining...')
+              this.bAlreadyShowed = true // to avoid duplicate showed text in job
+            } else {
+              this.bAlreadyShowed = false
+            }
           }
         }
       })
@@ -411,63 +799,100 @@ export default {
     _getTotalReward () {
       this.$JsonRPCClient.getWalletTotalReward((reward) => {
         if (String(reward).indexOf('.') > -1 && String(reward).length > 0) {
-          this.networkMining = reward.toFixed(8)
+          // this.networkMining = reward.toFixed(8)
+          this.$store.commit('updateNetAllReward', reward.toFixed(8))
         } else {
-          this.networkMining = reward.toString()
+          // this.networkMining = reward.toString()
+          this.$store.commit('updateNetAllReward', reward.toString())
         }
       })
     },
 
+    async onMortgage () {
+      this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
+      this.mortgageBtn1Disabled = true
+      let privateKey = this.selectedPrivateKey
+      this._status = 'pending'
+      let contractInfo = await this.$JsonRPCClient.getContractInfoSync(this.contractAddress[0])
+      window.localStorage.setItem(this.selectedWalletAddress, 'pending')
+      if (contractInfo.status === 'success') {
+        this._addMoreMortgage(this.mortgageAmount)
+      }
+    },
+
+    _addMoreMortgage (mortgage) {
+      this.$refs.digMaskPage.appednReadonly = true
+      let transferTimeLock = {
+        timestamp: new Date().getTime(),
+        walletAddress: this.selectedWalletAddress,
+        sendToAddress: this.selectedWallet.ownPoolAddress[0],
+        amount: mortgage,
+        gasLimit: '0',
+        gasPrice: '0',
+        txFee: '0',
+        chainName: 'SEC'
+      }
+      let unlockUntil = new Date().getTime() + 365 * 24 * 3600 * 1000
+      this.$JsonRPCClient.sendContractTransaction(this.selectedWalletAddress, this.selectedPrivateKey, 
+        unlockUntil, transferTimeLock,
+        (response) => {
+          this._getTimeLockHistory()
+          this._getWalletBalance(this.selectedWalletAddress)
+          this.selectedWallet.mortgageValue = (Number(this.selectedWallet.mortgageValue) + Number(this.mortgageAmount)).toString()
+          dataCenterHandler.updateWallet({
+            address: this.selectedWalletAddress,
+            mortgageValue: this.selectedWallet.mortgageValue
+          }, (body) => {
+            console.log('update wallet mortgage value')
+          })
+          this.mortgageBtn1 = 'publicBtn.mortgageBtn1s'
+          this.mortgageBtn1Disabled = true
+          this.$refs.digMaskPage.appednReadonly = false
+      })
+    },
+
     //开启挖矿弹窗显示
-    beginDigMask () {
-      let balance = this.digBalance
-      if (balance < 10 && this.digButton == "Start Mining") {
-        this.translucentShow = true
-        setTimeout(() => {
-          this.translucentShow = false
-        }, 3000)
-      } else {
-        this.maskShow = true
-        if (this.digButton == "Start Mining") {
-          this.maskText =`Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+    beginDigMask (idx) {
+      /**
+       * 
+       * idx  1 开启挖矿  2 追加更多 
+       * 
+       * makePages 0 - 开启挖矿  2 - 断网 3 - 追加更多
+       */
+      if (idx === 1) {
+        //开启挖矿改变状态
+        console.log(this.digButton)
+        if (this.digButton === 'publicBtn.stopBtn') {
+          this.digButton = 'publicBtn.openBtn'
+          this.openPool = false
+          this.stopMining()
         } else {
-          this.maskText = "Confirm to Stop Mining?"
+          this.maskShow = true
+          if (window.onoffline) {
+            this.makePages = 2
+          } else {
+            this.makePages = 0
+          }
         }
-      }
-    },
-
-    //开启挖矿
-    beginDig () {
-      let balance = this.digBalance
-      if (this.digButton === "Start Mining") {
-        this.maskText = `Mining will start soon, confirm using the ${this.selectedWalletName} binding?`
+      } else if (idx === 2) {
+        this.makePages = 3
         this.maskShow = true
       } else {
-        this.digButton = "Stop Mining"
-        this.maskText = "Confirm to Stop Mining?"
-        this.maskShow = true  
+        his.makePages = 2
+        this.maskShow = true
       }
     },
 
-    _confirm () {
-      if (this.digButton === "Start Mining") {
-        if (!WalletsHandler.checkNetworkStatus()) {
-          this.processTexts.push('No network connection.')
-          return
-        }
-        this.digButton = "Stop Mining"
-        this.moreList = []
-        this.startMining()
-        this.maskShow = false
-        this.checkedWallet = false
-        this.noCursor = true
-      } else {
-        this.digButton = "Start Mining"
-        this.stopMining()
-        this.maskShow = false
-        this.checkedWallet = true
-        this.noCursor = false
-      }
+    onBeginMining () {
+      this.startMining()
+      this.openPool = true
+      this.$nextTick(()=> {
+        this.digButton = 'publicBtn.stopBtn'
+      })
+    },
+
+    onAddMoreMortgage (mortgage) {
+      this._addMoreMortgage(mortgage)
     },
 
     saveMingingStatus () {
@@ -480,11 +905,12 @@ export default {
     },
 
     startMining () {
-      setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
+      // clearInterval(this.checkNetWorkJob)
+      // this.checkNetWorkJob = setInterval(this._startCheckNetworkJob, 1 * 60 * 1000)
       this.$JsonRPCClient.switchToLocalHost()
       this.processTexts.push(`You are using 0x${this.selectedWallet.walletAddress} for minging.`)
       if (!this.isSynced) {
-        this.processTexts.push(`Start mining (connecting nodes...).`)
+        this.processTexts.push(`Open mining (connecting nodes...).`)
         this.processTexts.push(`Node connection successful, synchronizing node...`)
         this.$JsonRPCClient.clientSEN.request('sec_startNetworkEvent', [], (err, response) => {
           console.log(err)
@@ -512,7 +938,9 @@ export default {
                       this.saveMingingStatus()
                       this._restartAllJobs()
                       clearInterval(this.getSyncStatusJob)
-                      this.checkNodeJob = setInterval(this._startCheckPeersJob, 2* 60 * 1000)
+                      // this._startCheckPeersJob()
+                      // clearInterval(this.checkNodeJob)
+                      // this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
                     }
                   } else {
                     _statusSameTimes = 0
@@ -520,7 +948,7 @@ export default {
                   }
                 })
               }, 30*1000)
-            }, 10*60*1000)
+            }, 10 *60 * 1000)
             this._beginMiningWithWallet()
           }
         })
@@ -559,6 +987,7 @@ export default {
         this.miningIn = true
         this.saveMingingStatus()
       })
+      
       this.$JsonRPCClient.switchToExternalServer()
       this._startUpdateLastBlockInfoJob()
     }
@@ -570,71 +999,113 @@ export default {
 </script>
 
 <style scoped>
-  main {padding: 24px;background: #F4F5F5;height: calc(100vh - 48px);display: flex;
+  .wallet-dig-container {padding: 24px 24px 0;background: #F4F5F5;height: calc(100vh - 25px);display: flex;
     align-content: stretch;display:-webkit-flex;}
   .dig-container {display: flex;flex-direction: column;box-shadow:0px 0px 3px rgba(0,0,0,0.16);
-  border-radius:4px;flex: 1;background: #fff;}
+    border-radius:4px 4px 0 0;flex: 1;background: #fff;}
   .dig-header {border-top-left-radius: 4px;
-    border-top-right-radius: 4px;padding: 0 22px 8px 32px;display: flex;align-items: center;
-    justify-content: space-between;}
-  .dig-header .dig-header-check {width: 308px;}
-  .dig-header .dig-header-check button {width: 98px;height: 32px;}
+    border-top-right-radius: 4px;padding: 20px 32px 16px;display: flex;justify-content: space-between;}
+  .dig-header .dig-header-check {width: 308px;position: relative;}
   .dig-header .dig-header-check h3 {margin: 0;font-size:18px;font-family: Montserrat-SemiBold;font-weight:600;
-    color:rgba(37,47,51,1);padding-top: 22px;}
-  .dig-header .dig-header-check h4 {margin: 0;padding: 6px 0 13px;color:#576066;font-size: 12px;font-weight: normal;}
+    color:#252f33;padding-bottom: 26px;}
+  .en .dig-header .dig-header-check h3 {font-family: Source-Bold;}
+  .minging-list {padding-bottom: 10px;color: #252F33;font-size: 14px;border-bottom: 1px solid #E6E6E6;box-sizing: border-box;
+    width: 246px;font-family: Lato-Bold;}
+  .minging-list span {color: #99A1A6;margin-right: 12px;font-family: Lato-Medium;}
+  .available-text,.guarantee-text {margin: 0;color:#576066;font-weight: normal;}
+  .available-text span,.guarantee-text span {font-family: Lato-Medium;}
+  .available-text {color: #29D893;padding-top: 10px;}
+  .guarantee-text {padding-top: 6px;}
+
+  .dig-enter {padding: 106px 112px 0 0;background: url('../../assets/images/digBg.png') center no-repeat, #fff;background-size: cover;
+    display: flex;justify-content: space-between;box-shadow: 0px 0px 3px rgba(0,0,0,0.16);
+    border-radius: 4px 4px 0 0;flex: 1;}
+
+  .dig-enter h2 {margin: 140px 0 0 150px;width: 90px;height: 20px;padding-bottom: 10px;font-family: Source-Bold;
+    border-bottom: 7px solid #29D893;font-size: 20px;color: #252F33;}
+  
+  .mining-wallet {width: 290px;color: #6D7880;font-size: 12px;}
+  .mining-wallet .mining-tit {padding-bottom: 8px;font-family: Lato-Regular;}
+  .en .mining-wallet .mining-tit {font-family: Source-Regular;}
+  .mining-wallet .mining-txt {padding-top: 36px;color: #6D7880;font-size: 14px;font-family: Lato-Medium;}
+  .en .mining-wallet .mining-txt {font-family: Source-Medium;}
+
+  .mining-wallet .mining-address {color: #252F33;font-size: 14px;line-height: 1.6;word-wrap: break-word;font-family: Lato-Medium;}
+  .mining-wallet .mining-tips {line-height: 1.5;word-wrap: break-word;padding-top: 16px;color: #99A1A6;}
+  .mining-wallet .flex-between {padding-bottom: 10px;border-bottom: 1px solid #E6E6E6;padding-top: 12px;}
+  .mining-wallet .flex-between p {font-family: Lato-Regular;}
+  .mining-wallet .flex-between span {font-family: Lato-Medium;}
+  .en .mining-wallet .flex-between p {font-family: Source-Regular;}
+
+  .mining-wallet .mining-list {padding: 0;height: 34px;}
+  .mining-wallet .mining-list span {font-family: Lato-Bold;}
+
+  .dig-enter input {border: 0;flex: 1;}
+  .dig-enter button {width:291px;border: 0;color: #fff;font-size: 14px;margin-top: 44px;font-family: Lato-Regular;
+    height:48px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);border-radius:4px;}
+  .en .dig-enter button {font-family: Source-Regular;}
+
+  .dig-button-list {display: flex;padding-top: 14px;}
+  .dig-button-list button {width:120px;height:32px;background:#D8D8D8;border-radius:4px;
+    border: 0;color: #fff;font-size: 13px;}
+  .dig-button-list button:last-child {margin-left: 16px;}
+
+ .appendAcitve {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%)!important;}
+
+  .exclamation-list {display: flex;align-items: center;padding: 22px 0 12px;font-family: Lato-Medium;color: #99A1A6;}
+  .exclamation-list img {margin-left: 10px;cursor: pointer;}
+
   .dig-header .dig-header-check h4 span {font-family: Lato-Medium;}
   .dig-header .dig-header-check p {font-family: Montserrat-Light;color: #839299;margin-top: 22px;}
-  .dig-header .dig-header-check ul {height: 33px;line-height: 33px;width: 162px;color:#252F33;
-    background:rgba(247,247,247,1);font-size: 14px;border-radius:4px;padding: 0 10px;}
-  .dig-header .dig-header-check ul img {width: 16px;height: 16px;}
-  .dig-header .dig-header-check ul li:first-child {display: flex;justify-content: space-between;
-    align-items: center;}
-  .dig-header .dig-header-check ul li:first-child:hover {cursor: pointer;}
-  .dig-header .dig-header-check ul li {position: relative;}
-  .dig-header .dig-header-check ul li ul {height: 160px;position: absolute;top: 0;left: -10px;z-index: 8;width: 182px;
-    overflow: auto;background: #fff;box-shadow:0px 0px 6px rgba(0,0,0,0.16);border-radius: 4px;padding: 0;}
-
-
-  .dig-header .dig-header-check ul li ul li {height: 40px;padding: 0 16px;display: flex;align-items: center;justify-content: space-between;}
-  .dig-header .dig-header-check ul li ul li:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}
-  .dig-header .dig-header-check ul li ul li:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
-  .dig-header .dig-header-check ul li ul li:hover {cursor: pointer;background:rgba(237,242,241,1);}
+  .dig-header .dig-header-check ul {height: 32px;line-height: 32px;width: 169px;background:#f7f7f7;border-radius:4px;}
+  .dig-header .dig-header-check ul li {display: block;text-align: center;color: #252F33;font-size: 13px;font-family: Lato-Bold;}
+  
   
   .dig-header .dig-header-check .button-list {display: flex;align-items: center;justify-content: space-between;
-    padding-right: 18px;margin-top: 8px;}
-  .dig-header .dig-header-check .dig-tips {width: 290px;word-wrap:break-word;color:#576066;}
-  .dig-header .dig-header-check .dig-tips label {font-family: Lato-Bold;}
+    padding-right: 22px;}
+  .dig-tips {width: 248px;height: 112px;background: url('../../assets/images/tipsDig.png') center no-repeat;background-size: cover;
+    position: absolute;top: 80px;left: 60px;}
+  .dig-tips .dig-tips-txt {width: 186px;padding: 21px 31px 0;margin: 0!important;color:#D8E1E6!important;font-size: 12px!important;
+    line-height: 1.5;font-family: Lato-Regular!important;}
   
-  .dig-header .dig-header-list {flex: 1;height: 132px;background:rgba(247,247,247,1);border-radius: 4px;
+  .dig-header .dig-header-list {flex: 1;height: 132px;background:#f7f7f7;border-radius: 4px;
     overflow: auto;color: #252F33;padding: 16px 14px;}
   .dig-header .dig-header-list ul {list-style: disc;}
   .dig-header .dig-header-list ul li {padding-top: 5px;line-height: 1.5;}
   .dig-header .dig-header-list ul li:first-child {padding-top: 0;}
   
-   .dig-mask-tips {position: fixed;top: 50%;left: 50%;margin: -32px 0 0 -200px;width: 400px;
-    padding: 24px;background:rgba(66,83,91,.92);color: #F7FBFA;font-size: 14px;
-    border-radius: 4px;}
+ 
+  .dig-body {flex: 1;display: flex;flex-direction: column;}
+  .dig-body ul {display: flex;align-items: center;padding: 0 32px;}
+  .dig-body ul li {cursor: pointer;color: #99A1A6;font-size: 14px;margin-left: 32px;height: 56px;box-sizing: border-box;
+    line-height: 56px;}
+  .en .dig-body ul li {font-family: Source-Medium;}
+  .dig-body ul li:first-child {margin-left: 0;}
 
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar { width: 2px; height: 2px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}
-  .dig-header .dig-header-check ul li ul::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 1px #EDF5F4;border-radius: 0; background: #EDF5F4;}
-  
-  .dig-body {padding: 22px 22px 0 32px;flex: 1;}
-  
+  .Lock-record,.ore-pool,.dig-earnings {flex: 1;box-sizing: border-box;padding: 20px 32px 0;}
+
+  .dig-earnings-list {height: calc(100% - 20px);}
+
+
   .dig-footer {padding: 0 22px 0 32px;color: #839299;height: 45px;
     border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
 
-  .miningIn {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%)!important;}
-  .dig-mask {position: relative;font-size: 14px;font-weight: 400;color: #576066;}
-  .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
-  .dig-mask-body {padding: 44px 20px 16px 24px;text-align: right;}
-  .dig-mask-body p {text-align: left;margin-bottom: 58px;}
-  .dig-mask-body button {color: #fff;width:97px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    height:32px;border: 0;border-radius: 4px;}
-  
-  .noCursor {cursor: no-drop;}
-  
-  .checkColor {color: #29D893;}
-  .dig-mask-body .exit {background:linear-gradient(90deg,rgba(238,28,57,1) 0%,rgba(217,25,73,1) 100%);}
-  .dig-mask-body .continue {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(41,216,147,1) 100%);}
+  .sotpPool {background:linear-gradient(90deg,#ee1c39 0%,#d91949 100%)!important;}
+
+  .checkColor {color: #29D893!important;border-bottom:2px solid #29d893;}
+
+  .tab-list {border-bottom:1px solid #e6e6e6;box-sizing: border-box;height: 56px;}
+  .tab-list,.tab-list section {display: flex;align-items: center;justify-content: space-between;}
+  .tab-list section {padding-right: 32px;}
+  .tab-list section p {font-size: 14px;color: #99A1A6;}
+  .tab-list section p span {color: #252F33;font-family: Lato-Medium;}
+  .tab-list section img {cursor: pointer;margin-left: 10px;}
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
 </style>

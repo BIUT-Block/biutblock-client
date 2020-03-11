@@ -3,7 +3,7 @@
     <section class="node-container">
       <!-- 节点头部 -->
       <section class="node-header">
-        <h3>Node</h3>
+        <h3>{{ $t('homeNode.hnTit') }}</h3>
         <section class="node-header-list">
           <node-title :title="address" :text="addressText"/>
           <node-title :title="localTime" :text="localTimeText"/>
@@ -14,7 +14,7 @@
       <wallet-margin/>
       <!-- 节点列表 -->
       <section class="node-body">
-        <h3>All Nodes List</h3>
+        <h3>{{ $t('homeNode.hnListTit') }}</h3>
         <node-list :nodeList="nodeList"/>
       </section>
     </section>
@@ -30,7 +30,7 @@ import { setInterval, clearInterval } from 'timers';
 const moment = require('moment-timezone')
 const ipify = require('ipify')
 const fetch = require('node-fetch')
-let secAPI = 'http://scan.secblock.io/'
+let secAPI = 'http://scan.biut.io:3001/'
 
 export default {
   name: 'walletNode',
@@ -42,14 +42,14 @@ export default {
   props: {},
   data () {
     return {
-      address: "IP Address",
+      address: "homeNode.hnTxt1",
       ntcServer: '2.de.pool.ntp.org',
       addressText: "-", //ip
-      localTime: "Local Time",
+      localTime: "homeNode.hnTxt2",
       localTimeText: "-", //本地时间
-      node: "Connected Node",
+      node: "homeNode.hnTxt3",
       nodeText: "-", //连接的节点
-      nodeTime: "Node Time",
+      nodeTime: "homeNode.hnTxt4",
       nodeTimeText: "-", //节点时间
       nodeList: [],
       updateNodeListJob: '',
@@ -88,9 +88,9 @@ export default {
   methods: {
     _getNodeLists () {
       if (window.localStorage.getItem('secTest') && window.localStorage.getItem('secTest') === 'true') {
-        secAPI = 'http://test.secblock.io/'
+        secAPI = 'http://test.biut.io/'
       } else {
-        secAPI = 'http://scan.secblock.io/'
+        secAPI = 'http://scan.biut.io:3001/'
       }
       fetch(`${secAPI}nodeinfoapi`).then(response => response.json()).then((nodestable) => {
         this.nodeList = []
@@ -115,7 +115,8 @@ export default {
         let localDate = moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss')
         this.nodeTimeText = WalletsHandler.formatDate(nodeDate.format('YYYY/MM/DD HH:mm:ss'), -nodeDate._offset)
         this.localTimeText = WalletsHandler.formatDate(localDate, new Date().getTimezoneOffset())
-        this.nodeText = response.result.ipv4
+        //this.nodeText = response.result.ipv4
+        this.nodeText = "homeNode.hnNetworkTxt"
       })
     }
   }
@@ -136,4 +137,7 @@ export default {
     padding: 24px 0 24px 32px;}
   .node-body h3 {font-size: 14px;color: #839299;font-weight: 600;margin: 0;
     font-family: Montserrat-SemiBold;background: #fff;padding-bottom: 16px;}
+
+  .en .node-body h3,.en .node-header h3 {font-family: Source-Medium;color: #42535B;font-weight: 500;}
+  .en .node-header h3 {color: #252F33;}
 </style>

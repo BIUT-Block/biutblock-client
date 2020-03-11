@@ -9,13 +9,13 @@
       <!-- 返回钱包首页 -->
       <section class="wallet-content-return">
         <img src="../../assets/images/returnImg.png" @click="returnWallet" title="return"/>
-        <span>Transaction Details</span>
+        <span>{{ $t('homeWalletDetails.hwdTit') }}</span>
       </section>
 
       <!-- 图片 -->
       <section class="wallet-content-img">
         <img :src="stateImg" alt="" width="80px" height="66px">
-        <h3 :class="textStyle">{{amount}} {{moneyType}}</h3>
+        <h3 :class="textStyle">{{ getPointNum(amount)}} {{moneyType}}</h3>
         <p :class="textStyle">{{status}}</p>
       </section>
 
@@ -23,7 +23,7 @@
       <section class="wallet-content-list">
         <ul>
           <li v-for="item in tradingList" :key="item.id">
-            <span>{{item.title}}</span>
+            <span>{{ $t(item.title) }}</span>
             <span>{{item.cnt}}</span>
           </li>          
         </ul>
@@ -32,7 +32,7 @@
       <!-- 查看交易详情 -->
       <section class="wallet-content-footer" :class="{'hideLink':status==='Packed'}">
         <img :src=" moneyType == 'BIUT' ? tradingLogo1 : tradingLogo2 " alt="">
-        <a :href="transactionLink" target="_blank">See more details at {{moneyType}} BLOCKCHAIN</a>
+        <a :href="transactionLink" target="_blank">{{ $t('homeWalletDetails.hwFootTxt1') }} {{moneyType}} {{ $t('homeWalletDetails.hwFootTxt2') }}</a>
       </section>
     </section>
   </main>
@@ -80,37 +80,37 @@ export default {
       return [
           {
             id: '01',
-            title: 'Transaction number',
+            title: 'homeWalletDetails.hwdListTxt1',
             cnt: this.transactionNumber
           },
           {
             id: '02',
-            title: 'Block',
+            title: 'homeWalletDetails.hwdListTxt2',
             cnt: this.block
           },
           {
             id: '03',
-            title: 'Creation time',
+            title: 'homeWalletDetails.hwdListTxt3',
             cnt: this.time
           },
           {
             id: '04',
-            title: 'From',
+            title: 'homeWalletDetails.hwdListTxt4',
             cnt: this.beneficiary
           },
           {
             id: '05',
-            title: 'To',
+            title: 'homeWalletDetails.hwdListTxt5',
             cnt: this.party
           },
           {
             id: '06',
-            title: 'Value',
-            cnt: this.amount + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
+            title: 'homeWalletDetails.hwdListTxt6',
+            cnt: this.getPointNum(this.amount) + ' '+ this.moneyType //携带  SEC、SEN 做页面展示
           },
           {
             id: '07',
-            title: 'Fee',
+            title: 'homeWalletDetails.hwdListTxt7',
             cnt: this.fee + ' BIU'
           }
       ]
@@ -118,8 +118,6 @@ export default {
   },
   created () {
     let trade = this.$route.query.trade
-    this.wallets = this.$route.query.wallets
-    this.selectedPrivateKey = this.$route.query.selectedPrivateKey
     this.transactionNumber = `0x${trade.id}`
     this.block = trade.blockNumber
     this.time = trade.listTime
@@ -131,10 +129,21 @@ export default {
     this.fee = trade.listMinerCost
     this.moneyType=trade.listUnit
     
-    let address = 'http://scan.biut.io/sen/search?search='
+    var address;
     if (this.$JsonRPCClient.isTestNetwork()) {
-      address = 'http://test.biut.io/search?search='
+      if (trade.listUnit === "BIUT") {
+        address = 'http://scan.biut.io:3001/search?search='
+      } else {
+        address = 'http://scan.biut.io:3001/sen/search?search='
+      }
+    } else {
+      if(trade.listUnit === "BIUT") {
+        address = 'http://scan.biut.io:3001/search?search='
+      } else {
+        address = 'http://scan.biut.io:3001/sen/search?search='
+      }
     }
+
     switch(trade.listState) {
       case 'Successful':
         if (trade.listMoney.indexOf('+') > -1) {
@@ -165,7 +174,8 @@ export default {
   destroyed () {},
   methods: {
     returnWallet () {
-      this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
+      this.$router.push({name: 'index'})
+      // this.$router.push({ name: 'index', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
     }
   },
 }
@@ -185,7 +195,7 @@ export default {
   .wallet-content-list ul li {display: flex;margin-bottom: 18px;}
   .wallet-content-list ul li:last-child {margin-bottom: 0;}
   .wallet-content-list ul li span:first-child {width: 155px;color: #576066;}
-  .wallet-content-list ul li span:last-child {flex: 1;word-break: break-all;}
+  .wallet-content-list ul li span:last-child {flex: 1;word-break: break-all;font-family: Lato-Regular;}
 
   .wallet-content-footer {color: #0B7FE6;text-align: center;}
   .wallet-content-footer img {width: 18px;height: 18px;margin-right: 8px;vertical-align: middle;}

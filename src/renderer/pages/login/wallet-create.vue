@@ -2,8 +2,8 @@
   <main>
     <aside>
       <img src="../../assets/images/loginLogo.png" alt="" title="BIUT"/>
-      <h2 class="titleTop">{{ createTitle1 }}</h2>
-      <h2>{{ createTitle2 }}</h2>
+      <h2 class="titleTop">{{ $t(createTitle1) }}</h2>
+      <h2>{{ $t(createTitle2) }}</h2>
       <span></span>
     </aside>
     <!-- <section class="wallet-nav">
@@ -12,19 +12,23 @@
     <img src="../../assets/images/closeImg.png" v-show="createClose" title="close" class="closeImg" @click="closeCreate"/>
     <!-- 创建钱包 createPages == 1 -->
     <section class="wallet-create" v-if="createPages == 1">
-      <span class="wallet-button-important" @click="importCreate">Import Wallet</span>
+      <span class="wallet-button-important" @click="importCreate">{{ $t("login.loginImportBtn") }}</span>
       
-      <wallet-title :title="walletNameText" :choose="true"/>
+      <wallet-title :title="walletNameText" :choose="true"  v-show="!walletNameDisable"/>
       <wallet-input 
         type="text" 
-        placeholder="Wallet Name" 
+        :placeholder="$t('input.walletNameIpt')" 
         maxlength="14"
         v-model="walletName"
-        @input="inputName"></wallet-input>
+        @input="inputName" v-show="!walletNameDisable"></wallet-input>
+      
+      <h4 v-show="walletNameDisable">{{ walletName }}</h4>
+
       
       <wallet-title :title="walletPassText1" :choose="true"/>
-      <wallet-input-pass placeholder="Password" maxlength="30" 
+      <wallet-input-pass :placeholder="$t('input.walletPass1Ipt')" maxlength="30" 
           v-model="walletPass1"
+          :class="passFormatShow ? 'border-red' : ''"
           @loseFocus="loseFocus"
           @getFocus="getFocus"
           @input="inputContent1"></wallet-input-pass>
@@ -32,25 +36,37 @@
       
       <wallet-title :title="walletPassText2" :choose="true"/>
       <wallet-input-pass 
-          placeholder="Confirm Password" 
-          maxlength="30" 
+          :placeholder="$t('input.walletPass2Ipt')" 
+          maxlength="30"
+          :class="passFormat2Show ? 'border-red' : ''"
           v-model="walletPass2"
           @input="inputContent2"></wallet-input-pass>
       <wallet-tips :tips="passFormat2"  v-show="passFormat2Show"/>
+
+      <wallet-title :title="walletCodeText" :choose="true"/>
+      <wallet-input 
+        type="text" 
+        :placeholder="$t('input.walletCodeIpt')" 
+        :class="walletCodeError ? 'border-red' : ''"
+        maxlength="8"
+        v-model="walletCode"
+        @input="inputCode"></wallet-input>
+      <wallet-tips :tips="walletCodeErrorText"  v-show="walletCodeError"/>
 
       <wallet-button  type="button" 
                       class="wallet-button-create" 
                       :text="walletButtonText"
                       :disabled="!createActive"
-                      :class="createActive?'passCorrect':''"
+                      :readonly="createReadonly"
+                      :class="[createActive?'passCorrect':'',createReadonly?'cantClick':'']"
                       @click.native="createWallet"/>
     </section>
 
     <!-- 创建钱包 -- 备份助记词 createPages == 2 -->
     <section class="wallet-backup"  v-if="createPages == 2">
       <section class="backup-title">
-        <label>Save these details!</label> 
-        If you lose these credentials, you lose access to your assets.
+        <label>{{ $t('login.createdTips1') }}</label> 
+        {{ $t('login.createdTips2') }}
       </section>
       <wallet-title :title="backupText1" :choose="false"/>
       <phrase-list :itemList="itemList"/>
@@ -65,7 +81,7 @@
       <wallet-translucent :text="copyText" v-show="copyShow"/>
       <section class="radio-content">
         <img :src="radioImg" alt="" @click="checkRadio">
-        <span>I have backed up these credentials</span>
+        <span>{{ $t('login.createdAgreement') }}</span>
       </section>
       <wallet-button  class="wallet-button-backup" 
                       :text="walletBackupButton"
@@ -79,23 +95,26 @@
       <ul>
         <li v-for="(item, index) in tabList" 
             :class="tabIndex == index?'check-li':''"
-            @click="isTab(index)">{{item.cnt}}</li>
+            @click="isTab(index)">{{ $t(item.cnt) }}</li>
       </ul>
 
       <!-- 私钥导入 -->
       <section class="wallet-import-private-key" v-show="tabIndex == 0">
         <wallet-input 
-          placeholder="Wallet Name" 
+          :placeholder="$t('input.walletNameIpt')" 
           maxlength="14" 
           v-model="walletNameImport1"
+          :readonly="walletNameDisable"
           @input="inputName1"></wallet-input>
-        <textarea placeholder="Eenter your private key here" 
+        <textarea
+            :placeholder="$t('input.walletPrivateKey')" 
             maxlength="64" 
+            :class="privateKeyError ? 'border-red1' : ''"
             v-model="walletPrivateKey"
             @input="inputPrivateKey">
         </textarea>
         <wallet-tips :tips="privateKeyErrorText" v-show="privateKeyError"/>
-        <wallet-button  class="wallet-button-backup" 
+        <wallet-button class="wallet-button-backup" 
                       :text="walletImportButton"
                       @click.native="importWallet"
                       :disabled="!privateActive"
@@ -104,16 +123,19 @@
 
       <!-- keystore导入 -->
       <section class="wallet-import-keystore" v-show="tabIndex == 1">
-         <p class="wallet-import-keystore-title">Select your Keystore</p>
+         <p class="wallet-import-keystore-title">{{ $t('login.importSelectTit') }}</p>
          <div>
-           <span :class="KeyStoreColor?'KeyStoreColor':''">{{KeyStoreVal}}</span>
+           <span :class="KeyStoreColor?'KeyStoreColor':''">{{ $t(KeyStoreVal) }}</span>
            <input type="file" @change="tirggerFile($event)"/>
          </div>
          
          <section v-show="showPass">
             <wallet-title :title="walletnNewPassText" :choose="false"/>
-            <wallet-input-pass placeholder="Password" maxlength="30" 
+            <wallet-input-pass
+              :placeholder="$t('input.walletPass1Ipt')" 
+              maxlength="30" 
               v-model="walletNewPass"
+              :class="walletnNewPassError ? 'border-red' : ''"
               @input="inputContent3"></wallet-input-pass>
             <wallet-tips :tips="walletnNewPassErrorText" v-show="walletnNewPassError"/>
          </section>
@@ -127,40 +149,32 @@
       <!-- 助记词导入 -->
       <section  class="wallet-import-phrase" v-show="tabIndex == 2">
         <wallet-input 
-          placeholder="Wallet Name" 
+          :placeholder="$t('input.walletNameIpt')" 
           maxlength="14" 
           v-model="walletNameImport2"
+          :readonly="walletNameDisable"
           @input="inputName2"></wallet-input>
-        <textarea placeholder="Enter your Phrase here width space-separated"
+        <textarea
+          :placeholder="$t('input.walletPhrase')"
+          :class="phraseError ? 'border-red1' : ''"
           v-model.trim="walletPhrase"></textarea>
         <wallet-tips :tips="phraseErrorText" v-show="phraseError"/>
-        <wallet-button  class="wallet-button-backup" 
+        <wallet-button class="wallet-button-backup" 
                       :text="walletImportButton"
                       @click.native="importWallet"
                       :disabled="!phraseActive"
                       :class="phraseActive?'passCorrect':''"/>
       </section>
 
-     <p class="go-create">No wallet?   <span @click="closeCreate">Create Wallet</span></p> 
+     <p class="go-create">{{ $t('login.loginFooter1') }}   <span @click="closeCreate">{{ $t('login.loginFooter2') }}</span></p> 
     </section>
     <!-- 钱包版本号 -->
     <span class="wallet-version"> V {{ versionNumber }}</span>
-    <!-- 遮罩层
-    <section class="mask" v-show="maskShow">
-      <section class="mask-container phrase-mask">
-        <img
-          src="../../assets/images/closeMask.png"
-          alt=""
-          class="maskCloseImg"
-          title="close"
-          @click="maskShow = false"
-        />
-        <section class="phrase-mask-body">
-          <p>This is a new wallet, are you confirm to import and save it locally?</p>
-          <button type="button"  @click="_navToNext">Confirm</button>
-        </section>
-      </section>
-    </section> -->
+
+    <!-- 钱包已存在弹窗 -->
+    <login-mask 
+      v-show="loginMaskShow"
+      @close="closeMask"/>
   </main>
 </template>
 
@@ -170,7 +184,8 @@ import walletButton from '../../components/wallet-button'
 import walletInput from '../../components/wallet-input'
 import walletInputPass from '../../components/wallet-input-pass'
 import walletTips from '../../components/wallet-tips'
-import phraseList from './components/phraseList'
+import phraseList from './components/phrase-list'
+import loginMask from './components/login-mask'
 import walletNav from '../../components/wallet-nav'
 import agreement from '../../assets/images/agreement.png'
 import agreements from '../../assets/images/agreements.png'
@@ -179,7 +194,9 @@ import Clipboard from 'clipboard'
 import walletsHandler from '../../lib/WalletsHandler'
 
 const fs = require('fs')
+const random = require('string-random')
 const pkg = require('../../../../package.json')
+const dataCenterHandler = require('../../lib/DataCenterHandler')
 
 export default {
   name: 'walletCreate',
@@ -191,30 +208,39 @@ export default {
     walletTips,
     phraseList,
     walletNav,
-    walletTranslucent
+    walletTranslucent,
+    loginMask // 钱包已存在弹窗
   },
   props: {},
   data () {
     return {
-      createTitle1: 'Create',
-      createTitle2: 'New Wallet',
+      createTitle1: 'login.loginCreate1',
+      createTitle2: 'login.loginCreate2',
       createPages: 1, // 1 创建钱包 2 备份助记词 3 导入钱包
       createClose: false, //创建钱包页面关闭按钮是否显示
-      walletNameText: 'WALLET NAME',
-      walletPassText1: 'PASSWORD',
-      walletPassText2: 'CONFIRM PASSWORD',
+      walletNameText: 'input.walletName',
+      walletPassText1: 'input.walletPass1',
+      walletPassText2: 'input.walletPass2',
       walletName: '', //创建钱包名称
+      walletNameDisable: false,
       walletPass1: '',//密码
       walletPass2: '',//确认密码
-      walletButtonText: 'Create Wallet',
-      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
+      walletCodeText: 'input.walletCode', //邀请码标题
+      walletCode: '',//邀请码输入框
+      walletCodeError: false,//邀请码错误是否显示
+      walletCodeErrorText: 'input.walletCodeError',//邀请码错误提示语
+
+      loginMaskShow: false,//钱包未绑定邀请码的弹窗
+
+      walletButtonText: 'login.loginBtn1',
+      passFormat: 'input.passFormatTips',
       passFormatShow: false,//密码格式提示
-      passFormat2: 'Two passwords are inconsistent.',//两次密码输入不一致
+      passFormat2: 'input.passDifferent',//两次密码输入不一致
       passFormat2Show: false,//密码格式提示
-      backupText1: 'PHRASE',
-      backupText2: 'PRIVATE KEY',
-      privateKey: '8305dcbb827255ef79f348654cd381768bd95349d330530ab33a9b2336a8f2e6',//备份助记词私钥
-      walletBackupButton: 'Enter Wallet',
+      backupText1: 'login.createdPhrase',
+      backupText2: 'login.createdKey',
+      privateKey: '',//备份助记词私钥
+      walletBackupButton: 'login.loginBtn3',
       radioImg: agreement,//协议按钮
       radioIndex: 1,// 1 表示默认不选择 相反选择
       agreedId: false, //备份助记词按钮默认不可点击
@@ -223,15 +249,15 @@ export default {
       tabList: [
         {
           id: '01',
-          cnt: 'Private Key'
+          cnt: 'login.importKey'
         },
         {
           id: '02',
-          cnt: 'Keystore'
+          cnt: 'login.importKeystore'
         },
         {
           id: '03',
-          cnt: 'Phrase'
+          cnt: 'login.importPhrase'
         }
       ],//导入钱包title
       tabIndex: 0,
@@ -241,24 +267,29 @@ export default {
       walletNewPass: '',//导入keystroe文件输入密码
       walletPhrase: '',//助记词
       selectedKeystorePath: '',
-      walletImportButton: 'Login',
-      privateKeyErrorText: 'Private Error.',//私钥错误提示语
+      walletImportButton: 'login.loginBtn2',
+      privateKeyErrorText: 'input.privateKeyError',//私钥错误提示语
       privateKeyError: false,//私钥错误提示是否显示
-      walletnNewPassText: 'Your wallet is encrypted.Good! Please enter the password.',//
-      walletnNewPassErrorText: 'Password Error, unlock failed.',//密码错误提示语
+      walletnNewPassText: 'login.importSelectTxt2',//
+      walletnNewPassErrorText: 'input.passUnlockError',//密码错误提示语
       showPass: false,//选择keystroe之后出现密码输入的框
-      KeyStoreVal: 'Select Keystore',
+      KeyStoreVal: 'login.importSelectTxt1',
       walletnNewPassError: false,//密码错误提示语是否显示
-      phraseErrorText: 'Phrase error',//助记词提示语错误
+      phraseErrorText: 'input.phraseError',//助记词提示语错误
       phraseError: false,//助记词提示语是否显示
       KeyStoreColor: true,
-      copyText: 'Copy success',//私钥复制
+      copyText: 'tips.copySuccess',//私钥复制
       copyShow: false,
       maskShow: false, //助记词导入钱包提示
-      navQuery: {}
+      navQuery: {},
+      contractAddress: '',
+      createReadonly: false
     }
   },
   computed: {
+    wallets () {
+      return this.$store.getters.wallets
+    },
     //创建钱包按钮是否激活
     createActive () {
       let passReg = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{8,30}$/
@@ -272,7 +303,8 @@ export default {
       return this.walletName.trim().length > 0 
              && pass1.length > 7
              && passReg.test(pass1)
-             && pass2 == pass1 ? true : false
+             && pass2 == pass1
+             && this.walletCode.length === 8 && !this.createReadonly? true : false
     },
     
     //备份助记词按钮是否激活
@@ -301,8 +333,13 @@ export default {
     let createId = this.$route.query.createId
     if ((createId == 1 && this.createPages == 1) || createId === 1) {
       this.createClose = true
+      this.walletNameDisable = false
     } else {
       this.createClose = false
+      this.walletName = 'Mining Wallet'
+      this.walletNameImport1 = 'Mining Wallet'
+      this.walletNameImport2 = 'Mining Wallet'
+      this.walletNameDisable = true
     }
     this.versionNumber = pkg.version
     // if (createId !== 1) {
@@ -345,6 +382,13 @@ export default {
       })
     },
 
+    //邀请码不能输入空格
+    inputCode () {
+      this.$nextTick(()=> {
+        this.walletCode = this.walletCode.replace(/\s+/g, "").replace(/[\u4E00-\u9FA5]/g,'')
+      })
+    },
+
     //私钥钱包名称不能输入空格开头
     inputName1 () {
       this.$nextTick(()=> {
@@ -369,24 +413,21 @@ export default {
     //不能输入中文
     inputContent1 () {
       this.$nextTick(()=> {
-        this.walletPass1 = this.walletPass1.replace(/[\u4E00-\u9FA5]/g,'')
-        this.walletPass1 = this.walletPass1.replace(/\s+/g,'')
+        this.walletPass1 = this.walletPass1.replace(/[\u4E00-\u9FA5]/g,'').replace(/\s+/g,'')
       })
     },
 
     //不能输入中文
     inputContent2 () {
       this.$nextTick(()=> {
-        this.walletPass2 = this.walletPass2.replace(/[\u4E00-\u9FA5]/g,'')
-        this.walletPass2 = this.walletPass2.replace(/\s+/g,'')
+        this.walletPass2 = this.walletPass2.replace(/[\u4E00-\u9FA5]/g,'').replace(/\s+/g,'')
       })
     },
 
     //不能输入中文
     inputContent3 () {
       this.$nextTick(()=> {
-        this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'')
-        this.walletNewPass = this.walletNewPass.replace(/\s+/g,'')
+        this.walletNewPass = this.walletNewPass.replace(/[\u4E00-\u9FA5]/g,'').replace(/\s+/g,'')
       })
     },
 
@@ -394,53 +435,78 @@ export default {
     importCreate () {
       this.createClose = true //进入导入钱包关闭按钮显示
       this.createPages = 3
-      this.createTitle1 = 'Import'
-      this.createTitle2 = 'Wallet'
+      this.createTitle1 = 'login.loginImport1'
+      this.createTitle2 = 'login.loginImport2'
     },
 
-    //创建钱包
-    createWallet() {
+    //创建钱包  需要传邀请码
+    async createWallet() {
+      this.walletButtonText = 'login.loginBtn1s'
+      this.createReadonly = true
       this.keys = walletsHandler.getWalletKeys() //create all keys of wallet
-      let wordsArray = this.keys.englishWords.split(' ')
-      let keyDataJSON = {}
-      this.itemList = []
-      this.privateKey = this.keys.privateKey
-      wordsArray.forEach((word, index)=>{
-        this.itemList.push({
-          id: index.toString(),
-          cnt: word
-        })
-      })
-      keyDataJSON[this.keys.privateKey] = {
-        walletName: this.walletName,
-        privateKey: this.keys.privateKey,
-        publicKey: this.keys.publicKey,
+      let transfer = {
+        nonce: "1",
+        timestamp: new Date().getTime(),
         walletAddress: this.keys.userAddress,
-        englishWords: this.keys.englishWords
+        amount: '0',
+        gasLimit: '0',
+        gasPrice: '0',
+        txFee: '0',
+        chainName: 'SEC'
       }
-      walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
-
-      this.createClose = true //进入备份助记词关闭按钮显示
-      this.createPages = 2
-      this.createTitle1 = 'Wallet'
-      this.createTitle2 = 'Created!'
+      this.contractAddress = await this.$JsonRPCClient.createContractTransactionPromise(this.keys.privateKey, random(6), transfer)
+      dataCenterHandler.createWallet({address: this.keys.userAddress, privateKey: this.keys.privateKey, invitationCode: this.walletCode, contractAddress: this.contractAddress}, (body) => {
+        if (body && body.status && body.doc[0].role !== 'Owner') {
+          this.parentWallet = body.doc[0]
+          let wordsArray = this.keys.englishWords.split(' ')
+          let keyDataJSON = {}
+          this.itemList = []
+          this.privateKey = this.keys.privateKey
+          wordsArray.forEach((word, index)=>{
+            this.itemList.push({
+              id: index.toString(),
+              cnt: word
+            })
+          })
+          keyDataJSON[this.keys.privateKey] = {
+            walletName: this.walletName,
+            privateKey: this.keys.privateKey,
+            publicKey: this.keys.publicKey,
+            walletAddress: this.keys.userAddress,
+            englishWords: this.keys.englishWords
+          }
+          walletsHandler.saveKeyStore(`BIUT${this.keys.userAddress}`, keyDataJSON, (this.walletPass1).replace(/\s+/g, ""))
+          this.createClose = true //进入备份助记词关闭按钮显示
+          this.createPages = 2
+          this.createTitle1 = 'login.loginImport2'
+          this.createTitle2 = 'login.loginCreated'
+          this.walletButtonText = 'login.loginBtn1'
+          this.createReadonly = false
+        } else {
+          this.walletCodeError = true
+          this.walletCodeErrorText = 'input.walletCodeError'
+          this.walletButtonText = 'login.loginBtn1'
+          this.createReadonly = false
+        }
+      })
     },
 
     //创建钱包的关闭方法
     closeCreate () {
       let createId = this.$route.query.createId // 获取路由参数，如果 是 1 是从主页进入的 ，否则点击关闭按钮返回创建页面
       if (createId === 1 && this.createPages === 1) {
-        this.$router.push({name: 'walletIndex', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
+        this.$router.push({name: 'walletIndex'})
+        // this.$router.push({name: 'walletIndex', query: {wallets: this.$route.query.wallets, selectedPrivateKey: this.$route.query.selectedPrivateKey}})
       } else if (this.createPages == 2 && createId == 1  || this.createPages == 3  && createId == 1) {
         this.createPages = 1
-        this.createTitle1 = 'Create'
-        this.createTitle2 = 'New Wallet'
+        this.createTitle1 = 'login.loginCreate1'
+        this.createTitle2 = 'login.loginCreate2'
         this.walletNameImport1 = ''
         this.walletPrivateKey = ''
         this.showPass = false
         this.walletNameImport2 = ''
         this.walletPhrase = ''
-        this.KeyStoreVal = 'Select Keystore'
+        this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
         this.walletnNewPassError = false
         this.KeyStoreColor = true
@@ -455,21 +521,21 @@ export default {
       } else {  //其他就是创建钱包
         this.createPages = 1
         this.createClose = false
-        this.createTitle1 = 'Create'
-        this.createTitle2 = 'New Wallet'
-        this.walletNameImport1 = ''
+        this.createTitle1 = 'login.loginCreate1'
+        this.createTitle2 = 'login.loginCreate2'
+        this.walletNameImport1 = 'Mining Wallet'
         this.walletPrivateKey = ''
         this.showPass = false
-        this.walletNameImport2 = ''
+        this.walletNameImport2 = 'Mining Wallet'
         this.walletPhrase = ''
-        this.KeyStoreVal = 'Select Keystore'
+        this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
         this.walletnNewPassError = false
         this.KeyStoreColor = true
         this.radioIndex = 1
         this.agreedId = false
         this.radioImg = agreement
-        this.walletName = ''
+        this.walletName = 'Mining Wallet'
         this.walletPass1 = ''
         this.walletPass2 = ''
         this.privateKeyError = false
@@ -488,7 +554,7 @@ export default {
           }, 3000)
       })
       clipboard.on('error', e => {
-          this.copyText = "Copy the failure"
+          this.copyText = "tips.copyFailure"
           setTimeout(() => {
               this.copyShow = false
           }, 3000)
@@ -498,16 +564,36 @@ export default {
 
     //备份助记词成功进入钱包主页
     backupWallet () {
-      walletsHandler.backUpWalletIntoFile({
+      this.$store.commit('addWallet', {
         walletName: this.walletName,
         privateKey: this.keys.privateKey,
         publicKey: this.keys.publicKey,
         walletAddress: this.keys.userAddress,
-        englishWords: this.keys.englishWords
-      }, (keyDataJSON) => {
-        window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
-        this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
+        englishWords: this.keys.englishWords,
+        invitationCode: this.parentWallet.invitationCode,
+        ownInvitationCode: this.parentWallet.ownInvitationCode,
+        mortgagePoolAddress: this.parentWallet.role === 'Miner' ? [this.parentWallet.mortgagePoolAddress] : [this.parentWallet.ownPoolAddress],
+        mortgageValue: '0',
+        ownPoolAddress: [this.contractAddress],
+        role: this.parentWallet.role
       })
+      this.$router.push({name: 'walletIndex'})
+      // walletsHandler.backUpWalletIntoFile({
+      //   walletName: this.walletName,
+      //   privateKey: this.keys.privateKey,
+      //   publicKey: this.keys.publicKey,
+      //   walletAddress: this.keys.userAddress,
+      //   englishWords: this.keys.englishWords,
+      //   invitationCode: this.parentWallet.invitationCode,
+      //   ownInvitationCode: this.parentWallet.ownInvitationCode,
+      //   mortgagePoolAddress: this.parentWallet.role === 'Miner' ? [this.parentWallet.mortgagePoolAddress] : [this.parentWallet.ownPoolAddress],
+      //   mortgageValue: '0',
+      //   ownPoolAddress: [this.contractAddress],
+      //   role: this.parentWallet.role
+      // }, (keyDataJSON) => {
+      //   window.sessionStorage.setItem("selectedPrivateKey", this.keys.privateKey)
+      //     this.$router.push({name: 'walletIndex', query: {wallets: keyDataJSON, selectedPrivateKey: this.keys.privateKey}})
+      // })
     },
 
     //导入钱包
@@ -520,29 +606,18 @@ export default {
           return
         } 
         walletsHandler.importWalletFromPrivateKey(this.walletPrivateKey, this.walletNameImport1, (wallets, selectedPrivateKey) => {
-          if (wallets === 'error') {
-            this.privateKeyError = true
-          } else if (wallets === 'DuplicateKey') {
-            this.privateKeyErrorText = 'Wallet already exisits or imported.'
-            this.privateKeyError = true
-          } else {
-            window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
-          }
+          window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
+          this._findOutWallet(wallets, selectedPrivateKey, 'privatekey')
+            //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
         })
       } else if (walletIdx == 1) {
         walletsHandler.decryptKeyStoreFile(this.selectedKeystorePath, (this.walletNewPass).replace(/\s+/g, ""), (wallets, selectedPrivateKey) => {
-          console.log(wallets)
-          if (wallets === 'error') {
-            this.walletnNewPassError = true
-            this.walletnNewPassErrorText = 'Password error, unable to unlock wallet'
-          } else if (wallets === 'DuplicateKey'){
-            this.walletnNewPassErrorText = 'Wallet already exists or imported.'
-            this.walletnNewPassError = true
-          } else {
-            window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
-            this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
+          window.sessionStorage.setItem("selectedPrivateKey", selectedPrivateKey)
+          if (this.createId === 1) {
+            wallets[selectedPrivateKey].walletName = 'Mining Wallet'
           }
+          this._findOutWallet(wallets, selectedPrivateKey, 'keystore')
+            //this.$router.push({ name: 'index',query: { wallets: wallets, selectedPrivateKey: selectedPrivateKey}})
         }) 
       } else {
         if (this.walletNameImport2 === '' || this.walletNameImport2.trim().length === ' ') {
@@ -550,23 +625,63 @@ export default {
           return
         } 
         walletsHandler.importWalletFromPhrase(this.walletPhrase, this.walletNameImport2, (wallets, selectedPrivateKey) => {
-            console.log(wallets)
-            if (wallets === 'error') {
-              this.phraseError = true
-              this.phraseErrorText = "Phrase error."
-            } else if (wallets === 'DuplicateKey') {
-              this.phraseError = true
-              this.phraseErrorText = 'Wallet already exists or imported.'
-            } else {  
               //this.maskShow = true
-              this.navQuery = {
-                wallets: wallets,
-                selectedPrivateKey: selectedPrivateKey
-              }
-              window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
-              this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
-            }
+          this.navQuery = {
+            wallets: wallets,
+            selectedPrivateKey: selectedPrivateKey
+          }
+          window.sessionStorage.setItem("selectedPrivateKey", this.navQuery.selectedPrivateKey)
+          this._findOutWallet(wallets, selectedPrivateKey, 'phrase')
+              //this.$router.push({ name: 'index',query: { wallets: this.navQuery.wallets, selectedPrivateKey: this.navQuery.selectedPrivateKey}})
         })
+      }
+    },
+
+    _findOutWallet (wallets, privateKey, from) {
+      if (wallets === 'error') {
+
+        this._showImportError(from, '')
+        //this.walletnNewPassErrorText = "input.passUnlockError"
+        //this.walletnNewPassError = true
+        return
+      }
+      if (this.wallets.filter(item => item.privateKey === privateKey).length > 0) {
+        this._showImportError(from, 'input.imporantExists')
+      } else {
+        dataCenterHandler.findOutWallet({address: wallets[privateKey].walletAddress}, (body) => {
+        if (body && body.doc.length > 0) {
+          wallets[privateKey].role = body.doc[0].role
+          wallets[privateKey].invitationCode = body.doc[0].invitationCode
+          wallets[privateKey].ownInvitationCode = body.doc[0].ownInvitationCode
+          wallets[privateKey].mortgageValue = body.doc[0].mortgageValue
+          wallets[privateKey].mortgagePoolAddress = body.doc[0].mortgagePoolAddress
+          wallets[privateKey].ownPoolAddress = body.doc[0].ownPoolAddress
+          this.$store.commit('addWallet', wallets[privateKey])
+          this.$router.push({ name: 'index' })
+        } else {
+          this.loginMaskShow = true
+          //this._showImportError(from, body.message)
+        }
+      })
+      }
+    },
+
+    _showImportError (from, error) {
+      switch (from) {
+        case "privatekey":
+          this.privateKeyError = true
+          this.privateKeyErrorText = error === '' ? "input.privateKeyError" : error
+          break
+        case "keystore":
+          this.walletnNewPassError = true
+          this.walletnNewPassErrorText = error === '' ? "input.passUnlockError" : error
+          break
+        case "phrase":
+            this.phraseError = true
+            this.phraseErrorText = error === '' ? "input.phraseError" : error
+          break
+        default:
+          break
       }
     },
 
@@ -579,15 +694,15 @@ export default {
     _importNameError (index) {
       switch (index) {
         case 0:
-          this.privateKeyErrorText = 'Please input wallet name.'
+          this.privateKeyErrorText = 'input.nameNull'
           this.privateKeyError = true
           break
         case 1:
-          this.walletnNewPassErrorText = 'Please input wallet name.'
+          this.walletnNewPassErrorText = 'input.nameNull'
           this.walletnNewPassError = true
           break
         case 2:
-          this.phraseErrorText = 'Please input wallet name.'
+          this.phraseErrorText = 'input.nameNull'
           this.phraseError = true
           break
       }
@@ -602,7 +717,7 @@ export default {
         this.showPass = true
         this.KeyStoreColor = false
       } else {
-        this.KeyStoreVal = 'Select Keystore'
+        this.KeyStoreVal = 'login.importSelectTxt1'
         this.walletNewPass = ''
         this.walletnNewPassError = false
         this.showPass = false
@@ -628,6 +743,10 @@ export default {
       // this.walletPrivateKey = ''
       // this.walletPhrase = ''
       this.tabIndex = index
+    },
+
+    closeMask () {
+      this.loginMaskShow = false
     }
   },
   watch: {
@@ -639,6 +758,7 @@ export default {
         })
       }
     },
+
     walletNameImport1 (newName1, oldName1) {
       let xReg = /[^\x00-\xff]/g
       if (this.getBLen(newName1) > 14 && xReg.test(newName1)) {
@@ -647,12 +767,21 @@ export default {
         })
       }
     },
+
     walletNameImport2 (newName2, oldName2) {
       let xReg = /[^\x00-\xff]/g
       if (this.getBLen(newName2) > 14 && xReg.test(newName2)) {
         this.$nextTick(()=> {
           this.walletNameImport2 = newName2.slice(0, 7)
         })
+      }
+    },
+
+    walletCode (newCode, oldCode) {
+      if (newCode.length > 0 && newCode.length < 8) {
+       this.walletCodeError = true
+      } else {
+        this.walletCodeError = false
       }
     }
   }
@@ -664,50 +793,58 @@ export default {
   main aside {background: url('../../assets/images/loginBackground.png') no-repeat center;
     background-size: 100% 100%;width: 372px;}
   main aside img {margin: 32px 0 0 24px;}
-  main aside h2 {color: #fff;font-size: 32px;margin: 0;padding-left: 64px;
-    font-family: 'Montserrat-SemiBold';}
+  main aside h2 {color: #fff;font-size: 32px;margin: 0;padding-left: 64px;font-family: Montserrat-SemiBold;}
+  .en main aside h2 {font-family: Source-Medium;}
+
+  h4 {font-size: 22px;font-family: Lato-Regular;font-weight: bold;margin: 0;padding-bottom: 32px;color:#6D7880;}
+
   main aside .titleTop {margin-top: 155px;}
   main aside span {display: block;width:43px;height:10px;background:rgba(255,255,255,1);
     margin-top: 16px;margin-left: 64px;}
   
   main .wallet-version {position: absolute;right: 28px;bottom: 24px;color: #839299;}
+  .en main .wallet-version {font-family: Lato-Regular;}
   main .closeImg {width: 24px;height: 24px;position: absolute;top: 20px;right: 20px;}
   main .wallet-nav {position: absolute;top: 0;right: 0;height: 30px;left: 351px;
     border-bottom: 1px solid #E5E5E5;text-align: right;}
   
   /* 创建钱包 */
-  .wallet-create {padding: 112px 68px 0;flex: 1;width: 450px;}
-  .wallet-create p {padding-top: 32px;}
+  .wallet-create {padding: 142px 68px 0;flex: 1;width: 450px;}
+  .wallet-create p {padding-top: 24px;}
   .wallet-create .wallet-button-create {width:190px;margin-top: 36px;}
   .wallet-create .wallet-button-important {display: inline-block;padding: 8px 12px;
     color: #0B7FE6;font-weight: 400;border:1px solid rgba(229,229,229,1);border-radius:4px;
     position: absolute;right: 68px;top: 48px;}
 
   /* 备份助记词 */
-  .wallet-backup {padding: 120px 68px 0;flex: 1;}
-  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;}
+  .wallet-backup {padding: 94px 68px 0;flex: 1;}
+
+  .wallet-backup .backup-title {font-size: 14px;padding-top: 0;padding-bottom: 32px;word-break: break-word;color: #EE1C39;line-height: 1.5;}
+  .en .wallet-backup .backup-title {font-size: 12px;padding-top: 0;padding-bottom: 20px;word-break: break-word;color: #EE1C39;line-height: 1.5;}
   .wallet-backup .backup-title label{font-family: Lato-Bold;}
+  .en .wallet-backup .backup-title label{font-family: Source-Regular;}
   .wallet-backup .private-key-title {padding-top: 17px;}
-  .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;
+  .wallet-backup .private-key-contant {background:rgba(242,242,242,1);border-radius:4px;color: #252F33;font-size: 14px;font-family: Lato-Regular;
     margin-top: 10px;padding: 11px 18px;word-break: break-all;line-height: 1.4;}
   .wallet-backup .private-key-contant img {margin-left: 20px;vertical-align: middle;}
   .wallet-backup .private-key-contant img:hover {cursor: pointer;}
   .wallet-backup .wallet-button-backup {width:190px;}
   .wallet-backup .radio-content {padding: 25px 0 16px;display: flex;align-items: center;color: #252F33;}
+  .en .wallet-backup .radio-content {padding: 36px 0;}
   .wallet-backup .radio-content img {margin-right: 10px;width: 14px;height: 14px;}
   .wallet-backup .radio-content span {color: #00D86D;}
 
   /* 导入钱包 */
-  .wallet-import {padding: 148px 90px 0 104px;flex: 1;}
+  .wallet-import {padding: 118px 94px 0 104px;flex: 1;}
   .wallet-import ul {display: flex;height: 36px;line-height: 36px;color: #388ED9;font-size: 14px;justify-content: space-between;}
-  .wallet-import ul li {text-align: center;border:1px solid rgba(229,229,229,1);display: block;flex: 1;}
+  .wallet-import ul li {text-align: center;border:1px solid rgba(229,229,229,1);display: block;flex: 1;box-sizing: border-box;}
   .wallet-import ul li:first-child {border-top-left-radius: 4px;border-right: 0;border-bottom-left-radius: 4px;}
   .wallet-import ul li:last-child {border-top-right-radius: 4px;border-left: 0;border-bottom-right-radius: 4px;}
   .wallet-import ul .check-li {background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);color: #fff;}
   .wallet-import button {width: 190px!important;margin-top: 48px;}
   .wallet-import .go-create {color: #576066;padding-top: 28px;}
   .wallet-import .go-create span {color: #29D893;}
-  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 58px;color: #252F33;
+  .wallet-import textarea {border: 1px solid #E6E6E6;border-radius: 4px;height: 108px;color: #252F33;box-sizing: border-box;
     padding: 24px;outline: none;resize: none;flex: 1;margin-top: 20px;font-size: 14px;overflow: auto;
     font-family: Lato-Regular;}
   .wallet-import textarea::-webkit-scrollbar {display: none;}
@@ -721,8 +858,9 @@ export default {
   
   /* 导入钱包 -- keyStore导入 */
   .wallet-import-keystore p {font-size: 14px;color: #839299;font-family: Lato-Bold;}
+  .en .wallet-import-keystore p {font-family: Source-Medium;}
   .wallet-import-keystore .wallet-import-keystore-title {margin: 32px 0 12px;}
-  .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;padding-left: 16px;
+  .wallet-import-keystore div {flex: 1;background:rgba(242,242,242,1);border-radius:4px;font-family: Lato-Regular;
     color: #42535B;font-size: 14px;margin-bottom: 20px;text-align: center;height: 36px;line-height: 36px;
     position: relative;}
   .wallet-import-keystore button {margin-top: 28px;}

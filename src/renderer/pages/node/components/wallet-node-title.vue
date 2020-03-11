@@ -1,7 +1,7 @@
 <template>
   <section>
-    <p>{{this.title}}</p>
-    <p>{{this.text || nodeText}}</p>
+    <p>{{ $t(title) }}</p>
+    <p>{{ $t(text) || nodeText}}</p>
   </section>
 </template>
 
@@ -37,4 +37,7 @@ export default {
   section p:first-child {color: #839299;font-family: Lato-Bold;padding-bottom: 5px;}
   section p:last-child {color: #839299;font-weight: 500;padding-top: 5px;font-size: 14px;
     color: #252F33;font-family: Lato-Medium;}
+
+  .en section p:first-child {font-family: Source-Medium;color: #99A1A6;}
+  .en section p:last-child {color: #252F33;font-family: Lato-Medium;}
 </style>
