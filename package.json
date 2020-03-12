@@ -14,7 +14,7 @@
     "release": "node .electron-vue/build.js && electron-builder",
     "release-all": "node .electron-vue/build.js && electron-builder && electron-builder -m && electron-builder --windows",
     "release-win": "node .electron-vue/build.js && electron-builder --windows",
-    "release-mac": "node .electron-vue/build.js && electron-builder -m",
+    "release-mac": "node .electron-vue/build.js && electron-builder --mac",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
