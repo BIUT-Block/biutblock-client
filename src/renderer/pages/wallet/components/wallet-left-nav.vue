@@ -29,43 +29,14 @@ export default {
     return {
       bgColorArr: ['bgColor1','bgColor2','bgColor3','bgColor4'],
       navIdx: 0,
-      createButtonText: "Create and Import Wallets",
-      imgUrl: imgUrl
+      createButtonText: "homeLeftNav.createBtn",
+      imgUrl: imgUrl,
+      addedWallet: 0
     }
   },
   computed: {
     walletList: function () {
-      let list = []
-      let selectedWallet
-      Object.keys(this.wallets).forEach( (privateKey) => {
-      list.push({
-        id: '01',
-        name: this.wallets[privateKey].walletName,
-        address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(32, 41)}`,
-        walletAddress: this.wallets[privateKey].walletAddress,
-        privateKey: privateKey,
-        publicKey: this.wallets[privateKey].publicKey,
-        englishWords: this.wallets[privateKey].englishWords
-        })
-        if (privateKey === this.selectedPrivateKey) {
-          selectedWallet = {
-            id: '01',
-            name: this.wallets[privateKey].walletName,
-            address: `0x${this.wallets[privateKey].walletAddress.substring(0, 6)}......${this.wallets[privateKey].walletAddress.substring(32, 41)}`,
-            walletAddress: this.wallets[privateKey].walletAddress,
-            privateKey: privateKey,
-            publicKey: this.wallets[privateKey].publicKey,
-            englishWords: this.wallets[privateKey].englishWords
-          }
-        }
-      })
-      if (selectedWallet) {
-        this.navIdx = selectedWallet.privateKey
-      } else {
-        this.navIdx = list[0].privateKey
-      }
-      this.$emit("walletSelectionChanged", selectedWallet || list[0])
-      return list
+      return this.$store.getters.wallets
     }
   },
   created () {   
@@ -73,27 +44,34 @@ export default {
   },
   mounted () {
     this.navIdx = this.selectedPrivateKey
-    if (this.createdId === 'walletIndex') {
-      this.$emit("walletSelectionChanged", {
-        id: '01',
-        name: this.wallets[this.selectedPrivateKey].walletName,
-        address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(32, 41)}`,
-        walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
-        privateKey: this.selectedPrivateKey,
-        publicKey: this.wallets[this.selectedPrivateKey].publicKey,
-        englishWords: this.wallets[this.selectedPrivateKey].englishWords
-      })
-    }  
+    // if (this.createdId === 'walletIndex') {
+    //   this.$emit("walletSelectionChanged", {
+    //     id: '01',
+    //     name: this.wallets[this.selectedPrivateKey].walletName,
+    //     address: `0x${this.wallets[this.selectedPrivateKey].walletAddress.substring(0, 6)}......${this.wallets[this.selectedPrivateKey].walletAddress.substring(32, 41)}`,
+    //     walletAddress: this.wallets[this.selectedPrivateKey].walletAddress,
+    //     privateKey: this.selectedPrivateKey,
+    //     publicKey: this.wallets[this.selectedPrivateKey].publicKey,
+    //     englishWords: this.wallets[this.selectedPrivateKey].englishWords,
+    //     invitationCode: this.wallets[this.selectedPrivateKey].invitationCode,
+    //     ownInvitationCode: this.wallets[this.selectedPrivateKey].ownInvitationCode,
+    //     role: this.wallets[this.selectedPrivateKey].role,
+    //     mortgagePoolAddress: this.wallets[this.selectedPrivateKey].mortgagePoolAddress,
+    //     ownPoolAddress: this.wallets[this.selectedPrivateKey].ownPoolAddress
+    //   })
+    // }  
   },
   destroyed () {},
   methods: {
     tabWallet (item, index) {
       this.navIdx = item.privateKey
+      this.$store.commit('changeSelectedWallet', item.privateKey)
       this.$emit("walletSelectionChanged", item)
     },
 
     createWallet () {
-      this.$router.push({ name: 'walletCreate', query: { wallets: this.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
+      this.$router.push({ name: 'walletCreate', query: { createId: 1 }})
+      // this.$router.push({ name: 'walletCreate', query: { wallets: this.wallets, selectedPrivateKey: this.navIdx, createId: 1 }})
     }
   }
 }
@@ -112,7 +90,7 @@ export default {
     border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
   ul li section {margin-left: 20px;}
   ul li section p:first-child {color: #576066;font-size: 14px;font-family: Lato-Bold;}
-  ul li section p {color: #839299;}
+  ul li section p {color: #839299;font-family: Lato-Regular;}
   ul li:hover,.create-button:hover {cursor: pointer;}
   .checked-nav {background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
     box-shadow:0px 0px 10px rgba(41,216,147,0.5);flex: 1;pointer-events: none;}

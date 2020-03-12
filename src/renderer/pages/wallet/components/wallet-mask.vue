@@ -12,16 +12,16 @@
           @click="clostMask"
         />
         <!-- 转账 maskPages = 4 Sent -->
-        <section class="wallet-mask-sent" v-show="maskPages == 4">
+        <section class="wallet-mask-sent" :class="sentPages == 2 ? 'wallet-mask-sent-en' : ''" v-show="maskPages == 4">
           <!-- 填写转账信息 --> 
           <section v-show="sentPages == 1">
-            <h3>Sent</h3>
-            <p>FROM</p>
+            <h3>{{ $t('homeWallet.hwBtn2') }}</h3>
+            <p>{{ $t('homeWalletMask.hwmSentTxt1') }}</p>
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-            <p>TO</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt2') }}</p>
             <section class="wallet-mask-sent-to-address">
               <input type="text" 
-                placeholder="Receive Address" 
+                :placeholder="$t('homeWalletMask.hwmSentAddressIpt')" 
                 v-model="sentAddress" 
                 maxlength="42"
                 @input="inputAddress" />
@@ -29,11 +29,11 @@
             </section>
             <wallet-tips :tips="addressError" v-show="addresErrorShow"/>
 
-            <p>AMOUNT</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt3') }}</p>
             <section class="wallet-mask-sent-amount">
               <input type="numer" 
                 maxlength="19"
-                placeholder="Amount" 
+                :placeholder="$t('homeWalletMask.hwmReceiptTxt2')"
                 v-model="sentTradingAmount" 
                 @input="clearAmount"
                 onpaste="return false"/>
@@ -55,13 +55,13 @@
             </section>
             
             <section class="all-amount-list">
-              <span>Balance：</span>
-              <span>{{tradingIdx === 0 ? allAmount : allfeeVal}} {{tradingText}}</span>
-              <span @click="sentAllAmount">All</span>
+              <span>{{ $t('homeWalletMask.hwmSentTxt3Amount') }}：</span>
+              <span>{{tradingIdx === 0 ? (getPointNum(allAmount)) : (getPointNum(allfeeVal))}} {{tradingText}}</span>
+              <span @click="sentAllAmount">{{ $t('homeWalletMask.hwmSentTxt3All') }}</span>
             </section>
             <wallet-tips :tips="moneyShowText" v-if="moneyShow"/>
 
-          <p class="trading-title">FEE</p>
+          <p class="trading-title">{{ $t('homeWalletMask.hwmSentTxt4') }}</p>
           <section class="transfer-slider">
             <el-slider v-model="feeVal"
               :show-tooltip="false"
@@ -69,52 +69,52 @@
               :max="maxFee"
               :min="minFee"></el-slider>
             <section>
-              <span :class="slowTips ? 'slow-color': ''">Slow</span>
+              <span :class="slowTips ? 'slow-color': ''">{{ $t('homeWalletMask.hwmSentSilder1') }}</span>
               <span>{{feeVal}} BIU</span>
-              <span :class="fastTips ? 'fast-color' : ''">Fast</span>
+              <span :class="fastTips ? 'fast-color' : ''">{{ $t('homeWalletMask.hwmSentSilder2') }}</span>
             </section>
           </section>
           
           <wallet-tips :tips="feeErrorText" v-if="feeValError"/>
 
-          <button type="button" @click="clostMask">Cancel</button>
+          <button type="button" @click="clostMask">{{ $t('publicBtn.cancelBtn') }}</button>
           <button type="button"
               :disabled="!sentActive"
               :class="sentActive ? 'passCorrect' : ''"
-              @click="sentConfirm">Sent</button>
+              @click="sentConfirm">{{ $t('homeWallet.hwBtn2') }}</button>
           </section>
 
           <!-- 确认转账 -->
           <section v-show="sentPages == 2" class="wallet-mask-sent-confirm">
-            <h3>{{ confirmTitle }}</h3>
+            <h3>{{ $t(confirmTitle) }}</h3>
             <wallet-tips :tips="sessionAddress" style="font-size: 14px;"/>
-            <p>FROM</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt1') }}</p>
             <span class="wallet-mask-sent-from-address">0x{{selectedWallet.walletAddress}}</span>
-            <p>TO</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt2') }}</p>
             <span class="wallet-mask-sent-from-address">{{sentAddress}}</span>
-            <p>AMOUNT</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt3') }}</p>
             <span class="wallet-mask-sent-from-address">{{sentTradingAmount}} {{ tradingText }}</span>
-            <p>FEE</p>
+            <p>{{ $t('homeWalletMask.hwmSentTxt4') }}</p>
             <span class="wallet-mask-sent-from-address">{{feeVal}} BIU</span>
 
-            <section v-show="!networkError">
-              <button type="button" @click="backSent">Back</button>
-              <button type="button" class="passCorrect" @click="sent">Confirm</button>
+            <section class="confirm-button-list" v-show="!networkError">
+              <button type="button" @click="backSent">{{ $t('publicBtn.backBtn') }}</button>
+              <button type="button" class="passCorrect" :disabled="sentDisabled" @click="sent">{{ $t('publicBtn.confirmBtn') }}</button>
             </section>
 
             <section class="network-error" v-show="networkError">
               <wallet-tips :tips="networkErrorText" v-show="networkError"/>
-              <button type="button" @click="backSent">Resubmit</button>
+              <button type="button" @click="backSent">{{ $t('publicBtn.resubmitBtn') }}</button>
             </section>
           </section>
         </section>
 
         <!-- 二维码 maskPages = 5 receive -->
         <section class="wallet-mask-receive" v-show="maskPages == 5">
-          <h3>Receive</h3>
-          <p>Account</p>
+          <h3>{{ $t('homeWallet.hwBtn1') }}</h3>
+          <p>{{ $t('homeWalletMask.hwmReceiptTxt1') }}</p>
           <span>0x{{selectedWallet.walletAddress}}</span>
-          <p>Amount</p>
+          <p>{{ $t('homeWalletMask.hwmReceiptTxt2') }}</p>
           <section>
             <input type="numer" 
               maxlength="19"
@@ -136,64 +136,64 @@
           </section>
           <wallet-tips :tips="receiveError" />
           <qrcode :value="qrcodeWalletAddress" :options="{ size: 93 }"></qrcode>
-          <span>Your address(QR Code)</span>
+          <span>{{ $t('homeWalletMask.hwmReceiptTxt3') }}</span>
         </section>
 
         <!-- 导出私钥 maskPages = 0 Export Private key -->
-        <section class="wallet-mask-priivate-key" v-show="maskPages == 0">
-          <h3>Export Private key</h3>
-          <wallet-tips :tips="privateKey" />
+        <section class="wallet-mask-private-key" v-show="maskPages == 0">
+          <h3>{{ $t('homeWallet.hwSet1') }}</h3>
+          <wallet-tips :tips="privateKey" class="error-tips"/>
           <section id="privateKey">
             {{selectedWallet.privateKey}}
           </section>
-          <span class="priivate-key-button copyButton" @click="copyCnt" 
+          <p class="priivate-key-button copyButton" 
+              @click="copyCnt" 
               data-clipboard-target="#privateKey"
-              :class="copySuccess ? 'copySuccessBg' : ''">
-            {{ copyButtonText }}
-          </span>
+              :class="copyTimeShow ? 'copySuccessBg' : ''">
+            {{ $t(copyButtonText) }} <span v-show="copyTimeShow">（{{ copyTimeShowTxt }} s）</span>
+          </p>
         </section>
 
         <!-- 导出keyStore文件 maskPages = 1  Export Keystore -->
         <section class="wallet-mask-keystroe" v-show="maskPages == 1">
-          <h3>Export Keystore</h3>
+          <h3>{{ $t('homeWallet.hwSet2') }}</h3>
           <wallet-input-pass
-            placeholder="Enter your new password"
+            :placeholder="$t('homeWalletMask.hwmKeystoreIpt')"
             maxlength="30"
             v-model="walletNewPass"
             @input="inputContent"></wallet-input-pass>
           <wallet-tips :tips="passFormat" class="tips" />
-          <span class="wallet-button" @click="clostMask">Cancel</span>
+          <span class="wallet-button" @click="clostMask">{{ $t('publicBtn.cancelBtn') }}</span>
           <span class="wallet-button" 
                 :disabled="!keystroeActive"
                 :class="keystroeActive ? 'keystroeActive' : ''"
                 @click="importantKeystroe">
-              Confirm
+              {{ $t('publicBtn.confirmBtn') }}
           </span>
         </section>
 
         <!-- 导出助记词Export maskPages = 2 Phrase -->
         <section class="wallet-mask-phrase" v-show="maskPages == 2">
-          <h3>Export Phrase</h3>
+          <h3>{{ $t('homeWallet.hwSet3') }}</h3>
           <ul>
             <li>{{selectedWallet.englishWords}}</li>
           </ul>
-          <span class="wallet-button" @click="importantPhrase">Confirm</span>
+          <span class="wallet-button" @click="importantPhrase">{{ $t('publicBtn.confirmBtn') }}</span>
         </section>
 
         <!-- 删除钱包 maskPages = 3 delete -->
         <section class="wallet-mask-delete" v-show="maskPages == 3">
           <p>
-            Confirm to delete your wallet? Please make sure you have backed up
-            your wallet.
+            {{ $t(maskDetTxt) }}
           </p>
-          <span class="wallet-button" @click="deleteWallet">Delete</span>
+          <span class="wallet-button" @click="deleteWallet">{{ $t(maskDetBtn) }}</span>
         </section>
 
         <section class="wallet-mask-delete" v-show="maskPages == 6">
           <p>
-            The wallet is bind to mining. You can not remove it.
+            {{ $t('homeWalletMask.hwmDeleteTit2') }}
           </p>
-          <span class="wallet-button" @click="clostMask">Confirm</span>
+          <span class="wallet-button" @click="clostMask">{{ $t('publicBtn.confirmBtn') }}</span>
         </section>
       </section>
     </section>
@@ -222,21 +222,22 @@ export default {
   props: {
     maskPages: Number,
     maskShow: Boolean,
-    selectedWallet: Object,
+   // selectedWallet: Object,
     walletData: Object,
-    balance: String,
-    balanceSEN: String
+   // balance: String,
+   // balanceSEN: String,
+   // walletName: String
   },
   data() {
     return {
       qrcodeWalletAddress: '',//二维码内容
-      sessionAddress: 'You are sending assets to the following address, please confirm the operation.',
-      addressError: 'Addresses are generally 42-bit characters beginning with 0x.',
+      sessionAddress: 'homeWalletMask.hwmSentTips',
+      addressError: 'homeWalletMask.hwmSentTxt2Error',
       amountError: '',
       receiveError: '',
-      passFormat: '8-30 characters, must contain at least 2 types of numbers, English letters, and special characters.',
-      privateKey: 'Security Warning: The private key is not encrypted and the export is risky. Here recommend to backup with mnemonic and Keystore.',
-      walletAddress: '0x27e7192fdbe340c8bc9569bb4bf2f15e76e9fed3',
+      passFormat: 'input.passFormatTips',
+      privateKey: 'homeWalletMask.hwmKeyTit',
+      walletAddress: '',
       walletNewPass: '',
       
       sentAddress: '',//转账地址
@@ -245,18 +246,19 @@ export default {
       //allAmountPlace: "Maximum input of " + this.balance,//默认字符总金额
       //allAmount: this.balance,//总金额 SEC
       moneyShow: false,//金额错误
-      moneyShowText: 'Transfer amount must be less than balance.',//金额错误
-      confirmTitle: 'Confirm The Following information.', //没网络的时候 Submission Failed
+      moneyShowText: 'homeWalletMask.hwmSentTxt3Error',//金额错误
+      confirmTitle: 'homeWalletMask.hwmSentTit1', //没网络的时候 Submission Failed
       networkError: false, //没有网络的时候 设置 成true
-      networkErrorText: 'No network connection.',
+      networkErrorText: 'homeWalletMask.hwmSentNetwork',
       addresErrorShow: false,//地址错误
 
       translucentShow: false, //弹窗
-      translucentText: 'Copy success',
+      translucentText: 'tips.copySuccess',
 
-      copyButtonText: 'copy',
-      copySuccess: false,
+      copyButtonText: 'homeWalletMask.hwmKeyCopy',
       copyTime: 3,
+      copyTimeShow: false,
+      copyTimeShowTxt: 3,
       receiveAmount: '',//二维码收款金额
       amountPlaceHolder: `Maximum input of ${this.balance}`,
 
@@ -267,6 +269,7 @@ export default {
       tradingText: 'BIUT',
       tradingShow: false,
       imgUrl: amountChecked, //选中的图片
+      sentDisabled: false,
       itemList: [
         {
           id: '01',
@@ -285,11 +288,27 @@ export default {
       stepFee: 0.00818182, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
-      feeErrorText: 'Fee cannot be greater than BIU balance.',
-      feeValError: false
+      feeErrorText: 'homeWalletMask.hwmSentFeeErrorText',
+      feeValError: false,
+
+      maskDetTxt: 'homeWalletMask.hwmDeleteTit',
+      maskDetBtn: 'homeWalletMask.hwmDeleteBtn'
     }
   },
   computed: {
+    selectedWallet () {
+      return this.$store.getters.selectedWallet
+    },
+    walletName () {
+      return this.$store.getters.walletName
+    },
+    balance () {
+      return this.$store.getters.availibleMoney
+    },
+    balanceSEN () {
+      return this.$store.getters.walletBalanceSEN
+    },
+
     //转账地址清空按钮
     clearSentAddressImg () {
       return this.sentAddress.length > 0 ? true : false
@@ -314,10 +333,7 @@ export default {
       let allNumber = (this.allfeeVal - this.feeVal).toFixed(3) // SEN可转账金额  addresErrorShow
 
       if (this.feeVal > this.allfeeVal) {
-        this.feeErrorText = 'Fee cannot be greater than BIU balance.'
-        this.feeValError = true
-      } else if (this.feeVal === 0) {
-        this.feeErrorText = 'Fee Cannot be zero.'
+        this.feeErrorText = 'homeWalletMask.hwmSentFeeErrorText'
         this.feeValError = true
       } else {
         this.feeValError = false
@@ -325,15 +341,15 @@ export default {
 
       if (address.length > 0 && address.length < 42) {
         this.addresErrorShow = true
-        this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
+        this.addressError = 'homeWalletMask.hwmSentTxt2Error'
         return false
       } else if (!(addressReg.test(address)) && address.length == 42) {
         this.addresErrorShow = true
-        this.addressError = 'This is not a valid address.'
+        this.addressError = 'homeWalletMask.hwmSentTxt2Error2'
         return false
       } else if (addressReg.test(address) && address == walletAddress) {
         this.addresErrorShow = true
-        this.addressError = 'The same address cannot be transferred.'
+        this.addressError = 'homeWalletMask.hwmSentTxt2Error3'
         return false
       } else {
         this.addresErrorShow = false
@@ -441,6 +457,15 @@ export default {
         "type": this.qrcodeIdx
     }
     this.qrcodeWalletAddress = JSON.stringify(parm)
+
+    let name = this.walletName
+    if (name === "Mining Wallet" || name === "挖矿钱包") {
+      this.maskDetTxt = 'homeWalletMask.hwmDeleteTit1',
+      this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn2'
+    } else {
+      this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
+      this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn1'
+    }
   },
   mounted() {
 
@@ -489,6 +514,7 @@ export default {
       this.qrcodeIdx = 0
       this.tradingIdx = 0
       this.feeVal=0.02
+      this.sentDisabled = false
       this.$emit("changeClose","")
     },
 
@@ -496,7 +522,7 @@ export default {
     sentConfirm () {
       this.sentPages = 2
       if (!navigator.onLine) {
-        this.confirmTitle = 'Submission Failed'
+        this.confirmTitle = 'homeWalletMask.hwmSentFailure'
         this.networkError = true
         return 
       }
@@ -533,8 +559,8 @@ export default {
     },
     
     _resetErrorText () {
-      this.addressError = 'Addresses are generally 42-bit characters beginning with 0x.'
-      this.confirmTitle = 'Confirm The Following information.'
+      this.addressError = 'homeWalletMask.hwmSentTxt2Error'
+      this.confirmTitle = 'homeWalletMask.hwmSentTit1'
       this.amountError = ''
       this.receiveError = ''
       this.networkError = false
@@ -542,21 +568,23 @@ export default {
 
     //转账
     sent () {
+      this.sentDisabled = true
       if (!navigator.onLine) {
-        this.confirmTitle = 'Submission Failed.'
+        this.confirmTitle = 'homeWalletMask.hwmSentFailure'
         this.networkError = true
+        this.sentDisabled = false
         return 
       }
       
       let sendToAddress = ''
 
       if (!this.isAddress()) {
-        this.addressError = "Invalid address formatt."
+        this.addressError = "homeWalletMask.hwmSentTxt2Error2"
         return
       }
 
       if (this.sentAddress === this.selectedWallet.walletAddress || this.sentAddress.replace("0x", "") === this.selectedWallet.walletAddress) {
-        this.addressError = "You can not tranfer to yourself."
+        this.addressError = "homeWalletMask.hwmSentTxt2Error3"
         return
       }
 
@@ -565,31 +593,45 @@ export default {
       } else {
         sendToAddress = this.sentAddress
       }
-      let encryptTransferData = WalletHandler.encryptTransaction(this.selectedWallet.privateKey, {
-        walletAddress: this.selectedWallet.walletAddress,
-        sendToAddress: sendToAddress,
-        amount: this.sentTradingAmount + '',
-        txFee: this.feeVal.toString()
-      })
+      
 
       if (this.tradingText === 'BIUT') {
-        this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
-        this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
+        let chainName = 'SEC'
+        let transferData = {
+          walletAddress: this.selectedWallet.walletAddress,
+          sendToAddress: sendToAddress,
+          amount: this.sentTradingAmount + '',
+          txFee: this.feeVal.toString(),
+          inputData: '',
+          chainName: chainName
+        }
+
+        this.$JsonRPCClient.sendTransactions(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
+          this.$emit('updateWalletBalance', balance, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
         }, (balance) => {
-          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
         })
       } else {
-        this.$JsonRPCClient.sendTransactionsSEN(this.selectedWallet.walletAddress, encryptTransferData, (balance) => {
-          this.$emit('updateWalletBalance', balance, this.selectedWallet.walletAddress)
+        let chainName = 'SEN'
+        let transferData = {
+          walletAddress: this.selectedWallet.walletAddress,
+          sendToAddress: sendToAddress,
+          amount: this.sentTradingAmount + '',
+          txFee: this.feeVal.toString(),
+          inputData: '',
+          chainName: chainName
+        }
+        this.$JsonRPCClient.sendTransactionsSEN(this.selectedWallet.walletAddress, this.selectedWallet.privateKey, transferData, (balance) => {
+          this.$emit('updateWalletBalance', balance, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
         }, (balance) => {
-        this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.walletAddress)
+          this.$emit('updateWalletBalanceSEN', balance, this.selectedWallet.privateKey, this.selectedWallet.walletAddress)
         })
       }
       
 
       this.clostMask()
       this.translucentShow = true
-      this.translucentText = "Submitted successfully"
+      this.translucentText = "homeWalletMask.hwmSentSuccess"
       setTimeout(() => {
         this.translucentShow = false
       }, 3000)
@@ -599,7 +641,13 @@ export default {
     //导出keystroe文件
     importantKeystroe () {
       let keyDataJSON = {}
-      keyDataJSON[this.selectedWallet.walletAddress] = this.walletData
+      keyDataJSON[this.selectedWallet.privateKey] = {
+        walletName: this.selectedWallet.walletName,
+        privateKey: this.selectedWallet.privateKey,
+        publicKey: this.selectedWallet.publicKey,
+        englishWords: this.selectedWallet.englishWords,
+        walletAddress: this.selectedWallet.walletAddress
+      }
       WalletHandler.saveKeyStore(`BIUT${this.selectedWallet.walletAddress}`, keyDataJSON, (this.walletNewPass).replace(/\s+/g, ""))
       this.clostMask()
     },
@@ -612,10 +660,17 @@ export default {
 
     //删除钱包
     deleteWallet () {
-      WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
-        this.$emit('updateWalletList', wallets)
-      })
+      let name = this.walletName
       this.clostMask ()
+      if (name === "Mining Wallet" || name === "挖矿钱包") {
+        this.maskDetTxt = 'homeWalletMask.hwmDeleteTit',
+        this.maskDetBtn = 'homeWalletMask.hwmDeleteBtn'
+      } else {
+        this.$store.commit('removeWallet', this.selectedWallet)
+         WalletHandler.removeWalletFromFile(this.selectedWallet, (wallets) => {     
+          this.$emit('updateWalletList', wallets)
+        })
+      }
     },
     
     //二维码扫描只能输入金额
@@ -656,28 +711,31 @@ export default {
     //复制私钥
     copyCnt () {
       var clipboard = new Clipboard('.copyButton')
-      this.copySuccess = true
       clipboard.on('success', e => {
           clipboard.destroy()
           let clock = window.setInterval(() => {
             var x = this.copyTime--
-            this.copyButtonText = "copy（"+ x +"）"
+            this.copyButtonText = "tips.copySuccess"
+            this.copyTimeShowTxt = x
+            this.copyTimeShow = true
             if(this.copyTime < 0){ // = 0 就停止
               this.copyTime = 3  //恢复默认值
-              this.copySuccess = false
-              this.copyButtonText = "Copy"
+              this.copyTimeShow = false
+              this.copyButtonText = "homeWalletMask.hwmKeyCopy"
               window.clearInterval(clock) //清空计时器
             }
           },1000)
       })
       clipboard.on('error', e => {
+          this.copyButtonText = "tips.copyFailure"
+          this.copyTimeShow = true
           let clock = window.setInterval(() => {
             var x = this.copyTime--
-            this.copyButtonText = "Copy the failure("+ x +")"
+            this.copyTimeShowTxt = x
             if(this.copyTime < 0){ // = 0 就停止
               this.copyTime = 5  //恢复默认值
-              this.copySuccess = false
-              this.copyButtonText = "Copy"
+               this.copyTimeShow = false
+              this.copyButtonText = "homeWalletMask.hwmKeyCopy"
               window.clearInterval(clock) //清空计时器
             }
           },1000)
@@ -751,19 +809,22 @@ export default {
   .wallet-mask {position: relative;}
   .closeImg {width: 16px;height: 16px;position: absolute;top: 12px;right: 20px;}
 
-  .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;height: 516px;padding: 28px 32px 0;}
+  .wallet-mask-sent {color: #252F33;font-size: 14px;font-weight: 500;padding: 36px 32px;}
+  .en .wallet-mask-sent-en {height: 458px;padding: 32px 32px 0;}
+
   .wallet-mask-sent img {width: 16px;height: 16px;}
   .wallet-mask-sent h3 {font-size: 24px;color: #252F33;font-weight: 600;margin: 0;padding-bottom: 4px;
     font-family: Montserrat-SemiBold;}
   .wallet-mask-sent p {font-family: Lato-Bold;font-size: 16px;color: #839299;padding-top: 24px;}
+  .en .wallet-mask-sent p {font-family: Source-Medium;}
 
   .wallet-mask-sent .wallet-mask-sent-confirm p {padding-top: 20px;}
   .wallet-mask-sent .wallet-mask-sent-confirm h3 {padding-bottom: 22px;}
-  .wallet-mask-sent-from-address {display: block;padding-top: 12px;font-family: Lato-Medium;}
+  .wallet-mask-sent-from-address {display: block;padding-top: 12px;font-family: Lato-Medium;color: #252F33;}
   .wallet-mask-sent-to-address,.wallet-mask-sent-amount {display: flex;align-items: center;height: 36px;border-bottom:1px solid rgba(229,229,229,1);}
-  .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;}
+  .wallet-mask-sent-to-address input,.wallet-mask-sent-amount input {flex: 1;border: 0;font-family: Lato-Medium;color: #252F33;}
   .wallet-mask-sent-amount section {display: flex;align-items: center;}
-  .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;}
+  .wallet-mask-sent-amount section span {color: #839299;margin-left: 10px;font-family: Lato-Regular;}
   .wallet-mask-sent-amount section span:hover {cursor: pointer;}
   .wallet-mask-sent-amount section span img {vertical-align: middle;margin-left: 4px;}
   
@@ -771,13 +832,14 @@ export default {
   .wallet-mask-sent-amount section .trading-list {position: absolute;right: 0;top: 37px;z-index: 9;border-radius: 4px;
     box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
   .wallet-mask-sent-amount section .trading-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
-  .wallet-mask-sent-amount section .trading-list li span {color: #576066;}
+  .wallet-mask-sent-amount section .trading-list li span {color: #576066;font-family: Lato-Regular;}
   .wallet-mask-sent-amount section .trading-list li:hover {cursor: pointer;}
   
   .wallet-mask-sent button {margin-top: 40px;width:180px;height:48px;color: #F7FBFA;font-size: 16px;border-radius: 4px;
     border: 0;background:linear-gradient(90deg,rgba(66,145,255,1) 0%,rgba(11,127,230,1) 100%);}
   .wallet-mask-sent button:last-child {margin-left: 8px;background:linear-gradient(90deg,rgba(194,194,194,1) 0%,rgba(165,165,165,1) 100%);}
-  
+  .en .wallet-mask-sent button {font-family: Source-Regular;}
+
   .wallet-mask-sent .trading-title {color: #839299;font-size: 16px;padding: 24px 0 10px;}
   .transfer-slider section {display: flex;justify-content: space-between;align-items: center;font-size: 14px;}
   .transfer-slider section span:first-child,.transfer-slider section span:last-child {color: #839299;}
@@ -787,33 +849,40 @@ export default {
   .transfer-slider >>> .el-slider__button-wrapper {width: 24px;height: 24px;top: -12px;}
 
   .all-amount-list {color: #839299;font-size: 14px;padding-top: 8px;}
+  .en .all-amount-list {color: #99A1A6;}
   .all-amount-list span:last-child {color: #29D893;margin-left: 10px;}
+  
   .all-amount-list span:last-child:hover {cursor: pointer;}
 
   .wallet-mask-receive {padding: 36px 32px 28px;}
   .wallet-mask-receive h3 {color: #252F33;font-size: 28px;margin: 0;padding-bottom: 28px;font-family: Montserrat-SemiBold;}
+  .en .wallet-mask-receive h3,.en .wallet-mask-sent h3,.en .wallet-mask-sent h3 {font-family: Source-Medium;font-weight: 500;color: #42535B;font-size: 22px;}
   .wallet-mask-receive p {color: #839299;font-size: 14px;margin: 0;padding-top: 24px;}
+  .en .wallet-mask-receive p {font-size: 16px;font-family: Source-Medium;}
   .wallet-mask-receive span {color: #252F33;font-size: 14px;padding-top: 10px;display: block;
     font-weight: 500;font-family: Lato-Medium;}
   .wallet-mask-receive span:last-child {padding-top: 0;font-size: 12px;font-weight: 400;}
-  .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;
+  .wallet-mask-receive section {display: flex;align-items: center;justify-content: space-between;position: relative;font-family: Lato-Regular;
     color: #839299;font-size: 14px;height: 28px;border-bottom: 1px solid rgba(229,229,229,1);}
-  .wallet-mask-receive section input {border: 0;flex: 1;}
-  .wallet-mask-receive canvas {margin: 28px 0 7px;}
+  .wallet-mask-receive section input {border: 0;flex: 1;font-family: Lato-Regular;}
+  .wallet-mask-receive canvas {margin: 28px 0 7px -10px;width: 105px!important;height: 105px!important;}
   .wallet-mask-receive section label img {vertical-align: middle;margin-left: 4px;}
   .wallet-mask-receive section label:hover {cursor: pointer;}
   .wallet-mask-receive .qrcode-list {position: absolute;top: 28px;right: 0;z-index: 9;border-radius: 4px;
     box-shadow:0px 1px 6px rgba(37,47,51,0.16);width:90px;height:72px;padding: 0 10px;}
   .wallet-mask-receive .qrcode-list li {display: flex;align-items: center;justify-content: space-between;height: 36px;}
-  .wallet-mask-receive .qrcode-list li span {color: #576066;}
+  .wallet-mask-receive .qrcode-list li span {color: #576066;font-family: Lato-Regular;}
   .wallet-mask-receive .qrcode-list li:hover {cursor: pointer;}
 
-  .wallet-mask-priivate-key {padding: 32px 32px 28px;}
-  .wallet-mask-priivate-key h3 {padding-bottom: 42px;}
-  .wallet-mask-priivate-key section {padding: 24px;background:rgba(229,229,229,1);
+  .wallet-mask-private-key {padding: 32px 32px 28px;}
+  .wallet-mask-private-key h3 {padding-bottom: 42px;}
+  .wallet-mask-private-key section {padding: 24px;background:rgba(229,229,229,1);font-family: Lato-Regular;
     border-radius:4px;color: #42535B;font-size: 14px;word-wrap:break-word;margin: 16px 0 24px;}
-  .wallet-mask-priivate-key .priivate-key-button {display: block;height:48px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
-    border-radius:4px;line-height: 48px;text-align: center;color: #fff;}
+  .en .wallet-mask-private-key section {margin: 26px 0 24px;}
+  .en .wallet-mask-private-key .error-tips {font-size: 14px;}
+  .en .wallet-mask-private-key  h3 {padding-bottom: 45px;}
+  .wallet-mask-private-key .priivate-key-button {display: block;height:48px;background:linear-gradient(90deg,rgba(41,216,147,1) 0%,rgba(12,197,183,1) 100%);
+    border-radius:4px;line-height: 48px;text-align: center;color: #fff;cursor: pointer;}
 
   .wallet-mask-keystroe .tips {text-align: left;}
   .wallet-mask-keystroe h3 {padding-bottom: 24px!important;}
@@ -824,8 +893,12 @@ export default {
 
 
   .wallet-mask-phrase,.wallet-mask-keystroe {padding: 32px 32px 16px;text-align: right;}
-  .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-priivate-key  h3 
+  .wallet-mask-phrase h3,.wallet-mask-keystroe h3,.wallet-mask-private-key  h3 
     {font-size: 18px;font-family: Montserrat-SemiBold;color: #576066;margin: 0;padding-bottom: 12px;text-align: left;}
+
+  .en .wallet-mask-phrase h3,.en .wallet-mask-keystroe h3,.en .wallet-mask-private-key  h3 {font-family: Source-Medium;font-weight: 500;
+    color: #42535B;}
+
   .wallet-mask-phrase ul {display: flex;flex-wrap: wrap;}
   .wallet-mask-phrase ul li {padding: 8px 6px;background:rgba(242,242,242,1);border-radius: 4px;text-align: left;
     color: #42535B;font-size: 14px;margin-top: 12px;line-height: 1.5;}
@@ -859,4 +932,8 @@ export default {
 
 .slow-color {color: #0B7FE6!important;}
 .fast-color {color: #F5A623!important;}
+
+.all-amount-list span:nth-child(2),.transfer-slider section span:nth-child(2) {font-family: Lato-Regular;}
+
+.confirm-button-list {display: flex;}
 </style>

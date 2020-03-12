@@ -1,19 +1,24 @@
 <template>
   <ul>
     <li>
-      <span>Whole Network Mining：</span>
-      <span>{{totalMining}} BIU</span>
+      <span>{{ $t('homeDig.hdFootTit1') }}：</span>
+      <span>{{ getPointNum(totalMining)}} BIU</span>
     </li>
     <li>
-      <span>Blocks：</span>
+      <span>{{ $t('homeDig.hdFootTit2') }}：</span>
       <span>{{totalBlockHeight}}</span>
     </li>
     <li>
       <span class="dig-round"></span>
-      <span>{{timeOfLastBlock}}</span>
+      <span>
+        {{ timeOfLastBlock }}
+        <span v-show="timeIdx === 1">{{ $t('homeDig.hdFootTimeTxt1') }}</span>
+        <span v-show="timeIdx === 2">{{ $t('homeDig.hdFootTimeTxt2') }}</span>
+        <span v-show="timeIdx === 3">{{ $t('homeDig.hdFootTimeTxt3') }}</span>
+      </span>
     </li>
     <li>
-      <span>Mined by：</span>
+      <span>{{ $t('homeDig.hdFootTit3') }}：</span>
       <span>
         {{ textText }}
       </span>
@@ -27,15 +32,27 @@ export default {
   components: {
 
   },
-  props: {walletAddress: String, totalBlockHeight: String, totalMining: String, timeDiff: String},
+  props: {},
   data() {
     return {
-
+      timeIdx: ""
     }
   },
   computed: {
+    walletAddress () {
+      return this.$store.getters.lastBlock.Beneficiary || ''
+    },
+    totalBlockHeight () {
+      return this.$store.getters.chainHeight
+    },
+    totalMining () {
+      return this.$store.getters.netTotalReward
+    },
+    timeDiff () {
+      return Math.abs(new Date().getTime() - Number(this.$store.getters.lastBlock.TimeStamp)).toString()
+    },
     textText () {
-      if (this.walletAddress == "") {
+      if (this.walletAddress === "") {
         return '-'
       } else {
         return '0x' + this.walletAddress.replace(/(.{6}).+(.{8})/,'$1...$2')
@@ -47,12 +64,16 @@ export default {
         return '-'
       }
       if (Math.ceil(Number(this.timeDiff) / 1000) < 60) {
-        return `${Math.ceil(Number(this.timeDiff) / 1000)} seconds ago`
+        this.timeIdx = 1
+        return `${Math.ceil(Number(this.timeDiff) / 1000)}`
       } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 60 && Math.ceil(Number(this.timeDiff) / 1000) < 3600) {
-        return `${Math.ceil(Number(this.timeDiff) / (60*1000))} minutes ago`
+        this.timeIdx = 2
+        return `${Math.ceil(Number(this.timeDiff) / (60*1000))}`
       } else if (Math.ceil(Number(this.timeDiff) / 1000) >= 3600 && Math.ceil(Number(this.timeDiff) / 1000) < 86400) {
-        return `${Math.ceil(Number(this.timeDiff) / (3600*1000))} hours ago`
+        this.timeIdx = 3
+        return `${Math.ceil(Number(this.timeDiff) / (3600*1000))}`
       } else {
+        this.timeIdx = 0
         return '-'
       }
       //  else if (Math.ceil(Number(this.timeDiff) / 1000) >= 86400) {
@@ -83,5 +104,6 @@ export default {
   ul li .dig-round {width:6px;height:6px;background:rgba(41,216,147,1);border-radius:50%;
       display: inline-block;margin-right: 8px;}
   ul li span:first-child {color: #839299;font-family: Montserrat-Light;font-weight:300;}
+  .en ul li span:first-child {font-family: Source-Regular;}
   ul li span:last-child {color: #252F33;font-weight: 500;font-family: Lato-Medium;}
 </style>

@@ -8,6 +8,8 @@ const WalletNode = resolve => require(['@/pages/node/wallet-node'], resolve)
 const WalletDig = resolve => require(['@/pages/dig/wallet-dig'], resolve)
 const WalletDigMore = resolve => require(['@/pages/dig/wallet-dig-more'], resolve)
 
+const Invitation = resolve => require(['@/pages/invitation/invitation'], resolve)
+
 Vue.use(Router)
 
 export default new Router({
@@ -51,6 +53,13 @@ export default new Router({
         path: '/walletDigMore',
         name: 'walletDigMore',
         component: WalletDigMore
+      },
+
+      //新的页面
+      {
+        path: '/invitation',
+        name: 'invitation',
+        component: Invitation
       }
       ]
     },

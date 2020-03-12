@@ -92,7 +92,13 @@ let WalletHandler = {
         privateKey: wallet.privateKey,
         publicKey: wallet.publicKey,
         walletAddress: wallet.walletAddress,
-        englishWords: wallet.englishWords
+        englishWords: wallet.englishWords,
+        invitationCode: wallet.invitationCode,
+        ownInvitationCode: wallet.invitationCode,
+        mortgagePoolAddress: wallet.mortgagePoolAddress,
+        mortgageValue: wallet.mortgageValue,
+        ownPoolAddress: wallet.ownPoolAddress,
+        role: wallet.role
       }
     }
 
@@ -128,7 +134,13 @@ let WalletHandler = {
         privateKey: wallet.privateKey,
         publicKey: wallet.publicKey,
         walletAddress: wallet.walletAddress,
-        englishWords: wallet.englishWords
+        englishWords: wallet.englishWords,
+        invitationCode: wallet.invitationCode,
+        ownInvitationCode: wallet.ownInvitationCode,
+        mortgagePoolAddress: wallet.mortgagePoolAddress,
+        mortgageValue: wallet.mortgageValue,
+        ownPoolAddress: wallet.ownPoolAddress,
+        role: wallet.role
       }
       let keyFileData = JSON.stringify(keyDataJSON)
       let cipherText = CryptoJS.AES.encrypt(keyFileData, SECFileKey).toString()
@@ -191,7 +203,8 @@ let WalletHandler = {
       if (err) return
       try {
         keyData = JSON.parse(CryptoJS.AES.decrypt(data.toString(), pwd).toString(CryptoJS.enc.Utf8))
-        this.backUpWalletIntoFile(keyData[Object.keys(keyData)[0]], fnAfterImport)
+        fnAfterImport(keyData, keyData[Object.keys(keyData)[0]].privateKey)
+        // this.backUpWalletIntoFile(keyData[Object.keys(keyData)[0]], fnAfterImport)
         // if (fs.existsSync(defaultFilePath)) {
         //   fs.readFile(defaultFilePath, 'utf-8', this._appendWalletIntoFile.bind(this, defaultFilePath, keyData[Object.keys(keyData)[0]], fnAfterImport))
         // } else {
@@ -201,6 +214,7 @@ let WalletHandler = {
         //   })
         // }
       } catch (e) {
+        console.log(e)
         fnAfterImport('error')
       }
     })
@@ -208,7 +222,7 @@ let WalletHandler = {
 
   importWalletFromPrivateKey: function (privateKey, walletName, fnAfterImport) {
     let wallet = this._getKeysFromPrivateKey(privateKey, walletName, fnAfterImport)
-    this.backUpWalletIntoFile(wallet, fnAfterImport)
+    // this.backUpWalletIntoFile(wallet, fnAfterImport)
   },
 
   _getKeysFromPrivateKey: function (privateKey, walletName, fnAfterImport) {
@@ -217,13 +231,16 @@ let WalletHandler = {
       let extractAddress = SECUtil.privateToAddress(privateKeyBuffer).toString('hex')
       let extractPublicKey = SECUtil.privateToPublic(privateKeyBuffer).toString('hex')
       let extractPhrase = SECUtil.entropyToMnemonic(privateKeyBuffer)
-      return {
+      let wallet = {}
+      wallet[privateKey] = {
         walletName: walletName,
         privateKey: privateKey,
         publicKey: extractPublicKey,
         englishWords: extractPhrase,
         walletAddress: extractAddress
       }
+      fnAfterImport(wallet, privateKey)
+      return wallet
     } catch (e) {
       fnAfterImport('error')
     }
@@ -231,7 +248,7 @@ let WalletHandler = {
 
   importWalletFromPhrase: function (phrase, walletName, fnAfterImport) {
     let wallet = this._getKeysFromPhrase(phrase, walletName, fnAfterImport)
-    this.backUpWalletIntoFile(wallet, fnAfterImport)
+    // this.backUpWalletIntoFile(wallet, fnAfterImport)
   },
 
   _getKeysFromPhrase: function (phrase, walletName, fnAfterImport) {
@@ -244,13 +261,16 @@ let WalletHandler = {
 
       let userAddressBuffer = SECUtil.publicToAddress(pubKey128, true)
       let userAddressToString = SECUtil.bufferToHex(userAddressBuffer).substring(2)
-      return {
+      let wallet = {}
+      wallet[privateKey] = {
         walletName: walletName,
         privateKey: privateKey,
         publicKey: pubKey128ToString,
         englishWords: phrase,
         walletAddress: userAddressToString
       }
+      fnAfterImport(wallet, privateKey)
+      return wallet
     } catch (e) {
       fnAfterImport('error')
     }
@@ -277,11 +297,13 @@ let WalletHandler = {
       to: transfer.sendToAddress,
       value: transfer.amount,
       txFee: transfer.txFee,
+      nonce: transfer.nonce,
       gasLimit: '0',
       gas: '0',
       gasPrice: '0',
       data: '',
-      inputData: ''
+      inputData: transfer.inputData,
+      chainName: transfer.chainName
     }]
     const tokenTxBuffer = [
       SECUtil.bufferToInt(transferData[0].timestamp),
@@ -291,7 +313,9 @@ let WalletHandler = {
       Buffer.from(transferData[0].gasLimit),
       Buffer.from(transferData[0].gas),
       Buffer.from(transferData[0].gasPrice),
-      Buffer.from(transferData[0].inputData)
+      Buffer.from(transferData[0].nonce),
+      Buffer.from(transferData[0].inputData),
+      Buffer.from(transferData[0].chainName)
     ]
     let txSigHash = Buffer.from(SECUtil.rlphash(tokenTxBuffer).toString('hex'), 'hex')
     let signature = SECUtil.ecsign(txSigHash, Buffer.from(privateKey, 'hex'))
@@ -301,6 +325,11 @@ let WalletHandler = {
       s: signature.s.toString('hex')
     }
     return transferData
+  },
+
+  generateContractAddress (walletAddress) {
+    let contractAddress = SECUtil.generateContractAddressString(walletAddress)
+    return contractAddress
   },
 
   formatDate (date, offset) {

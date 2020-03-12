@@ -1,13 +1,13 @@
 <template>
   <section>
-    <ul class="test">
-      <li>NODE IP</li>
-      <li>COUNTRY</li>
-      <li>CITY</li>
-      <li>NODE TIME</li>
+    <ul class="list-node-head">
+      <li>{{ $t('homeNode.hnListTxt1') }}</li>
+      <li>{{ $t('homeNode.hnListTxt2') }}</li>
+      <li>{{ $t('homeNode.hnListTxt3') }}</li>
+      <li>{{ $t('homeNode.hnListTxt4') }}</li>
     </ul>
     <section class="list-node">
-      <h4 v-show="listContent">Please check for network failure</h4>
+      <h4 v-show="listContent">{{ $t('homeNode.hnNetwork') }}</h4>
       <ul v-for="(item, index) in nodeList" :key="index" v-show="!listContent">
         <li>{{item.nodeIp}}</li>
         <li>{{item.nodeCountry}}</li>
@@ -62,9 +62,10 @@ export default {
   .list-node h4 {height: calc(100vh - 350px);font-size: 16px;color: #839299;font-weight: normal;
     display: flex;align-items: center;justify-content: center;}
   
-  section ul {height: 40px;border-bottom: 1px solid rgba(229,229,229,1);color: #252F33;
+  section ul {height: 40px;border-bottom: 1px solid rgba(229,229,229,1);color: #252F33;font-family: Lato-Regular;
     display: flex;align-items: center;}
   section ul li{width: 25%;}
-  .test {border-bottom: 2px solid rgba(229,229,229,1);font-family: Lato-Bold;
-    color: #839299;margin-right: 32px;}
+  .list-node-head {border-bottom: 2px solid rgba(229,229,229,1);font-family: Lato-Bold;color: #839299;margin-right: 32px;}
+
+  .en .list-node-head {font-family: Source-Medium;color: #99A1A6;font-weight: 500;}
 </style>

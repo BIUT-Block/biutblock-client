@@ -3,10 +3,10 @@
     <section class="list-header">
       <ul>
         <li style="width: 6%;"> &nbsp; </li>
-        <li style="width: 24%;">AGE</li>
-        <li style="width: 17%;">REWARD</li>
-        <li style="width: 17%;">BLOCKS</li>
-        <li style="width: 36%;">BLOCK HASH</li>
+        <li style="width: 24%;">{{ $t('homeDig.hdNavProfitListTxt1') }}</li>
+        <li style="width: 17%;">{{ $t('homeDig.hdNavProfitListTxt2') }}</li>
+        <li style="width: 17%;">{{ $t('homeDig.hdNavProfitListTxt3') }}</li>
+        <li style="width: 36%;">{{ $t('homeDig.hdNavProfitListTxt4') }}</li>
       </ul>
     </section>
     <section class="more-list">
@@ -56,9 +56,10 @@ export default {
   section .more-list {overflow: auto;flex: 1;height: 302px;padding: 0 32px;}
   section .more-list ul {overflow: auto}
   section .list-header {padding: 0 32px;}
-  section .list-header li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid rgba(229,229,229,1);}
-  section ul li {float: left;height: 42px;display: flex;align-items: center;color: #252F33;
-    border-bottom:1px solid rgba(229,229,229,1);word-break: break-all;}
+  section .list-header li {font-family: Lato-Bold;color: #839299;border-bottom:2px solid #e5e5e5;}
+  .en section .list-header li {font-family: Source-Medium;}
+  section ul li {float: left;height: 42px;display: flex;align-items: center;color: #252F33;border-bottom:1px solid #e5e5e5;
+    word-break: break-all;}
 
  .more-list::-webkit-scrollbar { width: 2px; height: 2px;}
  .more-list::-webkit-scrollbar-thumb { -webkit-box-shadow: inset 0 0 1px #00D6B2;background: #00D6B2;border-radius: 1px;}

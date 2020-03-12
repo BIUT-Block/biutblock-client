@@ -1,5 +1,5 @@
 <template>
-  <button :type="type">{{this.text}}</button>
+  <button :type="type">{{ $t(text) }}</button>
 </template>
 
 <script>
