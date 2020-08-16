@@ -2,7 +2,7 @@
   <main class="wallet-dig-container">
     <section class="dig-enter" v-show="digPage">
       <h2>{{ $t('homeDig.hdEnteryTit') }}</h2>
-
+      <!--
       <section class="mining-wallet">
         <p class="mining-tit">{{ $t('homeDig.hdEnteryTxt1') }}</p>
         <p class="mining-address">0x{{ selectedWalletAddress }}</p>
@@ -29,10 +29,10 @@
             {{ $t(mortgageBtn1) }}
           </button>
       </section>
-   
+      -->
     </section>  
 
-    <section class="dig-container" v-show="!digPage">
+    <section class="dig-container" v-show="true">
       <!-- 挖矿头部 -->
       <section class="dig-header">
         <section class="dig-header-check">
@@ -47,8 +47,10 @@
           <h4 class="available-text">{{ $t('homeWallet.hwBiutTxt1') }}：<span>{{ getPointNum(availibleMoney) }} BIUT</span></h4>
           <h4 class="guarantee-text">{{ $t('homeWallet.hwBiutTxt2') }}：<span>{{ getPointNum(freezeMoney) }} BIUT</span></h4>
           <section class="dig-button-list">
-            <button type="button" :class="[openPool ? 'sotpPool' : '', openActive ? 'passCorrect' : '']" :disabled="!openActive" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
+            <button type="button" :class="[openPool ? 'sotpPool' : '', openActive ? 'passCorrect' : '']" :disabled="false" @click="beginDigMask(1)">{{ $t(digButton) }}</button>
+            <!--
             <button type="button" :class="appendAcitve ? 'appendAcitve' : ''" :disabled="!appendAcitve" @click="beginDigMask(2)">{{ $t('publicBtn.mortgageBtn2') }}</button>
+            -->
           </section>
 
         </section>
@@ -67,7 +69,9 @@
         <section class="tab-list">
           <ul>
             <li @click="tabPage(1)" :class="pageIdx == 1 ? 'checkColor' : ''">{{ $t('homeDig.hdNavProfit') }}</li>
+            <!--
             <li @click="tabPage(2)" :class="pageIdx == 2 ? 'checkColor' : ''">{{ $t('homeDig.hdNavRecord') }}</li>
+            -->
             <li @click="tabPage(3)" :class="pageIdx == 3 ? 'checkColor' : ''">{{ $t('homeDig.hdNavPool') }}</li>
           </ul>
         </section>
@@ -268,7 +272,8 @@ export default {
 
     //是否可点击开启挖矿按钮
     openActive () {
-      return this.freezeMoney > 0 && navigator.onLine && this.networkOrPeer ? true : false
+      //return this.freezeMoney > 0 && navigator.onLine && this.networkOrPeer ? true : false
+      return true
     },
 
     availibleMoney () {
@@ -912,7 +917,50 @@ export default {
       if (!this.isSynced) {
         this.processTexts.push(`Open mining (connecting nodes...).`)
         this.processTexts.push(`Node connection successful, synchronizing node...`)
+        /*bzh
         this.$JsonRPCClient.clientSEN.request('sec_startNetworkEvent', [], (err, response) => {
+          console.log(err)
+          if (response) {       
+            // stop all updating job
+            clearInterval(this.getBlockHeightJob)
+            if (this.updateListJob !== '') {
+              clearInterval(this.updateListJob)
+            }
+            //begin to get sync status
+            setTimeout(() => {
+              let _statusSameTimes = 0 
+              this.getSyncStatusJob = setInterval(() => {
+                this.$JsonRPCClient.getSyncStatus((responseSEC) => {
+                  let lastSyncStatus = window.sessionStorage.getItem('lastSyncStatus')
+                  let currentSyncStatus = responseSEC.result.message.isSyncing
+                  if (!currentSyncStatus && lastSyncStatus === currentSyncStatus.toString()) {
+                    _statusSameTimes = _statusSameTimes + 1
+                    // 两次检查同步状态相同。
+                    if (_statusSameTimes === 2) {
+                      this.processTexts.push(`Local networking success ${WalletsHandler.formatDate(moment(new Date().getTime()).format('YYYY/MM/DD HH:mm:ss'), new Date().getTimezoneOffset())}`)
+                      this.processTexts.push(`Complete syncing blocks`)
+                      this.isSynced = true
+                      this.$JsonRPCClient.switchToLocalHost()
+                      this.saveMingingStatus()
+                      this._restartAllJobs()
+                      clearInterval(this.getSyncStatusJob)
+                      // this._startCheckPeersJob()
+                      // clearInterval(this.checkNodeJob)
+                      // this.checkNodeJob = setInterval(this._startCheckPeersJob, 2 * 60 * 1000)
+                    }
+                  } else {
+                    _statusSameTimes = 0
+                    window.sessionStorage.setItem('lastSyncStatus', currentSyncStatus)
+                  }
+                })
+              }, 30*1000)
+            }, 10 *60 * 1000)
+            this._beginMiningWithWallet()
+          }
+        })
+        */
+        //bzh
+        this.$JsonRPCClient.client.request('startNetwork', [], (err, response) => {
           console.log(err)
           if (response) {       
             // stop all updating job
@@ -973,11 +1021,11 @@ export default {
     },
 
     _beginMiningWithWallet () {
-      this.$JsonRPCClient.clientSEN.request('sec_setAddress', [this.selectedWallet.walletAddress], (err, response) => {
+      this.$JsonRPCClient.clientSEN.request('setAddress', [this.selectedWallet.walletAddress], (err, response) => {
         console.log(err)
         if (err) return
       })
-      this.$JsonRPCClient.clientSEN.request('sec_setPOW', ['1'], (err, response) => {
+      this.$JsonRPCClient.clientSEN.request('setPOW', ['1'], (err, response) => {
         console.log(err)
         if (err) {
           this.miningIn = false

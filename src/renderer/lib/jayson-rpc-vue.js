@@ -9,12 +9,15 @@ let sourceCode = 'ZnVuY3Rpb24gdHJhbnNmZXIoYWRkcmVzcywgYW1vdW50KSB7CiAgICB2YXIgdH
 
 export default {
   install: function (Vue, options) {
-    let externalServerAddress = 'scan.biut.io'
+    //let externalServerAddress = 'scan.biut.io'
+    let externalServerAddress = '35.158.171.46'
     let externalServerAddressTest = 'test.biut.io'
     let externalServerPort = '3001/secrpc'
     let externalServerPortSEN = '3001/senrpc'
     let localhostAddress = '127.0.0.1'
-    let localhostPort = '3002'
+    //bzh
+    //let localhostPort = '3002'
+    let localhostPort = '4000'
     let localhostPortSEN = '3003'
 
     let jsonRPC = {
@@ -24,7 +27,8 @@ export default {
       clientSEN: '',
       switchToLocalHost: function () {
         this.client = jayson.http(`http://${localhostAddress}:${localhostPort}`)
-        this.clientSEN = jayson.http(`http://${localhostAddress}:${localhostPortSEN}`)
+        //bzh
+        //this.clientSEN = jayson.http(`http://${localhostAddress}:${localhostPortSEN}`)
       },
       switchToExternalServer: function () {
         //let isTestEnv = window.localStorage.getItem('secTest')
@@ -405,7 +409,9 @@ export default {
         // this._getSENSyncStatus(fnSENSyncStatus)
       },
       _getSECSyncStatus: function (fnSECSyncStatus) {
-        jayson.http(`http://${localhostAddress}:${localhostPort}`).request('sec_getSyncInfo', [], (err, response) => {
+        //bzh
+        //jayson.http(`http://${localhostAddress}:${localhostPort}`).request('sec_getSyncInfo', [], (err, response) => {
+        jayson.http(`http://${localhostAddress}:${localhostPort}`).request('getSyncInfo', [], (err, response) => {
           if (err) return
           fnSECSyncStatus(response)
         })

@@ -17,6 +17,8 @@ const downloadUrl = 'https://github.com/BIUT-Block/biutblock-client-pool/release
 const packageJSON = require('../../package.json')
 const fs = require('fs')
 
+import CenterController from 'bzh-chain'
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -91,6 +93,7 @@ function createWindow() {
         // requestBIU = net.request('http://test.biut.io/sen/genesisBlockHash')
         // }
         // ----------------  START RPC SERVER AND NODE INSTANCE  ----------------
+        /* bzh
         const SECNODE = require('@biut-block/biutjs-node')
         let SECCore = new SECNODE.Core({
           DBPath: path + '/data/',
@@ -103,8 +106,32 @@ function createWindow() {
         })
         let SECRPC = new SECNODE.RPC(SECCore)
         SECRPC.runRPCServer()
+        */
+
+        const cc = new CenterController({addr:undefined, privKey:'1b5502e2c1ece684d536c21e8de54a3552f8e8d9ebe42f119aa373006f6f5c70'})
 
         // ------------------  CHECK REMOTE GENESIS BLOCK HASH  -----------------
+        requestBIUT.on('response', response => {
+          response.on('data', remotegenesisHash => {
+            remotegenesisHash = remotegenesisHash.toString()
+            console.log(`remote BIUT GenesisHash: ${remotegenesisHash}`)
+            cc.chain.chainOper.chainDB.getBlocks(0, 0, (err, genesisBlock) => {
+              if (err) {
+                return console.log('BIUT Blockchain Database is empty')
+              }
+              console.log(`Local BIUT GenesisHash: ${genesisBlock[0].Hash}`)
+              if (genesisBlock[0].Hash === remotegenesisHash) {
+                return console.log('BIUT GenesisHash check passed')
+              } else {
+                console.log('BIUT GenesisHash not passed, remove local database')
+              }
+            })
+          })
+          response.on('end', () => {})
+        })
+        requestBIUT.end()
+
+        /*
         requestBIUT.on('response', response => {
           response.on('data', remotegenesisHash => {
             remotegenesisHash = remotegenesisHash.toString()
@@ -124,7 +151,7 @@ function createWindow() {
           response.on('end', () => {})
         })
         requestBIUT.end()
-
+        
         requestBIU.on('response', response => {
           response.on('data', remotegenesisHash => {
             remotegenesisHash = remotegenesisHash.toString()
@@ -144,7 +171,7 @@ function createWindow() {
           response.on('end', () => {})
         })
         requestBIU.end()
-
+        */
         mainWindow = new BrowserWindow({
           height: 610,
           useContentSize: true,

@@ -90,7 +90,9 @@ export default {
       if (window.localStorage.getItem('secTest') && window.localStorage.getItem('secTest') === 'true') {
         secAPI = 'http://test.biut.io/'
       } else {
-        secAPI = 'http://scan.biut.io:3001/'
+        // todo: use mongox api to get node list.
+        //secAPI = 'http://scan.biut.io:3001/'
+        secAPI = 'http://35.158.171.46:4001/'
       }
       fetch(`${secAPI}nodeinfoapi`).then(response => response.json()).then((nodestable) => {
         this.nodeList = []
