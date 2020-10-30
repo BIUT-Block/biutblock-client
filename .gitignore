@@ -21,3 +21,5 @@ build/Setup*
 biutlogs
 build/preInit
 ndpprivatekey
+build/.icon-ico/
+build/builder-effective-config.yaml
