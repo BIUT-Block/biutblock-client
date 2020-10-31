@@ -281,11 +281,11 @@ export default {
         }
       ],
 
-      feeVal: 0.02, //初始值
-      minFee: 0.01,//最小值
+      feeVal: 0.7, //初始值
+      minFee: 0.5,//最小值
     //  allfeeVal: Number(this.balanceSEN), //所有的SEN
     //  maxFee: Number(this.balanceSEN), //最大值
-      stepFee: 0.00818182, //步长
+      stepFee: 0.01, //步长
       slowTips: false, //小于默认值 color 改变
       fastTips: false, //大于默认值 color 改变
       feeErrorText: 'homeWalletMask.hwmSentFeeErrorText',
@@ -400,7 +400,7 @@ export default {
       return Number(this.balanceSEN)
     },
     maxFee() {
-      return Number("0.1")
+      return Number("1")
     }
   },
 
