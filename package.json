@@ -87,7 +87,7 @@
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "mdi": "^2.2.43",
-    "moment-timezone": "^0.5.33",
+    "moment-timezone": "^0.5.35",
     "net-ping": "^1.2.3",
     "node-fetch": "^2.6.1",
     "node-gyp": "^5.1.1",
